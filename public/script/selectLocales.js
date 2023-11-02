@@ -62,6 +62,8 @@ locales.forEach((local) => {
 
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(calcularCercania);
+} else {
+  sinGeolocation()
 }
 
 function calcularCercania(datos) {
@@ -106,3 +108,6 @@ function nombrarBoton(nombre, direccion) {
   document.querySelector("#selectLocalFormSubmit").style.display = "flex";
   document.querySelector("#localSelectRefBoton").innerHTML = "<span id='localSelectNombre'>Local " + nombre + "</span><span id='localSelectDireccion'>" + direccion + "</span>";
 }
+
+// Ajustar elementos si no hoy Geo posicionamiento
+function sinGeolocation(){}

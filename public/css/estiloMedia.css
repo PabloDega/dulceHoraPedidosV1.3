@@ -1,4 +1,11 @@
+:root {
+  --anchoMax: 800px;
+}
+
 @media (min-width: 576px) {
+  header p{
+   font-size: 2em; 
+  }
   header img {
     width: 150px;
   }
@@ -120,7 +127,8 @@
   }
   .selectLocalSeleccion {
     flex-direction: row;
-    width: 80%;
+    /* width: 80%; */
+    max-width: var(--anchoMax);
   }
   .pedidoNombreUsuario {
     flex-direction: row;

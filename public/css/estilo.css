@@ -2,6 +2,7 @@
 
 :root {
   --anchoMax: 800px;
+  --amarillo: rgb(255, 220, 0);
 }
 
 * {
@@ -23,7 +24,7 @@ body {
   min-height: 100vh;
 }
 header {
-  background-color: white;
+  background-color: var(--amarillo);
   width: 100%;
   padding: 0.5em;
   font-weight: 700;
@@ -47,7 +48,24 @@ header #local {
   gap: 0.5em;
 }
 header p {
-  font-size: 2em;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: white;
+  letter-spacing: 0.05em;
+  line-height: 1em;
+}
+header p #pick{
+  color: red;
+  font-size: 1.2em;
+  font-weight: 900;
+}
+header p #up{
+  color: blue;
+  font-size: 1.2em;
+  font-weight: 900;
 }
 header #holder {
   flex-grow: 1;
@@ -64,7 +82,7 @@ header .headerIcons {
 }
 header #cart,
 header #pedidoActivo {
-  background-color: lightseagreen;
+  background-color: var(--amarillo);
   box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
   padding: 15px;
   border-radius: 50%;
@@ -100,7 +118,7 @@ header #cart span {
 }
 header #headerCambiar {
   font-size: 0.8em;
-  background-color: lightgray;
+  background-color: white;
   padding: 0.5em;
   border-radius: 0.5em;
   transition: 0.5s;
@@ -296,6 +314,7 @@ footer img {
   max-width: var(--anchoMax);
   margin: 0 auto;
   display: flex;
+  flex-wrap: wrap;
   gap: 1em;
   padding: 1em;
 }
@@ -574,20 +593,25 @@ footer img {
 .pointer {
   cursor: pointer;
 }
+.selectLocal{
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+}
 .selectLocal form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1em;
-  margin: 2em;
   margin-bottom: 6em;
+  max-width: var(--anchoMax);
 }
 .selectLocal h1 {
   font-size: 1.9em;
   padding: 0;
 }
 .selectLocal h4 {
-  font-size: 0.8em;
+  font-size: 1em;
   color: white;
   font-weight: 400;
 }
@@ -626,14 +650,14 @@ footer img {
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
   transition: 1s;
   animation-name: selectLocalFormSubmit;
-  animation-duration: 2s;
+  animation-duration: 3s;
   animation-iteration-count: infinite;
 }
 @keyframes selectLocalFormSubmit {
   0%{transform: scale(100%);}
-  20%{transform: scale(105%);}
+  15%{transform: scale(105%);}
   25%{transform: scale(102%);}
-  30%{transform: scale(107%);}
+  35%{transform: scale(107%);}
   60%{transform: scale(110%);}  
 }
 #selectLocalFormSubmit:hover{
