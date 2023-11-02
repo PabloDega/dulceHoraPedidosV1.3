@@ -1,0 +1,68 @@
+<div id="prodCards">
+<% data.forEach(dato => { 
+  let estado = "Baja"; 
+  if(dato.estado == "true"){estado = "Disponible"}; 
+  let topSale = "No";
+  if(dato.topSale == "true"){topSale = "Si"}; 
+  let destacado = "No"; 
+  if(dato.destacado == "true"){destacado ="Si"};
+  let precioDocena = "";
+  if(dato.precioDocena > 0){precioDocena = "$" + dato.precioDocena};
+  %>
+
+<div class="backListaProdCard">
+  <img src="/<%= dato.imgCard %>" alt="" />
+  <h1><%= dato.nombre %></h1>
+  <table>
+    <tbody>
+      <tr>
+        <td>id</td>
+        <td><%= dato.id %></td>
+      </tr>
+      <tr>
+        <td>Categoría</td>
+        <td><%= dato.categoria %></td>
+      </tr>
+      <tr>
+        <td>Nombre</td>
+        <td><%= dato.nombre %></td>
+      </tr>
+      <tr>
+        <td>Descripción</td>
+        <td><%= dato.descripcion %></td>
+      </tr>
+      <tr>
+        <td>Variedad</td>
+        <td><%= dato.variedad %></td>
+      </tr>
+      <tr>
+        <td>Precio</td>
+        <td>$<%= dato.precio %></td>
+      </tr>
+      <tr>
+        <td>Precio Docena</td>
+        <td><%= precioDocena %></td>
+      </tr>
+      <tr>
+        <td>Fraccionamiento</td>
+        <td><%= dato.fraccionamiento %></td>
+      </tr>
+      <tr>
+        <td>Estado</td>
+        <td><%= estado %></td>
+      </tr>
+      <tr>
+        <td>Top Sale</td>
+        <td><%= topSale %></td>
+      </tr>
+      <tr>
+        <td>Destacado</td>
+        <td><%= destacado %></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="backListaProdCardBoton btnNaranja" id="backListaProdEditar" data-id="<%= dato.id %>">editar</div>
+  <div class="backListaProdCardBoton btnRojo" id="backListaProdEliminar" data-id="<%= dato.id %>" data-tipo="productos">eliminar</div>
+</div>
+<%}); %>
+</div>

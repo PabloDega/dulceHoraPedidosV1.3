@@ -1,0 +1,19 @@
+<form action="" method="post" id="editorLocal" class="editor">
+    <h1>Nueva Categoria</h1>
+    <span>
+        <label for="id">ID</label>
+        <input type="text" name="id" id="id" value="<%= data || valoresForm.id %>" readonly />
+    </span>
+    <span>
+        <label for="categoria">Categoria</label>
+        <input type="text" name="categoria" id="categoria" value="<%= valoresForm.categoria %>" />
+    </span>
+    <span>
+        <label for="nombreImg">Nombre de Imagen</label>
+        <input type="text" name="nombreImg" id="nombreImg" value="<%= valoresForm.nombreImg || "im/" %>" />
+    </span>
+       <span>
+        <input type="submit" value="Crear">
+    </span>
+    <input type="hidden" name="tipo" value="nuevo">
+</form>

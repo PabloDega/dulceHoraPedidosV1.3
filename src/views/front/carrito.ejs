@@ -1,0 +1,30 @@
+<div id="cont">
+  <div id="popScreen" style="display: none"></div>
+  <div id="carrito">
+    <h1><img src="/im/carro.svg" alt="">Carrito de compra</h1>
+    <h2>Productos Seleccionados</h2>
+    <form action="" method="post">
+      <div id="carritoProds">
+        <div id="cardRender">
+          <%- include("partial/carritoPedido")%>
+        </div>
+        <div class="cardProd" id="comprarCarrito">
+          <div id="cardProdTotal">
+            <span>Total </span>
+            <span id="totalCarrito">$
+              <script>document.write(total)</script>
+            </span>
+          </div>
+          <div id="cardProdSeguir" class="btn">Seguir comprando</div>
+          <input type="submit" value="Confirmar Pedido" id="cardProdConfirmar" class="pointer">
+        </div>
+    </form>
+    <div class="cardProd" id="vaciarCarrito">
+      <span id="cardProdVaciar" class="pointer">
+        <img src="im/carro.svg" alt="imagen de carrito" />
+        Vaciar Carrito
+      </span>
+    </div>
+  </div>
+</div>
+<script src="script/carrito.js" type="module"></script>

@@ -1,0 +1,37 @@
+<%- include("partial/pasos")%>
+<h2>Productos más vendidos</h2>
+<div class="slideH" id="slideH1">
+    <%- include("partial/slideH")%>
+    <!-- JS Fill -->
+</div>
+<div class="barra"></div>
+<h2>Productos por categoría</h2>
+<div class="slideH" id="slideCategorias">
+    <%- include("partial/categorias")%>
+</div>
+<div class="slideH" id="slideH2">
+    <!-- JS Fill -->
+</div>
+<div class="barra"></div>
+<h2>Ubicación del Local</h2>
+<div id="ubicacion">
+    <iframe src="<%= local.gmap %>" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+<div class="barra"></div>
+<h2>Promociones y descuentos</h2>
+<div id="promosVig">
+    <div id="promoVig">
+        <span>Docena de Medialunas</span>
+        <img src="im/promodocenaweb.png" alt="promo Medialnuas">
+    </div>
+<%if(local.promobp == "true"){%>
+    <div id="promoVig">
+        <span>Promo Cuenta DNI</span>
+        <img src="im/promo_bp.png" alt="promo Banco Provincia">
+    </div>
+<%}%>
+</div>
+<div class="barra"></div>
+<script>
+     window.prodActivos = <%- JSON.stringify(prodActivos) %>
+</script>

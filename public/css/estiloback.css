@@ -1,0 +1,614 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+body {
+  background-color: red;
+  font-family: "Roboto", sans-serif;
+}
+#cont {
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+#backMenu {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+  /* flex-grow: 1; */
+  align-content: flex-start;
+}
+#backMenu > h1 {
+  width: 100%;
+  color: white;
+  border-bottom: 3px solid white;
+}
+#backMenu > h1 > span {
+  font-size: 1.5rem;
+}
+#cont .backSubMenu{
+  gap: 1em;
+  margin-bottom: 2em;
+}
+.backSubMenu > h1{
+  font-size: 1.6em;
+}
+.backCard {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  border-radius: 1em;
+  padding: 1em;
+  width: 200px;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+.backCard:hover > h1 {
+  color: red;
+}
+.backCard h1 {
+  transition: 0.5s;
+  font-size: 1.5em;
+}
+.backCard img {
+  height: 50px;
+}
+#backRender {
+  margin: 0 auto;
+  flex-grow: 1;
+  max-width: 1000px;
+}
+#backRender #prodCards, #backRender #localCards{
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#backRender .backListaProdCard, #backRender .backListaLocalCard{
+  background-color: white;
+  width: 300px;
+  border-radius: 1em;
+  overflow: hidden;
+  position: relative;
+  padding: 1em;
+  padding-top: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+#backRender .backListaProdCard img, #backRender .backListaLocalCard img{
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: -150px;
+}
+#backRender .backListaProdCard h1, #backRender .backListaLocalCard h1{
+  font-size: 1.5em;
+}
+#backRender .backListaFotosCard{
+  background-color: white;
+  width: 300px;
+  border-radius: 1em;
+  overflow: hidden;
+  position: relative;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+#backRender .backListaFotosCard h1{
+  font-size: 1.5em;
+}
+#backRender .backListaFotosCard h2{
+  font-size: 1.2em;
+}
+#backRender .backListaFotosCard img{
+  width: 50%;
+}
+table {
+  border-collapse: collapse;
+  font-size: 0.8em;
+  width: 100%;
+}
+table thead {
+  color: white;
+  background-color: gray;
+}
+table tbody tr {
+  background-color: white;
+}
+table tbody tr:nth-child(odd) {
+  background-color: rgb(207, 207, 207);
+}
+table tbody tr:hover {
+  background-color: gray;
+  color: white;
+}
+table tbody tr .editar {
+  cursor: pointer;
+}
+table th,
+table td {
+  padding: 0.7em;
+  border-collapse: collapse;
+}
+table input{
+  padding: 0.3em;
+  width: 6em;
+  text-align: right;
+}
+.numTabla{
+  text-align: right;
+}
+.unchecked{
+  color: gray;
+}
+.tablaCategoria{
+  font-weight: 600;
+  color: white;
+  background-color: darkred;
+  text-align: center;
+  font-size: 1.2em;
+}
+#preciosForm{
+  margin: 1em auto;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+#preciosEnviar{
+  margin: 1em 0;
+}
+#backRender .editor{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  background-color: white;
+  padding: 1em;
+  border-radius: 1em;
+  width: 400px;
+}
+#backRender .editor span{
+  display: flex;
+  gap: 1em;
+  align-items: baseline;
+}
+#backRender .editor label{
+  width: 120px;
+}
+#backRender .editor textarea{
+  flex-grow: 1;
+}
+#backRender .editor input{
+  padding: 0.3em;
+  flex-grow: 1;
+}
+#backRender .editor input[type="checkbox"]{
+  flex-grow: unset;
+}
+#backRender .editor #variedades, #backRender .editor #editProdNuevaVariedadCreacion{
+  flex-direction: column;
+}
+#backRender .editor #variedades>span{
+  gap: 0;
+  align-items: center;
+}
+.backListaProdCardBoton, .btn{
+  padding: 0.5em;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 5px;
+}
+.btnNaranja{
+  background-color: darkorange;
+}
+.btnRojo{
+  background-color: red;
+  color:white;
+}
+.inputBtn{
+  border: 0;
+}
+.backListaProdTablaBoton{
+  cursor: pointer;
+  font-weight: 600;
+}
+#editProdNuevaVariedad, #editProdEliminarVariedad{
+  background-color: rgb(207, 207, 207);
+  padding: 0.25em;
+}
+header {
+  background-color: white;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  position: relative;
+}
+header img {
+  width: 150px;
+}
+#userIcon {
+  font-size: 0.9em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+  position: absolute;
+  bottom: 20px;
+  right: 50px;
+  cursor: pointer;
+}
+#userIcon img {
+  width: 2em;
+  margin-bottom: 0.2em;
+}
+#cerrarSesion{
+  flex-direction: column;
+  gap: 1em;
+  background-color: white;
+  font-weight: 600;
+  font-size: 0.8em;
+  position: absolute;
+  bottom: -100px;
+  right: 20px;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+#cerrarSesionBtn{
+  cursor: pointer;
+  color:red;
+}
+#cerrarSesionBtn:hover{
+  color:darkred;
+}
+#loginForm {
+  background-color: white;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 2em;
+  border-radius: 1em;
+}
+#loginForm span {
+  font-size: 1.5em;
+}
+#loginForm input {
+  padding: 0.5em;
+}
+footer {
+  background-color: darkred;
+  display: flex;
+  padding: 1em;
+  align-items: center;
+  justify-content: center;
+  justify-self: flex-end;
+  color: white;
+}
+footer a {
+  color: inherit;
+}
+footer img {
+  width: 100px;
+}
+.small {
+  width: 100px;
+  font-size: 0.7em;
+}
+.small img {
+  height: 25px;
+}
+.fotosHeader{
+  display: flex;
+  align-items: baseline;
+  color: white;
+  gap: 0.5em;
+  margin-bottom: 1em;
+  border-bottom: 3px solid white;
+  width: 100%;
+}
+.fotosHeader h1{
+  font-size: 1.6em;
+}
+.fotosHeader h2{
+  font-size: 1.3em;
+}
+#cortina{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+#cortina #confirmarEliminar{
+  background-color: white;
+  padding: 1em;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+#errores{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  gap: 1em;
+}
+.mensajeErrorForm{
+  max-width: 600px;
+  background-color: darkred;
+  color: white;
+  padding: 2em;
+  border-radius: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+  animation-name: errorForm;
+  animation-duration: 2s;
+}
+@keyframes errorForm {
+  from {
+    opacity: 0;
+    translate: 0 -100px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+.pedidosCont{
+  display: flex;
+  gap: 2em;
+  margin: 2em auto;
+  width: 100%;
+  max-width: 1000px;
+}
+.pedidos{
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 1em;
+}
+.pedidosCard{
+  background-color: white;
+  border-radius: 1em;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+}
+.pedidosCard .pedidosCardTipo{
+  position: absolute;
+  width: 40px;
+  top: 0px;
+  right: -10px;
+}
+.pedidosCard .pedidosCardMsj{
+  position: absolute;
+  width: 30px;
+  top: 50px;
+  right: -10px;
+  animation-name: mensajeNuevo;
+  animation-duration: 0.6s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-timing-function: ease-in-out;
+}
+@keyframes mensajeNuevo {
+  from{
+    transform: translateY(-3px) rotate(0deg);
+  }
+  to{
+    transform: translateY(3px) rotate(10deg);
+  }  
+}
+.pedidoCardNuevo{
+  font-weight: 600;
+  background-color: orange;
+  animation-name: pedidoNuevo;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  order: 10;
+}
+@keyframes pedidoNuevo {
+  from{transform: scale(100%);}
+  to{transform: scale(105%);}
+}
+.pedidoCardLeido{
+  order: 5;
+}
+.pedidoCardEntregado{
+  order: 3;
+}
+.pedidoCardCancelado{
+  order: 2;
+}
+.pedidoCardEntregado, .pedidoCardCancelado{
+  display: none;
+}
+.verPedidosCerrados{
+  background-color: white;
+  border-radius: 1em;
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  order: 1;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9em;
+  gap: 1em;
+}
+.verPedidosCerrados img{
+  width: 30px;
+}
+.pedidosChat{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+}
+.chatMensajes{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.chatMensaje{
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+}
+.chatMensaje .chatMensajeFecha{
+  font-size: 0.8em;
+  opacity: 0.7;
+  border-bottom: 1px solid gray;
+  margin-bottom: 0.5em;
+}
+#msjL{
+  background-color: lightsalmon;
+  border-radius: 1em 1em 0 1em;
+  margin-left: 2em;
+}
+#msjU{
+  background-color: white;
+  border-radius: 1em 1em 1em 0;
+  margin-right: 2em;
+}
+.chatSend{
+  align-self: flex-end;
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+.chatBtnEnviar{
+  background-color: orange;
+  padding: 0.5em;
+  font-weight: 600;
+  cursor: pointer;
+  border: 0
+}
+.chatInput{
+  flex-grow: 1;
+  padding: 0.5em;
+}
+.inputError{
+  display: none;
+  position: absolute;
+  top: -100px;
+  padding: 1em;
+  background-color: orange;
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 6s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes inputError {
+  0%{opacity: 0; top: -50px}
+  20%{opacity: 1; top: -100px}
+  80%{opacity: 1; top: -100px}
+  100%{opacity: 0; top: -150px}
+}
+
+.btnChat{
+  display: none;
+}
+
+.respuestasRapidas{
+  display: flex;
+  gap: 1em;
+  background-color: darkred;
+  padding: 0.5em;
+  border-radius: 0 0 1em 1em;
+  justify-content: center;
+}
+.respuestasRapidas div{
+  background-color: white;
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 0.5em;
+}
+#RRlisto{
+  background-color:lightgreen;
+}
+#RRprep15, #RRprep30{
+  background-color:lightskyblue;
+}
+#RRsinStock{
+  background-color:lightcoral;
+}
+.pedidoCard{
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  background-color: white;
+  padding: 1em;
+  border-radius: 1em;
+}
+.pedidoEstado{
+  display: flex;
+  gap: 2em;
+}
+.pedidoEstadoBoton{
+  padding: 1em;
+  border: 0;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+#actividadTableCont{
+  position: relative;
+  width: 90vw;
+  max-width: 100%;
+}
+#actividadFiltros{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 0.4em;
+  background-color: orange;
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8em;
+}
+#actividadFiltrosTabla{
+  display: none;
+  background-color: orange;
+  text-align: left;
+}
+#actividadQuitarFiltros{
+  background-color: red;
+  padding: 0.4em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8em;
+  width: fit-content;
+}

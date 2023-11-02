@@ -1,0 +1,22 @@
+<table id="tablaUsuarios">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Local</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% data.forEach(dato => { %>
+        <tr>
+          <td><%= dato.usuario %></td>
+          <td><%= dato.rol %></td>
+          <td><%= dato.local %></td>
+          <td class="backListaProdTablaBoton" id="backListaUsuarioEditar" data-id="<%= dato.usuario %>">editar</td>
+          <td class="backListaProdTablaBoton" id="backListaUsuarioEliminar" data-id="<%= dato.usuario %>" data-tipo="usuarios">eliminar</td>
+        </tr>
+      <%}); %>
+    </tbody>
+</table>

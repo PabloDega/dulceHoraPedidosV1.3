@@ -1,0 +1,57 @@
+<% let verBotonesEstado=true; switch (dataPedido.estado) { case "entregado" : verBotonesEstado=false; break;
+    case "cancelado" : verBotonesEstado=false; break; default: break; }%>
+    <div class="pedidoInfo">
+        <div class="pedidoCard">
+            <h3>Pedido Nº<%= dataPedido.id %></h3>
+            <hr>
+            <h3>Fecha <%= dataPedido.fecha.toLocaleString("es-AR") %></h3>
+            <hr>
+            <h3>Pedido:</h3>
+            <div class="pedido">
+                <% let productos=dataPedido.productos; productos=productos.replace(/'/g, `"`);
+                    productos=JSON.parse(productos); productos.forEach((item)=> {
+                    let producto = dataProds.find((data) => data.id == item[1]);%>
+                    <span><b>
+                            <%= producto.nombre %>
+                        </b></span>
+                    <% item[2].forEach((item)=> {
+                        if(item[1] > 0){
+                        let nombre = item[0].replace(/_/g, " ")%>
+                        <span class="pedidoDetalle">
+                            <span class="pedidoDetalleNombre">
+                                <%= nombre %>
+                            </span>
+                            <span>
+                                <%= item[1] %>
+                            </span>
+                        </span>
+                        <%}})%><br>
+                            <%}) %>
+            </div>
+            <hr>
+            <div>Total: <b>$<%= dataPedido.total %></b></div>
+            <hr>
+            <span>Estado: <%= dataPedido.estado %></span>
+            <%if(verBotonesEstado){%>
+                <hr>
+                <div class="pedidoEstado">
+                    <span>Modificar estado:</span>
+                    <form id="formEntregado" method="post">
+                        <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                        <input type="hidden" name="estado" value="entregado">
+                        <input type="submit" data-form="formEntregado" value="Entregado" class="pedidoEstadoBoton btnNaranja">
+                    </form>
+                    <form id="formCancelado" method="post">
+                        <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                        <input type="hidden" name="estado" value="cancelado">
+                        <input type="submit" data-form="formCancelado" value="Cancelado" class="pedidoEstadoBoton btnRojo">
+                    </form>
+                    <form id="formForzarCierre" method="post">
+                        <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                        <input type="hidden" name="estado" value="cancelado">
+                        <input type="submit" data-form="formForzarCierre" value="Forzar Cierre" class="pedidoEstadoBoton btnRojo">
+                    </form>
+                </div>
+                <%}%>
+        </div>
+    </div>

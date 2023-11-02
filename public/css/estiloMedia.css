@@ -1,0 +1,128 @@
+@media (min-width: 576px) {
+  header img {
+    width: 150px;
+  }
+  .agregarCard {
+    overflow: auto;
+    margin-top: 1em;
+  }
+  #cardEliminar {
+    margin-top: 1em;
+  }
+  .selectLocalBotones {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 400px;
+    gap: 0.5em;
+    width: auto;
+  }
+  .selectLocalMap{
+    height: 500px;
+  }
+  .chatMensajes {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 500px;
+    background-color: darkred;
+    gap: 1em;
+    padding: 1em;
+  }
+  .chatInfo {
+    flex-direction: row;
+  }
+  .chatEstado img {
+    width: 60px;
+  }
+  .pedidoNombreUsuario {
+    flex-grow: 1;
+  }
+  .chatEstado {
+    flex-direction: row;
+  }
+  .pedidoInfo{
+    flex-direction: row;
+  }
+  .pedidoMap > iframe{
+    height: 100%;
+    width: 100%;
+  }
+  .pedidoMap{
+    flex-grow: 1;
+  }
+  /* header .headerIcons{
+    flex-direction: row;
+    align-items: center;
+    position: static;
+  } */
+  /* header #cart, header #pedidoActivo {
+    background-color: transparent;
+    box-shadow: none;
+  } */
+  header #cart {
+    position: relative;
+  }
+  header #pedidoActivo span{
+    display: block;
+  }
+  ._404brujula{
+    max-width: 550px;
+    margin: 0 auto;
+  }
+}
+/* ------------------------------------------ */
+@media (min-width: 800px) {
+  .slideH {
+    flex-wrap: wrap;
+    margin: 0 auto;
+    /* justify-content: space-around; */
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    border-radius: 1em;
+    overflow: hidden;
+    background-color: white;
+    position: relative;
+  }
+  .categoria {
+    background-image: none;
+    background-color: white;
+    color: red;
+    text-shadow: none;
+    font-size: 1.2em;
+    border-radius: 0.5em;
+    width: auto;
+    height: auto;
+  }
+  .categoria:hover {
+    background-color: red;
+    color: white;
+  }
+  .categoria img {
+    display: none;
+  }
+  .categoria p {
+    position: relative;
+    padding: 0.5em;
+  }
+  #carritoProds {
+    flex-direction: row;
+  }
+  #cardRender {
+    flex-direction: row;
+    align-items: normal;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .selectLocalSeleccion {
+    flex-direction: row;
+    width: 80%;
+  }
+  .pedidoNombreUsuario {
+    flex-direction: row;
+  }
+}

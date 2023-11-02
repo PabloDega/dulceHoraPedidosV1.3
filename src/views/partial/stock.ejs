@@ -1,0 +1,27 @@
+<form action="" method="post" id="stock" class="editor">
+  <h1>Stock de <%= data.nombre %></h1>
+  <table>
+    <tbody>
+    <%  let dataStock = data.stock.split(",");
+        categorias.forEach((dato) => {
+          let buscar = productos.filter((x) => x.categoria == dato.categoria)%>
+            <tr>
+              <td colspan="2" class="tablaCategoria"><%= dato.categoria %></td>
+            </tr>
+          <%buscar.forEach((dato) => {
+            let checked;
+            if(dataStock.find((x) => x == dato.id)){
+              checked = "checked";
+            }else{
+              checked = "unchecked";
+            }%>
+            <tr class="<%= checked %>">
+              <td><%= dato.nombre %></td>
+              <td><input type="checkbox" name="stock" value="<%= dato.id %>" <%= checked %>></td>
+            </tr>  
+          <%})
+      }) %>
+    </tbody>
+  </table>
+  <input type="submit" value="Actualizar">
+</form>

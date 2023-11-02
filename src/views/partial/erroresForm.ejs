@@ -1,0 +1,7 @@
+<div id="errores">
+<% if(typeof errores != "undefined") {errores.forEach((error) => { %>
+    <div class="mensajeErrorForm">
+        <%= error.msg %>
+    </div>
+<% })} %>
+</div>

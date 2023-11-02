@@ -1,0 +1,40 @@
+<form action="" method="post" class="editor" id="nuevoUsuario">
+    <h1>Editar Usuario</h1>
+    <span>
+      <label for="usuario">Usuario</label>
+      <input type="text" name="usuario" id="usuario" value="<%= data.usuario %>" readonly />
+    </span>
+    <span>
+      <label for="local">Local</label>
+      <input type="text" name="local" id="local" value="<%= data.local %>" readonly />
+    </span>
+    <span>
+      <% let selectedNone = "";
+        let selectedAdmin = "";
+        let selectedAtencion = "";
+        switch (data.rol) {
+          case "":
+            selectedNone = "selected";
+            break;
+          case "admin":
+            selectedAdmin = "selected";
+            break;
+          case "atencion":
+            selectedAtencion = "selected";
+            break;
+          default:
+            break;
+        } %>
+      <label for="rolUser">Rol</label>
+          <select name="rolUser" id="rolUser">
+              <option value="" <%= selectedNone %>>-Seleccione un Rol-</option>
+              <option value="admin" <%= selectedAdmin %>>Administración</option>
+              <option value="atencion" <%= selectedAtencion %>>Atención</option>
+          </select>
+      </label>
+    </span>
+    <span>
+      <input type="submit" value="Modificar" />
+    </span>
+  </form>
+  

@@ -1,0 +1,91 @@
+<form action="" method="post" id="nuevoProducto" class="editor">
+  <h1>Nuevo Producto</h1>
+  <span>
+    <label for="id">ID</label>
+    <input type="text" name="id" id="id" readonly value="<%= lastId || data.id %>"/>
+  </span>
+  <span>
+    <label for="categoria">Categoría</label>
+    <select name="categoria" id="categoria">
+      <option value="" disabled selected>- Seleccionar un item -</option>
+      <% dataCategorias.forEach((categoria) => {
+        let selected = "";
+        if(categoria.categoria == data.categoria){selected = "selected"}%>
+        <option value="<%= categoria.categoria %>" <%= selected %>><%= categoria.categoria %></option>
+      <% })%>
+    </select>
+  </span>
+  <span>
+    <label for="nombre">Nombre</label>
+    <input type="text" name="nombre" id="nombre" value="<%= data.nombre %>" />
+  </span>
+  <span>
+    <label for="descripcion">Descripcion</label>
+    <textarea name="descripcion" id="descripcion" rows="5" value="<%= data.descripcion %>"></textarea>
+  </span>
+  <span>
+    <label for="variedad">Variedad</label>
+    <span id="variedades">
+      <span id="editProdNuevaVariedad" class="backListaProdTablaBoton">+ variedad</span>
+      <%switch (typeof(data.variedad)) {
+        case "string":
+          if(data.variedad != ""){
+          %><input type="text" name="variedad" id="variedad" placeholder="nueva variedad" value="<%= data.variedad %>"><%
+          }
+          break;
+        case "object":
+          data.variedad.forEach((variedadX) => {
+            if(variedadX != ""){
+            %><input type="text" name="variedad" id="variedad" placeholder="nueva variedad" value="<%= variedadX %>"><%
+          }})
+          break;
+        default:
+          break;
+      } %>
+    </span>
+  </span>
+  <span>
+    <label for="precio">Precio Unitario</label>
+    <input type="text" name="precio" id="precio" value="<%= data.precio || 0 %>" />
+  </span>
+  <% 
+  let fraccionUnidad = "";
+  let fraccionDocena = "selected";
+  let verPrecioDocena = "block";
+  if(data.fraccionamiento == "Unidad"){
+    fraccionUnidad = "selected";
+    fraccionDocena = "";
+    verPrecioDocena = "none";
+  }
+  %>
+  <span>
+    <label for="fraccionamiento">Fraccionamiento</label>
+    <select name="fraccionamiento" id="editProdFraccionamiento">
+      <option value="Unidad" <%= fraccionUnidad %>>Unidad</option>
+      <option value="Docena" <%= fraccionDocena %>>Docena</option>
+    </select>
+  </span>
+  <span id="editProdPrecioDocena" style="display: <%= verPrecioDocena %>;">
+    <label for="precioDoc">Precio por Docena</label>
+    <input type="text" name="precioDoc" id="precioDoc" value="<%= data.precioDoc || 0 %>"/>
+  </span>
+  <span>
+    <label for="estado">Estado</label>
+    <input type="checkbox" name="estado" id="estado" value="true" <% if(data.estado == "true"){%><%= "checked" %><%} %>>
+  </span>
+  <span>
+    <label for="topSale">Top Sale</label>
+    <input type="checkbox" name="topSale" id="topSale" value="true" <% if(data.topSale == "true"){%><%= "checked" %><%} %>>  </span>
+  <span>
+    <label for="destacado">Destacado</label>
+    <input type="checkbox" name="destacado" id="destacado" value="true" <% if(data.destacado == "true"){%><%= "checked" %><%} %>>  </span>
+  </span>
+  <span>
+    <label for="nombreImg">Nombre de Imagen</label>
+    <input type="text" name="nombreImg" id="nombreImg" value="<%= data.nombreImg || 'im/card' %>" />
+</span>
+<span>
+  <input type="submit" value="Crear">
+</span>
+<input type="hidden" name="tipo" value="nuevo">
+</form>

@@ -1,0 +1,44 @@
+<%  dataPedidos.forEach((pedido) => { 
+    let estilo;
+    switch (pedido.estado) {
+        case "nuevo":
+            estilo = "pedidoCardNuevo";
+            imagen = "warning"
+            break;
+        case "leido":
+            estilo = "pedidoCardLeido";
+            imagen = "chat"
+            break;
+        case "entregado":
+            estilo = "pedidoCardEntregado";
+            imagen = "checked"
+            break;
+        case "cancelado":
+            estilo = "pedidoCardCancelado";
+            imagen = "cancel"
+            break;
+        default:
+            break;
+    }
+    let buzon;
+    if(pedido.buzon == "mensaje"){
+        buzon = "block";
+    } else {
+        buzon = "none";
+    }%>
+    <div class="pedidosCard <%= estilo %>" data-id="<%= pedido.id %>">
+        <img src="/im/<%= imagen %>.svg" alt="icon" class="pedidosCardTipo">
+        <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj" style="display:<%= buzon %>;">
+        <span>Pedido: <%= pedido.id %></span>
+        <span>Fecha: <%= pedido.fecha.toLocaleString("es-AR") %></span>
+        <span><b>Estado: <%= pedido.estado %></b></span>
+    </div>
+<% }) %>
+<div class="verPedidosCerrados" id="verPedidosCancelados">
+    <img src="/im/cancel.svg" alt="icon">
+    Ver pedidos Cancelados
+</div>
+<div class="verPedidosCerrados" id="verPedidosEntregados">
+    <img src="/im/checked.svg" alt="icon">
+    Ver pedidos Entregados
+</div>

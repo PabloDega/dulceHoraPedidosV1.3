@@ -1,0 +1,47 @@
+<table id="tablaProductos">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Variedad</th>
+            <th>Precio</th>
+            <th>Precio Docena</th>
+            <th>Fraccionamiento</th>
+            <th>Estado</th>
+            <th>Top Sale</th>
+            <th>Destacado</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% data.forEach(dato => { 
+        let estado = "baja"; 
+        if(dato.estado == "true"){estado = "disponible"}; 
+        let topSale = "No";
+        if(dato.topSale == "true"){topSale = "Si"}; 
+        let destacado = "No"; 
+        if(dato.destacado == "true"){destacado ="Si"};
+        let precioDocena = "";
+        if(dato.precioDocena > 0){precioDocena = "$" + dato.precioDocena};
+        %>
+        <tr>
+          <td><%= dato.id %></td>
+          <td><%= dato.categoria %></td>
+          <td><%= dato.nombre %></td>
+          <td><%= dato.descripcion %></td>
+          <td><%= dato.variedad %></td>
+          <td>$<%= dato.precio %></td>
+          <td><%= precioDocena %></td>
+          <td><%= dato.fraccionamiento %></td>
+          <td><%= estado %></td>
+          <td><%= topSale %></td>
+          <td><%= destacado %></td>
+          <td class="backListaProdTablaBoton" id="backListaProdEditar" data-id="<%= dato.id %>">editar</td>
+          <td class="backListaProdTablaBoton" id="backListaProdEliminar" data-id="<%= dato.id %>" data-tipo="productos">eliminar</td>
+        </tr>
+      <%}); %>
+    </tbody>
+</table>

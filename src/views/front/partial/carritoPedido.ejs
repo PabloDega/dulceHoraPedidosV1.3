@@ -1,0 +1,40 @@
+<%if(pedido == undefined || pedido == ""){
+  let total = 0
+  %><h1>El carrito está vacío</h1>
+  <script>
+      window.total = <%- JSON.stringify(total) %>
+ </script><%
+} else {
+let pedidoParse = JSON.parse(pedido);
+let total = 0;
+pedidoParse.forEach((item, i) => {
+  let prod = data.find((dato) => dato.id == item[1]);
+  let precio;
+  if(prod.fraccionamiento == "Docena"){
+    let docenas = parseInt(item[4] / 12);
+    let resto = item[4] % 12;
+    precio = prod.precioDocena * docenas + prod.precio * resto;
+  } else {
+    precio = prod.precio * item[4];
+  }
+  total += precio;%>
+<div class="cardProd">
+    <img src="<%= prod.imgCard %>" alt="" />
+    <div class="cardProdNum">Item <%= item[0] %></div>
+    <div class="cardProdNom"><%= prod.nombre %></div>
+      <%item[2].forEach((item) => {
+        let item0 = item[0].replace(/_/g, " ")%>
+        <div class="cardProdItem">
+            <span><%= item0%></span>
+            <span><%= item[1]%></span>
+        </div>
+      <%})%>
+    <div class="cardProdPrecio">$<%= precio %></div>
+    <div class="cardProdEliminar pointer" data-idPedidoEliminar="<%= i %>">eliminar</div>
+</div>
+<%})%>
+<input type="hidden" name="totalPedido" value="<%= total %>">
+<script>
+      window.total = <%- JSON.stringify(total) %>
+</script>
+<%}%>

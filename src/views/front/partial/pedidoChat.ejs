@@ -1,0 +1,48 @@
+<div class="pedidoChat">
+  <div class="chatInfo">
+    <div class="chatEstado">
+      <img src="im/backprods.svg" alt="">
+      <span>Local <span>desconectado</span></span>
+    </div>
+    <div class="pedidoNombreUsuario">
+      <span class="chatNombreInput">
+        <input type="text" name="nombreCliente" id="nombreCliente" placeholder="Tu nombre (opcional)">
+        <div class="pedidoBtn" id="pedidoBtnCargar">Cargar</div>
+      </span>
+    </div>
+  </div>
+  <div class="chatMensajes">
+    <h1>Chat</h1>
+    <div class="chatMensaje" id="msjL">
+      <span>
+        <b>Dulce Hora Bot:</b> Gracias por dejarnos tu pedido, te responderemos a la
+        brevedad
+      </span>
+    </div>
+     <%let mensajesA = "["+dataMensajes+"]";
+      let mensajes = JSON.parse(mensajesA)
+      mensajes.forEach((mensaje) => {%>
+        <div class="chatMensaje" id="<%= mensaje.emisor %>">
+        <span class="chatMensajeFecha">
+          <%= new Date(mensaje.fecha).toLocaleString() %>
+          </span>
+        <span>
+          <b><%= mensaje.nombre %>:</b> <%= mensaje.mensaje %>
+        </span>
+      </div>
+      <%})%>
+  </div>
+  <form action="" id="chatSend" class="chatSend">
+    <div class="inputError">&#10060; Ocurrió un error con el envío del mensaje, tener en cuenta el mismo no puede estar vacío ni contener caracteres especiales, recargue la página e intente nuevamente</div>
+    <input type="hidden" name="chatEmisor" value="msjU" id="chatEmisor">
+    <input type="hidden" name="chatEmisor" value="Cliente" id="chatNombre">
+    <input type="text" class="chatInput" id="chatInput"><input type="submit" value="Enviar" class="chatBtnEnviar">
+  </form>
+</div>
+
+
+<script>
+  window.pedidoNumero = <%- JSON.stringify(pedidoNumero) %>;
+  window.localId = <%- JSON.stringify(localId) %>;
+  window.ring = true;
+</script>

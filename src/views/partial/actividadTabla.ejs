@@ -1,0 +1,78 @@
+<% let pedidos = new Set();
+let usuarios = new Set();
+data.forEach((dato) => {
+    pedidos.add(dato.pedido);
+    usuarios.add(dato.user)
+})%>
+<div id="actividadTableCont">
+<table id="actividadTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>fecha</th>
+            <th>Pedido</th>
+            <th>Usuario</th>
+            <th>Acción</th>
+            <th>Datos</th>
+        </tr>
+        <tr id="actividadFiltrosTabla">
+            <th></th>
+            <th></th>
+            <th>
+                <select name="pedido" id="pedido">
+                    <option value="" selected disabled>Seleccionar</option>
+                    <%pedidos.forEach((pedido) => {%>
+                        <option value="<%=pedido%>"><%=pedido%></option>
+                    <%})%>
+                </select>
+            </th>
+            <th>
+                <select name="usuario" id="usuario">
+                    <option value="" selected disabled>Seleccionar</option>
+                    <%usuarios.forEach((usuario) => {%>
+                        <option value="<%=usuario%>"><%=usuario%></option>
+                    <%})%>
+                </select>
+            </th>
+            <th>
+                <select name="accion" id="accion">
+                    <option value="" selected disabled>Seleccionar</option>
+                    <option value="" disabled>Usuario</option>
+                    <option value="Landing">Landing</option>
+                    <option value="Ingreso">Ingreso</option>
+                    <option value="Carrito">Carrito</option>
+                    <option value="Pedido">Pedido</option>
+                    <option value="Cancelado">Cancelado</option>
+                    <option value="" disabled>Local</option>
+                    <option value="Login">Login</option>
+                    <option value="Lectura">Lectura</option>
+                    <option value="Estado">Estado</option>
+                    <option value="Stock">Stock</option>
+                    <option value="Logout">Logout</option>
+                </select>
+            </th>
+            <th style="text-align: right;">
+                <div id="actividadQuitarFiltros">Limpiar Filtros</div>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="actividadTbody">
+        <% data.forEach((dato) => {%>
+            <tr>
+                <td><%=dato.id%></td>
+                <% let fecha = new Date(dato.fecha) %>
+                <td><%=fecha.toLocaleString("es-AR")%></td>
+                <td><%=dato.pedido%></td>
+                <td><%=dato.user%></td>
+                <td><%=dato.accion%></td>
+                <td><%=dato.datos%></td>
+            </tr>
+        <%})%>
+    </tbody>
+    <div id="actividadFiltros">Filtrar</div>
+</table>
+</div>
+<script>
+    window.data = <%- JSON.stringify(data) %>;
+</script>
+<script src="/script/actividad.js"></script>

@@ -1,0 +1,59 @@
+<form action="" method="post" id="editorLocal" class="editor">
+    <h1>Editar Local</h1>
+    <span>
+        <label for="id">ID</label>
+        <input type="text" name="id" id="id" value="<%= data.id %>" readonly />
+    </span>
+    <span>
+        <label for="franquicia">Franquicia</label>
+        <input type="text" name="franquicia" id="franquicia" value="<%= data.franquicia %>" />
+    </span>
+    <span>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" value="<%= data.nombre %>" />
+    </span>
+    <span>
+        <label for="direccion">Dirección</label>
+        <input type="text" name="direccion" id="direccion" value="<%= data.direccion %>" />
+    </span>
+    <span>
+        <label for="telefono">Teléfono</label>
+        <input type="text" name="telefono" id="telefono" value="<%= data.telefono %>" />
+    </span>
+    <span>
+        <label for="gmap">Ubicación Google Maps</label>
+        <textarea name="gmap" id="gmap" rows="8"><%= data.gmap %></textarea>
+    </span>
+    <span>
+        <label for="img">Nombre de Imagen</label>
+        <input type="text" name="img" id="img" value="<%= data.img %>" />
+    </span>
+    <span>
+        <label for="promobp">Promo Banco Provincia</label>
+        <% 
+        let promobp="" ; 
+        if(data.promobp == "true"){
+            promobp="checked";
+        }
+         %>
+        <input type="checkbox" name="promobp" id="promobp" value="true" <%= promobp %>>
+    </span>
+    <span>
+        <label for="estado">Estado</label>
+        <% let estadoActivo = "selected";
+        let estadoInactivo = "";
+        if(data.estado == "inactivo"){
+          estadoActivo = "";
+          estadoInactivo = "selected";
+        } %>
+        <select name="estado" id="estado">
+            <option value="activo" <%= estadoActivo %>>Activo</option>
+            <option value="inactivo" <%= estadoInactivo %>>Inactivo</option>
+        </select>
+    </span>
+    <span>
+        <input type="submit" value="Modificar">
+    </span>
+    <input type="hidden" name="tipo" value="editar">
+    <input type="hidden" name="nombreImgOriginal" value="<%= data.img || data.nombreImgOriginal %>">
+</form>

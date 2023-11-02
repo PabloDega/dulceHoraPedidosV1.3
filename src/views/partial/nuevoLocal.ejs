@@ -1,0 +1,40 @@
+<form action="" method="post" id="nuevoLocal" class="editor">
+    <h1>Nuevo Local</h1>
+    <span>
+        <label for="id">ID</label>
+        <input type="text" name="id" id="id" value="<%= data %>" readonly />
+    </span>
+    <span>
+        <label for="franquicia">Franquicia</label>
+        <input type="text" name="franquicia" id="franquicia" value="<%= valoresForm.franquicia %>" />
+    </span>
+    <span>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" value="<%= valoresForm.nombre %>" />
+    </span>
+    <span>
+        <label for="direccion">Dirección</label>
+        <input type="text" name="direccion" id="direccion" value="<%= valoresForm.direccion %>" />
+    </span>
+    <span>
+        <label for="telefono">Teléfono</label>
+        <input type="text" name="telefono" id="telefono" value="<%= valoresForm.telefono %>" />
+    </span>
+    <span>
+        <label for="gmap">Ubicación Google Maps</label>
+        <textarea name="gmap" id="gmap" rows="8"><%= valoresForm.gmap %></textarea>
+    </span>
+    <span>
+        <label for="img">Nombre de Imagen</label>
+        <input type="text" name="img" id="img" value="<%= valoresForm.img || "im/local/" %>" />
+    </span>
+    <span>
+        <label for="promobp">Promo Banco Provincia</label>
+        <input type="checkbox" name="promobp" id="promobp" value="true" <% if(valoresForm.promobp == "true"){ %><%= "checked" %><% } %>>
+    </span>
+    </span>
+    <span>
+        <input type="submit" value="Crear">
+    </span>
+    <input type="hidden" name="tipo" value="nuevo">
+</form>

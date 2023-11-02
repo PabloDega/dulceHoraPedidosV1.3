@@ -1,0 +1,20 @@
+<span class="fotosHeader">
+    <h1>Fotos de Categorías</h1>
+    <h2>/ Características</h2>
+    <span>Imagen en PNG con fondo transparente</span>
+</span>
+<div id="prodCards">
+    <% data.forEach(dato=> { %>
+        <div class="backListaFotosCard">
+            <h1>
+                <%= dato.categoria %>
+            </h1>
+            <span>ID: <%= dato.id %></span>
+            <div>
+                <span>Nombre de archivo: <%= dato.imgCat %></span>
+            </div>
+            <img src="/<%= dato.imgCat %>" alt="" />
+            <div class="backListaProdCardBoton btnNaranja btnCategorias" id="backFotosUpload" data-id="<%= dato.id %>">Subir nueva foto</div>
+        </div>
+        <% }) %>
+</div>

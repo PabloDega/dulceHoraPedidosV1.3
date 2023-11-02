@@ -1,0 +1,8 @@
+<%categorias.forEach((categoria) => {%>
+    <div>
+        <div class="categoria pointer" data-categoria="<%= categoria.categoria%>">
+            <p><%= categoria.categoria%></p>
+            <img src="<%= categoria.imgCat%>" alt="">
+        </div>
+    </div>
+<% }) %>

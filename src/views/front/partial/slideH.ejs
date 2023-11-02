@@ -1,0 +1,31 @@
+<%prodActivos.forEach((prod)=> {
+    if(prod.topSale == "true"){
+    let nombre;
+    let precio;
+    if (prod.fraccionamiento == "Docena") {
+    nombre = "Docena de " + prod.nombre;
+    precio = prod.precioDocena;
+    } else {
+    nombre = prod.nombre;
+    precio = prod.precio;
+    }
+    %>
+    <div class="card" id="promo" <% if (prod.destacado == "true") {%>"style=order:-1"<%}%>>
+        <%if (prod.destacado=="true" ) {%>
+            <div class="cardPromo"><img src="im/star.svg" alt="">TOP VENTAS</div>
+            <%}%>
+                <div class="cardImg"><img src="<%= prod.imgCard %>" alt=""></div>
+                <div class="cardCont">
+                    <p class="cardDesc">
+                        <%= nombre %>
+                    </p>
+                    <p class="cardDetalle">
+                        <%= prod.variedad %>
+                    </p>
+                    <div class="cardPrecio"><span>$<%= precio %></span>
+                        <div class="cardAdd pointer" data-id="<%= prod.id %>">+</div>
+                    </div>
+                </div>
+    </div>
+    <%} 
+})%>

@@ -1,0 +1,20 @@
+<%- include("../partial/erroresForm")%>
+<%- include("../partial/menu", {menu: "small"})%>
+<%- include("../partial/menuFotos", {menu: "small"})%>
+<div id="backRender">
+  <% switch(mostrar){ 
+        case "productos": 
+            %><%- include("../partial/fotosProductos",  { data }) %><%;
+            break;
+        case "categorias": 
+            %><%- include("../partial/fotosCategorias",  { data }) %><%;
+            break;
+        case "locales":
+            %><%- include("../partial/fotosLocales",  { data }) %><%;
+            break;
+        case "upload":
+            %><%- include("../partial/fotosUpload",  { data, tipo }) %><%;
+            break;
+        default: "";
+  } %>
+</div>

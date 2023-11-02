@@ -1,0 +1,31 @@
+<%- include("partial/pasos")%>
+  <div class="barra"></div>
+  <div class="selectLocal">
+    <form id="selectLocalForm" action="" method="post">
+      <h1>Seleccione un local</h1>
+      <h4>Cada local cuenta con producción propia, por lo que la disponibilidad de los productos puede varias entre las sucursales</h4>
+      <div class="selectLocalSeleccion">
+        <div class="selectLocalBotones">
+          <% data.forEach((local)=> { %>
+            <div class="selectLocalLocales" data-id="<%= local.id %>" id="local<%= local.id %>">
+              <input type="checkbox" name="local" id="check<%= local.id %>" class="localCheck" value="<%= local.id %>" hidden>
+              <%= local.nombre %>
+              <span style="display: none;" class="localDireccion" id="span<%= local.id %>"><%= local.direccion %></span>
+            </div>
+            <% }) %>
+            <div id="selectLocalVerMas"><b>+</b> Ver mas locales</div>
+        </div>
+        <div class="selectLocalMap">
+          <iframe src="" width="100%" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" id="mapaLocal"></iframe>
+        </div>
+      </div>
+      <div id="selectLocalFormSubmit">
+        <img src="/im/puerta.svg" alt="">
+        <span id="localSelectRefBoton">...seleccione un local</span>
+      </div>
+    </form>
+  </div>
+  <script>
+    window.locales = <%- JSON.stringify(data) %>
+  </script>
+  <script src="script/selectLocales.js" type="module"></script>

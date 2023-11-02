@@ -1,0 +1,26 @@
+<div class="chatMensajes">
+    <%let mensajesA = "["+dataMensajes+"]";
+      let mensajes = JSON.parse(mensajesA)
+      mensajes.forEach((mensaje) => {%>
+        <div class="chatMensaje" id="<%= mensaje.emisor %>">
+        <span class="chatMensajeFecha">
+          <%= new Date(mensaje.fecha).toLocaleString() %>
+          </span>
+        <span>
+          <b><%= mensaje.nombre %>:</b> <%= mensaje.mensaje %>
+        </span>
+      </div>
+    <%})%>
+</div>
+<form action="" id="chatSend" class="chatSend">
+    <div class="inputError">&#10060; Ocurrió un error con el envío del mensaje, tener en cuenta el mismo no puede estar vacío ni contener caracteres especiales, recargue la página e intente nuevamente</div>
+    <input type="hidden" name="chatEmisor" value="msjL" id="chatEmisor">
+    <input type="hidden" name="chatEmisor" value="<%= local.nombre %>" id="chatNombre">
+    <input type="text" class="chatInput" id="chatInput"><input type="submit" value="Enviar" class="chatBtnEnviar">
+</form>
+<div class="respuestasRapidas">
+  <div id="RRlisto" class="pointer">&#9989; Pedido Listo</div>
+  <div id="RRprep15">&#9201; Listo en 15'</div>
+  <div id="RRprep30">&#9201; Listo en 30'</div>
+  <div id="RRsinStock">&#10060; Sin Stock</div>
+</div>

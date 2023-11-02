@@ -1,0 +1,10 @@
+<%- include("../partial/confirmarEliminar") %>
+<%- include("../partial/menu", {menu: "small"})%>
+<%- include("../partial/menuProductos", {menu: "small"})%>
+<div id="backRender">
+  <% if(vista == "card"){ %>
+    <%- include("../partial/cardsProductos", { data }) %>
+  <% } else { %>
+    <%- include("../partial/tablaProductos", { data }) %>
+  <% } %>
+</div>

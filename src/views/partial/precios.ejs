@@ -1,0 +1,46 @@
+<div id="backMenu"><h1>Precios</h1></div>
+<form action="/panel/precios" method="post" id="preciosForm">
+<table id="preciosTabla">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Nuevo Precio</th>
+            <th>Precio Docena</th>
+            <th>Nuevo Precio por Docena</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% 
+      data.forEach(dato => { 
+        let precioDocena = "-";
+        if(dato.precioDocena > 0){precioDocena = "$" + dato.precioDocena};
+        let preciosBody = valoresForm["dato"+dato.id];
+        let precioBody = "";
+        let precioDocenaBody = "";
+        if(preciosBody){
+          precioBody = preciosBody[1];
+          precioDocenaBody = preciosBody[2];
+        }
+        %>
+        <tr>
+          <td><%= dato.id %> <input type="text" name="dato<%= dato.id %>" value="<%= dato.id %>" hidden> </td>
+          <td><%= dato.categoria %></td>
+          <td><%= dato.nombre %></td>
+          <td class="numTabla">$<%= dato.precio %></td>
+          <td><input type="text" name="dato<%= dato.id %>" id="preciosPrecio" data-id="<%= dato.id %>" value="<%= precioBody %>"></td>
+          <% if(dato.fraccionamiento == "Docena"){ %>
+            <td class="numTabla"><%= precioDocena %></td>
+            <td><input type="text" name="dato<%= dato.id %>" id="preciosPrecioDocena" data-id="<%= dato.id %>" value="<%= precioDocenaBody %>"></td>
+          <% } else { %>
+            <td></td>
+            <td></td>
+          <% } %>
+        </tr>
+      <%}); %>
+    </tbody>
+</table>
+<input type="submit" value="Actualizar Precios" class="backListaProdCardBoton btnNaranja inputBtn" id="preciosEnviar">
+</form>

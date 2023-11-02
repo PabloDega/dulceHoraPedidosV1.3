@@ -1,0 +1,1018 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
+
+:root {
+  --anchoMax: 800px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+body {
+  background-color: red;
+  font-family: "Roboto", sans-serif;
+}
+#cont {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
+  background-color: white;
+  width: 100%;
+  padding: 0.5em;
+  font-weight: 700;
+}
+header #contHeader {
+  max-width: var(--anchoMax);
+  margin: 0 auto;
+}
+header #header,
+header #local {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+header img {
+  width: 90px;
+}
+header #local {
+  padding-left: 1em;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+header p {
+  font-size: 2em;
+}
+header #holder {
+  flex-grow: 1;
+}
+header .headerIcons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  z-index: 5;
+}
+header #cart,
+header #pedidoActivo {
+  background-color: lightseagreen;
+  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  border-radius: 50%;
+  position: relative;
+}
+header #pedidoActivo {
+  background-color: lightcyan;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.nuevoItemCart{
+  animation-name: nuevoItem;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-out;
+}
+@keyframes nuevoItem {
+  0%{transform: translateY(0px) scale(100%);}
+  100%{transform: translateY(-5px) scale(110%);}  
+}
+header #cart img {
+  width: 40px;
+  margin: 0;
+}
+header #cart span {
+  position: absolute;
+  bottom: 39px;
+  left: 28px;
+  font-size: 20px;
+  text-align: center;
+}
+header #headerCambiar {
+  font-size: 0.8em;
+  background-color: lightgray;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  transition: 0.5s;
+}
+header #headerCambiar:hover {
+  background-color: orange;
+}
+header #pedidoActivo img {
+  align-self: center;
+  width: 40px;
+  margin: 0;
+  animation-name: pedidoActivo;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+header #pedidoActivo span {
+  display: none;
+}
+@keyframes pedidoActivo {
+  from {
+    transform: scale(100%);
+  }
+  to {
+    transform: scale(120%);
+  }
+}
+h1 {
+  padding: 0.5em;
+  color: white;
+  letter-spacing: 0.05em;
+}
+#pasos {
+  width: 100%;
+  max-width: var(--anchoMax);
+  /* max-width: 600px; */
+  margin: 0 auto;
+  overflow: scroll;
+  height: fit-content;
+}
+#pasos::-webkit-scrollbar {
+  display: none;
+}
+#pasosImg {
+  display: flex;
+  width: 400%;
+}
+#pasosImg img {
+  width: 25%;
+}
+h2 {
+  font-size: 1.5em;
+  padding-left: 1em;
+  color: white;
+  max-width: var(--anchoMax);
+  margin: 0 auto;
+}
+.slideH {
+  display: flex;
+  gap: 1em;
+  padding: 1em;
+  overflow-x: scroll;
+  max-width: var(--anchoMax);
+}
+.slideH::-webkit-scrollbar {
+  display: none;
+}
+.card {
+  display: inline-block;
+  width: 13rem;
+  min-width: 13rem;
+  border-radius: 1em;
+  overflow: hidden;
+  background-color: white;
+  position: relative;
+}
+.card img {
+  width: 100%;
+}
+/* .card p {
+  padding: 0.5em;
+} */
+.cardImg {
+  height: 150px;
+  overflow: hidden;
+}
+.cardDesc {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+.cardDetalle {
+  color: gray;
+  flex-grow: 1;
+  font-size: 0.9em;
+}
+.cardCont {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.7em;
+  padding: 1em;
+  height: 50%;
+}
+.cardPrecio {
+  font-size: 1.4em;
+  font-weight: 700;
+  display: flex;
+  gap: 0.5em;
+  align-items: flex-end;
+  align-self: flex-end;
+  flex-grow: 1;
+}
+.cardPromo {
+  position: absolute;
+  top: 90px;
+  background-color: orange;
+  margin: 0.5em;
+  padding: 0.5em;
+  font-weight: 700;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+.cardPromo img {
+  display: inline-block;
+  width: 20px;
+}
+.cardAdd {
+  border: 2px solid black;
+  border-radius: 7px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+.barra {
+  display: block;
+  height: 2px;
+  margin: 1em;
+  background-color: white;
+}
+.categoria {
+  display: flex;
+  /* background-image: linear-gradient(orange, rgb(235, 247, 79)); */
+  background-color: white;
+  width: 16rem;
+  padding: 0.5em;
+  /* height: 150px; */
+  /* position: relative; */
+  font-size: 1.4em;
+  color: darkred;
+  letter-spacing: 0.1em;
+  /* text-shadow: 0px 0px 7px orange; */
+  font-weight: 700;
+  border-radius: 0.5em 0.5em 0 0;
+}
+.categoria img {
+  /* position: absolute; */
+  height: 85px;
+  /* right: 0px; */
+  /* bottom: 0; */
+}
+.categoria p {
+  display: flex;
+  flex-grow: 1;
+  justify-content:center;
+  align-items: center;
+  /* position: absolute; */
+  /* margin: 1em; */
+}
+#ubicacion {
+  margin: 0 auto;
+  max-width: var(--anchoMax);
+  width: 100%;
+}
+#ubicacion iframe {
+  padding: 1em;
+}
+#precios {
+  margin: 1em;
+}
+footer {
+  background-color: darkred;
+  color: white;
+  padding: 1em;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+}
+footer img {
+  width: 100px;
+}
+#promosVig {
+  max-width: var(--anchoMax);
+  margin: 0 auto;
+  display: flex;
+  gap: 1em;
+  padding: 1em;
+}
+#promoVig{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: white;
+  font-weight: 600;
+}
+#promoVig img {
+  max-width: 300px;
+}
+#popScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  flex-direction: column;
+}
+.agregarCard {
+  background-color: white;
+  color: black;
+  max-height: 90vh;
+  overflow: scroll;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.agregarCard img {
+  width: 100%;
+}
+.agregarSeleccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.5em 1.2em;
+}
+.agregarCard h1 {
+  color: black;
+  font-size: 1.5em;
+  padding: 0;
+}
+.agregarVariedad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+.agregarVariedad input {
+  width: 40px;
+  height: 35px;
+  font-size: 1em;
+  text-align: center;
+  border: 2px solid orangered;
+  border-width: 2px 0 2px 0;
+}
+.agregarVariedad input::-webkit-outer-spin-button,
+.agregarVariedad input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.agregarMenos,
+.agregarMas,
+.agregar6,
+.agregar12,
+.agregarBotones {
+  display: flex;
+  height: 35px;
+  min-width: 20px;
+  padding: 0 7px;
+  align-items: center;
+  justify-content: center;
+  background-color: orangered;
+  color: white;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.agregarVariedad .agregar6,
+.agregarVariedad .agregar12,
+.agregarVariedad .agregarMenos,
+.agregarVariedad #cantTotal,
+.agregarBotones {
+  margin-left: 0.7em;
+}
+.agregarVariedad > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-basis: content;
+}
+.agregarVariedad > div > span:first-child {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.agregarPrecios {
+  font-size: 1.3em;
+}
+.agregarBoton:hover {
+  box-shadow: 0 0 2px gray;
+}
+.agregarVariedad > div > span.agregarBotones {
+  flex-grow: 0;
+}
+.agregarBotones {
+  padding: 0.4em;
+  height: auto;
+  text-align: center;
+}
+.agregarPrecios span {
+  flex-grow: 1;
+}
+#agregarBotonCarrito {
+  background-color: red;
+  padding: 1em;
+}
+#agregarCerrar {
+  width: 30%;
+  border: 2px solid white;
+  color: white;
+  padding: 0.7em;
+  border-radius: 5px;
+  text-align: center;
+  margin: 1em auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Carrito */
+
+#carrito {
+  display: flex;
+  flex-direction: column;
+}
+#carrito h1,
+#carrito h2 {
+  padding: 0.5em;
+  color: inherit;
+}
+#carrito h1, #carrito h2{
+  display: flex;
+  min-width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+#carrito h1 {
+  background-color: darkred;
+  color: white;
+  font-size: 1.6em;
+}
+#carrito h1 img{
+  filter: invert(100%);
+}
+#carrito h2 {
+  font-size: 1.2em;
+  color: darkred;
+  background-color: white;
+  margin-bottom: 2em;
+}
+#cardRender {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+.cardProd {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 350px;
+  /* margin: 1em auto; */
+  background-color: white;
+  padding: 1em;
+  border-radius: 1em;
+  gap: 0.5em;
+}
+.cardProdItem {
+  display: flex;
+}
+.cardProdNum,
+.cardProdEliminar {
+  color: gray;
+}
+.cardProdNum img {
+  width: 40%;
+}
+.cardProdNom {
+  font-size: 1.3em;
+}
+.cardProdItem {
+  border-bottom: solid 1px gray;
+  gap: 1em;
+}
+.cardProdItem > span:nth-child(2) {
+  flex-grow: 1;
+  text-align: center;
+}
+.cardProdItem > span:nth-child(1) {
+  width: 70%;
+}
+.cardProdPrecio,
+#cardProdTotal > span:nth-child(2) {
+  font-size: 1.4em;
+  font-weight: 600;
+  align-self: flex-end;
+}
+.cardProdEliminar {
+  align-self: flex-end;
+}
+#cardProdTotal {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 1em;
+  padding: 0.5em;
+}
+#cardProdConfirmar {
+  background-color: red;
+  text-align: center;
+  padding: 1em;
+  border: 0;
+  border-radius: 0 0 0.5em 0.5em;
+  color: white;
+  font-weight: 600;
+  font-size: 1em;
+}
+#cardProdSeguir {
+  background-color: orange;
+  border-radius: 0;
+}
+#cardProdVaciar {
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#cardProdVaciar img {
+  width: 25px;
+  margin-right: 0.5em;
+}
+#comprarCarrito,
+#vaciarCarrito {
+  margin: 1em auto;
+}
+#cardEliminar {
+  background-color: white;
+  padding: 2em;
+  max-width: 350px;
+  margin: 0 auto;
+}
+#cardEliminar > span {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+#cardEliminar > span > span {
+  display: flex;
+  gap: 1em;
+}
+#cardEliminar > span > span > div {
+  padding: 1em;
+  border-radius: 0.5em;
+  font-weight: 600;
+}
+#cardEliminarOk,
+#cardVaciarOk {
+  background-color: orangered;
+  color: white;
+}
+#cardEliminarCancelar,
+#cardVaciarCancelar {
+  background-color: rgb(171, 171, 171);
+}
+.pointer {
+  cursor: pointer;
+}
+.selectLocal form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  margin: 2em;
+  margin-bottom: 6em;
+}
+.selectLocal h1 {
+  font-size: 1.9em;
+  padding: 0;
+}
+.selectLocal h4 {
+  font-size: 0.8em;
+  color: white;
+  font-weight: 400;
+}
+.selectLocal form select {
+  padding: 0.5em;
+  border: 0;
+  border-radius: 1em;
+  font-size: 1.5em;
+}
+.selectLocalSeleccion {
+  display: flex;
+  gap: 1em;
+  flex-direction: column-reverse;
+  width: 100%;
+  justify-content: center;
+}
+.selectLocalBotones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: 100%;
+}
+#selectLocalFormSubmit {
+  display: none;
+  flex-direction: row;
+  gap: 0.5rem;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1em;
+  font-size: 1.4em;
+  font-weight: 900;
+  cursor: pointer;
+  position: fixed;
+  bottom: 40px;
+  right: auto;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+  transition: 1s;
+  animation-name: selectLocalFormSubmit;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+@keyframes selectLocalFormSubmit {
+  0%{transform: scale(100%);}
+  20%{transform: scale(105%);}
+  25%{transform: scale(102%);}
+  30%{transform: scale(107%);}
+  60%{transform: scale(110%);}  
+}
+#selectLocalFormSubmit:hover{
+  transform: scale(105%);
+  animation-name: none;
+}
+#selectLocalFormSubmit img {
+  height: 50px;
+}
+#selectLocalFormSubmit span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#localSelectRefBoton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+#localSelectNombre{
+  color: darkred;
+  font-size: 0.8em;
+}
+#localSelectDireccion{
+  font-size: 0.6em;
+}
+.selectLocalMap {
+  flex-grow: 3;
+  max-width: 700px;
+  height: 300px;
+  display: none;
+}
+.selectLocalMap iframe {
+  border: none;
+}
+.selectLocalLocales,
+#selectLocalVerMas {
+  background-color: white;
+  color: black;
+  font-size: 1.2em;
+  padding: 0.5em;
+  cursor: pointer;
+  transition: 0.5s;
+}
+#selectLocalVerMas {
+  background-color: lightgray;
+  font-size: 1em;
+  display: none;
+  order: 100;
+}
+.selectLocalLocalesActivo {
+  background-color: lightgray;
+  border-left: 4px solid purple;
+}
+.selectLocalLocales:hover {
+  background-color: lightgray;
+}
+.selectLocalLocales span {
+  font-size: 0.8em;
+  display: block;
+}
+#selectLocalForm input[type="submit"] {
+  padding: 1em;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 5px;
+  border: 0;
+  font-size: 1.6em;
+}
+.pedidoRender {
+  margin: 0 auto;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  max-width: var(--anchoMax);
+}
+.pedidoInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+.pedidoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 2em;
+  background-color: white;
+  border-radius: 1em;
+  color: black;
+  /* width: 20em; */
+}
+.pedidoCard > * {
+  color: black;
+  margin: 0;
+  padding: 0;
+}
+.pedidoCard h2 {
+  font-size: 1.4em;
+}
+.pedidoCard h3 {
+  color: gray;
+  font-size: 1.2em;
+}
+.pedido {
+  display: flex;
+  flex-direction: column;
+}
+.pedidoDetalle {
+  display: flex;
+  color: gray;
+  border-bottom: 1px solid lightgray;
+}
+.pedidoDetalleNombre {
+  flex-grow: 1;
+}
+.pedidoDetalleTotal {
+  display: block;
+  text-align: right;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+.pedidoChat {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.chatMensajes {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 500px;
+  background-color: darkred;
+  gap: 1em;
+  padding: 1em;
+}
+.chatMensajes h1 {
+  font-size: 1.2em;
+  padding: 0;
+  border-bottom: 2px solid white;
+}
+.chatNombreInput {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+}
+.chatSend {
+  align-self: flex-end;
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+.inputError {
+  display: none;
+  position: absolute;
+  top: -100px;
+  padding: 1em;
+  background-color: orange;
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 6s;
+  animation-fill-mode: forwards;
+}
+@keyframes inputError {
+  0% {
+    opacity: 0;
+    top: -50px;
+  }
+  20% {
+    opacity: 1;
+    top: -100px;
+  }
+  80% {
+    opacity: 1;
+    top: -100px;
+  }
+  100% {
+    opacity: 0;
+    top: -150px;
+  }
+}
+.chatMensaje {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+}
+.chatMensaje .chatMensajeFecha {
+  font-size: 0.8em;
+  opacity: 0.7;
+  border-bottom: 1px solid gray;
+  margin-bottom: 0.5em;
+}
+#msjL {
+  background-color: lightsalmon;
+  border-radius: 1em 1em 0 1em;
+  margin-left: 2em;
+}
+#msjU {
+  background-color: white;
+  border-radius: 1em 1em 1em 0;
+  margin-right: 2em;
+}
+.chatBtnEnviar {
+  background-color: orange;
+  padding: 0.5em;
+  font-weight: 600;
+  cursor: pointer;
+  border: 0;
+}
+.btnChat {
+  background-color: orange;
+  width: fit-content;
+  align-self: flex-end;
+}
+.chatInput {
+  flex-grow: 1;
+  padding: 0.5em;
+}
+.chatInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.chatEstado img {
+  width: 40px;
+  filter: brightness(150%);
+}
+.pedidoNombreUsuario,
+.chatEstado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+  padding: 1em;
+}
+.pedidoMap > iframe {
+  height: 100px;
+}
+.chatEstado {
+  background-color: lightgrey;
+  color: gray;
+  order: 2;
+  & img {
+    opacity: 0.6;
+  }
+}
+.chatEstadoOnline {
+  background-color: lightgreen;
+  color: black;
+  & img {
+    opacity: 1;
+  }
+}
+.pedidoNombreUsuario input {
+  padding: 0.5em;
+  flex-grow: 1;
+}
+.pedidoBotones {
+  margin-top: 0.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1em;
+  font-size: 0.9rem;
+}
+#pedidoPagarMP {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(0, 150, 200);
+}
+#pedidoPagarMP img {
+  width: 40px;
+}
+.pedidoBtn {
+  background-color: red;
+  padding: 0.5em;
+  font-weight: 600;
+  color: white;
+  border-radius: 0.5em;
+  cursor: pointer;
+  text-align: center;
+}
+#cortina {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+#cortina #confirmarEliminar {
+  background-color: white;
+  padding: 1em;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.btn {
+  padding: 0.5em;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 5px;
+}
+.btnNaranja {
+  background-color: darkorange;
+}
+.btnRojo {
+  background-color: red;
+  color: white;
+}
+._404 {
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  text-align: center;
+}
+._404brujula {
+  position: relative;
+  display: flex;
+}
+._404brujula .brujula,
+._404brujula .aguja {
+  width: 100%;
+  height: 100%;
+}
+._404brujula .aguja {
+  position: absolute;
+  transition: 2s;
+  overflow: hidden;
+}
+._404btn {
+  display: flex;
+  width: fit-content;
+  align-self: center;
+}
+#graciasCont {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  gap: 1em;
+  margin: 2em 0;
+}
+#graciasCont h1 {
+  padding: 0;
+}
+#graciasCont span {
+  font-size: 1.5em;
+}
+#graciasCont #graciasInicio {
+  background-color: white;
+  color: red;
+}
+#graciasCont img {
+  max-width: 300px;
+  animation-name: gracias;
+  animation-duration: 2s;
+  animation-direction: alternate-reverse;
+  animation-iteration-count: infinite;
+}
+@keyframes gracias {
+  from {
+    transform: rotateZ(-3deg);
+  }
+  to {
+    transform: rotateZ(3deg);
+  }
+}

@@ -1,0 +1,45 @@
+<div id="backMenu">
+    <h1>Panel de Control<span>/ Local Dulce Hora Villa Real</span></h1>
+    <% if(userRol == "supervisor"){%>
+    <div class="backCard <%= menu %>" id="productos">
+      <img src="/im/backprods.svg" alt="icono productos" />
+      <h1>Productos</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="precios">
+      <img src="/im/backprecios.svg" alt="icono precios" />
+      <h1>Precios</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="local">
+      <img src="/im/backlocal.svg" alt="icono local" />
+      <h1>Local</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="fotos">
+      <img src="/im/backfotos.svg" alt="icono fotos" />
+      <h1>Fotos</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="usuarios">
+      <img src="/im/backuser.svg" alt="icono usuarios" />
+      <h1>Usuarios</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="actividadToda">
+      <img src="/im/backactividad.svg" alt="icono actividad" />
+      <h1>Actividad</h1>
+    </div>
+    <% } %>
+    <% if(userRol == "admin" ||userRol == "atencion"){ %>
+    <div class="backCard <%= menu %>" id="stock">
+      <img src="/im/backprods.svg" alt="icono stock" />
+      <h1>Stock</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="pedidos">
+      <img src="/im/backventas.svg" alt="icono pedidos" />
+      <h1>Pedidos</h1>
+    </div>
+    <% } %>
+    <% if(userRol == "admin"){ %>
+      <div class="backCard <%= menu %>" id="actividad">
+        <img src="/im/backactividad.svg" alt="icono actividad" />
+        <h1>Actividad</h1>
+      </div>
+      <% } %>
+  </div>

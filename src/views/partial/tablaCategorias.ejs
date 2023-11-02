@@ -1,0 +1,22 @@
+<table id="tablaCategorias">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>imgCat</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% data.forEach(dato => { %>
+        <tr>
+          <td><%= dato.id %></td>
+          <td><%= dato.categoria %></td>
+          <td><%= dato.imgCat %></td>
+          <td class="backListaProdTablaBoton" id="backListaCatEditar" data-id="<%= dato.id %>">editar</td>
+          <td class="backListaProdTablaBoton" id="backListaCatEliminar" data-id="<%= dato.id %>" data-tipo="categorias">eliminar</td>
+        </tr>
+      <%}); %>
+    </tbody>
+</table>

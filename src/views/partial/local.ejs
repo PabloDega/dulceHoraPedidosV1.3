@@ -1,0 +1,46 @@
+<div id="localCards">
+  <% data.forEach(dato => {%>
+    <div class="backListaLocalCard">
+      <img src="/<%= dato.img %>" alt="" />
+      <h1><%= dato.nombre %></h1>
+      <table>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td><%= dato.id %></td>
+          </tr>
+          <tr>
+            <td>Franquicia</td>
+            <td><%= dato.franquicia %></td>
+          </tr>
+          <tr>
+            <td>Nombre</td>
+            <td><%= dato.nombre %></td>
+          </tr>
+          <tr>
+            <td>Dirección</td>
+            <td><%= dato.direccion %></td>
+          </tr>
+          <tr>
+            <td>Telefono</td>
+            <td><%= dato.telefono %></td>
+          </tr>
+          <tr>
+            <td>Google Map</td>
+            <td><%= dato.gmap %></td>
+          </tr>
+          <tr>
+            <td>Promo Provincia</td>
+            <td><%= dato.promobp %></td>
+          </tr>
+          <tr>
+            <td>Estado</td>
+            <td><%= dato.estado %></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="backListaProdCardBoton btnNaranja" id="backListaLocalEditar" data-id="<%= dato.id %>">editar</div>
+      <div class="backListaProdCardBoton btnRojo" id="backListaLocalEliminar" data-id="<%= dato.id %>" data-tipo="local">eliminar</div>
+    </div>
+    <%}); %>
+    </div>

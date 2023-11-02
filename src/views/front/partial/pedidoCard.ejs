@@ -1,0 +1,32 @@
+<div class="pedidoInfo">
+    <div class="pedidoCard">
+        <h3>Pedido Nº<%= pedidoNumero %></h3>
+        <hr>
+        <h2>Local <%= local.nombre %></h2>
+        <hr>
+        <h3>Pedido</h3>
+        <div class="pedido">
+            <%  pedido = JSON.parse(pedido);
+                pedido.forEach((item) => {
+                    let prod = data.find((data) => data.id == item[1]);%>
+                    <span><b><%= prod.nombre %></b></span>
+                    <% item[2].forEach((item) => {
+                        if(item[1] > 0){
+                        let nombre = item[0].replace(/_/g, " ")%>
+                        <span class="pedidoDetalle">
+                            <span class="pedidoDetalleNombre"><%= nombre %></span>
+                            <span><%= item[1] %></span>
+                        </span>
+                    <%}})%><br>
+            <%}) %>
+        </div>
+        <div class="pedidoDetalleTotal">Total: $<%= total %></div>
+        <div class="pedidoBotones">
+            <div class="pedidoBtn" id="pedidoPagarMP"><img src="/im/Mercado-Pago-Logo.png" alt="">Pagar con MP</div>
+            <div class="pedidoBtn" id="pedidoCancelar">Finalizar</div>
+        </div>
+    </div>
+    <div class="pedidoMap">
+        <iframe src="<%= local.gmap %>" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+</div>
