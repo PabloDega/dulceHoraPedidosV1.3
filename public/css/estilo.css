@@ -2,7 +2,7 @@
 
 :root {
   --anchoMax: 800px;
-  --amarillo: rgb(255, 220, 0);
+  --amarillo: rgb(255, 190, 0);
 }
 
 * {
@@ -89,7 +89,7 @@ header #pedidoActivo {
   position: relative;
 }
 header #pedidoActivo {
-  background-color: lightcyan;
+  /* background-color: lightcyan; */
   display: flex;
   flex-direction: column;
   gap: 0.5em;

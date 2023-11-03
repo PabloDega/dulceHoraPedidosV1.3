@@ -4,12 +4,12 @@
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="56.693px" height="56.693px" viewBox="-4.347 -4.347 56.693 56.693" enable-background="new -4.347 -4.347 56.693 56.693"
 	 xml:space="preserve">
-<path fill="#4CAAE2" d="M-131.042,48.5"/>
-<path fill="#4CAAE2" d="M25-0.5C11.469-0.5,0.5,10.47,0.5,24c0,0.559,0.019,1.112,0.056,1.661c0.22,3.289,1.094,6.398,2.486,9.205
+<path fill="#000000" d="M-131.042,48.5"/>
+<path fill="#000000" d="M25-0.5C11.469-0.5,0.5,10.47,0.5,24c0,0.559,0.019,1.112,0.056,1.661c0.22,3.289,1.094,6.398,2.486,9.205
 	L0.5,48.5l8.35-6.084C13.162,46.201,18.811,48.5,25,48.5c13.529,0,24.5-10.97,24.5-24.5S38.529-0.5,25-0.5z"/>
 <g>
-	<circle fill="#FFFFFF" cx="14.125" cy="24" r="3.417"/>
-	<circle fill="#FFFFFF" cx="25" cy="24" r="3.417"/>
-	<circle fill="#FFFFFF" cx="35.875" cy="24" r="3.417"/>
+	<circle fill="#FFBE00" cx="14.125" cy="24" r="3.417"/>
+	<circle fill="#FFBE00" cx="25" cy="24" r="3.417"/>
+	<circle fill="#FFBE00" cx="35.875" cy="24" r="3.417"/>
 </g>
 </svg>
