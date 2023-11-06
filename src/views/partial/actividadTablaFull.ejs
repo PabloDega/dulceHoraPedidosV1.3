@@ -1,11 +1,11 @@
 <% let pedidos = new Set();
 let usuarios = new Set();
 let locales = new Set();
-data.forEach((dato) => {
+data.data.forEach((dato) => {
     pedidos.add(dato.pedido);
     usuarios.add(dato.user)
     locales.add(dato.local)
-})%>
+});%>
 <div id="actividadTableCont">
 <table id="actividadTable">
     <thead>
@@ -68,7 +68,7 @@ data.forEach((dato) => {
         </tr>
     </thead>
     <tbody id="actividadTbody">
-        <% data.forEach((dato) => {%>
+        <% data.data.forEach((dato) => {%>
             <tr>
                 <td><%=dato.id%></td>
                 <% let fecha = new Date(dato.fecha) %>
@@ -83,8 +83,14 @@ data.forEach((dato) => {
     </tbody>
     <div id="actividadFiltros">Filtrar</div>
 </table>
+<div id="actividadPaginado">
+    <span id="prev">&#10502;</span>
+    <div id="paginadoInfo"><span id="act">1</span> de <span id="tot">3</span></div>
+    <span id="next">&#10503;</span>
+</div>
 </div>
 <script>
-    window.data = <%- JSON.stringify(data) %>;
+    window.data = <%- JSON.stringify(data.data) %>;
+    window.filasTotal = <%- JSON.stringify(data.filasTotal) %>;
 </script>
 <script src="/script/actividad.js"></script>

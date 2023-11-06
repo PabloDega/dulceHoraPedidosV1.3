@@ -39,9 +39,9 @@ router.post("/categorias/nueva", auth.authSupervisor, validar.validarNuevaCatego
 
 router.get("/categorias/eliminar", auth.authSupervisor, panelControllers.categoriasEliminar);
 
-router.get("/precios", auth.authAdmin, panelControllers.precios);
+router.get("/precios", auth.authSupervisor, panelControllers.precios);
 
-router.post("/precios", auth.authAdmin, validar.validarPreciosChain, panelControllers.preciosUpdate);
+router.post("/precios", auth.authSupervisor, validar.validarPreciosChain, panelControllers.preciosUpdate);
 
 router.get("/local", auth.authSupervisor, panelControllers.local);
 
@@ -85,6 +85,6 @@ router.post("/pedidos", panelControllers.pedidosEstado);
 
 router.get("/actividad", panelControllers.actividad);
 
-router.get("/actividadToda", panelControllers.actividadToda);
+router.get("/actividadToda", auth.authSupervisor, panelControllers.actividadToda);
 
 module.exports = router;

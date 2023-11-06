@@ -586,6 +586,9 @@ footer img {
   position: relative;
   width: 90vw;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 #actividadFiltros{
   position: absolute;
@@ -611,4 +614,15 @@ footer img {
   font-weight: 600;
   font-size: 0.8em;
   width: fit-content;
+}
+#actividadPaginado{
+  display: flex;
+  align-self: flex-end;
+  gap: 1em;
+  color: white;
+  background-color: gray;
+  padding: 0.5em;
+}
+#actividadPaginado span{
+  cursor: pointer;
 }

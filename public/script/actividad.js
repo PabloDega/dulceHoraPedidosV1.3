@@ -93,3 +93,29 @@ function actualizarFiltros(filtrado) {
     accion.innerHTML += `<option value="${dato}">${dato}</option>`;
   });
 }
+
+//Control de página
+let pagActual;
+let pagTotal = Math.floor((window.filasTotal / 25) + 1)
+if(window.location.search){
+  let params = new URLSearchParams(window.location.search)
+  pagActual = params.get("page");
+} else {
+  pagActual = 1;
+}
+let pagPrevBtn = document.querySelector("#actividadPaginado #prev");
+let pagProxBtn = document.querySelector("#actividadPaginado #next");
+document.querySelector("#paginadoInfo #act").innerHTML = pagActual;
+document.querySelector("#paginadoInfo #tot").innerHTML = pagTotal;
+if(pagActual < 2){
+  pagPrevBtn.style.display = "none";
+}
+if(pagActual >= pagTotal){
+  pagProxBtn.style.display = "none";
+}
+pagPrevBtn.addEventListener("click", () => {
+  window.location.href = window.location.pathname.split("/")[2] + "?page=" + (Number(pagActual) - 1);
+})
+pagProxBtn.addEventListener("click", () => {
+  window.location.href = window.location.pathname.split("/")[2] + "?page=" + (Number(pagActual) + 1);
+})

@@ -545,7 +545,13 @@ const pedidosEstado = async (req, res) => {
 };
 
 const actividad = async(req, res) => {
-  let data = await servicesActividad.getActividad(req.session.userLocal);
+  let page;
+  if(isNaN(req.query.page) || req.query.page < 1){
+    page = 1;
+  }else{
+    page = req.query.page;
+  }
+  let data = await servicesActividad.getActividad(req.session.userLocal, page);
   res.render(__basedir + "/src/views/pages/actividad", {
     data,
     usuario: req.session.userLog,
@@ -554,7 +560,13 @@ const actividad = async(req, res) => {
 };
 
 const actividadToda = async(req, res) => {
-  let data = await servicesActividad.getActividadAll();
+  let page;
+  if(isNaN(req.query.page) || req.query.page < 1){
+    page = 1;
+  }else{
+    page = req.query.page;
+  }
+  let data = await servicesActividad.getActividadAll(page);
   res.render(__basedir + "/src/views/pages/actividadFull", {
     data,
     usuario: req.session.userLog,
