@@ -140,7 +140,6 @@ table tbody tr .editar {
 }
 table th,
 table td {
-  padding: 0.7em;
   border-collapse: collapse;
 }
 table input{
@@ -153,6 +152,18 @@ table input{
 }
 .unchecked{
   color: gray;
+}
+.fila td{
+  display: flex;
+  cursor: pointer;
+}
+.fila td label{
+  flex-grow: 1;
+  cursor: pointer;
+  padding: 0.7em;
+}
+.fila td input{
+  margin: 0.7em;
 }
 .tablaCategoria{
   font-weight: 600;

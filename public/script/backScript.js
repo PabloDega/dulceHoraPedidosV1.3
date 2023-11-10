@@ -313,3 +313,12 @@ function cerrarPopEliminar() {
   let popScreen = document.querySelector("#popScreen");
   popScreen.innerHTML = "";
 }
+// Selector para checkbox de stock
+if (document.querySelector(".fila") != null) {
+  document.querySelectorAll("input[type=checkbox]").forEach((item) =>{
+    item.addEventListener("change", (e)=>{
+      let filaDestino = "#fila" + e.target.value;
+      document.querySelector(filaDestino).classList.toggle("unchecked")
+    });}
+  );
+}

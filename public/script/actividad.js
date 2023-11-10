@@ -94,7 +94,7 @@ function actualizarFiltros(filtrado) {
   });
 }
 
-//Control de página
+//Control de páginacion
 let pagActual;
 let pagTotal = Math.floor((window.filasTotal / 25) + 1)
 if(window.location.search){
