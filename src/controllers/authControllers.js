@@ -22,7 +22,10 @@ const loginQuery = async (req, res) => {
     req.session.userRol = checkPass.rol;
     req.session.userLocal = checkPass.local;
     await actividad.actividadUser(req.body.loginUsuario, checkPass.local, 0, "Login", "");
-    res.render(__basedir + "/src/views/pages/panel", {usuario: req.session.userLog, userRol: req.session.userRol});
+    res.render(__basedir + "/src/views/pages/panel", {
+      usuario: req.session.userLog, 
+      userRol: checkPass.rol,
+    });
   } else {
     res.render(__basedir + "/src/views/pages/login", {
         usuario: "",

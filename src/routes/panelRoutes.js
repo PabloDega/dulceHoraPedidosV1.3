@@ -87,4 +87,8 @@ router.get("/actividad", panelControllers.actividad);
 
 router.get("/actividadToda", auth.authSupervisor, panelControllers.actividadToda);
 
+router.get("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionLocal);
+
+router.get("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
+
 module.exports = router;

@@ -4,6 +4,7 @@ const servicesUsuarios = require(__basedir + "/src/services/usuarios");
 const servicesPedidos = require(__basedir + "/src/services/pedidos");
 const servicesChat = require(__basedir + "/src/services/chat");
 const servicesActividad = require(__basedir + "/src/services/actividad");
+const servicesProduccion = require(__basedir + "/src/services/produccion")
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
@@ -595,6 +596,39 @@ const stockUpdate = async (req, res) => {
   res.redirect("/panel/stock")
 };
 
+const pedidoProduccionLocal = async(req, res) => {
+  let data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
+  let dataPedido;
+  if(req.query.id){
+    const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
+    if(dataPedidoCheck.local == req.session.userLocal){
+      dataPedido = dataPedidoCheck;
+    }
+  }
+  res.render(__basedir + "/src/views/pages/produccion", {
+    data,
+    dataPedido,
+    lector: "local",
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
+
+const pedidoProduccionFabrica = async(req, res) => {
+  let data = await servicesProduccion.getProduccionFabrica();
+  let dataPedido;
+  if(req.query.id){
+    dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
+  }
+  res.render(__basedir + "/src/views/pages/produccion", {
+    data,
+    dataPedido,
+    lector: "fabrica",
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
+
 module.exports = {
   index,
   productosCard,
@@ -637,4 +671,6 @@ module.exports = {
   actividadToda,
   stockForm,
   stockUpdate,
+  pedidoProduccionLocal,
+  pedidoProduccionFabrica,
 };

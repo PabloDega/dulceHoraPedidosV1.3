@@ -44,6 +44,16 @@ if (document.querySelector("#actividad") != null) {
     .querySelector("#actividad")
     .addEventListener("click", () => (location.href = "/panel/actividad"));
 }
+if (document.querySelector("#produccionLocal") != null) {
+  document
+    .querySelector("#produccionLocal")
+    .addEventListener("click", () => (location.href = "/panel/produccionLocal"));
+}
+if (document.querySelector("#produccionFabrica") != null) {
+  document
+    .querySelector("#produccionFabrica")
+    .addEventListener("click", () => (location.href = "/panel/produccionFabrica"));
+}
 /* if (document.querySelectorAll(".editar") != null) {
   document
     .querySelectorAll(".editar")
@@ -229,6 +239,14 @@ if (document.querySelector(".pedidosCard") != null) {
   );
 }
 
+if (document.querySelector(".pedidosProdCard") != null) {
+  document.querySelectorAll(".pedidosProdCard").forEach((boton) =>
+    boton.addEventListener("click", (e) => {
+      location.href = "/panel/produccionLocal?id=" + e.currentTarget.dataset.id;
+    })
+  );
+}
+
 if (document.querySelector(".pedidoEstadoBoton") != null) {
   document.querySelectorAll(".pedidoEstadoBoton").forEach((boton) =>
     boton.addEventListener("click", (e) => {
@@ -321,4 +339,17 @@ if (document.querySelector(".fila") != null) {
       document.querySelector(filaDestino).classList.toggle("unchecked")
     });}
   );
+}
+// Activar y desactivar select de local en usuarios
+if (document.querySelector("#rolUser") != null) {
+  document.querySelector("#rolUser").addEventListener("change", (e) => {
+    if(e.target.value == "produccion"){
+      console.log("ping")
+      document.querySelector("#localUser").disabled = true;
+      document.querySelector("#localUserProduccion").disabled = false;
+    } else {
+      document.querySelector("#localUser").disabled = false;
+      document.querySelector("#localUserProduccion").disabled = true;
+    }
+  })
 }

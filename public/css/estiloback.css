@@ -141,6 +141,7 @@ table tbody tr .editar {
 table th,
 table td {
   border-collapse: collapse;
+  padding: 0.7em;
 }
 table input{
   padding: 0.3em;
@@ -393,20 +394,20 @@ footer img {
     translate: 0;
   }
 }
-.pedidosCont{
+.pedidosCont, .produccionCont{
   display: flex;
   gap: 2em;
   margin: 2em auto;
   width: 100%;
   max-width: 1000px;
 }
-.pedidos{
+.pedidos, .produccion{
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
   gap: 1em;
 }
-.pedidosCard{
+.pedidosCard, .pedidosProdCard{
   background-color: white;
   border-radius: 1em;
   padding: 1em;
@@ -415,13 +416,13 @@ footer img {
   cursor: pointer;
   position: relative;
 }
-.pedidosCard .pedidosCardTipo{
+.pedidosCard .pedidosCardTipo, .pedidosProdCard .pedidosCardTipo{
   position: absolute;
   width: 40px;
   top: 0px;
   right: -10px;
 }
-.pedidosCard .pedidosCardMsj{
+.pedidosCard .pedidosCardMsj, .pedidosProdCard .pedidosCardMsj{
   position: absolute;
   width: 30px;
   top: 50px;
@@ -480,7 +481,7 @@ footer img {
 .verPedidosCerrados img{
   width: 30px;
 }
-.pedidosChat{
+.pedidosChat, .produccionPedido{
   display: flex;
   flex-direction: column;
   gap: 1em;

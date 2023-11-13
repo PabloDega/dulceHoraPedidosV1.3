@@ -9,18 +9,10 @@
     <input type="password" name="passUser" id="passUser" />
   </span>
   <span>
-    <label for="local">Local</label>
-    <select name="local" id="local">
-        <option value="" selected>-Seleccione un local-</option>
-        <% locales.forEach((local) => {%>
-        <option value="<%=local.id%>" <% if(valoresForm.local == local.nombre){%> <%= "selected" %> <%}%>><%=local.nombre%></option>
-        <% }) %>
-    </select>
-  </span>
-  <span>
     <% let selectedNone = "";
       let selectedAdmin = "";
       let selectedAtencion = "";
+      let selectedProduccion = "";
       switch (valoresForm.rolUser) {
         case "":
           selectedNone = "selected";
@@ -31,6 +23,9 @@
         case "atencion":
           selectedAtencion = "selected";
           break;
+        case "produccion":
+          selectedProduccion = "selected";
+          break;
         default:
           break;
       } %>
@@ -39,8 +34,21 @@
             <option value="" <%= selectedNone %>>-Seleccione un Rol-</option>
             <option value="admin" <%= selectedAdmin %>>Administración</option>
             <option value="atencion" <%= selectedAtencion %>>Atención</option>
+            <option value="produccion" <%= selectedProduccion %>>Producción</option>
         </select>
     </label>
+  </span>
+  <span>
+    <label for="loca">Local</label>
+    <select name="local" id="localUser">
+        <option value="" selected>-Seleccione un local-</option>
+        <% locales.forEach((local) => {%>
+        <option value="<%=local.id%>" <% if(valoresForm.local == local.nombre){%> <%= "selected" %> <%}%>><%=local.nombre%></option>
+        <% }) %>
+    </select>
+  </span>
+  <span>
+    <input type="text" name="local" id="localUserProduccion" disabled value="0" style="display: none;">
   </span>
   <span>
     <input type="submit" value="Crear" />

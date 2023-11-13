@@ -1,0 +1,55 @@
+<div class="produccionCont">
+    <div class="produccion">
+        <%data.forEach((pedido) => {
+        let estilo;
+        switch (pedido.estado) {
+            case "precarga":
+                estilo = "pedidoProdPrecarga";
+                imagen = "precarga";
+                break;
+            case "cargado":
+                estilo = "pedidoProdCargado";
+                imagen = "cargado";
+                break;
+            case "aceptado":
+                estilo = "pedidoProdAceptado";
+                imagen = "checked";
+                break;
+            case "produccion":
+                estilo = "pedidoProdProduccion";
+                imagen = "produccion";
+                break;
+            case "enviado":
+                estilo = "pedidoProdEnviado";
+                imagen = "enviado";
+                break;
+            case "entregado":
+                estilo = "pedidoProdEntregado";
+                imagen = "entregado";
+                break;
+            case "facturado":
+                estilo = "pedidoProdFacturado";
+                imagen = "facturado";
+                break;
+            default:
+                break;
+        }
+        let buzon;
+        if((pedido.buzon == "mensajeFabrica" && lector == "local") || (pedido.buzon == "mensajeLocal" && lector == "fabrica")){
+            buzon = "block";
+        } else {
+            buzon = "none";
+        } %>
+        <div class="pedidosProdCard <%= estilo %>" data-id="<%= pedido.id %>">
+            <img src="/im/<%= imagen %>.svg" alt="icon" class="pedidosCardTipo">
+            <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj" style="display:<%= buzon %>;">
+            <span>Pedido: <%= pedido.id %></span>
+            <span>Fecha: <%= pedido.fecha.toLocaleString("es-AR") %></span>
+            <span><b>Estado: <%= pedido.estado %></b></span>
+        </div>
+        <% }) %>
+    </div>
+    <div class="produccionPedido">
+        <%= dataPedido %>
+    </div>
+</div>

@@ -154,14 +154,19 @@ const validarUsuariosChain = [
     .notEmpty().withMessage("El campo 'Usuario' es obligatorio")
     .trim()
     .escape()
-    .isAlpha().withMessage("El nombre de usuario solo admite letras, sin espacios ni símbolos"),
+    .isAlpha().withMessage("El nombre de usuario solo admite letras, sin espacios ni símbolos")
+    .custom(async(usuario) => {
+        const nombreDuplicado = await fileNames.buscarPathDuplicado(usuario,"usuarios","usuario");
+        if (nombreDuplicado) {
+          throw new Error("Nombre de usuario en uso");
+        }
+    }),
   body("passUser")
     .notEmpty().withMessage("El campo 'Contraseña' es obligatorio")
     .trim()
     .escape()
     .isStrongPassword({minSymbols: 0, minUppercase: 0, minLength: 6, minLowercase: 1, minNumbers: 1}).withMessage("La contraseña debe tener un mínimo de 6 caracteres, y por lo menos 1 número"),
   body("local")
-    .notEmpty().withMessage("El campo 'Local' es obligatorio")
     .trim()
     .escape()
     .isString().withMessage("Error en el campo 'Local', por favor recargar la página"),
