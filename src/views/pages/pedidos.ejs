@@ -1,24 +1,22 @@
 <%- include("../partial/menu", {menu: "small"})%>
-
-    <div class="pedidosCont">
-        <div class="pedidos">
-            <%- include("../partial/pedidos", { dataPedidos })%>
-        </div>
-        <div class="pedidosChat">
-            <% if(dataPedido != undefined){%>
-                <%- include("../partial/pedidoCard", { dataPedido, dataProds })%>
-                <%- include("../partial/pedidosChat", { dataPedido })%>
-            <%}%>
-        </div>
+<div class="titulo"><h2>Ventas Online</h2></div>
+<div class="pedidosCont">
+    <div class="pedidos">
+        <%- include("../partial/pedidos", { dataPedidos })%>
     </div>
-    <script>
-        window.local = <%- JSON.stringify(local) %>
-        window.pedidoNumero = <%- JSON.stringify(pedidoNumero) %>
-        window.ring = false;
-        window.usuario = <%- JSON.stringify(usuario) %>
-    </script>
-    <script defer src="/socket.io/socket.io.js"></script>
-    <script defer src="/script/chatBack.js"></script>
-    <script defer src="/script/chat.js"></script>
-    
-    
+    <div class="pedidosChat">
+        <% if(dataPedido != undefined){%>
+            <%- include("../partial/pedidoCard", { dataPedido, dataProds })%>
+            <%- include("../partial/pedidosChat", { dataPedido })%>
+        <%}%>
+    </div>
+</div>
+<script>
+    window.local = <%- JSON.stringify(local) %>
+    window.pedidoNumero = <%- JSON.stringify(pedidoNumero) %>
+    window.ring = false;
+    window.usuario = <%- JSON.stringify(usuario) %>
+</script>
+<script defer src="/socket.io/socket.io.js"></script>
+<script defer src="/script/chatBack.js"></script>
+<script defer src="/script/chat.js"></script>

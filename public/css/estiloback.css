@@ -27,7 +27,7 @@ body {
   /* flex-grow: 1; */
   align-content: flex-start;
 }
-#backMenu > h1 {
+#backMenu > h1, .titulo {
   width: 100%;
   color: white;
   border-bottom: 3px solid white;
@@ -394,10 +394,10 @@ footer img {
     translate: 0;
   }
 }
-.pedidosCont, .produccionCont{
+.pedidosCont, .produccionCont, #produccionHeader, .titulo{
   display: flex;
   gap: 2em;
-  margin: 2em auto;
+  margin: 0 auto;
   width: 100%;
   max-width: 1000px;
 }
@@ -503,12 +503,12 @@ footer img {
   border-bottom: 1px solid gray;
   margin-bottom: 0.5em;
 }
-#msjL{
+#msjL, #mensajeLocal{
   background-color: lightsalmon;
   border-radius: 1em 1em 0 1em;
   margin-left: 2em;
 }
-#msjU{
+#msjU, #mensajeFabrica{
   background-color: white;
   border-radius: 1em 1em 1em 0;
   margin-right: 2em;

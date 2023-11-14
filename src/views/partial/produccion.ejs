@@ -1,55 +1,149 @@
+<div class="titulo">
+    <h2>Pedidos de Producción a Fábrica</h2>
+</div>
 <div class="produccionCont">
     <div class="produccion">
-        <%data.forEach((pedido) => {
-        let estilo;
-        switch (pedido.estado) {
-            case "precarga":
+        <% data.forEach((pedido)=> {
+            let estilo;
+            switch (pedido.estado) {
+                case "precarga":
                 estilo = "pedidoProdPrecarga";
                 imagen = "precarga";
                 break;
-            case "cargado":
+                case "cargado":
                 estilo = "pedidoProdCargado";
                 imagen = "cargado";
                 break;
-            case "aceptado":
+                case "aceptado":
                 estilo = "pedidoProdAceptado";
                 imagen = "checked";
                 break;
-            case "produccion":
+                case "produccion":
                 estilo = "pedidoProdProduccion";
                 imagen = "produccion";
                 break;
-            case "enviado":
+                case "enviado":
                 estilo = "pedidoProdEnviado";
                 imagen = "enviado";
                 break;
-            case "entregado":
+                case "entregado":
                 estilo = "pedidoProdEntregado";
                 imagen = "entregado";
                 break;
-            case "facturado":
+                case "facturado":
                 estilo = "pedidoProdFacturado";
                 imagen = "facturado";
                 break;
-            default:
+                default:
                 break;
-        }
-        let buzon;
-        if((pedido.buzon == "mensajeFabrica" && lector == "local") || (pedido.buzon == "mensajeLocal" && lector == "fabrica")){
-            buzon = "block";
-        } else {
-            buzon = "none";
-        } %>
-        <div class="pedidosProdCard <%= estilo %>" data-id="<%= pedido.id %>">
-            <img src="/im/<%= imagen %>.svg" alt="icon" class="pedidosCardTipo">
-            <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj" style="display:<%= buzon %>;">
-            <span>Pedido: <%= pedido.id %></span>
-            <span>Fecha: <%= pedido.fecha.toLocaleString("es-AR") %></span>
-            <span><b>Estado: <%= pedido.estado %></b></span>
-        </div>
-        <% }) %>
+                }
+            let buzon;
+            if((pedido.buzon == "mensajeFabrica" && lector == "local") || (pedido.buzon == "mensajeLocal" && lector ==
+            "fabrica")){
+                buzon = "block";
+            } else {
+                buzon = "none";
+            } %>
+            <div class="pedidosProdCard <%= estilo %>" data-id="<%= pedido.id %>">
+                <img src="/im/<%= imagen %>.svg" alt="icon" class="pedidosCardTipo">
+                <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj" style="display:<%=buzon%>">
+                <span>Pedido: <%= pedido.id %></span>
+                <span>Fecha: <%= pedido.fecha.toLocaleString("es-AR") %></span>
+                <span><b>Estado: <%= pedido.estado %></b></span>
+            </div>
+            <% }) %>
     </div>
     <div class="produccionPedido">
-        <%= dataPedido %>
+
+
+        <% if(dataPedido !==undefined){%>
+            <div class="pedidoCard">
+                <h3>Pedido Nº<%= dataPedido.id %></h3>
+                <hr>
+                <h3>Fecha <%= dataPedido.fecha.toLocaleString("es-AR") %></h3>
+                <hr>
+                <h3>Pedido:</h3>
+                <div class="pedido">
+                    <table id="tablaProduccionCard">
+                        <thead>
+                            <tr>
+                                <th>Códgio</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Pecio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let detallePedido=JSON.parse(dataPedido.pedido);
+                            detallePedido.forEach((item)=> {%>
+                                <tr>
+                                    <td><%= item[1] %></td>
+                                    <td>x</td>
+                                    <td><%= item[0] %></td>
+                                    <td><%= item[2] %></td>
+                                    <td><%= item[0] * item[2] %></td>
+                                </tr>
+                                <%})%>
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <div>Total: <b>$<%= dataPedido.total %></b></div>
+                <hr>
+                <span>Estado: <%= dataPedido.estado %></span>
+
+                <hr>
+                <div class="pedidoEstado">
+                    <span>Modificar estado:</span>
+                    <% if(dataPedido.estado === "precarga" || dataPedido.estado === "cargado"){%>
+                        <form id="formCancelado" method="post">
+                            <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                            <input type="hidden" name="estado" value="cancelado">
+                            <input type="submit" data-form="formCancelado" value="Cancelar"
+                                class="pedidoEstadoBoton btnRojo">
+                        </form>
+                    <%}%>
+                    <% if(dataPedido.estado === "enviado" || dataPedido.estado === "facturado"){%>
+                            <form id="formRecibido" method="post">
+                                <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                                <input type="hidden" name="estado" value="recibido">
+                                <input type="submit" data-form="formRecibido" value="Recibido"
+                                    class="pedidoEstadoBoton btnNaranja">
+                            </form>
+                    <%}%>
+                    <% if(dataPedido.estado === "aceptado" || dataPedido.estado === "produccion"){%>
+                        Actualmente no es posible modificar el estado del pedido, por cualquier modificación o consulta comunicarse con la fábrica, gracias
+                    <%}%>
+                </div>
+
+            </div>
+
+            <div class="chatMensajes">
+                <% let mensajesPedido = JSON.parse(dataPedido.mensajes);
+                mensajesPedido.forEach((mensaje) => {
+                    let chatEmisor;
+                    if(mensaje[0] === "mensajeFabrica"){
+                        chatEmisor = "Fábrica";
+                    } else {
+                        chatEmisor = "Local";
+                    }%>
+                    <div class="chatMensaje" id="<%= mensaje[0] %>">
+                        <span>
+                            <b><%= chatEmisor %>:</b>
+                            <%= mensaje[1] %>
+                        </span>
+                    </div>
+                <%}) %>
+            </div>
+
+            <form action="" id="chatProduccionSend" class="chatSend">
+                <div class="inputError">&#10060; Ocurrió un error con el envío del mensaje, tener en cuenta el mismo no puede estar vacío ni contener caracteres especiales, recargue la página e intente nuevamente</div>
+                <input type="hidden" name="chatEmisor" value="mensajeLocal" id="chatEmisor">
+                <input type="text" class="chatInput" id="chatInput">
+                <input type="submit" value="Enviar" class="chatBtnEnviar">
+            </form>
+
+            <%} %>
     </div>
 </div>
