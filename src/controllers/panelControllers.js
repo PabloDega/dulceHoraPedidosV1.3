@@ -597,7 +597,8 @@ const stockUpdate = async (req, res) => {
 };
 
 const pedidoProduccionLocal = async(req, res) => {
-  let data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
+  const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
+  const productos = await servicesProduccion.getProductosProduccion();
   let dataPedido;
   if(req.query.id){
     const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
@@ -608,11 +609,23 @@ const pedidoProduccionLocal = async(req, res) => {
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     dataPedido,
+    productos,
     lector: "local",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
 };
+
+const pedidoProduccionAgregarMensaje = async(req, res) => {
+  // agregar mensaje a la bbdd
+  const data = await servicesProduccion.getProduccionPedido(req.body.pedidoProdNum);
+  let mensajes = JSON.parse(data.mensajes);
+  let nuevoMensaje = [req.body.emisorMensaje, req.body.mensajeProduccion]
+  mensajes.push(nuevoMensaje)
+  mensajes = JSON.stringify(mensajes)
+  await servicesProduccion.agregarMensajeProduccion(req.body.pedidoProdNum, mensajes)
+  res.redirect("/panel/produccionLocal?id=" + req.query.id);
+}
 
 const pedidoProduccionFabrica = async(req, res) => {
   let data = await servicesProduccion.getProduccionFabrica();
@@ -673,4 +686,5 @@ module.exports = {
   stockUpdate,
   pedidoProduccionLocal,
   pedidoProduccionFabrica,
+  pedidoProduccionAgregarMensaje,
 };

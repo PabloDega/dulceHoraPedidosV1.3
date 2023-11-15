@@ -17,23 +17,27 @@ body {
   flex-direction: column;
   gap: 1em;
 }
-#backMenu {
+.backMenu {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   display: flex;
-  gap: 2em;
+  gap: 1em;
   flex-wrap: wrap;
   /* flex-grow: 1; */
   align-content: flex-start;
 }
-#backMenu > h1, .titulo {
+.backMenu > h1, .backMenu > h2, .titulo {
   width: 100%;
   color: white;
   border-bottom: 3px solid white;
+  display: flex;
 }
-#backMenu > h1 > span {
+.backMenu > h1 > span {
   font-size: 1.5rem;
+}
+.backMenu > h2{
+  border-bottom: 2px solid white;
 }
 #cont .backSubMenu{
   gap: 1em;
@@ -41,6 +45,13 @@ body {
 }
 .backSubMenu > h1{
   font-size: 1.6em;
+}
+#backMenuShow{
+  align-self:center;
+  margin-left: auto;
+  font-size: 1rem;
+  cursor: pointer;
+  display: none;
 }
 .backCard {
   background-color: white;
@@ -586,7 +597,10 @@ footer img {
 }
 .pedidoEstado{
   display: flex;
-  gap: 2em;
+  gap: 1em;
+}
+.pedidoEstado span{
+  min-width: 8em;
 }
 .pedidoEstadoBoton{
   padding: 1em;
@@ -637,4 +651,7 @@ footer img {
 }
 #actividadPaginado span{
   cursor: pointer;
+}
+#tablaProduccionCard{
+  text-align: center;
 }

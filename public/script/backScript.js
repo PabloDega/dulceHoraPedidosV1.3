@@ -353,3 +353,21 @@ if (document.querySelector("#rolUser") != null) {
     }
   })
 }
+
+// ocultar menu en modo supervisor, excepto en panel home
+let vistaMenu = "flex";
+console.log(window.location.pathname)
+if(window.location.pathname !== "/panel" && document.querySelector("#supervisor")){
+  let menu = document.querySelector("#supervisor");
+  let boton = document.querySelector("#backMenuShow");
+  menu.style.display = "none";
+  boton.style.display = "block";
+  boton.addEventListener("click", () => {
+    if(menu.style.display == "none"){
+      menu.style.display = "flex";
+    } else {
+      menu.style.display = "none";
+    }
+    
+  })
+}

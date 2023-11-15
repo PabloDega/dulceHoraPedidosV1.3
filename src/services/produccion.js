@@ -37,8 +37,31 @@ const getProduccionPedido = async (id) => {
   }
 };
 
+const agregarMensajeProduccion = async(id, mensajes) => {
+  try {
+    await conectar.query(`UPDATE produccion SET mensajes = '${mensajes}' WHERE id = '${id}'`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const getProductosProduccion = async () => {
+  try {
+    const rows = await conectar.query("SELECT * FROM productosFabrica ORDER BY categoria");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getProduccionFabrica,
   getProduccionLocal,
   getProduccionPedido,
+  agregarMensajeProduccion,
+  getProductosProduccion,
 };

@@ -75,7 +75,7 @@ async function chatLocalActivoAdd(local, socketId){
     chatLocalesActivos.push(datos)
   }
   await chatLocalesActivos[chatFind].usuarios.push(socketId);
-}
+} 
 
 function chatLocalActivoSub(socket){
   let resultado = 0;

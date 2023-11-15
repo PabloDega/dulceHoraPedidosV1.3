@@ -76,13 +76,15 @@
                         </thead>
                         <tbody>
                             <% let detallePedido=JSON.parse(dataPedido.pedido);
-                            detallePedido.forEach((item)=> {%>
+                            detallePedido.forEach((item)=> {
+                                let producto = productos.find((prod) => prod.id == item[1])
+                                %>
                                 <tr>
                                     <td><%= item[1] %></td>
-                                    <td>x</td>
+                                    <td><%= producto.nombre %></td>
                                     <td><%= item[0] %></td>
-                                    <td><%= item[2] %></td>
-                                    <td><%= item[0] * item[2] %></td>
+                                    <td>$<%= item[2] %></td>
+                                    <td>$<%= item[0] * item[2] %></td>
                                 </tr>
                                 <%})%>
                         </tbody>
@@ -100,16 +102,21 @@
                         <form id="formCancelado" method="post">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="cancelado">
-                            <input type="submit" data-form="formCancelado" value="Cancelar"
-                                class="pedidoEstadoBoton btnRojo">
+                            <input type="submit" data-form="formCancelado" value="Cancelar" class="pedidoEstadoBoton btnRojo">
                         </form>
                     <%}%>
                     <% if(dataPedido.estado === "enviado" || dataPedido.estado === "facturado"){%>
                             <form id="formRecibido" method="post">
                                 <input type="hidden" name="id" value="<%= dataPedido.id %>">
                                 <input type="hidden" name="estado" value="recibido">
-                                <input type="submit" data-form="formRecibido" value="Recibido"
-                                    class="pedidoEstadoBoton btnNaranja">
+                                <input type="submit" data-form="formRecibido" value="Recibido" class="pedidoEstadoBoton btnNaranja">
+                            </form>
+                    <%}%>
+                    <% if(dataPedido.estado === "precarga"){%>
+                            <form id="formEditar" method="post">
+                                <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                                <input type="hidden" name="estado" value="editar">
+                                <input type="submit" data-form="formEditar" value="Editar" class="pedidoEstadoBoton btnNaranja">
                             </form>
                     <%}%>
                     <% if(dataPedido.estado === "aceptado" || dataPedido.estado === "produccion"){%>
@@ -122,25 +129,26 @@
             <div class="chatMensajes">
                 <% let mensajesPedido = JSON.parse(dataPedido.mensajes);
                 mensajesPedido.forEach((mensaje) => {
-                    let chatEmisor;
+                    let emisorMensaje;
                     if(mensaje[0] === "mensajeFabrica"){
-                        chatEmisor = "Fábrica";
+                        emisorMensaje = "Fábrica";
                     } else {
-                        chatEmisor = "Local";
+                        emisorMensaje = "Local";
                     }%>
                     <div class="chatMensaje" id="<%= mensaje[0] %>">
                         <span>
-                            <b><%= chatEmisor %>:</b>
+                            <b><%= emisorMensaje %>:</b>
                             <%= mensaje[1] %>
                         </span>
                     </div>
                 <%}) %>
             </div>
 
-            <form action="" id="chatProduccionSend" class="chatSend">
+            <form action="" id="chatProduccionSend" class="chatSend" method="post">
                 <div class="inputError">&#10060; Ocurrió un error con el envío del mensaje, tener en cuenta el mismo no puede estar vacío ni contener caracteres especiales, recargue la página e intente nuevamente</div>
-                <input type="hidden" name="chatEmisor" value="mensajeLocal" id="chatEmisor">
-                <input type="text" class="chatInput" id="chatInput">
+                <input type="hidden" name="emisorMensaje" value="mensajeLocal" id="chatEmisor">
+                <input type="hidden" name="pedidoProdNum" value="<%= dataPedido.id %>" id="pedidoProdNum">
+                <input type="text" name="mensajeProduccion" class="chatInput" id="chatInput">
                 <input type="submit" value="Enviar" class="chatBtnEnviar">
             </form>
 
