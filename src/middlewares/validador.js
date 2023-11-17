@@ -130,6 +130,10 @@ const validarLocalesChain = [
     .optional({ values: "falsy" })
     .trim()
     .isURL().withMessage("El campo 'Google maps' solo acepta una URL"),
+  body("linkmp")
+    .optional({ values: "falsy" })
+    .trim()
+    .isURL().withMessage("El campo 'Link MP' solo acepta una URL"),
   body("img")
     .trim()
     .notEmpty().withMessage("El campo Nombre de Imagen es obligatorio")

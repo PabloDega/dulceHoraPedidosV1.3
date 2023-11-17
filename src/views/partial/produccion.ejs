@@ -44,7 +44,7 @@
             } else {
                 buzon = "none";
             } %>
-            <div class="pedidosProdCard <%= estilo %>" data-id="<%= pedido.id %>">
+            <div class="pedidosProdCard <%= estilo %>" data-id="<%= pedido.id %>" data-lector="<%= lector %>">
                 <img src="/im/<%= imagen %>.svg" alt="icon" class="pedidosCardTipo">
                 <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj" style="display:<%=buzon%>">
                 <span>Pedido: <%= pedido.id %></span>
@@ -144,9 +144,11 @@
                 <%}) %>
             </div>
 
+            <% let emisor = "mensajeLocal";
+                if(lector == "fabrica"){emisor = "mensajeFabrica"};%>
             <form action="" id="chatProduccionSend" class="chatSend" method="post">
                 <div class="inputError">&#10060; Ocurrió un error con el envío del mensaje, tener en cuenta el mismo no puede estar vacío ni contener caracteres especiales, recargue la página e intente nuevamente</div>
-                <input type="hidden" name="emisorMensaje" value="mensajeLocal" id="chatEmisor">
+                <input type="hidden" name="emisorMensaje" value="<%= emisor %>" id="chatEmisor">
                 <input type="hidden" name="pedidoProdNum" value="<%= dataPedido.id %>" id="pedidoProdNum">
                 <input type="text" name="mensajeProduccion" class="chatInput" id="chatInput">
                 <input type="submit" value="Enviar" class="chatBtnEnviar">

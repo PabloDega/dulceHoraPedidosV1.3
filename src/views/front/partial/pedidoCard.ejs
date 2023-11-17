@@ -22,7 +22,9 @@
         </div>
         <div class="pedidoDetalleTotal">Total: $<%= total %></div>
         <div class="pedidoBotones">
-            <div class="pedidoBtn" id="pedidoPagarMP"><img src="/im/Mercado-Pago-Logo.png" alt="">Pagar con MP</div>
+            <% if(local.linkmp){%>
+                <div class="pedidoBtn" id="pedidoPagarMP" data-linkmp="<%= local.linkmp %>"><img src="/im/Mercado-Pago-Logo.png" alt="">Pagar con MP</div>
+            <%}%>
             <div class="pedidoBtn" id="pedidoCancelar">Finalizar</div>
         </div>
     </div>

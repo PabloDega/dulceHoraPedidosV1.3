@@ -597,15 +597,18 @@ const stockUpdate = async (req, res) => {
 };
 
 const pedidoProduccionLocal = async(req, res) => {
-  const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
-  const productos = await servicesProduccion.getProductosProduccion();
   let dataPedido;
   if(req.query.id){
     const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
     if(dataPedidoCheck.local == req.session.userLocal){
-      dataPedido = dataPedidoCheck;
+      if(dataPedidoCheck.buzon == "mensajeFabrica"){
+        await servicesProduccion.mensajeProduccionLeido(req.query.id)
+      }
+      dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);;
     }
   }
+  const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
+  const productos = await servicesProduccion.getProductosProduccion();
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     dataPedido,
@@ -616,31 +619,48 @@ const pedidoProduccionLocal = async(req, res) => {
   });
 };
 
-const pedidoProduccionAgregarMensaje = async(req, res) => {
+const pedidoProduccionAgregarMensajeLocal = async(req, res) => {
   // agregar mensaje a la bbdd
   const data = await servicesProduccion.getProduccionPedido(req.body.pedidoProdNum);
   let mensajes = JSON.parse(data.mensajes);
   let nuevoMensaje = [req.body.emisorMensaje, req.body.mensajeProduccion]
   mensajes.push(nuevoMensaje)
   mensajes = JSON.stringify(mensajes)
-  await servicesProduccion.agregarMensajeProduccion(req.body.pedidoProdNum, mensajes)
-  res.redirect("/panel/produccionLocal?id=" + req.query.id);
+  await servicesProduccion.agregarMensajeProduccion(req.body.pedidoProdNum, mensajes, req.body.emisorMensaje)
+  res.redirect(req.originalUrl);
 }
 
 const pedidoProduccionFabrica = async(req, res) => {
-  let data = await servicesProduccion.getProduccionFabrica();
   let dataPedido;
   if(req.query.id){
+    const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
+    if(dataPedidoCheck.buzon == "mensajeLocal"){
+      await servicesProduccion.mensajeProduccionLeido(req.query.id)
+    }
     dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
   }
+  let data = await servicesProduccion.getProduccionFabrica();
+  const productos = await servicesProduccion.getProductosProduccion();
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     dataPedido,
+    productos,
     lector: "fabrica",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
 };
+
+const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
+  // agregar mensaje a la bbdd
+  const data = await servicesProduccion.getProduccionPedido(req.body.pedidoProdNum);
+  let mensajes = JSON.parse(data.mensajes);
+  let nuevoMensaje = [req.body.emisorMensaje, req.body.mensajeProduccion]
+  mensajes.push(nuevoMensaje)
+  mensajes = JSON.stringify(mensajes)
+  await servicesProduccion.agregarMensajeProduccion(req.body.pedidoProdNum, mensajes, req.body.emisorMensaje)
+  res.redirect(req.originalUrl);
+}
 
 module.exports = {
   index,
@@ -686,5 +706,6 @@ module.exports = {
   stockUpdate,
   pedidoProduccionLocal,
   pedidoProduccionFabrica,
-  pedidoProduccionAgregarMensaje,
+  pedidoProduccionAgregarMensajeLocal,
+  pedidoProduccionAgregarMensajeFabrica,
 };

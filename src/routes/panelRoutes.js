@@ -89,8 +89,10 @@ router.get("/actividadToda", auth.authSupervisor, panelControllers.actividadToda
 
 router.get("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionLocal);
 
-router.post("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionAgregarMensaje);
+router.post("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionAgregarMensajeLocal);
 
 router.get("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
+
+router.post("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionAgregarMensajeFabrica);
 
 module.exports = router;

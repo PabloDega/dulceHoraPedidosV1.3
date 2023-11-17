@@ -110,7 +110,8 @@ function cerrarPopEliminar() {
 // Funcion pagar con MP
 
 if (document.querySelector("#pedidoPagarMP") != null) {
-  document.querySelector("#pedidoPagarMP").addEventListener("click", () => {
-    window.open("https://link.mercadopago.com.ar/pablodega", "_blank");
+  document.querySelector("#pedidoPagarMP").addEventListener("click", (e) => {
+    console.log(e.target.dataset)
+    window.open(e.target.dataset.linkmp, "_blank");
   });
 }

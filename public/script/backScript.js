@@ -242,7 +242,9 @@ if (document.querySelector(".pedidosCard") != null) {
 if (document.querySelector(".pedidosProdCard") != null) {
   document.querySelectorAll(".pedidosProdCard").forEach((boton) =>
     boton.addEventListener("click", (e) => {
-      location.href = "/panel/produccionLocal?id=" + e.currentTarget.dataset.id;
+      let destino = "Local"
+      if(e.currentTarget.dataset.lector == "fabrica"){destino = "Fabrica"}
+      location.href = "/panel/produccion" + destino + "?id=" + e.currentTarget.dataset.id;
     })
   );
 }
@@ -357,7 +359,7 @@ if (document.querySelector("#rolUser") != null) {
 // ocultar menu en modo supervisor, excepto en panel home
 let vistaMenu = "flex";
 console.log(window.location.pathname)
-if(window.location.pathname !== "/panel" && document.querySelector("#supervisor")){
+if((window.location.pathname !== "/panel" && window.location.pathname !== "/login") && document.querySelector("#supervisor")){
   let menu = document.querySelector("#supervisor");
   let boton = document.querySelector("#backMenuShow");
   menu.style.display = "none";
@@ -368,6 +370,5 @@ if(window.location.pathname !== "/panel" && document.querySelector("#supervisor"
     } else {
       menu.style.display = "none";
     }
-    
   })
 }

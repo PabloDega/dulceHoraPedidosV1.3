@@ -37,9 +37,19 @@ const getProduccionPedido = async (id) => {
   }
 };
 
-const agregarMensajeProduccion = async(id, mensajes) => {
+const agregarMensajeProduccion = async(id, mensajes, emisor) => {
   try {
-    await conectar.query(`UPDATE produccion SET mensajes = '${mensajes}' WHERE id = '${id}'`);
+    await conectar.query(`UPDATE produccion SET mensajes = '${mensajes}', buzon = '${emisor}' WHERE id = '${id}'`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const mensajeProduccionLeido = async(id) => {
+  try {
+    await conectar.query(`UPDATE produccion SET buzon = 'leido' WHERE id = '${id}'`);
   } catch (error) {
     throw error;
   } finally {
@@ -63,5 +73,6 @@ module.exports = {
   getProduccionLocal,
   getProduccionPedido,
   agregarMensajeProduccion,
+  mensajeProduccionLeido,
   getProductosProduccion,
 };
