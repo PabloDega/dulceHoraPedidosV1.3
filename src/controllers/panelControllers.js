@@ -604,14 +604,16 @@ const pedidoProduccionLocal = async(req, res) => {
       if(dataPedidoCheck.buzon == "mensajeFabrica"){
         await servicesProduccion.mensajeProduccionLeido(req.query.id)
       }
-      dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);;
+      dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
     }
   }
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
   const productos = await servicesProduccion.getProductosProduccion();
+  const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     dataPedido,
+    dataLocal,
     productos,
     lector: "local",
     usuario: req.session.userLog,

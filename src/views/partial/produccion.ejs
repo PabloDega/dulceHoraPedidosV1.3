@@ -1,8 +1,40 @@
 <div class="titulo">
-    <h2>Pedidos de Producción a Fábrica</h2>
+    <%  function verFechaFiltro(fecha){
+            let year = fecha.getFullYear();
+            let month = fecha.getMonth() + 1;
+            let day = fecha.getDate();
+            return day + "/" + month + "/" + year;
+        }
+        let diasDeEntrega = JSON.parse(dataLocal.entrega);
+        let fechaHoy = new Date();
+        let modfechaPM = 0;
+        if(fechaHoy.getHours() > 12){
+            modfechaPM = 1;
+        };
+        let proximaEntrega;
+        for(let i = 0; i < diasDeEntrega.length; i++) {
+            if(fechaHoy.getDay() < diasDeEntrega[i]){
+                proximaEntrega = diasDeEntrega[i];
+                break;
+            }
+        }
+        let difDiasEntrega = proximaEntrega - fechaHoy.getDay();
+        let fechaProximaEntrega = new Date(Date.now() + difDiasEntrega * 24 * 60 * 60 * 1000);
+        if((difDiasEntrega - modfechaPM) > 2){};
+        let fechaLimiteProximoPedido = new Date()
+        let aperturaProximoPedido = Date.now()
+        %>
+    <h2>Pedidos de Producción a Fábrica - Próxima entrega <%= proximaEntrega %> </h2>
 </div>
 <div class="produccionCont">
     <div class="produccion">
+        <div class="pedidosProdCard" style="order: 10000;">
+            <span>Calendario de pedidos</span>
+            <span>Hoy: <%= verFechaFiltro(fechaHoy) %></span>
+            <span>Dias para proxima entrega: <%= difDiasEntrega %></span>
+            <span>Proxima Entrega: <%= verFechaFiltro(fechaProximaEntrega) %></span>
+            <span>Apertura prox pedido: <%= aperturaProximoPedido %></span>
+        </div>
         <% data.forEach((pedido)=> {
             let estilo;
             switch (pedido.estado) {
@@ -54,8 +86,7 @@
             <% }) %>
     </div>
     <div class="produccionPedido">
-
-
+        
         <% if(dataPedido !==undefined){%>
             <div class="pedidoCard">
                 <h3>Pedido Nº<%= dataPedido.id %></h3>
