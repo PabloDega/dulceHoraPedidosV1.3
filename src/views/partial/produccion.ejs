@@ -1,40 +1,94 @@
-<div class="titulo">
-    <%  function verFechaFiltro(fecha){
-            let year = fecha.getFullYear();
-            let month = fecha.getMonth() + 1;
-            let day = fecha.getDate();
-            return day + "/" + month + "/" + year;
-        }
-        let diasDeEntrega = JSON.parse(dataLocal.entrega);
-        let fechaHoy = new Date();
-        let modfechaPM = 0;
-        if(fechaHoy.getHours() > 12){
-            modfechaPM = 1;
-        };
-        let proximaEntrega;
-        for(let i = 0; i < diasDeEntrega.length; i++) {
-            if(fechaHoy.getDay() < diasDeEntrega[i]){
-                proximaEntrega = diasDeEntrega[i];
-                break;
+<%  function verFechaFiltro(fecha){
+        let year = fecha.getFullYear();
+        let month = fecha.getMonth() + 1;
+        let day = fecha.getDate();
+        return day + "/" + month + "/" + year;
+    }
+    let cEDiasDeEntrega = JSON.parse(dataLocal.entrega);
+    let fechaHoy = new Date(2023,10,18,13,25);
+
+    //buscar dia de proxima entrega
+    let cEProximaEntrega;
+    let cEDiasRestanteProxEntrega;
+    let cEPlusSegundaFecha;
+    for(let i = 0; i < cEDiasDeEntrega.length; i++) {
+        if(fechaHoy.getDay() <= cEDiasDeEntrega[i]){
+            cEProximaEntrega = cEDiasDeEntrega[i];
+            cEDiasRestanteProxEntrega = cEDiasDeEntrega[i] - fechaHoy.getDay();
+            // cEPlusSegundaFecha = cEDiasDeEntrega[i+1] - cEDiasDeEntrega[i];
+            if(i + 1 == cEDiasDeEntrega.length){
+                cEPlusSegundaFecha = cEDiasDeEntrega[0] + 7 - cEDiasDeEntrega[i];
+            } else {
+                cEPlusSegundaFecha = cEDiasDeEntrega[i+1] - cEDiasDeEntrega[i];
             }
+            break;
         }
-        let difDiasEntrega = proximaEntrega - fechaHoy.getDay();
-        let fechaProximaEntrega = new Date(Date.now() + difDiasEntrega * 24 * 60 * 60 * 1000);
-        if((difDiasEntrega - modfechaPM) > 2){};
-        let fechaLimiteProximoPedido = new Date()
-        let aperturaProximoPedido = Date.now()
-        %>
-    <h2>Pedidos de Producción a Fábrica - Próxima entrega <%= proximaEntrega %> </h2>
+    }
+    if(cEProximaEntrega == undefined){
+        cEProximaEntrega = cEDiasDeEntrega[0]
+        cEDiasRestanteProxEntrega = cEDiasDeEntrega[0] + 7 - fechaHoy.getDay();
+        cEPlusSegundaFecha = cEDiasDeEntrega[1] - cEDiasDeEntrega[0];
+    }
+    // console.log(cEPlusSegundaFecha)
+
+    // Setear fecha de proxima entrega
+    let cEFechaEntregaPedido = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), fechaHoy.getDate() + cEDiasRestanteProxEntrega, 12);
+    let cEFechaEntregaProxPedido = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), fechaHoy.getDate() + cEDiasRestanteProxEntrega + cEPlusSegundaFecha, 12);
+    // verifica cuanto falta para la proxima entrega (hrs) y determina si el pedido para la proxima fecha esta pendiente, abierto o cerrado
+    let cEHorasRestanteEntregaPedido = (cEFechaEntregaPedido - fechaHoy) / 1000 / 60 / 60;
+    let cEPedidoEstado;
+    if(cEHorasRestanteEntregaPedido > 72){
+        cEPedidoEstado = "pendiente";
+    } else if(cEHorasRestanteEntregaPedido > 48) {
+        cEPedidoEstado = "abierto";
+    } else {
+        cEPedidoEstado = "cerrado";
+    }
+    // habilita estado para el pedido siguiente en base al analisis anterior
+    let cEHorasRestanteEntregaProximoPedido = (cEFechaEntregaProxPedido - fechaHoy) / 1000 / 60 / 60;
+    let cEProximoPedidoEstado = "pendiente";
+    if(cEPedidoEstado == "cerrado"){
+        if(cEHorasRestanteEntregaProximoPedido > 72){
+            cEProximoPedidoEstado = "pendiente";
+        } else if(cEHorasRestanteEntregaProximoPedido > 48) {
+            cEProximoPedidoEstado = "abierto";
+        } else {
+            cEProximoPedidoEstado = "cerrado";
+        }
+    }
+    
+    /* console.log(">>>fecha hoy:" + fechaHoy);
+    console.log("fecha de entrega:" + cEFechaEntregaPedido);
+    console.log("hrs restantes entrega:" + cEHorasRestanteEntregaPedido);
+    console.log("Estado pedido:" + cEPedidoEstado);
+    console.log("fecha de entrega prox pedido:" + cEFechaEntregaProxPedido);
+    console.log("hrs restantes proxima entrega:" + cEHorasRestanteEntregaProximoPedido);
+    console.log("Estado proximo pedido:" + cEProximoPedidoEstado); */
+    %>
+
+
+<div class="titulo">
+    <h2>Pedidos de Producción a Fábrica</h2>
+</div>
+<div id="calendarioPedidosProduccion">
+    <h2>Calendario de Pedidos y Entregas</h2>
+    <div id="calendarioPedidos">
+        <div>
+            <span>Hoy: </span><span><%= fechaHoy.toLocaleString("es-AR") %></span>
+        </div>
+        <div>
+            <span>Entrega: </span><span><%= verFechaFiltro(cEFechaEntregaPedido) %></span><span class="<%= cEPedidoEstado %>"><%= cEPedidoEstado %></span>
+        </div>
+        <div>
+            <span>Proxima Entrega: </span><span><%= verFechaFiltro(cEFechaEntregaProxPedido) %></span><span class="<%= cEProximoPedidoEstado %>"><%= cEProximoPedidoEstado %></span>
+        </div>
+    </div>
+    <div id="botones">
+        <span class="btn btnNaranja">Nuevo Pedido</span>
+    </div>
 </div>
 <div class="produccionCont">
     <div class="produccion">
-        <div class="pedidosProdCard" style="order: 10000;">
-            <span>Calendario de pedidos</span>
-            <span>Hoy: <%= verFechaFiltro(fechaHoy) %></span>
-            <span>Dias para proxima entrega: <%= difDiasEntrega %></span>
-            <span>Proxima Entrega: <%= verFechaFiltro(fechaProximaEntrega) %></span>
-            <span>Apertura prox pedido: <%= aperturaProximoPedido %></span>
-        </div>
         <% data.forEach((pedido)=> {
             let estilo;
             switch (pedido.estado) {
@@ -91,7 +145,9 @@
             <div class="pedidoCard">
                 <h3>Pedido Nº<%= dataPedido.id %></h3>
                 <hr>
-                <h3>Fecha <%= dataPedido.fecha.toLocaleString("es-AR") %></h3>
+                <h3>Fecha de Entrega: <%= verFechaFiltro(dataPedido.fecha) %></h3>
+                <hr>
+                <h3>Estado: <%= dataPedido.estado %></h3>
                 <hr>
                 <h3>Pedido:</h3>
                 <div class="pedido">
@@ -129,7 +185,7 @@
                 <hr>
                 <div class="pedidoEstado">
                     <span>Modificar estado:</span>
-                    <% if(dataPedido.estado === "precarga" || dataPedido.estado === "cargado"){%>
+                    <% if(dataPedido.estado === "precargado" || dataPedido.estado === "cargado"){%>
                         <form id="formCancelado" method="post">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="cancelado">
@@ -143,11 +199,16 @@
                                 <input type="submit" data-form="formRecibido" value="Recibido" class="pedidoEstadoBoton btnNaranja">
                             </form>
                     <%}%>
-                    <% if(dataPedido.estado === "precarga"){%>
+                    <% if(dataPedido.estado === "precargado"){%>
                             <form id="formEditar" method="post">
                                 <input type="hidden" name="id" value="<%= dataPedido.id %>">
                                 <input type="hidden" name="estado" value="editar">
                                 <input type="submit" data-form="formEditar" value="Editar" class="pedidoEstadoBoton btnNaranja">
+                            </form>
+                            <form id="formEnviar" method="post">
+                                <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                                <input type="hidden" name="estado" value="enviar">
+                                <input type="submit" data-form="formEnviar" value="Enviar" class="pedidoEstadoBoton btnNaranja">
                             </form>
                     <%}%>
                     <% if(dataPedido.estado === "aceptado" || dataPedido.estado === "produccion"){%>

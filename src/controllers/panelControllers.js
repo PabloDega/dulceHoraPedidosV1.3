@@ -664,6 +664,17 @@ const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
   res.redirect(req.originalUrl);
 }
 
+const pedidoProduccionNuevo = async (req, res) => {
+  const productos = await servicesProduccion.getProductosProduccion();
+  const ultimoPedido = await servicesProduccion.getUltimoPedido(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/nuevaProduccion", {
+    ultimoPedido,
+    productos,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
 module.exports = {
   index,
   productosCard,
@@ -710,4 +721,5 @@ module.exports = {
   pedidoProduccionFabrica,
   pedidoProduccionAgregarMensajeLocal,
   pedidoProduccionAgregarMensajeFabrica,
+  pedidoProduccionNuevo,
 };
