@@ -1,19 +1,46 @@
-<form action="" method="post" id="nuevaProduccion" class="editor">
+<form action="" method="post" id="nuevaProduccion" class="editor anchoMax">
+    <div id="datosFloat">
+        <span>
+            <span>Fecha de entrega:</span>
+            <span></span>
+        </span>
+        <span id="pedidoProduccionTotal">
+            Total:
+        </span>
+        <span>
+            <input type="submit" value="Enviar">
+        </span>
+    </div>
     <h1>Nuevo Pedido Producción</h1>
-    <%= ultimoPedido %>
-    <span>
-        <span>Fecha de entrega:</span>
-        <span></span>
-    </span>
-    <span>
-        <label for="id">ID</label>
-        <input type="text" name="id" id="id" value="" readonly />
-    </span>
-    <span>
-        <label for="categoria">Categoria</label>
-        <input type="number" name="categoria" id="categoria" value="" />
-    </span>
-    <span>
-        <input type="submit" value="Enviar">
-    </span>
+    <table id="pedidoProduccionTabla">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Producto</th>
+                <th>Unidad</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Importe</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% productos.forEach((producto) => {%>
+                <tr>
+                    <td><%= producto.codigo %></td>
+                    <td><%= producto.nombre %></td>
+                    <td><%= producto.unidad %></td>
+                    <td class="pedidoProduccionCeldaImporte">
+                        <span>$</span>
+                        <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
+                    <td>
+                        <input type="number" name="cantidad<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="0">
+                    </td>
+                    <td class="pedidoProduccionCeldaImporte">
+                        <span>$</span>
+                        <span class="importe" id="importe<%= producto.id %>">0</span>
+                    </td>
+                </tr>
+            <%}) %>
+        </tbody>
+    </table>
 </form>

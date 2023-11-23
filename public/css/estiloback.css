@@ -655,3 +655,56 @@ footer img {
 #tablaProduccionCard{
   text-align: center;
 }
+#calendarioPedidosProduccion{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  background: white;
+}
+#calendarioPedidosProduccion h2{
+  font-size: 1.2em;
+}
+.anchoMax{
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+#calendarioPedidos{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+#calendarioPedidos div{
+  display: flex;
+  gap:1em;
+  border-bottom: 1px solid gray;
+}
+#calendarioPedidos div span:first-child{
+  font-weight: 600;
+}
+#calendarioPedidosProduccion .cerrado{
+  font-weight: 600;
+  color: red;
+}
+#calendarioPedidosProduccion .abierto{
+  font-weight: 600;
+  color: green;
+}
+#calendarioPedidosProduccion .pendiente{
+  font-weight: 600;
+  color: gray;
+}
+#backRender #nuevaProduccion{
+  width: 100%;
+}
+.pedidoProduccionCeldaImporte{
+  display: flex;
+}
+#datosFloat{
+  display: flex;
+}
+#pedidoProduccionTotal{
+  font-weight: 600;
+  font-size: 1.2em;
+}

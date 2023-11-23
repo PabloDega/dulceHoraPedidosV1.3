@@ -5,7 +5,7 @@
         return day + "/" + month + "/" + year;
     }
     let cEDiasDeEntrega = JSON.parse(dataLocal.entrega);
-    let fechaHoy = new Date(2023,10,18,13,25);
+    let fechaHoy = new Date(2023,10,19,13,25);
 
     //buscar dia de proxima entrega
     let cEProximaEntrega;
@@ -55,37 +55,34 @@
         } else {
             cEProximoPedidoEstado = "cerrado";
         }
-    }
-    
-    /* console.log(">>>fecha hoy:" + fechaHoy);
-    console.log("fecha de entrega:" + cEFechaEntregaPedido);
-    console.log("hrs restantes entrega:" + cEHorasRestanteEntregaPedido);
-    console.log("Estado pedido:" + cEPedidoEstado);
-    console.log("fecha de entrega prox pedido:" + cEFechaEntregaProxPedido);
-    console.log("hrs restantes proxima entrega:" + cEHorasRestanteEntregaProximoPedido);
-    console.log("Estado proximo pedido:" + cEProximoPedidoEstado); */
-    %>
-
+    }%>
 
 <div class="titulo">
     <h2>Pedidos de Producción a Fábrica</h2>
 </div>
-<div id="calendarioPedidosProduccion">
+<div id="calendarioPedidosProduccion" class="anchoMax">
     <h2>Calendario de Pedidos y Entregas</h2>
     <div id="calendarioPedidos">
         <div>
-            <span>Hoy: </span><span><%= fechaHoy.toLocaleString("es-AR") %></span>
+            <span>Hoy: </span>
+            <span><%= fechaHoy.toLocaleString("es-AR") %></span>
         </div>
         <div>
-            <span>Entrega: </span><span><%= verFechaFiltro(cEFechaEntregaPedido) %></span><span class="<%= cEPedidoEstado %>"><%= cEPedidoEstado %></span>
+            <span>Entrega: </span>
+            <span><%= verFechaFiltro(cEFechaEntregaPedido) %></span>
+            <span class="<%= cEPedidoEstado %>"> pedido <%= cEPedidoEstado %></span>
         </div>
         <div>
-            <span>Proxima Entrega: </span><span><%= verFechaFiltro(cEFechaEntregaProxPedido) %></span><span class="<%= cEProximoPedidoEstado %>"><%= cEProximoPedidoEstado %></span>
+            <span>Proxima Entrega: </span>
+            <span><%= verFechaFiltro(cEFechaEntregaProxPedido) %></span>
+            <span class="<%= cEProximoPedidoEstado %>">pedido <%= cEProximoPedidoEstado %></span>
         </div>
     </div>
+    <% if(cEPedidoEstado == "abierto" || cEProximoPedidoEstado == "abierto"){%>
     <div id="botones">
-        <span class="btn btnNaranja">Nuevo Pedido</span>
+        <span class="btn btnNaranja">Abrir Pedido</span>
     </div>
+    <%} %>
 </div>
 <div class="produccionCont">
     <div class="produccion">
@@ -108,17 +105,9 @@
                 estilo = "pedidoProdProduccion";
                 imagen = "produccion";
                 break;
-                case "enviado":
-                estilo = "pedidoProdEnviado";
-                imagen = "enviado";
-                break;
-                case "entregado":
-                estilo = "pedidoProdEntregado";
-                imagen = "entregado";
-                break;
-                case "facturado":
-                estilo = "pedidoProdFacturado";
-                imagen = "facturado";
+                case "cerrado":
+                estilo = "pedidoProdCerrado";
+                imagen = "cerrado";
                 break;
                 default:
                 break;
@@ -191,13 +180,6 @@
                             <input type="hidden" name="estado" value="cancelado">
                             <input type="submit" data-form="formCancelado" value="Cancelar" class="pedidoEstadoBoton btnRojo">
                         </form>
-                    <%}%>
-                    <% if(dataPedido.estado === "enviado" || dataPedido.estado === "facturado"){%>
-                            <form id="formRecibido" method="post">
-                                <input type="hidden" name="id" value="<%= dataPedido.id %>">
-                                <input type="hidden" name="estado" value="recibido">
-                                <input type="submit" data-form="formRecibido" value="Recibido" class="pedidoEstadoBoton btnNaranja">
-                            </form>
                     <%}%>
                     <% if(dataPedido.estado === "precargado"){%>
                             <form id="formEditar" method="post">

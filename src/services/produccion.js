@@ -59,7 +59,7 @@ const mensajeProduccionLeido = async(id) => {
 
 const getProductosProduccion = async () => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosFabrica ORDER BY categoria");
+    const rows = await conectar.query("SELECT * FROM productosFabrica WHERE estado = 'true' ORDER BY codigo");
     return rows[0];
   } catch (error) {
     throw error;
@@ -76,7 +76,6 @@ const getUltimoPedido = async (local) => {
     for(let i = rows[0].length - 1 ; i > 0; i--){
       if(rows[0][i].estado !== "cancelado" || rows[0][i].estado !== "precargado"){
         ultimoPedido = rows[0][i].pedido;
-        console.log(rows[0][i].estado)
         break;
       }
     }
