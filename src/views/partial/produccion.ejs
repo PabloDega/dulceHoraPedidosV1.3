@@ -5,12 +5,13 @@
         return day + "/" + month + "/" + year;
     }
     let cEDiasDeEntrega = JSON.parse(dataLocal.entrega);
-    let fechaHoy = new Date(2023,10,19,13,25);
+    let fechaHoy = new Date(2023, 10, 20);
 
     //buscar dia de proxima entrega
     let cEProximaEntrega;
     let cEDiasRestanteProxEntrega;
     let cEPlusSegundaFecha;
+    let fechaEntregaActiva = 0;
     for(let i = 0; i < cEDiasDeEntrega.length; i++) {
         if(fechaHoy.getDay() <= cEDiasDeEntrega[i]){
             cEProximaEntrega = cEDiasDeEntrega[i];
@@ -41,6 +42,7 @@
         cEPedidoEstado = "pendiente";
     } else if(cEHorasRestanteEntregaPedido > 48) {
         cEPedidoEstado = "abierto";
+        fechaEntregaActiva = verFechaFiltro(cEFechaEntregaPedido);
     } else {
         cEPedidoEstado = "cerrado";
     }
@@ -52,6 +54,7 @@
             cEProximoPedidoEstado = "pendiente";
         } else if(cEHorasRestanteEntregaProximoPedido > 48) {
             cEProximoPedidoEstado = "abierto";
+            fechaEntregaActiva = verFechaFiltro(cEFechaEntregaProxPedido);
         } else {
             cEProximoPedidoEstado = "cerrado";
         }
@@ -80,7 +83,7 @@
     </div>
     <% if(cEPedidoEstado == "abierto" || cEProximoPedidoEstado == "abierto"){%>
     <div id="botones">
-        <span class="btn btnNaranja">Abrir Pedido</span>
+        <span class="btn btnNaranja">Nuevo Pedido</span>
     </div>
     <%} %>
 </div>
@@ -113,8 +116,7 @@
                 break;
                 }
             let buzon;
-            if((pedido.buzon == "mensajeFabrica" && lector == "local") || (pedido.buzon == "mensajeLocal" && lector ==
-            "fabrica")){
+            if((pedido.buzon == "mensajeFabrica" && lector == "local") || (pedido.buzon == "mensajeLocal" && lector == "fabrica")){
                 buzon = "block";
             } else {
                 buzon = "none";
@@ -231,3 +233,6 @@
             <%} %>
     </div>
 </div>
+<script>
+    localStorage.setItem("fechaEntregaActiva", <%- JSON.stringify(fechaEntregaActiva) %>)
+</script>

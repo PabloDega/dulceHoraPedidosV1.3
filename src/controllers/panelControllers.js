@@ -675,6 +675,26 @@ const pedidoProduccionNuevo = async (req, res) => {
   })
 }
 
+const pedidoProduccionInsert = async (req, res) => {
+  let pedido = [];
+  const productos = await servicesProduccion.getProductosProduccion();
+  for(dato in req.body){
+    if(!isNaN(dato)){
+      if(req.body[dato] > 0){
+        let pedidoItem = [];
+        let producto = productos.find((datoProd) => datoProd.id == dato);
+        pedidoItem.push(parseInt(req.body[dato]));
+        pedidoItem.push(parseInt(dato));
+        pedidoItem.push(producto.costo);
+        pedido.push(pedidoItem);
+      }
+    }
+  }
+  console.log(JSON.stringify(pedido))
+  // await servicesProduccion.insertPedidoProduccion();
+  res.redirect("/panel/produccionLocal");
+}
+
 module.exports = {
   index,
   productosCard,
@@ -722,4 +742,5 @@ module.exports = {
   pedidoProduccionAgregarMensajeLocal,
   pedidoProduccionAgregarMensajeFabrica,
   pedidoProduccionNuevo,
+  pedidoProduccionInsert,
 };

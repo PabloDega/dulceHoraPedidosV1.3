@@ -93,6 +93,8 @@ router.post("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccio
 
 router.get("/nuevaProduccion", auth.authAdmin, panelControllers.pedidoProduccionNuevo);
 
+router.post("/nuevaProduccion", auth.authAdmin, panelControllers.pedidoProduccionInsert);
+
 router.get("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
 
 router.post("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionAgregarMensajeFabrica);

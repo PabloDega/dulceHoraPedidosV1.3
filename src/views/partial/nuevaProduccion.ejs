@@ -1,14 +1,14 @@
 <form action="" method="post" id="nuevaProduccion" class="editor anchoMax">
     <div id="datosFloat">
         <span>
-            <span>Fecha de entrega:</span>
-            <span></span>
+            <span><b>Fecha de entrega:</b></span>
+            <span>Martes 28/11/2023</span>
         </span>
         <span id="pedidoProduccionTotal">
-            Total:
+            <b>Total:</b>
         </span>
         <span>
-            <input type="submit" value="Enviar">
+            <input type="submit" value="Enviar" class="btn btnNaranja">
         </span>
     </div>
     <h1>Nuevo Pedido Producción</h1>
@@ -26,14 +26,14 @@
         <tbody>
             <% productos.forEach((producto) => {%>
                 <tr>
-                    <td><%= producto.codigo %></td>
+                    <td class="<%= producto.categoria %>"><%= producto.codigo %></td>
                     <td><%= producto.nombre %></td>
                     <td><%= producto.unidad %></td>
                     <td class="pedidoProduccionCeldaImporte">
                         <span>$</span>
                         <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
                     <td>
-                        <input type="number" name="cantidad<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="0">
+                        <input type="number" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="0">
                     </td>
                     <td class="pedidoProduccionCeldaImporte">
                         <span>$</span>
@@ -41,6 +41,9 @@
                     </td>
                 </tr>
             <%}) %>
+            <tr>
+                <td> <input type="text" name="pedidoProduccionFechaEntrega" id="pedidoProduccionFechaEntrega"> </td>
+            </tr>
         </tbody>
     </table>
 </form>
