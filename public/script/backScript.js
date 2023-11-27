@@ -346,7 +346,6 @@ if (document.querySelector(".fila") != null) {
 if (document.querySelector("#rolUser") != null) {
   document.querySelector("#rolUser").addEventListener("change", (e) => {
     if(e.target.value == "produccion"){
-      console.log("ping")
       document.querySelector("#localUser").disabled = true;
       document.querySelector("#localUserProduccion").disabled = false;
     } else {
@@ -358,7 +357,6 @@ if (document.querySelector("#rolUser") != null) {
 
 // ocultar menu en modo supervisor, excepto en panel home
 let vistaMenu = "flex";
-console.log(window.location.pathname)
 if((window.location.pathname !== "/panel" && window.location.pathname !== "/login") && document.querySelector("#supervisor")){
   let menu = document.querySelector("#supervisor");
   let boton = document.querySelector("#backMenuShow");
@@ -371,4 +369,14 @@ if((window.location.pathname !== "/panel" && window.location.pathname !== "/logi
       menu.style.display = "none";
     }
   })
+}
+
+if (document.querySelector("#pedidoProdNuevo") != null) {
+  document.querySelector("#pedidoProdNuevo").addEventListener("click", () => {
+      location.href = "/panel/nuevaProduccion"
+  });
+}
+
+if(localStorage.getItem("fechaEntregaActiva")){
+  console.log(localStorage.getItem("fechaEntregaActiva"))
 }

@@ -242,6 +242,14 @@ table input{
   background-color: red;
   color:white;
 }
+.btnVerde{
+  background-color: green;
+  color:white;
+}
+.btnSmall{
+  /* transform: scale(0.9); */
+  font-size: 0.9em;
+}
 .inputBtn{
   border: 0;
 }
@@ -720,7 +728,8 @@ footer img {
   gap: 0.5em;
 }
 #backRender #datosFloat input{
-  padding: 1em;
+  padding: 0.5rem;
+  font-size: 1em;
 }
 #pedidoProduccionTotal{
   font-weight: 600;
@@ -770,4 +779,12 @@ footer img {
 }
 #pedidoProduccionTabla .Salado{
   border-left: 5px solid crimson;
+}
+.pedidoProduccionUltimoPedido{
+  width: 3em;
+  text-align: center;
+  display: none;
+}
+.visible{
+  display: inline-block;
 }

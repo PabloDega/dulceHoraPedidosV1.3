@@ -73,13 +73,23 @@ const getUltimoPedido = async (local) => {
     const rows = await conectar.query("SELECT * FROM produccion WHERE ?", { local });
     let ultimoPedido;
     // lee registros en orden descendente y verifique que no está cancelado
-    for(let i = rows[0].length - 1 ; i > 0; i--){
+    for(let i = rows[0].length - 1 ; i >= 0; i--){
       if(rows[0][i].estado !== "cancelado" || rows[0][i].estado !== "precargado"){
         ultimoPedido = rows[0][i].pedido;
         break;
       }
     }
     return ultimoPedido;
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const insertPedidoProduccion = async(datos) => {
+  try {
+    await conectar.query(`INSERT INTO produccion (local, pedido, total, estado, fechaentrega, mensajes, buzon) VALUES ("${datos.local}", "${datos.pedido}", "${datos.total}", "cargado", "${datos.fechaDeEntrega}", "[]", "leido")`);
   } catch (error) {
     throw error;
   } finally {
@@ -95,4 +105,5 @@ module.exports = {
   mensajeProduccionLeido,
   getProductosProduccion,
   getUltimoPedido,
+  insertPedidoProduccion,
 };

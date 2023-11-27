@@ -2,13 +2,15 @@
     <div id="datosFloat">
         <span>
             <span><b>Fecha de entrega:</b></span>
-            <span>Martes 28/11/2023</span>
+            <span id="pedidoProduccionDatosFechaEntrega">Martes 28/11/2023</span>
         </span>
         <span id="pedidoProduccionTotal">
             <b>Total:</b>
         </span>
         <span>
-            <input type="submit" value="Enviar" class="btn btnNaranja">
+            <input type="submit" value="Enviar" class="btn btnVerde" id="pedidoProduccionEnviar">
+                <span class="btn btnRojo btnSmall" id="pedidoProduccionVaciar">Vaciar</span>
+            <span class="btn btnNaranja btnSmall" id="pedidoProduccionVerPedidoAnterior">Pedido anterior</span>
         </span>
     </div>
     <h1>Nuevo Pedido Producción</h1>
@@ -24,7 +26,19 @@
             </tr>
         </thead>
         <tbody>
-            <% productos.forEach((producto) => {%>
+            <% productos.forEach((producto) => {
+                let ultimoPedidoParsed = JSON.parse(ultimoPedido)
+                let ultimaCantidad = 0;
+                if(ultimoPedidoParsed !== undefined){
+                    ultimaCantidad = ultimoPedidoParsed.find((dato) => dato[1] == producto.id);
+                    if(ultimaCantidad !== undefined){
+                        ultimaCantidad = ultimaCantidad[0];
+                        
+                    } else {
+                        ultimaCantidad = 0;
+                    }
+                } 
+                %>
                 <tr>
                     <td class="<%= producto.categoria %>"><%= producto.codigo %></td>
                     <td><%= producto.nombre %></td>
@@ -33,6 +47,7 @@
                         <span>$</span>
                         <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
                     <td>
+                        <input type="text" class="pedidoProduccionUltimoPedido" disabled value="<%= ultimaCantidad %>">
                         <input type="number" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="0">
                     </td>
                     <td class="pedidoProduccionCeldaImporte">
@@ -43,6 +58,7 @@
             <%}) %>
             <tr>
                 <td> <input type="text" name="pedidoProduccionFechaEntrega" id="pedidoProduccionFechaEntrega"> </td>
+                <td> <input type="text" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
             </tr>
         </tbody>
     </table>

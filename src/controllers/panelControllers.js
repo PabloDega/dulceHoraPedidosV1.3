@@ -690,9 +690,14 @@ const pedidoProduccionInsert = async (req, res) => {
       }
     }
   }
-  console.log(JSON.stringify(pedido))
-  // await servicesProduccion.insertPedidoProduccion();
-  res.redirect("/panel/produccionLocal");
+  let datos = {
+    local: parseInt(req.session.userLocal),
+    pedido: JSON.stringify(pedido),
+    total: parseInt(req.body.pedidoProduccionImporteTotal),
+    fechaDeEntrega: req.body.pedidoProduccionFechaEntrega,
+  }
+  await servicesProduccion.insertPedidoProduccion(datos);
+  res.redirect("/panel/produccionLocal");  
 }
 
 module.exports = {

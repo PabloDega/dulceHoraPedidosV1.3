@@ -4,89 +4,94 @@
         let day = fecha.getDate();
         return day + "/" + month + "/" + year;
     }
-    let cEDiasDeEntrega = JSON.parse(dataLocal.entrega);
-    let fechaHoy = new Date(2023, 10, 20);
 
-    //buscar dia de proxima entrega
-    let cEProximaEntrega;
-    let cEDiasRestanteProxEntrega;
-    let cEPlusSegundaFecha;
-    let fechaEntregaActiva = 0;
-    for(let i = 0; i < cEDiasDeEntrega.length; i++) {
-        if(fechaHoy.getDay() <= cEDiasDeEntrega[i]){
-            cEProximaEntrega = cEDiasDeEntrega[i];
-            cEDiasRestanteProxEntrega = cEDiasDeEntrega[i] - fechaHoy.getDay();
-            // cEPlusSegundaFecha = cEDiasDeEntrega[i+1] - cEDiasDeEntrega[i];
-            if(i + 1 == cEDiasDeEntrega.length){
-                cEPlusSegundaFecha = cEDiasDeEntrega[0] + 7 - cEDiasDeEntrega[i];
-            } else {
-                cEPlusSegundaFecha = cEDiasDeEntrega[i+1] - cEDiasDeEntrega[i];
+    if(lector == "local"){
+        let cEDiasDeEntrega = JSON.parse(dataLocal.entrega);
+        var fechaHoy = new Date(2023, 10, 27);
+
+        //buscar dia de proxima entrega
+        let cEProximaEntrega;
+        let cEDiasRestanteProxEntrega;
+        let cEPlusSegundaFecha;
+        var fechaEntregaActiva = 0;
+        for(let i = 0; i < cEDiasDeEntrega.length; i++) {
+            if(fechaHoy.getDay() <= cEDiasDeEntrega[i]){
+                cEProximaEntrega = cEDiasDeEntrega[i];
+                cEDiasRestanteProxEntrega = cEDiasDeEntrega[i] - fechaHoy.getDay();
+                // cEPlusSegundaFecha = cEDiasDeEntrega[i+1] - cEDiasDeEntrega[i];
+                if(i + 1 == cEDiasDeEntrega.length){
+                    cEPlusSegundaFecha = cEDiasDeEntrega[0] + 7 - cEDiasDeEntrega[i];
+                } else {
+                    cEPlusSegundaFecha = cEDiasDeEntrega[i+1] - cEDiasDeEntrega[i];
+                }
+                break;
             }
-            break;
         }
-    }
-    if(cEProximaEntrega == undefined){
-        cEProximaEntrega = cEDiasDeEntrega[0]
-        cEDiasRestanteProxEntrega = cEDiasDeEntrega[0] + 7 - fechaHoy.getDay();
-        cEPlusSegundaFecha = cEDiasDeEntrega[1] - cEDiasDeEntrega[0];
-    }
-    // console.log(cEPlusSegundaFecha)
+        if(cEProximaEntrega == undefined){
+            cEProximaEntrega = cEDiasDeEntrega[0]
+            cEDiasRestanteProxEntrega = cEDiasDeEntrega[0] + 7 - fechaHoy.getDay();
+            cEPlusSegundaFecha = cEDiasDeEntrega[1] - cEDiasDeEntrega[0];
+        }
+        // console.log(cEPlusSegundaFecha)
 
-    // Setear fecha de proxima entrega
-    let cEFechaEntregaPedido = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), fechaHoy.getDate() + cEDiasRestanteProxEntrega, 12);
-    let cEFechaEntregaProxPedido = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), fechaHoy.getDate() + cEDiasRestanteProxEntrega + cEPlusSegundaFecha, 12);
-    // verifica cuanto falta para la proxima entrega (hrs) y determina si el pedido para la proxima fecha esta pendiente, abierto o cerrado
-    let cEHorasRestanteEntregaPedido = (cEFechaEntregaPedido - fechaHoy) / 1000 / 60 / 60;
-    let cEPedidoEstado;
-    if(cEHorasRestanteEntregaPedido > 72){
-        cEPedidoEstado = "pendiente";
-    } else if(cEHorasRestanteEntregaPedido > 48) {
-        cEPedidoEstado = "abierto";
-        fechaEntregaActiva = verFechaFiltro(cEFechaEntregaPedido);
-    } else {
-        cEPedidoEstado = "cerrado";
-    }
-    // habilita estado para el pedido siguiente en base al analisis anterior
-    let cEHorasRestanteEntregaProximoPedido = (cEFechaEntregaProxPedido - fechaHoy) / 1000 / 60 / 60;
-    let cEProximoPedidoEstado = "pendiente";
-    if(cEPedidoEstado == "cerrado"){
-        if(cEHorasRestanteEntregaProximoPedido > 72){
-            cEProximoPedidoEstado = "pendiente";
-        } else if(cEHorasRestanteEntregaProximoPedido > 48) {
-            cEProximoPedidoEstado = "abierto";
-            fechaEntregaActiva = verFechaFiltro(cEFechaEntregaProxPedido);
+        // Setear fecha de proxima entrega
+        var cEFechaEntregaPedido = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), fechaHoy.getDate() + cEDiasRestanteProxEntrega, 12);
+        var cEFechaEntregaProxPedido = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), fechaHoy.getDate() + cEDiasRestanteProxEntrega + cEPlusSegundaFecha, 12);
+        // verifica cuanto falta para la proxima entrega (hrs) y determina si el pedido para la proxima fecha esta pendiente, abierto o cerrado
+        let cEHorasRestanteEntregaPedido = (cEFechaEntregaPedido - fechaHoy) / 1000 / 60 / 60;
+        var cEPedidoEstado;
+        if(cEHorasRestanteEntregaPedido > 72){
+            cEPedidoEstado = "pendiente";
+        } else if(cEHorasRestanteEntregaPedido > 48) {
+            cEPedidoEstado = "abierto";
+            fechaEntregaActiva = verFechaFiltro(cEFechaEntregaPedido);
         } else {
-            cEProximoPedidoEstado = "cerrado";
+            cEPedidoEstado = "cerrado";
+        }
+        // habilita estado para el pedido siguiente en base al analisis anterior
+        let cEHorasRestanteEntregaProximoPedido = (cEFechaEntregaProxPedido - fechaHoy) / 1000 / 60 / 60;
+        var cEProximoPedidoEstado = "pendiente";
+        if(cEPedidoEstado == "cerrado"){
+            if(cEHorasRestanteEntregaProximoPedido > 72){
+                cEProximoPedidoEstado = "pendiente";
+            } else if(cEHorasRestanteEntregaProximoPedido > 48) {
+                cEProximoPedidoEstado = "abierto";
+                fechaEntregaActiva = verFechaFiltro(cEFechaEntregaProxPedido);
+            } else {
+                cEProximoPedidoEstado = "cerrado";
+            }
         }
     }%>
 
 <div class="titulo">
     <h2>Pedidos de Producción a Fábrica</h2>
 </div>
-<div id="calendarioPedidosProduccion" class="anchoMax">
-    <h2>Calendario de Pedidos y Entregas</h2>
-    <div id="calendarioPedidos">
-        <div>
-            <span>Hoy: </span>
-            <span><%= fechaHoy.toLocaleString("es-AR") %></span>
+<%  if(lector == "local"){ %>
+    <div id="calendarioPedidosProduccion" class="anchoMax">
+        <h2>Calendario de Pedidos y Entregas</h2>
+        <div id="calendarioPedidos">
+            <div>
+                <span>Hoy: </span>
+                <span><%= fechaHoy.toLocaleString("es-AR") %></span>
+            </div>
+            <div>
+                <span>Entrega: </span>
+                <span><%= verFechaFiltro(cEFechaEntregaPedido) %></span>
+                <span class="<%= cEPedidoEstado %>"> pedido <%= cEPedidoEstado %></span>
+            </div>
+            <div>
+                <span>Proxima Entrega: </span>
+                <span><%= verFechaFiltro(cEFechaEntregaProxPedido) %></span>
+                <span class="<%= cEProximoPedidoEstado %>">pedido <%= cEProximoPedidoEstado %></span>
+            </div>
         </div>
-        <div>
-            <span>Entrega: </span>
-            <span><%= verFechaFiltro(cEFechaEntregaPedido) %></span>
-            <span class="<%= cEPedidoEstado %>"> pedido <%= cEPedidoEstado %></span>
+        <% if(cEPedidoEstado == "abierto" || cEProximoPedidoEstado == "abierto"){%>
+        <div id="botones">
+            <span class="btn btnNaranja" id="pedidoProdNuevo">Nuevo Pedido</span>
         </div>
-        <div>
-            <span>Proxima Entrega: </span>
-            <span><%= verFechaFiltro(cEFechaEntregaProxPedido) %></span>
-            <span class="<%= cEProximoPedidoEstado %>">pedido <%= cEProximoPedidoEstado %></span>
-        </div>
+        <%} %>
     </div>
-    <% if(cEPedidoEstado == "abierto" || cEProximoPedidoEstado == "abierto"){%>
-    <div id="botones">
-        <span class="btn btnNaranja">Nuevo Pedido</span>
-    </div>
-    <%} %>
-</div>
+<%}%>
 <div class="produccionCont">
     <div class="produccion">
         <% data.forEach((pedido)=> {
@@ -233,6 +238,8 @@
             <%} %>
     </div>
 </div>
+<%  if(lector == "local"){%>
 <script>
     localStorage.setItem("fechaEntregaActiva", <%- JSON.stringify(fechaEntregaActiva) %>)
 </script>
+<%}%>   
