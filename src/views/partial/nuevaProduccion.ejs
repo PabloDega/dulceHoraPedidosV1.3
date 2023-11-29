@@ -29,7 +29,7 @@
             <% productos.forEach((producto) => {
                 let ultimoPedidoParsed = JSON.parse(ultimoPedido)
                 let ultimaCantidad = 0;
-                if(ultimoPedidoParsed !== undefined){
+                if(ultimoPedidoParsed !== undefined && ultimoPedido !== 0){
                     ultimaCantidad = ultimoPedidoParsed.find((dato) => dato[1] == producto.id);
                     if(ultimaCantidad !== undefined){
                         ultimaCantidad = ultimaCantidad[0];
@@ -56,7 +56,7 @@
                     </td>
                 </tr>
             <%}) %>
-            <tr>
+            <tr style="display: none;">
                 <td> <input type="text" name="pedidoProduccionFechaEntrega" id="pedidoProduccionFechaEntrega"> </td>
                 <td> <input type="text" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
             </tr>

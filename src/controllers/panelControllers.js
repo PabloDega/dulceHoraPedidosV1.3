@@ -8,6 +8,7 @@ const servicesProduccion = require(__basedir + "/src/services/produccion")
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
+const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 
 const index = (req, res) => {
   res.render(__basedir + "/src/views/pages/panel", {
@@ -610,11 +611,17 @@ const pedidoProduccionLocal = async(req, res) => {
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
   const productos = await servicesProduccion.getProductosProduccion();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
+  let fechaUltimoPedido = 0
+  if(data.length > 0){
+    fechaUltimoPedido = data[data.length-1].fechaentrega; 
+  }
+  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, fechaUltimoPedido);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     dataPedido,
     dataLocal,
     productos,
+    prodFecha,
     lector: "local",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -641,12 +648,28 @@ const pedidoProduccionFabrica = async(req, res) => {
     }
     dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
   }
+  let locales = await servicesLocal.getLocales();
   let data = await servicesProduccion.getProduccionFabrica();
   const productos = await servicesProduccion.getProductosProduccion();
+  // calcular estado del pedido de cada local segun fecha actual
+  let fechasLocales = [];
+  for await (let local of locales){
+    if(local.servicios.pedidos){
+      const data = await servicesProduccion.getProduccionLocal(local.id);
+      if(data.length > 0){
+        let fechaUltimoPedido = data[data.length-1].fechaentrega;
+        let fechas = await produccionMiddleware.getFechasProduccionLocal(local.entrega, fechaUltimoPedido);
+        fechas.localId = local.id
+        fechasLocales.push(fechas);
+      }
+    }
+  }
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     dataPedido,
     productos,
+    locales,
+    fechasLocales,
     lector: "fabrica",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -666,7 +689,10 @@ const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
 
 const pedidoProduccionNuevo = async (req, res) => {
   const productos = await servicesProduccion.getProductosProduccion();
-  const ultimoPedido = await servicesProduccion.getUltimoPedido(req.session.userLocal);
+  let ultimoPedido = await servicesProduccion.getUltimoPedido(req.session.userLocal);
+  if(ultimoPedido == undefined){
+    ultimoPedido = 0;
+  }
   res.render(__basedir + "/src/views/pages/nuevaProduccion", {
     ultimoPedido,
     productos,
@@ -698,6 +724,15 @@ const pedidoProduccionInsert = async (req, res) => {
   }
   await servicesProduccion.insertPedidoProduccion(datos);
   res.redirect("/panel/produccionLocal");  
+}
+
+const pedidoProduccionUpdateEstado = async(req, res) => {
+  await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
+  if(req.body.emisor == "fabrica"){
+    res.redirect("/panel/produccionFabrica");
+  } else if(req.body.emisor == "local"){
+    res.redirect("/panel/produccionLocal");
+  }
 }
 
 module.exports = {
@@ -748,4 +783,5 @@ module.exports = {
   pedidoProduccionAgregarMensajeFabrica,
   pedidoProduccionNuevo,
   pedidoProduccionInsert,
+  pedidoProduccionUpdateEstado,
 };

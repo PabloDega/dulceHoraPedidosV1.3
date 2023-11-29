@@ -91,6 +91,8 @@ router.get("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccion
 
 router.post("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionAgregarMensajeLocal);
 
+router.post("/produccionLocalUpdateEstado", auth.authAdmin, panelControllers.pedidoProduccionUpdateEstado);
+
 router.get("/nuevaProduccion", auth.authAdmin, panelControllers.pedidoProduccionNuevo);
 
 router.post("/nuevaProduccion", auth.authAdmin, panelControllers.pedidoProduccionInsert);
@@ -98,5 +100,7 @@ router.post("/nuevaProduccion", auth.authAdmin, panelControllers.pedidoProduccio
 router.get("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
 
 router.post("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionAgregarMensajeFabrica);
+
+router.post("/produccionFabricaUpdateEstado", auth.authSupervisor, panelControllers.pedidoProduccionUpdateEstado);
 
 module.exports = router;

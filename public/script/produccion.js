@@ -72,6 +72,8 @@ function vaciarImportes() {
         input.value = 0;
     });
     localStorage.setItem("precargaPedidoProduccion", "[]");
+    pedidoProduccionCalcImportes();
+    pedidoProduccionCalcTotal();
 }
 
 document.querySelector("#pedidoProduccionVaciar").addEventListener("click", () => {

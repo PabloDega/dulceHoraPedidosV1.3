@@ -669,14 +669,14 @@ footer img {
 #tablaProduccionCard{
   text-align: center;
 }
-#calendarioPedidosProduccion{
+.pedidosProdInfo{
   display: flex;
   flex-direction: column;
   gap: 1em;
   padding: 1em;
   background: white;
 }
-#calendarioPedidosProduccion h2{
+.pedidosProdInfo h2{
   font-size: 1.2em;
 }
 #calendarioPedidos{
@@ -688,21 +688,26 @@ footer img {
   display: flex;
   gap:1em;
   border-bottom: 1px solid gray;
+  padding-bottom: 0.2em;
 }
 #calendarioPedidos div span:first-child{
   font-weight: 600;
 }
-#calendarioPedidosProduccion .cerrado{
+.pedidosProdInfo .cerrado{
   font-weight: 600;
   color: red;
 }
-#calendarioPedidosProduccion .abierto{
+.pedidosProdInfo .abierto{
   font-weight: 600;
   color: green;
 }
-#calendarioPedidosProduccion .pendiente{
+.pedidosProdInfo .pendiente{
   font-weight: 600;
   color: gray;
+}
+.pedidosProdInfo .cargado{
+  font-weight: 600;
+  color: blue;
 }
 #backRender #nuevaProduccion{
   width: 100%;
@@ -787,4 +792,18 @@ footer img {
 }
 .visible{
   display: inline-block;
+}
+.invisible{
+  display: none;
+}
+#estadoPedidos{
+  font-size: 0.8em;
+  display: flex;
+  gap: 1em;
+}
+#estadoPedidos div{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  align-items: center;
 }

@@ -249,7 +249,7 @@ if (document.querySelector(".pedidosProdCard") != null) {
   );
 }
 
-if (document.querySelector(".pedidoEstadoBoton") != null) {
+/* if (document.querySelector(".pedidoEstadoBoton") != null) {
   document.querySelectorAll(".pedidoEstadoBoton").forEach((boton) =>
     boton.addEventListener("click", (e) => {
       e.preventDefault();
@@ -257,7 +257,7 @@ if (document.querySelector(".pedidoEstadoBoton") != null) {
       document.querySelector("#" + e.target.dataset.form).submit();
     })
   );
-}
+} */
 
 /* if (document.querySelector("#cerrarSesionBtn") != null) {
   document.querySelector("#cerrarSesionBtn").addEventListener("submit", (e) => {
