@@ -654,7 +654,8 @@ const pedidoProduccionFabrica = async(req, res) => {
   // calcular estado del pedido de cada local segun fecha actual
   let fechasLocales = [];
   for await (let local of locales){
-    if(local.servicios.pedidos){
+    let serviciosLocal = JSON.parse(local.servicios);
+    if(serviciosLocal.pedidos){
       const data = await servicesProduccion.getProduccionLocal(local.id);
       if(data.length > 0){
         let fechaUltimoPedido = data[data.length-1].fechaentrega;

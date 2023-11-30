@@ -40,10 +40,15 @@
     <h2>Estado de los pedidos</h2>
     <div id="estadoPedidos">
     <%locales.forEach((local) => {
-        if(local.servicios.pedidos){
+        let serviciosLocal = JSON.parse(local.servicios);
+        if(serviciosLocal.pedidos){
             let fechas = fechasLocales.find((fechasLocal) => local.id == fechasLocal.localId);
-            let estadoPedido = "Recibido";
+            if(fechas === undefined){
+                return;
+            }
+            let estadoPedido = "cargado";
             let fechaEntrega = fechas.fechaEntregaActiva;
+            console.log(fechasLocales)
             if(fechas.fechaEntregaActiva !== 0){
                 if(fechas.fechaEntregaActiva == verFechaFiltro(fechas.fechaEntregaPedido)){
                     estadoPedido = fechas.pedidoEstado;
@@ -52,17 +57,20 @@
                 }
             } 
             if(fechas.fechaEntregaActiva == 0){
-                if(fechas.pedidoEstado == "cargado"){
+                if(fechas.pedidoEstado == "cargado" || fechas.pedidoEstado == "pendiente"){
                     fechaEntrega = verFechaFiltro(fechas.fechaEntregaPedido);
-                } else if(fechas.proximoPedidoEstado == "cargado"){
-                    fechaEntrega = verFechaFiltro(fechas.fechaEntregaProxPedido);   
+                    estadoPedido = fechas.pedidoEstado;
+                } else if(fechas.proximoPedidoEstado == "cargado" || fechas.proximoPedidoEstado == "pendiente"){
+                    fechaEntrega = verFechaFiltro(fechas.fechaEntregaProxPedido);
+                    estadoPedido = fechas.proximoPedidoEstado; 
                 }
             }
-            if(estadoPedido == "cerrado"){
-                estadoPedido == "Recibido";
-            }
+            /* if(estadoPedido == "cerrado"){
+                estadoPedido == "cargado";
+            } */
             %>
         <div>
+            <span class="produccionSemaforo <%= "prodSemaforo"+estadoPedido %>"></span>
             <span><%= local.nombre %></span>
             <span ><%= fechaEntrega %></span>
             <span><%= estadoPedido %></span>
@@ -92,7 +100,7 @@
                 break;
                 case "cancelado":
                 estilo = "pedidoProdCerrado";
-                imagen = "cerrado";
+                imagen = "cancel";
                 break;
                 default:
                 break;

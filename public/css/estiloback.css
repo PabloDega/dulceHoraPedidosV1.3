@@ -807,3 +807,18 @@ footer img {
   gap: 0.5em;
   align-items: center;
 }
+.produccionSemaforo{
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.prodSemaforoabierto{
+  background-color: yellow;
+}
+.prodSemaforocargado{
+  background-color: green;
+}
+.prodSemaforopendiente{
+  background-color: gray;
+}
