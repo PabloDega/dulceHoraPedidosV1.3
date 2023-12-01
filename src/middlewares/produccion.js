@@ -8,7 +8,7 @@ const getFechasProduccionLocal = (diasEntrega, fechaUltimoPedido) => {
   }
 
   let diasDeEntrega = JSON.parse(diasEntrega);
-  let fechaHoy = new Date(2023, 11, 2);
+  let fechaHoy = new Date(2023, 10, 26, 12, 25);
 
   //buscar dia de proxima entrega
   let proximaEntrega;
@@ -78,9 +78,11 @@ const getFechasProduccionLocal = (diasEntrega, fechaUltimoPedido) => {
     fechaHoy,
     fechaEntregaPedido,
     pedidoEstado,
+    horasRestanteEntregaPedido: Math.trunc(horasRestanteEntregaPedido) - 48,
     fechaEntregaProxPedido,
     proximoPedidoEstado,
     fechaEntregaActiva,
+    horasRestanteEntregaProximoPedido: Math.trunc(horasRestanteEntregaProximoPedido) - 48,
   };
   return fechas;
 };

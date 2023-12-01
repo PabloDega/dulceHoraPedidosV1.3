@@ -103,4 +103,6 @@ router.post("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoPr
 
 router.post("/produccionFabricaUpdateEstado", auth.authSupervisor, panelControllers.pedidoProduccionUpdateEstado);
 
+router.get("/productosFabrica", auth.authSupervisor, panelControllers.productosFabrica);
+
 module.exports = router;

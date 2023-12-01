@@ -1,0 +1,35 @@
+<table id="tablaProductos">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Código</th>
+            <th>Categoría</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Unidad</th>
+            <th>Sector</th>
+            <th>Estado</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% data.forEach((dato) => { 
+        let estado = "baja"; 
+        if(dato.estado == "true"){estado = "disponible"}; 
+        %>
+        <tr>
+          <td><%= dato.id %></td>
+          <td><%= dato.codigo %></td>
+          <td><%= dato.categoria %></td>
+          <td><%= dato.nombre %></td>
+          <td>$<%= dato.costo %></td>
+          <td><%= dato.unidad %></td>
+          <td><%= dato.sector %></td>
+          <td><%= estado %></td>
+          <td class="backListaProdFabricaBoton" id="backListaProdFabricaEditar" data-id="<%= dato.id %>">editar</td>
+          <td class="backListaProdFabricaBoton" id="backListaProdFabricaEliminar" data-id="<%= dato.id %>" data-tipo="productosFabrica">eliminar</td>
+        </tr>
+      <%}); %>
+    </tbody>
+</table>

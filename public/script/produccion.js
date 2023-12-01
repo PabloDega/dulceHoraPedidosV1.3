@@ -3,6 +3,10 @@ let totalPedido = 0;
 let diasDeLaSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
 
 function pedidoProduccionCalcImporte(e){
+    if(isNaN(parseInt(e.target.value))){
+        e.target.value = 0;
+        return;
+    }
     let costo = document.querySelector("#costo" + e.target.dataset.id);
     costo = parseInt(costo.innerHTML)
     document.querySelector(`#importe${e.target.dataset.id}`).innerHTML = costo * parseInt(e.target.value);
@@ -78,6 +82,12 @@ function vaciarImportes() {
 
 document.querySelector("#pedidoProduccionVaciar").addEventListener("click", () => {
     vaciarImportes();
+})
+
+document.querySelector("#pedidoProduccionEnviar").addEventListener("click", (e) => {
+    e.preventDefault();
+    localStorage.removeItem("precargaPedidoProduccion");
+    document.querySelector("#nuevaProduccion").submit();
 })
 
 

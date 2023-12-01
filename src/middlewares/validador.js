@@ -200,7 +200,7 @@ const validarLoginChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato de contraseña incorrecto"),
-]
+];
 
 const dataValidator = (data) => { 
   if(data.mensaje == ""){
@@ -225,7 +225,7 @@ const dataValidator = (data) => {
     return false;
   }
   return true
-}
+};
 
 
 module.exports = {

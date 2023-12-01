@@ -1,5 +1,5 @@
-<% if(userRol == "supervisor"){%>
 <div class="backMenu">
+<% if(userRol == "supervisor"){%>
   <h1>Panel de Control <span id="backMenuShow">Menu</span></h1>
   <div class="backMenu" id="supervisor">
     <h2>Ventas Online</h2>
@@ -36,10 +36,8 @@
       <img src="/im/backproduccion.svg" alt="icono produccion" />
       <h1>Pedidos Produccion</h1>
     </div>
-</div>
-  <% } %>
-  <% if(userRol == "admin" ||userRol == "atencion"){ %>
-<div class="backMenu">
+<% } %>
+<% if(userRol == "admin" ||userRol == "atencion"){ %>
   <h1>Panel de Control</h1>
   <div class="backCard <%= menu %>" id="stock">
     <img src="/im/backprods.svg" alt="icono stock" />
@@ -49,15 +47,15 @@
     <img src="/im/backventas.svg" alt="icono pedidos" />
     <h1>Ventas Online</h1>
   </div>
-  <% } %>
-  <% if(userRol == "admin"){ %>
-    <div class="backCard <%= menu %>" id="produccionLocal">
-      <img src="/im/backproduccion.svg" alt="icono produccion" />
-      <h1>Pedidos Produccion</h1>
-    </div>
-    <div class="backCard <%= menu %>" id="actividad">
-      <img src="/im/backactividad.svg" alt="icono actividad" />
-      <h1>Actividad</h1>
-    </div>
-    <% } %>
+<% } %>
+<% if(userRol == "admin"){ %>
+  <div class="backCard <%= menu %>" id="produccionLocal">
+    <img src="/im/backproduccion.svg" alt="icono produccion" />
+    <h1>Pedidos Produccion</h1>
+  </div>
+  <div class="backCard <%= menu %>" id="actividad">
+    <img src="/im/backactividad.svg" alt="icono actividad" />
+    <h1>Actividad</h1>
+  </div>
+<% } %>
 </div>

@@ -1,4 +1,5 @@
 const servicesProductos = require(__basedir + "/src/services/productos");
+const servicesProductosFabrica = require(__basedir + "/src/services/productosFabrica");
 const servicesLocal = require(__basedir + "/src/services/local");
 const servicesUsuarios = require(__basedir + "/src/services/usuarios");
 const servicesPedidos = require(__basedir + "/src/services/pedidos");
@@ -736,6 +737,15 @@ const pedidoProduccionUpdateEstado = async(req, res) => {
   }
 }
 
+const productosFabrica = async(req, res) => {
+  let data = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/productosFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
 module.exports = {
   index,
   productosCard,
@@ -785,4 +795,5 @@ module.exports = {
   pedidoProduccionNuevo,
   pedidoProduccionInsert,
   pedidoProduccionUpdateEstado,
+  productosFabrica,
 };
