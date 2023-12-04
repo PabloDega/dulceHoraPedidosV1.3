@@ -193,7 +193,7 @@
                 <span>Modificar estado:</span>
                 <%if(lector == "local"){
                     if(dataPedido.estado === "cargado"){%>
-                        <form id="formCancelado" method="post" action="/panel/produccionLocalUpdateEstado">
+                        <form id="formCancelado" method="post" action="/panel/produccion/local/updateEstado">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="cancelado">
                             <input type="hidden" name="emisor" value="local">
@@ -205,14 +205,14 @@
                 }
                 if(lector == "fabrica"){
                     if(dataPedido.estado === "cargado"){%>
-                        <form id="formAceptar" method="post" action="/panel/produccionFabricaUpdateEstado">
+                        <form id="formAceptar" method="post" action="/panel/produccion/fabrica/updateEstado">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="aceptado">
                             <input type="hidden" name="emisor" value="fabrica">
                             <input type="submit" data-form="formAceptado" value="Aceptar" class="pedidoEstadoBoton btnVerde">
                         </form>
                     <%} else if(dataPedido.estado === "aceptado"){%>
-                        <form id="formEntregado" method="post" action="/panel/produccionFabricaUpdateEstado">
+                        <form id="formEntregado" method="post" action="/panel/produccion/fabrica/updateEstado">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="entregado">
                             <input type="hidden" name="emisor" value="fabrica">

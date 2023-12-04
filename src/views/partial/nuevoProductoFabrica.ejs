@@ -1,0 +1,46 @@
+<form action="" method="post" id="nuevoProducto" class="editor">
+    <h1>Nuevo Producto</h1>
+    <span>
+        <label for="codigo">Codigo</label>
+        <input type="text" name="codigo" id="codigo" value="<%= valoresForm.codigo %>" />
+    </span>
+    <span>
+        <label for="categoria">Categoria</label>
+        <select name="categoria" id="categoria">
+            <option value="" disabled selected>- Seleccionar un item -</option>
+            <% categorias.forEach((categoria) => {
+                let selected = "";
+                if(categoria.categoriaProduccion == valoresForm.categoria){selected = "selected"}%>
+                <option value="<%= categoria.categoriaProduccion %>"><%= categoria.categoriaProduccion %> <%= selected %></option>
+            <%}) %>
+        </select>
+    </span>
+    <span>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" value="<%= valoresForm.nombre %>"/>
+    </span>
+    <span>
+        <label for="precio">Precio</label>
+        <input type="number" name="precio" id="precio" value="<%= valoresForm.precio %>" />
+    </span>
+    <span>
+        <label for="unidad">Unidad</label>
+        <input type="text" name="unidad" id="unidad" value="<%= valoresForm.unidad %>"/>
+    </span>
+    <span>
+        <label for="sector">Sector de producción</label>
+        <select name="sector" id="sector">
+            <option value="" disabled selected>- Seleccionar un item -</option>
+            <% sectores.forEach((sector) => {%>
+                <option value="<%= sector.sector %>"><%= sector.sector %></option>
+            <%}) %>
+        </select>
+    </span>
+    <span>
+        <label for="estado">Estado</label>
+        <input type="checkbox" name="estado" id="estado" value="true"> Disponible
+    </span>
+    <span>
+        <input type="submit" value="Crear">
+    </span>
+</form>

@@ -725,15 +725,15 @@ const pedidoProduccionInsert = async (req, res) => {
     fechaDeEntrega: req.body.pedidoProduccionFechaEntrega,
   }
   await servicesProduccion.insertPedidoProduccion(datos);
-  res.redirect("/panel/produccionLocal");  
+  res.redirect("/panel/produccion/local");  
 }
 
 const pedidoProduccionUpdateEstado = async(req, res) => {
   await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
   if(req.body.emisor == "fabrica"){
-    res.redirect("/panel/produccionFabrica?id=" + req.body.id);
+    res.redirect("/panel/produccion/fabrica?id=" + req.body.id);
   } else if(req.body.emisor == "local"){
-    res.redirect("/panel/produccionLocal?id=" + req.body.id);
+    res.redirect("/panel/produccion/local?id=" + req.body.id);
   }
 }
 
@@ -780,11 +780,46 @@ const pedidoProduccionUpdate = async(req, res) => {
     local: parseInt(req.body.pedidoProduccionLocalId),
   }
   await servicesProduccion.updatePedidoProduccion(datos);
-
-  res.redirect("/panel/produccionFabrica?id=" + req.body.pedidoProduccionLocalId);
+  res.redirect("/panel/produccion/fabrica?id=" + req.body.pedidoProduccionLocalId);
 }
 
-const productosFabricaNuevo = async(req, res) => {}
+const productosFabricaNuevo = async(req, res) => {
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const sectores = await servicesProductosFabrica.getSectoresFabrica();
+  res.render(__basedir + "/src/views/pages/nuevoProductoFabrica", {
+    valoresForm: {},
+    categorias,
+    sectores,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const productosFabricaInsert = async(req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    const sectores = await servicesProductosFabrica.getSectoresFabrica();
+    return res.render(__basedir + "/src/views/pages/nuevoProductoFabrica", {
+      valoresForm: req.body,
+      categorias,
+      sectores,
+      data: req.body,
+      errores: errores.array({ onlyFirstError: true }),
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+  console.log(req.body)
+  // await servicesProductosFabrica.insertProductoFabrica(req.body);
+  let data = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/productosFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
 
 module.exports = {
   index,
@@ -839,4 +874,5 @@ module.exports = {
   pedidoProduccionEditar,
   pedidoProduccionUpdate,
   productosFabricaNuevo,
+  productosFabricaInsert,
 };

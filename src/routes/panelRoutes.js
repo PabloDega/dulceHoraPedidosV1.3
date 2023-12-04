@@ -87,28 +87,30 @@ router.get("/actividad", panelControllers.actividad);
 
 router.get("/actividadToda", auth.authSupervisor, panelControllers.actividadToda);
 
-router.get("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionLocal);
+router.get("/produccion/local", auth.authAdmin, panelControllers.pedidoProduccionLocal);
 
-router.post("/produccionLocal", auth.authAdmin, panelControllers.pedidoProduccionAgregarMensajeLocal);
+router.post("/produccion/local", auth.authAdmin, panelControllers.pedidoProduccionAgregarMensajeLocal);
 
-router.post("/produccionLocalUpdateEstado", auth.authAdmin, panelControllers.pedidoProduccionUpdateEstado);
+router.post("/produccion/local/updateEstado", auth.authAdmin, panelControllers.pedidoProduccionUpdateEstado);
 
 router.get("/produccion/nueva", auth.authAdmin, panelControllers.pedidoProduccionNuevo);
 
 router.post("/produccion/nueva", auth.authAdmin, panelControllers.pedidoProduccionInsert);
 
-router.get("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
+router.get("/produccion/fabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
 
-router.post("/produccionFabrica", auth.authSupervisor, panelControllers.pedidoProduccionAgregarMensajeFabrica);
+router.post("/produccion/fabrica", auth.authSupervisor, panelControllers.pedidoProduccionAgregarMensajeFabrica);
 
-router.post("/produccionFabricaUpdateEstado", auth.authSupervisor, panelControllers.pedidoProduccionUpdateEstado);
+router.post("/produccion/fabrica/updateEstado", auth.authSupervisor, panelControllers.pedidoProduccionUpdateEstado);
 
-router.get("/editarPedidoProduccion", auth.authSupervisor, panelControllers.pedidoProduccionEditar);
+router.get("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionEditar);
 
-router.post("/editarPedidoProduccion", auth.authSupervisor, panelControllers.pedidoProduccionUpdate);
+router.post("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionUpdate);
 
 router.get("/productosFabrica", auth.authSupervisor, panelControllers.productosFabrica);
 
 router.get("/productosFabrica/nuevo", auth.authSupervisor, panelControllers.productosFabricaNuevo);
+
+router.post("/productosFabrica/nuevo", auth.authSupervisor, panelControllers.productosFabricaInsert);
 
 module.exports = router;

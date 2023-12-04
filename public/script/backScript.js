@@ -47,12 +47,12 @@ if (document.querySelector("#actividad") != null) {
 if (document.querySelector("#produccionLocal") != null) {
   document
     .querySelector("#produccionLocal")
-    .addEventListener("click", () => (location.href = "/panel/produccionLocal"));
+    .addEventListener("click", () => (location.href = "/panel/produccion/local"));
 }
 if (document.querySelector("#produccionFabrica") != null) {
   document
     .querySelector("#produccionFabrica")
-    .addEventListener("click", () => (location.href = "/panel/produccionFabrica"));
+    .addEventListener("click", () => (location.href = "/panel/produccion/fabrica"));
 }
 if (document.querySelector("#productosFabrica") != null) {
   document
@@ -253,8 +253,8 @@ if (document.querySelector(".pedidosProdCard") != null) {
   document.querySelectorAll(".pedidosProdCard").forEach((boton) =>
     boton.addEventListener("click", (e) => {
       let destino = "Local"
-      if(e.currentTarget.dataset.lector == "fabrica"){destino = "Fabrica"}
-      location.href = "/panel/produccion" + destino + "?id=" + e.currentTarget.dataset.id;
+      if(e.currentTarget.dataset.lector == "fabrica"){destino = "fabrica"}
+      location.href = "/panel/produccion/" + destino + "?id=" + e.currentTarget.dataset.id;
     })
   );
 }
@@ -387,16 +387,6 @@ if (document.querySelector("#pedidoProdNuevo") != null) {
   });
 }
 
-/* if(localStorage.getItem("fechaEntregaActiva")){
-  console.log(localStorage.getItem("fechaEntregaActiva"))
-} */
-
-/* if (document.querySelector(".pedidoProdentregado") != null) {
-  document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
-    card.style.display = "none";
-  })
-} */
-
 if (document.querySelector("#verPedidosProduccion") != null) {
   document.querySelector("#verPedidosProduccion").addEventListener("click", () => {
     document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
@@ -407,6 +397,12 @@ if (document.querySelector("#verPedidosProduccion") != null) {
 
 if(document.querySelector("#pedidoProduccionModificar") != null){
   document.querySelector("#pedidoProduccionModificar").addEventListener("click", (e) => {
-    location.href = "/panel/editarPedidoProduccion?id=" + e.target.dataset.id;
+    location.href = "/panel/produccion/editar?id=" + e.target.dataset.id;
+  })
+}
+
+if(document.querySelector("#nuevoProdFabrica") != null){
+  document.querySelector("#nuevoProdFabrica").addEventListener("click", () => {
+    location.href = "/panel/productosFabrica/nuevo";
   })
 }
