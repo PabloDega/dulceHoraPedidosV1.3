@@ -54,6 +54,16 @@ if (document.querySelector("#produccionFabrica") != null) {
     .querySelector("#produccionFabrica")
     .addEventListener("click", () => (location.href = "/panel/produccionFabrica"));
 }
+if (document.querySelector("#productosFabrica") != null) {
+  document
+    .querySelector("#productosFabrica")
+    .addEventListener("click", () => (location.href = "/panel/productosFabrica"));
+}
+if (document.querySelector("#verProdFabrica") != null) {
+  document
+    .querySelector("#verProdFabrica")
+    .addEventListener("click", () => (location.href = "/panel/productosFabrica"));
+}
 /* if (document.querySelectorAll(".editar") != null) {
   document
     .querySelectorAll(".editar")
@@ -373,10 +383,30 @@ if((window.location.pathname !== "/panel" && window.location.pathname !== "/logi
 
 if (document.querySelector("#pedidoProdNuevo") != null) {
   document.querySelector("#pedidoProdNuevo").addEventListener("click", () => {
-      location.href = "/panel/nuevaProduccion"
+      location.href = "/panel/produccion/nueva"
   });
 }
 
-if(localStorage.getItem("fechaEntregaActiva")){
+/* if(localStorage.getItem("fechaEntregaActiva")){
   console.log(localStorage.getItem("fechaEntregaActiva"))
+} */
+
+/* if (document.querySelector(".pedidoProdentregado") != null) {
+  document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
+    card.style.display = "none";
+  })
+} */
+
+if (document.querySelector("#verPedidosProduccion") != null) {
+  document.querySelector("#verPedidosProduccion").addEventListener("click", () => {
+    document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
+      card.style.display = "flex";
+    })
+  });
+}
+
+if(document.querySelector("#pedidoProduccionModificar") != null){
+  document.querySelector("#pedidoProduccionModificar").addEventListener("click", (e) => {
+    location.href = "/panel/editarPedidoProduccion?id=" + e.target.dataset.id;
+  })
 }

@@ -695,7 +695,7 @@ const pedidoProduccionNuevo = async (req, res) => {
   if(ultimoPedido == undefined){
     ultimoPedido = 0;
   }
-  res.render(__basedir + "/src/views/pages/nuevaProduccion", {
+  res.render(__basedir + "/src/views/pages/produccion/nueva", {
     ultimoPedido,
     productos,
     usuario: req.session.userLog,
@@ -731,9 +731,9 @@ const pedidoProduccionInsert = async (req, res) => {
 const pedidoProduccionUpdateEstado = async(req, res) => {
   await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
   if(req.body.emisor == "fabrica"){
-    res.redirect("/panel/produccionFabrica");
+    res.redirect("/panel/produccionFabrica?id=" + req.body.id);
   } else if(req.body.emisor == "local"){
-    res.redirect("/panel/produccionLocal");
+    res.redirect("/panel/produccionLocal?id=" + req.body.id);
   }
 }
 
@@ -745,6 +745,46 @@ const productosFabrica = async(req, res) => {
     userRol: req.session.userRol,
   })
 }
+
+const pedidoProduccionEditar = async(req, res) => {
+  let productos = await servicesProductosFabrica.getProductosFabrica();
+  let pedido = await servicesProduccion.getProduccionPedido(req.query.id);
+  let locales = await servicesLocal.getLocales();
+  res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
+    locales,
+    productos,
+    pedido,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const pedidoProduccionUpdate = async(req, res) => {
+  let pedido = [];
+  const productos = await servicesProduccion.getProductosProduccion();
+  for(dato in req.body){
+    if(!isNaN(dato)){
+      if(req.body[dato] > 0){
+        let pedidoItem = [];
+        let producto = productos.find((datoProd) => datoProd.id == dato);
+        pedidoItem.push(parseInt(req.body[dato]));
+        pedidoItem.push(parseInt(dato));
+        pedidoItem.push(producto.costo);
+        pedido.push(pedidoItem);
+      }
+    }
+  }
+  let datos = {
+    pedido: JSON.stringify(pedido),
+    total: parseInt(req.body.pedidoProduccionImporteTotal),
+    local: parseInt(req.body.pedidoProduccionLocalId),
+  }
+  await servicesProduccion.updatePedidoProduccion(datos);
+
+  res.redirect("/panel/produccionFabrica?id=" + req.body.pedidoProduccionLocalId);
+}
+
+const productosFabricaNuevo = async(req, res) => {}
 
 module.exports = {
   index,
@@ -796,4 +836,7 @@ module.exports = {
   pedidoProduccionInsert,
   pedidoProduccionUpdateEstado,
   productosFabrica,
+  pedidoProduccionEditar,
+  pedidoProduccionUpdate,
+  productosFabricaNuevo,
 };

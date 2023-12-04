@@ -1,7 +1,17 @@
 <div class="backMenu">
-<% if(userRol == "supervisor"){%>
+<% if(userRol == "supervisor" || userRol == "produccion"){%>
+
   <h1>Panel de Control <span id="backMenuShow">Menu</span></h1>
   <div class="backMenu" id="supervisor">
+    <h2>Administracion</h2>
+    <div class="backCard <%= menu %>" id="usuarios">
+      <img src="/im/backuser.svg" alt="icono usuarios" />
+      <h1>Usuarios</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="actividadToda">
+      <img src="/im/backactividad.svg" alt="icono actividad" />
+      <h1>Actividad</h1>
+    </div>
     <h2>Ventas Online</h2>
     <div class="backCard <%= menu %>" id="productos">
       <img src="/im/backprods.svg" alt="icono productos" />
@@ -19,23 +29,20 @@
       <img src="/im/backfotos.svg" alt="icono fotos" />
       <h1>Fotos</h1>
     </div>
-    <div class="backCard <%= menu %>" id="usuarios">
-      <img src="/im/backuser.svg" alt="icono usuarios" />
-      <h1>Usuarios</h1>
-    </div>
-    <div class="backCard <%= menu %>" id="actividadToda">
-      <img src="/im/backactividad.svg" alt="icono actividad" />
-      <h1>Actividad</h1>
-    </div>
     <h2>Producción</h2>
     <div class="backCard <%= menu %>" id="productosFabrica">
       <img src="/im/backproductosfabrica.svg" alt="icono productosFabrica" />
-      <h1>Productos de Fabrica</h1>
+      <h1>Productos Fábrica</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="preciosFabrica">
+      <img src="/im/backprecios.svg" alt="icono precios" />
+      <h1>Precios Fábrica</h1>
     </div>
     <div class="backCard <%= menu %>" id="produccionFabrica">
       <img src="/im/backproduccion.svg" alt="icono produccion" />
       <h1>Pedidos Produccion</h1>
     </div>
+  </div>
 <% } %>
 <% if(userRol == "admin" ||userRol == "atencion"){ %>
   <h1>Panel de Control</h1>

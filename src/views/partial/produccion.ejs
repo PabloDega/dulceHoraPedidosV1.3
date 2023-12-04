@@ -4,7 +4,7 @@
         let day = fecha.getDate();
         return day + "/" + month + "/" + year;
     }%>
-
+<!-- Calendario de pedidos -->
 <div class="titulo">
     <h2>Pedidos de Producción a Fábrica</h2>
 </div>
@@ -34,7 +34,7 @@
         <%} %>
     </div>
 <%}%>
-
+<!-- Calendario de Locales para Fabrica -->
 <%if(lector == "fabrica"){%>
     <div id="estadoPedidosLocales"class="anchoMax pedidosProdInfo">
     <h2>Estado de los pedidos</h2>
@@ -91,8 +91,13 @@
     </div>
 <%}%>
 
+
 <div class="produccionCont">
     <div class="produccion">
+        <div id="verPedidosProduccion">
+            <img src="/im/checked.svg" alt="icon" class="pedidosCardTipo">
+            <b>Ver Pedidos Entregados</b> 
+        </div>
         <% data.forEach((pedido)=> {
             let estilo;
             switch (pedido.estado) {
@@ -121,7 +126,7 @@
             } else {
                 buzon = "none";
             } %>
-            <div class="pedidosProdCard <%= estilo %>" data-id="<%= pedido.id %>" data-lector="<%= lector %>">
+            <div class="pedidosProdCard <%= estilo %> pedidoProd<%= pedido.estado %>" data-id="<%= pedido.id %>" data-lector="<%= lector %>">
                 <img src="/im/<%= imagen %>.svg" alt="icon" class="pedidosCardTipo">
                 <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj" style="display:<%=buzon%>">
                 <span>Pedido: <%= pedido.id %></span>
@@ -134,12 +139,18 @@
             </div>
             <% }) %>
     </div>
+
+
     <div class="produccionPedido">
-        
     <% if(dataPedido !== undefined){%>
         <div class="pedidoCard">
             <h3>Pedido Nº<%= dataPedido.id %></h3>
             <hr>
+            <%if(lector == "fabrica"){
+                    let local = locales.find((local) => dataPedido.local == local.id)%>
+                    <h3>Local: <%= local.nombre %></h3>
+                    <hr>
+            <%}%>
             <h3>Fecha de Entrega: <%= verFechaFiltro(dataPedido.fecha) %></h3>
             <hr>
             <h3>Estado: <%= dataPedido.estado %></h3>
@@ -207,7 +218,7 @@
                             <input type="hidden" name="emisor" value="fabrica">
                             <input type="submit" data-form="forEntregado" value="Entregado" class="pedidoEstadoBoton btnNaranja">
                         </form>
-                        <span class="btn btnVerde btnSmall" id="pedidoProduccionModificar">Modificar</span>
+                        <span class="btn btnVerde btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
                     <%}
                 }%>
             </div>

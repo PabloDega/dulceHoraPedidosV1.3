@@ -61,16 +61,20 @@ if(precargaAnterior && precargaAnterior.length > 0){
 
 function setFechaDeEntrega(){
     let fechaEntrega = localStorage.getItem("fechaEntregaActiva");
-    let diaEntrega = new Date(fechaEntrega.split("/")[2], fechaEntrega.split("/")[1]-1, fechaEntrega.split("/")[0]).getDay()
-    document.querySelector("#pedidoProduccionFechaEntrega").value = localStorage.getItem("fechaEntregaActiva");
-    document.querySelector("#pedidoProduccionDatosFechaEntrega").innerHTML = diasDeLaSemana[diaEntrega] + " " + fechaEntrega;
+    if(fechaEntrega !== null){
+        let diaEntrega = new Date(fechaEntrega.split("/")[2], fechaEntrega.split("/")[1]-1, fechaEntrega.split("/")[0]).getDay()
+        document.querySelector("#pedidoProduccionFechaEntrega").value = localStorage.getItem("fechaEntregaActiva");
+        document.querySelector("#pedidoProduccionDatosFechaEntrega").innerHTML = diasDeLaSemana[diaEntrega] + " " + fechaEntrega;
+    }
+}
+if(document.querySelector("#pedidoProduccionVerPedidoAnterior") != null){
+    document.querySelector("#pedidoProduccionVerPedidoAnterior").addEventListener("click", () => {
+        document.querySelectorAll(".pedidoProduccionUltimoPedido").forEach((elem) => {
+            elem.classList.toggle("visible");
+        })
+    });
 }
 
-document.querySelector("#pedidoProduccionVerPedidoAnterior").addEventListener("click", () => {
-    document.querySelectorAll(".pedidoProduccionUltimoPedido").forEach((elem) => {
-        elem.classList.toggle("visible");
-    })
-})
 function vaciarImportes() {
     document.querySelectorAll(".pedidoProduccionCantidad").forEach((input) => {
         input.value = 0;
@@ -80,15 +84,19 @@ function vaciarImportes() {
     pedidoProduccionCalcTotal();
 }
 
-document.querySelector("#pedidoProduccionVaciar").addEventListener("click", () => {
-    vaciarImportes();
-})
+if(document.querySelector("#pedidoProduccionVaciar") !=null){
+    document.querySelector("#pedidoProduccionVaciar").addEventListener("click", () => {
+        vaciarImportes();
+    })
+}
 
-document.querySelector("#pedidoProduccionEnviar").addEventListener("click", (e) => {
-    e.preventDefault();
-    localStorage.removeItem("precargaPedidoProduccion");
-    document.querySelector("#nuevaProduccion").submit();
-})
+if(document.querySelector("#pedidoProduccionEnviar") != null){
+    document.querySelector("#pedidoProduccionEnviar").addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("precargaPedidoProduccion");
+        document.querySelector("#nuevaProduccion").submit();
+    })
+}
 
 
 pedidoProduccionCalcImportes();

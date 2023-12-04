@@ -1,0 +1,73 @@
+<% if(pedido.local == "x"){%>
+    <h1>Pedido Inexistente</h1>
+<% } else { %>
+<form action="" method="post" id="nuevaProduccion" class="editor anchoMax">
+    <div id="datosFloat">
+        <span>
+            <span><b>Fecha de entrega:</b></span>
+            <span id="pedidoProduccionDatosFechaEntrega">Martes 28/11/2023</span>
+        </span>
+        <span id="pedidoProduccionTotal">
+            <b>Total:</b>
+        </span>
+        <span>
+            <input type="submit" value="Modificar" class="btn btnVerde" id="pedidoProduccionUpdate">
+        </span>
+    </div>
+    <h1>Editar Pedido a Producción</h1>
+    <div id="pedidoProdHeadForm">  
+        <h3>Pedido <%= pedido.id %></h3>
+        <hr>
+        <h3>Fecha de Entrega: <%= pedido.fechaentrega %></h3>
+        <hr>
+        <% let local = locales.find((local) => pedido.local == local.id) %>
+        <h3>Local: <%= local.nombre %></h3>
+    </div>
+    <table id="pedidoProduccionTabla">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Producto</th>
+                <th>Unidad</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Importe</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% productos.forEach((producto) => {
+                let pedidoParsed = JSON.parse(pedido.pedido)
+                let cantidadPedida = 0;
+                if(pedidoParsed !== undefined && pedido.local !== "x"){
+                    cantidadPedida = pedidoParsed.find((dato) => dato[1] == producto.id);
+                    if(cantidadPedida !== undefined){
+                        cantidadPedida = cantidadPedida[0];
+                    } else {
+                        cantidadPedida = 0;
+                    }
+                } 
+                %>
+                <tr>
+                    <td class="<%= producto.categoria %>"><%= producto.codigo %></td>
+                    <td><%= producto.nombre %></td>
+                    <td><%= producto.unidad %></td>
+                    <td class="pedidoProduccionCeldaImporte">
+                        <span>$</span>
+                        <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
+                    <td>
+                        <input type="number" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="<%= cantidadPedida %>">
+                    </td>
+                    <td class="pedidoProduccionCeldaImporte">
+                        <span>$</span>
+                        <span class="importe" id="importe<%= producto.id %>">0</span>
+                    </td>
+                </tr>
+            <%}) %>
+            <tr style="display: none;">
+                <td> <input type="text" name="pedidoProduccionLocalId" id="pedidoProduccionLocalId" value="<%= pedido.id %>"> </td>
+                <td> <input type="text" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<% } %>

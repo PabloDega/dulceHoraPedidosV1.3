@@ -13,7 +13,7 @@ const isLogged = (req, res, next) => {
 };
 
 const authAdmin = (req, res, next) => {
-  if (req.session.userRol == "admin" || req.session.userRol == "supervisor") {
+  if (req.session.userRol == "admin" || req.session.userRol == "supervisor" || req.session.userRol == "produccion") {
     next();
   } else {
   return res.redirect("/panel");
@@ -21,7 +21,7 @@ const authAdmin = (req, res, next) => {
 };
 
 const authSupervisor = (req, res, next) => {
-  if (req.session.userRol != "supervisor") {
+  if (req.session.userRol != "supervisor" && req.session.userRol != "produccion") {
     return res.redirect("/panel");
   }
   next();

@@ -107,6 +107,16 @@ const updateEstadoProduccion = async(estado, id) => {
   }
 }
 
+const updatePedidoProduccion = async(datos) => {
+  try {
+    await conectar.query(`UPDATE produccion SET pedido = "${datos.pedido}", total = "${datos.total}" WHERE id = "${datos.local}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 module.exports = {
   getProduccionFabrica,
   getProduccionLocal,
@@ -117,4 +127,5 @@ module.exports = {
   getUltimoPedido,
   insertPedidoProduccion,
   updateEstadoProduccion,
+  updatePedidoProduccion,
 };

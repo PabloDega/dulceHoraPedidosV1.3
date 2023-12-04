@@ -486,7 +486,7 @@ footer img {
 .pedidoCardEntregado, .pedidoCardCancelado{
   display: none;
 }
-.verPedidosCerrados{
+.verPedidosCerrados, #verPedidosProduccion{
   background-color: white;
   border-radius: 1em;
   padding: 1em;
@@ -500,6 +500,15 @@ footer img {
 }
 .verPedidosCerrados img{
   width: 30px;
+}
+.pedidoProdentregado{
+  display: none;
+}
+#verPedidosProduccion{
+  order: 0;
+}
+.pedidoProdcancelado{
+  display: none;
 }
 .pedidosChat, .produccionPedido{
   display: flex;
@@ -851,4 +860,8 @@ footer img {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+#pedidoProdHeadForm{
+  display: flex;
+  gap: 0.5em;
 }
