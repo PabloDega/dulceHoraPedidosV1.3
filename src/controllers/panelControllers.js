@@ -695,7 +695,7 @@ const pedidoProduccionNuevo = async (req, res) => {
   if(ultimoPedido == undefined){
     ultimoPedido = 0;
   }
-  res.render(__basedir + "/src/views/pages/produccion/nueva", {
+  res.render(__basedir + "/src/views/pages/nuevaProduccion", {
     ultimoPedido,
     productos,
     usuario: req.session.userLog,
