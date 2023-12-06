@@ -36,15 +36,7 @@ const insertProducto = async (datos) => {
 const updateProducto = async (datos) => {
   try {
     const answer = await conectar.query(
-      `UPDATE productos SET categoria = "${datos.categoria}", nombre = "${
-        datos.nombre
-      }", descripcion = "${datos.descripcion}", variedad = "${
-        datos.variedad || datos.nombre
-      }", precio = "${datos.precio}", precioDocena = "${datos.precioDoc}", fraccionamiento = "${
-        datos.fraccionamiento
-      }", imgCard = "${datos.nombreImg}", estado = "${datos.estado || "false"}", topSale = "${
-        datos.topSale || "false"
-      }", destacado = "${datos.destacado || "false"}" WHERE id = "${datos.id}"`
+      `UPDATE productos SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", descripcion = "${datos.descripcion}", variedad = "${datos.variedad || datos.nombre}", precio = "${datos.precio}", precioDocena = "${datos.precioDoc}", fraccionamiento = "${datos.fraccionamiento}", imgCard = "${datos.nombreImg}", estado = "${datos.estado || "false"}", topSale = "${datos.topSale || "false"}", destacado = "${datos.destacado || "false"}" WHERE id = "${datos.id}"`
     );
   } catch (error) {
     throw error;

@@ -56,19 +56,16 @@ if (document.querySelector("#produccionFabrica") != null) {
 }
 if (document.querySelector("#productosFabrica") != null) {
   document
-    .querySelector("#productosFabrica")
-    .addEventListener("click", () => (location.href = "/panel/productosFabrica"));
+    .querySelectorAll("#productosFabrica")
+    .forEach((boton) =>
+      boton.addEventListener("click", () => (location.href = "/panel/productosFabrica"))
+    );
 }
-if (document.querySelector("#verProdFabrica") != null) {
+if (document.querySelector("#verCategoriaFabrica") != null) {
   document
-    .querySelector("#verProdFabrica")
-    .addEventListener("click", () => (location.href = "/panel/productosFabrica"));
+    .querySelector("#verCategoriaFabrica")
+    .addEventListener("click", () => (location.href = "/panel/categoriasFabrica"));
 }
-/* if (document.querySelectorAll(".editar") != null) {
-  document
-    .querySelectorAll(".editar")
-    .forEach((boton) => boton.addEventListener("click", (e) => console.log(e.target.dataset.id)));
-} */
 if (document.querySelector("#backListaProdEditar") != null) {
   document
     .querySelectorAll("#backListaProdEditar")
@@ -259,24 +256,6 @@ if (document.querySelector(".pedidosProdCard") != null) {
   );
 }
 
-/* if (document.querySelector(".pedidoEstadoBoton") != null) {
-  document.querySelectorAll(".pedidoEstadoBoton").forEach((boton) =>
-    boton.addEventListener("click", (e) => {
-      e.preventDefault();
-      pedidoFinalizado(pedidoNumero, e.target.value);
-      document.querySelector("#" + e.target.dataset.form).submit();
-    })
-  );
-} */
-
-/* if (document.querySelector("#cerrarSesionBtn") != null) {
-  document.querySelector("#cerrarSesionBtn").addEventListener("submit", (e) => {
-    e.preventDefault();
-    socket.emit("envioMensaje", e.target.value);
-    e.target.value = "";
-  });
-} */
-
 // Toggle precio de docena en editar/nuevo producto
 function editProdtoggleUnidad(e) {
   let precioDocenaInput = document.querySelector("#editProdPrecioDocena");
@@ -405,4 +384,38 @@ if(document.querySelector("#nuevoProdFabrica") != null){
   document.querySelector("#nuevoProdFabrica").addEventListener("click", () => {
     location.href = "/panel/productosFabrica/nuevo";
   })
+}
+
+if (document.querySelector(".backListaProdFabricaEditar") != null) {
+  document.querySelectorAll(".backListaProdFabricaEditar").forEach((boton) =>
+    boton.addEventListener("click", (e) => {
+      location.href = "/panel/productosFabrica/editar?id=" + e.currentTarget.dataset.id;
+    })
+  );
+}
+
+if (document.querySelector(".backListaProdFabricaEliminar") != null) {
+  document
+    .querySelectorAll(".backListaProdFabricaEliminar")
+    .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
+}
+
+if(document.querySelector("#nuevaCategoriaFabrica") != null){
+  document.querySelector("#nuevaCategoriaFabrica").addEventListener("click", () => {
+    location.href = "/panel/categoriasFabrica/nueva";
+  })
+}
+
+if (document.querySelector(".backListaCategoriaFabricaEditar") != null) {
+  document.querySelectorAll(".backListaCategoriaFabricaEditar").forEach((boton) =>
+    boton.addEventListener("click", (e) => {
+      location.href = "/panel/categoriasFabrica/editar?id=" + e.currentTarget.dataset.id;
+    })
+  );
+}
+
+if (document.querySelector(".backListaCategoriaFabricaEliminar") != null) {
+  document
+    .querySelectorAll(".backListaCategoriaFabricaEliminar")
+    .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
 }

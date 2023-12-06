@@ -804,14 +804,12 @@ const productosFabricaInsert = async(req, res) => {
       valoresForm: req.body,
       categorias,
       sectores,
-      data: req.body,
       errores: errores.array({ onlyFirstError: true }),
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     });
   }
-  console.log(req.body)
-  // await servicesProductosFabrica.insertProductoFabrica(req.body);
+  await servicesProductosFabrica.insertProductoFabrica(req.body);
   let data = await servicesProductosFabrica.getProductosFabrica();
   res.render(__basedir + "/src/views/pages/productosFabrica", {
     data,
@@ -820,6 +818,141 @@ const productosFabricaInsert = async(req, res) => {
   })
 }
 
+const productosFabricaEditar = async(req, res) => {
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const sectores = await servicesProductosFabrica.getSectoresFabrica();
+  let productoFabrica = {};
+  if(req.query.id){
+    productoFabrica = await servicesProductosFabrica.getProductoFabrica(req.query.id);
+  }
+  res.render(__basedir + "/src/views/pages/editarProductoFabrica", {
+    valoresForm: productoFabrica,
+    categorias,
+    sectores,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const productosFabricaUpdate = async(req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    const sectores = await servicesProductosFabrica.getSectoresFabrica();
+    return res.render(__basedir + "/src/views/pages/editarProductoFabrica", {
+      valoresForm: req.body,
+      categorias,
+      sectores,
+      errores: errores.array({ onlyFirstError: true }),
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+  await servicesProductosFabrica.updateProductoFabrica(req.body, req.query.id);
+  let data = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/productosFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const productosFabricaEliminar = async(req, res) => {
+  if(req.query.id){
+    await servicesProductosFabrica.deleteProductoFabrica(req.query.id);
+  }
+  let data = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/productosFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const categoriasFabrica = async(req, res) => {
+  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const categoriasFabricaNueva = async(req, res) => {
+  res.render(__basedir + "/src/views/pages/nuevaCategoriaFabrica", {
+    valoresForm: {},
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const categoriasFabricaInsert = async(req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    return res.render(__basedir + "/src/views/pages/nuevaCategoriaFabrica", {
+      errores: errores.array({ onlyFirstError: true }),
+      valoresForm: req.body,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  }
+  await servicesProductosFabrica.insertCategoriaFabrica(req.body);
+  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const categoriasFabricaEditar = async(req, res) => {
+  let categoriaFabrica = {};
+  if(req.query.id){
+    categoriaFabrica = await servicesProductosFabrica.getCategoriaFabrica(req.query.id);
+  }
+  res.render(__basedir + "/src/views/pages/editarCategoriaFabrica", {
+    valoresForm: categoriaFabrica,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const categoriasFabricaUpdate = async(req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    let categoriaFabrica = {};
+    if(req.query.id){
+      categoriaFabrica = await servicesProductosFabrica.getCategoriaFabrica(req.query.id);
+    }
+    return res.render(__basedir + "/src/views/pages/editarCategoriaFabrica", {
+      errores: errores.array({ onlyFirstError: true }),
+      valoresForm: categoriaFabrica,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  }
+  if(req.query.id){
+    await servicesProductosFabrica.updateCategoriaFabrica(req.body, req.query.id);
+  }
+  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const categoriasFabricaEliminar = async(req, res) => {
+  if(req.query.id){
+    await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
+  }
+  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
 
 module.exports = {
   index,
@@ -875,4 +1008,13 @@ module.exports = {
   pedidoProduccionUpdate,
   productosFabricaNuevo,
   productosFabricaInsert,
+  productosFabricaEditar,
+  productosFabricaUpdate,
+  productosFabricaEliminar,
+  categoriasFabrica,
+  categoriasFabricaNueva,
+  categoriasFabricaInsert,
+  categoriasFabricaEditar,
+  categoriasFabricaUpdate,
+  categoriasFabricaEliminar,
 };

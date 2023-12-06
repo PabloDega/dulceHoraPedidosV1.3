@@ -111,6 +111,25 @@ router.get("/productosFabrica", auth.authSupervisor, panelControllers.productosF
 
 router.get("/productosFabrica/nuevo", auth.authSupervisor, panelControllers.productosFabricaNuevo);
 
-router.post("/productosFabrica/nuevo", auth.authSupervisor, panelControllers.productosFabricaInsert);
+router.post("/productosFabrica/nuevo", auth.authSupervisor, validar.validarProductoFabricaChain, panelControllers.productosFabricaInsert);
+
+router.get("/productosFabrica/editar", auth.authSupervisor, panelControllers.productosFabricaEditar);
+
+router.post("/productosFabrica/editar", auth.authSupervisor, validar.validarProductoFabricaChain, panelControllers.productosFabricaUpdate);
+
+router.get("/productosFabrica/eliminar", auth.authSupervisor, panelControllers.productosFabricaEliminar);
+
+router.get("/categoriasFabrica", auth.authSupervisor, panelControllers.categoriasFabrica);
+
+router.get("/categoriasFabrica/nueva", auth.authSupervisor, panelControllers.categoriasFabricaNueva);
+
+router.post("/categoriasFabrica/nueva", auth.authSupervisor, validar.validarCategoriaFabricaChain, panelControllers.categoriasFabricaInsert);
+
+router.get("/categoriasFabrica/editar", auth.authSupervisor, panelControllers.categoriasFabricaEditar);
+
+router.post("/categoriasFabrica/editar", auth.authSupervisor, validar.validarCategoriaFabricaChain, panelControllers.categoriasFabricaUpdate);
+
+router.get("/categoriasFabrica/eliminar", auth.authSupervisor, panelControllers.categoriasFabricaEliminar);
+
 
 module.exports = router;

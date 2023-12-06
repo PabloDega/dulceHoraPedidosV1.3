@@ -11,10 +11,40 @@ const getProductosFabrica = async () => {
   }
 };
 
-const getCategoriasFabrica = async () => {
+const getProductoFabrica = async (id) => {
   try {
-    const rows = await conectar.query("SELECT * FROM categoriasfabrica");
-    return rows[0];
+    const rows = await conectar.query("SELECT * FROM productosFabrica WHERE ?", { id });
+    return rows[0][0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const insertProductoFabrica = async (datos) => {
+  try {
+    await conectar.query(`INSERT INTO productosFabrica (categoria, nombre, costo, estado, descripcion, sector, unidad, codigo) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.costo}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}")`);  
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const updateProductoFabrica = async (datos, id) => {
+  try {
+    await conectar.query(`UPDATE productosFabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", costo = "${datos.costo}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}" WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const deleteProductoFabrica = async (id) => {
+  try {
+    await conectar.query(`DELETE FROM productosFabrica WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -33,9 +63,51 @@ const getSectoresFabrica = async () => {
   }
 };
 
-const insertProductoFabrica = async (datos) => {
+const getCategoriasFabrica = async () => {
   try {
-    await conectar.query(`INSERT INTO productosFabrica () VALUES ("${datos.destacado || "false"}")`);
+    const rows = await conectar.query("SELECT * FROM categoriasfabrica");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getCategoriaFabrica = async (id) => {
+  try {
+    const rows = await conectar.query("SELECT * FROM categoriasfabrica WHERE ?", { id });
+    return rows[0][0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const insertCategoriaFabrica = async (datos) => {
+  try {
+    await conectar.query(`INSERT INTO categoriasfabrica (categoriaProduccion, color) VALUES ("${datos.categoria}", "${datos.color}")`);  
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const updateCategoriaFabrica = async (datos, id) => {
+  try {
+    await conectar.query(`UPDATE categoriasfabrica SET categoriaProduccion = "${datos.categoria}", color = "${datos.color}" WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const deleteCategoriaFabrica = async (id) => {
+  try {
+    await conectar.query(`DELETE FROM categoriasfabrica WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -45,7 +117,14 @@ const insertProductoFabrica = async (datos) => {
 
 module.exports = {
   getProductosFabrica,
-  getCategoriasFabrica,
-  getSectoresFabrica,
+  getProductoFabrica,
   insertProductoFabrica,
+  updateProductoFabrica,
+  deleteProductoFabrica,
+  getCategoriasFabrica,
+  getCategoriaFabrica,
+  insertCategoriaFabrica,
+  updateCategoriaFabrica,
+  deleteCategoriaFabrica,
+  getSectoresFabrica,
 };

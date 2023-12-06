@@ -1,5 +1,5 @@
 <form action="" method="post" id="nuevoProducto" class="editor">
-    <h1>Nuevo Producto</h1>
+    <h1>Editar Producto</h1>
     <span>
         <label for="codigo">Código</label>
         <input type="number" class="sinFlechas" name="codigo" id="codigo" value="<%= valoresForm.codigo %>" />
@@ -45,12 +45,10 @@
     <span>
         <label for="estado">Estado</label>
         <% let estadoChecked = "";
-        if(valoresForm.estado){
-            if(JSON.parse(valoresForm.estado)){estadoChecked = "checked"}
-        }%>
+            if(JSON.parse(valoresForm.estado)){estadoChecked = "checked"} %>
         <input type="checkbox" name="estado" id="estado" value="true" <%= estadoChecked %>> Disponible
     </span>
     <span>
-        <input type="submit" value="Crear">
+        <input type="submit" value="Modificar">
     </span>
 </form>

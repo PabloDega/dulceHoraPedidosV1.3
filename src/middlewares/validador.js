@@ -202,6 +202,57 @@ const validarLoginChain = [
     .isString().withMessage("Formato de contraseña incorrecto"),
 ];
 
+const validarProductoFabricaChain = [
+  body("codigo")
+    .notEmpty().withMessage("El campo 'Codigo' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El campo 'Codigo' solo acepta numeros, sin espacios ni guiones"),
+  body("categoria")
+    .notEmpty().withMessage("El campo 'Categoria' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Categoría incorrecto"),
+  body("nombre")
+    .notEmpty().withMessage("El campo 'Nombre' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Nombre incorrecto"),
+  body("descripcion")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Descripcion incorrecto"),
+  body("costo")
+    .notEmpty().withMessage("El campo 'costo' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El campo 'costo' solo acepta numeros, sin espacios ni guiones"),
+  body("unidad")
+    .notEmpty().withMessage("El campo 'Unidad' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Unidad incorrecto"),
+  body("sector")
+    .notEmpty().withMessage("El campo 'Sector' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Sector incorrecto"),
+];
+
+const validarCategoriaFabricaChain = [
+  body("categoria")
+    .notEmpty().withMessage("El campo 'Categoría' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Categoría incorrecto"),
+  body("color")
+    .notEmpty().withMessage("El campo 'Color' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo Color incorrecto"),
+]
+
 const dataValidator = (data) => { 
   if(data.mensaje == ""){
     return false;
@@ -237,5 +288,7 @@ module.exports = {
   validarUsuariosChain,
   validarUsuariosUpdateChain,
   validarLoginChain,
+  validarProductoFabricaChain,
+  validarCategoriaFabricaChain,
   dataValidator,
 };
