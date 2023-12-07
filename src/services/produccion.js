@@ -117,6 +117,16 @@ const updatePedidoProduccion = async(datos) => {
   }
 }
 
+const deletePedidoProduccion = async (id) => {
+  try {
+    await conectar.query(`DELETE FROM produccion WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getProduccionFabrica,
   getProduccionLocal,
@@ -128,4 +138,5 @@ module.exports = {
   insertPedidoProduccion,
   updateEstadoProduccion,
   updatePedidoProduccion,
+  deletePedidoProduccion,
 };

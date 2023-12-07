@@ -752,47 +752,8 @@ footer img {
 .pedidoProduccionCantidad{
   width: 4em;
 }
-#pedidoProduccionTabla .Facturas{
+.categoriaProduccion{
   border-left: 8px solid orange;
-}
-#pedidoProduccionTabla .Panificados{
-  border-left: 8px solid orangered;
-}
-#pedidoProduccionTabla .Bizcocheria{
-  border-left: 8px solid darkred;
-}
-#pedidoProduccionTabla .Prepizza{
-  border-left: 8px solid yellow;
-}
-#pedidoProduccionTabla .Postre{
-  border-left: 8px solid green;
-}
-#pedidoProduccionTabla .Cuartos{
-  border-left: 8px solid darkseagreen;
-}
-#pedidoProduccionTabla .Alfajor{
-  border-left: 8px solid aquamarine;
-}
-#pedidoProduccionTabla .Budin{
-  border-left: 8px solid cornflowerblue;
-}
-#pedidoProduccionTabla .Seca{
-  border-left: 8px solid indigo;
-}
-#pedidoProduccionTabla .Humeda{
-  border-left: 8px solid midnightblue;
-}
-#pedidoProduccionTabla .Porcion{
-  border-left: 8px solid plum;
-}
-#pedidoProduccionTabla .Torta{
-  border-left: 8px solid saddlebrown;
-}
-#pedidoProduccionTabla .Insumos{
-  border-left: 8px solid tomato;
-}
-#pedidoProduccionTabla .Salado{
-  border-left: 8px solid crimson;
 }
 .pedidoProduccionUltimoPedido{
   width: 3em;

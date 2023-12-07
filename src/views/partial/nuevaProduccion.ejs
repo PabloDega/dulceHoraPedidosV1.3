@@ -37,10 +37,13 @@
                     } else {
                         ultimaCantidad = 0;
                     }
-                } 
+                };
+                let color = "#CCCCCC";
+                let categoria = categorias.find((dato) => dato.categoriaProduccion == producto.categoria);
+                if(categoria){color = categoria.color};
                 %>
                 <tr>
-                    <td class="<%= producto.categoria %>"><%= producto.codigo %></td>
+                    <td style="border-color: <%= color %>;" class="categoriaProduccion"><%= producto.codigo %></td>
                     <td><%= producto.nombre %></td>
                     <td><%= producto.unidad %></td>
                     <td class="pedidoProduccionCeldaImporte">

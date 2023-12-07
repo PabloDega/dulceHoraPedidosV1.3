@@ -218,6 +218,12 @@
                             <input type="hidden" name="emisor" value="fabrica">
                             <input type="submit" data-form="forEntregado" value="Entregado" class="pedidoEstadoBoton btnNaranja">
                         </form>
+                        <form id="formCancelado" method="post" action="/panel/produccion/fabrica/updateEstado">
+                            <input type="hidden" name="id" value="<%= dataPedido.id %>">
+                            <input type="hidden" name="estado" value="cancelado">
+                            <input type="hidden" name="emisor" value="fabrica">
+                            <input type="submit" data-form="formCancelado" value="Cancelar" class="pedidoEstadoBoton btnRojo">
+                        </form>
                         <span class="btn btnVerde btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
                     <%}
                 }%>

@@ -691,6 +691,7 @@ const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
 
 const pedidoProduccionNuevo = async (req, res) => {
   const productos = await servicesProduccion.getProductosProduccion();
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   let ultimoPedido = await servicesProduccion.getUltimoPedido(req.session.userLocal);
   if(ultimoPedido == undefined){
     ultimoPedido = 0;
@@ -698,12 +699,14 @@ const pedidoProduccionNuevo = async (req, res) => {
   res.render(__basedir + "/src/views/pages/nuevaProduccion", {
     ultimoPedido,
     productos,
+    categorias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
 }
 
 const pedidoProduccionInsert = async (req, res) => {
+  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Nuevo Pedido a Produccion", "");
   let pedido = [];
   const productos = await servicesProduccion.getProductosProduccion();
   for(dato in req.body){
@@ -729,11 +732,21 @@ const pedidoProduccionInsert = async (req, res) => {
 }
 
 const pedidoProduccionUpdateEstado = async(req, res) => {
-  await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
-  if(req.body.emisor == "fabrica"){
-    res.redirect("/panel/produccion/fabrica?id=" + req.body.id);
-  } else if(req.body.emisor == "local"){
-    res.redirect("/panel/produccion/local?id=" + req.body.id);
+  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Cambio de estado de pedido", req.body.estado);
+  if(req.body.estado == "cancelado"){
+    await servicesProduccion.deletePedidoProduccion(req.body.id);
+    if(req.body.emisor == "fabrica"){
+      res.redirect("/panel/produccion/fabrica");
+    } else if(req.body.emisor == "local"){
+      res.redirect("/panel/produccion/local");
+    }
+  } else {
+    await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
+    if(req.body.emisor == "fabrica"){
+      res.redirect("/panel/produccion/fabrica?id=" + req.body.id);
+    } else if(req.body.emisor == "local"){
+      res.redirect("/panel/produccion/local?id=" + req.body.id);
+    }
   }
 }
 
