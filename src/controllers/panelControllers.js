@@ -626,6 +626,7 @@ const pedidoProduccionLocal = async(req, res) => {
     lector: "local",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    userLocal: req.session.userLocal,
   });
 };
 
