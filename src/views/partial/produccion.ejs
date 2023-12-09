@@ -142,12 +142,13 @@
 
 
     <div class="produccionPedido">
-    <% if(dataPedido !== undefined){%>
+    <% if(dataPedido !== undefined){
+        let local;%>
         <div class="pedidoCard">
             <h3>Pedido Nº<%= dataPedido.id %></h3>
             <hr>
             <%if(lector == "fabrica"){
-                    let local = locales.find((local) => dataPedido.local == local.id)%>
+                    local = locales.find((local) => dataPedido.local == local.id)%>
                     <h3>Local: <%= local.nombre %></h3>
                     <hr>
             <%}%>
@@ -224,9 +225,15 @@
                             <input type="hidden" name="emisor" value="fabrica">
                             <input type="submit" data-form="formCancelado" value="Cancelar" class="pedidoEstadoBoton btnRojo">
                         </form>
-                        <span class="btn btnVerde btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
+                        <span class="btn btnAzul btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
                     <%}
                 }%>
+                <form id="exportarExcel" method="post" action="/panel/productosFabrica/exportar/excel">
+                    <input type="hidden" name="fecha" value="<%= verFechaFiltro(dataPedido.fecha) %>">
+                    <input type="hidden" name="local" value="<%= local.nombre %>">
+                    <input type="hidden" name="pedido" value="<%= JSON.stringify(detallePedido) %>">
+                    <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
+                </form>
             </div>
 
         </div>

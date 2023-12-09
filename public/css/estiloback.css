@@ -246,6 +246,10 @@ table input{
   background-color: green;
   color:white;
 }
+.btnAzul{
+  background-color: blue;
+  color:white;
+}
 .btnSmall{
   /* transform: scale(0.9); */
   font-size: 0.9em;

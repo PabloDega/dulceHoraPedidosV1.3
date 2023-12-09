@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const panelControllers = require("../controllers/panelControllers");
+const excelControllers = require("../controllers/excelControllers");
 const fileUpload = require("../services/fileUpload");
 const validar = require("../middlewares/validador");
 const auth = require("../middlewares/auth")
@@ -118,6 +119,10 @@ router.get("/productosFabrica/editar", auth.authSupervisor, panelControllers.pro
 router.post("/productosFabrica/editar", auth.authSupervisor, validar.validarProductoFabricaChain, panelControllers.productosFabricaUpdate);
 
 router.get("/productosFabrica/eliminar", auth.authSupervisor, panelControllers.productosFabricaEliminar);
+
+router.get("/productosFabrica/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
+
+router.post("/productosFabrica/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
 
 router.get("/categoriasFabrica", auth.authSupervisor, panelControllers.categoriasFabrica);
 
