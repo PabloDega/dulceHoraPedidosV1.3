@@ -610,8 +610,10 @@ const pedidoProduccionLocal = async(req, res) => {
     }
   }
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
-  const productos = await servicesProduccion.getProductosProduccion();
+  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
+  const locales = await servicesLocal.getLocales();
   let fechaUltimoPedido = 0
   if(data.length > 0){
     fechaUltimoPedido = data[data.length-1].fechaentrega; 
@@ -619,10 +621,12 @@ const pedidoProduccionLocal = async(req, res) => {
   const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, fechaUltimoPedido);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
+    categorias,
     dataPedido,
     dataLocal,
     productos,
     prodFecha,
+    locales,
     lector: "local",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -652,7 +656,8 @@ const pedidoProduccionFabrica = async(req, res) => {
   }
   let locales = await servicesLocal.getLocales();
   let data = await servicesProduccion.getProduccionFabrica();
-  const productos = await servicesProduccion.getProductosProduccion();
+  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   // calcular estado del pedido de cada local segun fecha actual
   let fechasLocales = [];
   for await (let local of locales){
@@ -671,6 +676,7 @@ const pedidoProduccionFabrica = async(req, res) => {
     data,
     dataPedido,
     productos,
+    categorias,
     locales,
     fechasLocales,
     lector: "fabrica",

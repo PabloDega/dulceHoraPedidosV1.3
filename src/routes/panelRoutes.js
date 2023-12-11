@@ -120,7 +120,7 @@ router.post("/productosFabrica/editar", auth.authSupervisor, validar.validarProd
 
 router.get("/productosFabrica/eliminar", auth.authSupervisor, panelControllers.productosFabricaEliminar);
 
-router.get("/productosFabrica/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
+// router.get("/productosFabrica/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
 
 router.post("/productosFabrica/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
 

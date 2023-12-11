@@ -23,42 +23,58 @@
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Importe</th>
+                <th>Imagen</th>
             </tr>
         </thead>
         <tbody>
-            <% productos.forEach((producto) => {
-                let ultimoPedidoParsed = JSON.parse(ultimoPedido)
-                let ultimaCantidad = 0;
-                if(ultimoPedidoParsed !== undefined && ultimoPedido !== 0){
-                    ultimaCantidad = ultimoPedidoParsed.find((dato) => dato[1] == producto.id);
-                    if(ultimaCantidad !== undefined){
-                        ultimaCantidad = ultimaCantidad[0];
-                        
-                    } else {
-                        ultimaCantidad = 0;
+            <% categorias.forEach((categoria) => {
+                let prodFiltrados = [];
+                productos.forEach((item) => {
+                    if(item.categoria == categoria.categoriaProduccion){
+                        prodFiltrados.push(item);
                     }
-                };
-                let color = "#CCCCCC";
-                let categoria = categorias.find((dato) => dato.categoriaProduccion == producto.categoria);
-                if(categoria){color = categoria.color};
-                %>
-                <tr>
-                    <td style="border-color: <%= color %>;" class="categoriaProduccion"><%= producto.codigo %></td>
-                    <td><%= producto.nombre %></td>
-                    <td><%= producto.unidad %></td>
-                    <td class="pedidoProduccionCeldaImporte">
-                        <span>$</span>
-                        <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
-                    <td>
-                        <input type="text" class="pedidoProduccionUltimoPedido" disabled value="<%= ultimaCantidad %>">
-                        <input type="number" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="0">
-                    </td>
-                    <td class="pedidoProduccionCeldaImporte">
-                        <span>$</span>
-                        <span class="importe" id="importe<%= producto.id %>">0</span>
-                    </td>
-                </tr>
-            <%}) %>
+                })
+                if(prodFiltrados.length > 0){%>
+                    <tr>
+                        <th colspan="7" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+                    </tr>
+                    <%prodFiltrados.forEach((producto) => {
+                        let ultimoPedidoParsed = JSON.parse(ultimoPedido)
+                        let ultimaCantidad = 0;
+                        if(ultimoPedidoParsed !== undefined && ultimoPedido !== 0){
+                            ultimaCantidad = ultimoPedidoParsed.find((dato) => dato[1] == producto.id);
+                            if(ultimaCantidad !== undefined){
+                                ultimaCantidad = ultimaCantidad[0];
+                                
+                            } else {
+                                ultimaCantidad = 0;
+                            }
+                        };
+                        let color = "#CCCCCC";
+                        let categoria = categorias.find((dato) => dato.categoriaProduccion == producto.categoria);
+                        if(categoria){color = categoria.color};
+                        %>
+                        <tr>
+                            <td style="border-color: <%= color %>;" class="categoriaProduccion"><%= producto.codigo %></td>
+                            <td><%= producto.nombre %></td>
+                            <td><%= producto.unidad %></td>
+                            <td class="pedidoProduccionCeldaImporte">
+                                <span>$</span>
+                                <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
+                            <td>
+                                <input type="text" class="pedidoProduccionUltimoPedido" disabled value="<%= ultimaCantidad %>">
+                                <input type="number" min="0" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="0">
+                            </td>
+                            <td class="pedidoProduccionCeldaImporte">
+                                <span>$</span>
+                                <span class="importe" id="importe<%= producto.id %>">0</span>
+                            </td>
+                            <td class="verProdFabrica">ver <span><img src="<%= producto.img %>" alt=""></span></td>
+                        </tr>
+                    <%})
+                }
+            })%>
+            
             <tr style="display: none;">
                 <td> <input type="text" name="pedidoProduccionFechaEntrega" id="pedidoProduccionFechaEntrega"> </td>
                 <td> <input type="text" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>

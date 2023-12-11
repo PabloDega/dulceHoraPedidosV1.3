@@ -169,18 +169,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% let detallePedido=JSON.parse(dataPedido.pedido);
-                        detallePedido.forEach((item)=> {
+                        <% let detallePedido = JSON.parse(dataPedido.pedido);
+                        categorias.forEach((categoria) => {
+                            let prodFiltrados = [];
+                            detallePedido.forEach((pedido) => {
+                                let producto = productos.find((prod) => prod.id == pedido[1])
+                                if(producto.categoria == categoria.categoriaProduccion){
+                                    prodFiltrados.push(pedido);
+                                }
+                            })
+                            if(prodFiltrados.length > 0){%>
+                                <tr>
+                                    <th colspan="5" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+                                </tr>
+                            <%}
+                            prodFiltrados.forEach((item)=> {
                             let producto = productos.find((prod) => prod.id == item[1])
                             %>
                             <tr>
-                                <td><%= item[1] %></td>
+                                <td><%= producto.codigo %></td>
                                 <td><%= producto.nombre %></td>
                                 <td><%= item[0] %></td>
                                 <td>$<%= item[2] %></td>
                                 <td>$<%= item[0] * item[2] %></td>
                             </tr>
-                            <%})%>
+                            <%});
+                        })%>
                     </tbody>
                 </table>
             </div>
@@ -233,10 +247,12 @@
                     <%if(lector == "fabrica"){%>
                     <input type="hidden" name="local" value="<%= local.nombre %>">
                     <%}%>
-                    <%if(lector == "local"){%>
-                    <input type="hidden" name="local" value="<%= userLocal %>">
+                    <%if(lector == "local"){
+                        let nombreLocal = locales.find((local) => local.id == userLocal);%>
+                    <input type="hidden" name="local" value="<%= nombreLocal.nombre %>">
                     <%}%>
                     <input type="hidden" name="pedido" value="<%= JSON.stringify(detallePedido) %>">
+                    <input type="hidden" name="id" value="<%= dataPedido.id %>">
                     <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
                 </form>
             </div>
