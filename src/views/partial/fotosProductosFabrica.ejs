@@ -1,0 +1,22 @@
+<span class="fotosHeader">
+    <h1>Fotos de Productos</h1>
+    <h2>/ Características</h2>
+    <span>Imagen cuadrada en 700 pixeles</span>
+</span>
+<div id="prodCards">
+    <% data.forEach(dato=> { %>
+        <div class="backListaFotosCard">
+            <h1>
+                <%= dato.nombre %>
+            </h1>
+            <span>ID de producto: <%= dato.id %></span>
+            <div>
+                <span>Nombre de archivo: <b>
+                        <%= dato.imgCard %>
+                    </b></span>
+            </div>
+            <img src="/<%= dato.img %>" alt="" />
+            <div class="backListaProdCardBoton btnNaranja btnNuevaFotoFabrica" id="backFotosUpload" data-id="<%= dato.id %>">Subir nueva foto</div>
+        </div>
+        <% }) %>
+</div>

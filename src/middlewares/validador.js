@@ -238,6 +238,16 @@ const validarProductoFabricaChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo Sector incorrecto"),
+  body("img")
+    .optional({ values: "falsy" })
+    .trim()
+    .isURL({
+      require_tld: false,
+      require_protocol: false,
+      require_host: false,
+      require_port: false,
+      require_valid_protocol: false,
+    }).withMessage("Formato del campo 'Nombre de Imagen' incorrecto"),
 ];
 
 const validarCategoriaFabricaChain = [

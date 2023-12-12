@@ -98,6 +98,13 @@ if(document.querySelector("#pedidoProduccionEnviar") != null){
     })
 }
 
+//Evitar que el fomulario se envie con enter
+document.querySelector("#nuevaProduccion").addEventListener("keypress", (e) => {
+    if(e.keyCode == 13){
+        e.preventDefault();
+    }
+})
+
 
 pedidoProduccionCalcImportes();
 pedidoProduccionCalcTotal();

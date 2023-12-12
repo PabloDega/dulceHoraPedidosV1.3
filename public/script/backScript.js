@@ -54,6 +54,11 @@ if (document.querySelector("#produccionFabrica") != null) {
     .querySelector("#produccionFabrica")
     .addEventListener("click", () => (location.href = "/panel/produccion/fabrica"));
 }
+if (document.querySelector("#fotosFabrica") != null) {
+  document
+    .querySelector("#fotosFabrica")
+    .addEventListener("click", () => (location.href = "/panel/productosFabrica/fotos"));
+}
 if (document.querySelector("#productosFabrica") != null) {
   document
     .querySelectorAll("#productosFabrica")
@@ -187,14 +192,18 @@ if (document.querySelector("#fotosLocales") != null) {
     .addEventListener("click", () => (location.href = "/panel/fotos/locales"));
 }
 if (document.querySelectorAll(".btnProductos") != null) {
-  document
-    .querySelectorAll(".btnProductos")
-    .forEach((boton) =>
-      boton.addEventListener(
-        "click",
-        (e) => (location.href = "/panel/fotos/nueva?tipo=productos&id=" + e.target.dataset.id)
-      )
-    );
+  document.querySelectorAll(".btnProductos").forEach((boton) => {
+    boton.addEventListener("click", (e) => {
+      location.href = "/panel/fotos/nueva?tipo=productos&id=" + e.target.dataset.id;
+    })
+  })
+}
+if (document.querySelectorAll(".btnNuevaFotoFabrica") != null) {
+  document.querySelectorAll(".btnNuevaFotoFabrica").forEach((boton) => {
+    boton.addEventListener("click", (e) => {
+      location.href = "/productosFabrica/fotos/nueva?id=" + e.target.dataset.id;
+    })
+  })
 }
 if (document.querySelectorAll(".btnCategorias") != null) {
   document

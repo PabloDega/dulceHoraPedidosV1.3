@@ -658,6 +658,7 @@ const pedidoProduccionFabrica = async(req, res) => {
   let data = await servicesProduccion.getProduccionFabrica();
   const productos = await servicesProductosFabrica.getProductosFabrica();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  
   // calcular estado del pedido de cada local segun fecha actual
   let fechasLocales = [];
   for await (let local of locales){
@@ -974,6 +975,16 @@ const categoriasFabricaEliminar = async(req, res) => {
   })
 }
 
+const fotosProductosFabrica = async(req, res) => {
+  let data = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/fotosProductosFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+
 module.exports = {
   index,
   productosCard,
@@ -1037,4 +1048,5 @@ module.exports = {
   categoriasFabricaEditar,
   categoriasFabricaUpdate,
   categoriasFabricaEliminar,
+  fotosProductosFabrica,
 };

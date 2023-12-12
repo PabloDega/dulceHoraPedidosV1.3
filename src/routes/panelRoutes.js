@@ -136,5 +136,7 @@ router.post("/categoriasFabrica/editar", auth.authSupervisor, validar.validarCat
 
 router.get("/categoriasFabrica/eliminar", auth.authSupervisor, panelControllers.categoriasFabricaEliminar);
 
+router.get("/productosFabrica/fotos", auth.authSupervisor, panelControllers.fotosProductosFabrica);
+
 
 module.exports = router;

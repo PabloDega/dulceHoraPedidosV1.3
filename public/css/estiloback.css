@@ -871,6 +871,9 @@ footer img {
   border: 10px solid white;
   border-radius: 1em 1em 1em 0;
   box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  flex-direction: column;
+  background-color: white;
+  color:black;
 }
 .verProdFabrica span img{
   width: 150px;
