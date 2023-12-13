@@ -984,6 +984,37 @@ const fotosProductosFabrica = async(req, res) => {
   })
 }
 
+const nuevaFotoProductoFabrica = async(req, res) => {
+  if(!req.query.id){
+    res.redirect("/panel/productosFabrica/fotos");
+  }
+  const id = req.query.id
+  const data = await servicesProductosFabrica.getProductoFabrica(id);
+  if(data === undefined){
+    res.redirect("/panel/productosFabrica/fotos");
+  }
+  res.render(__basedir + "/src/views/pages/nuevaFotoProductoFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const uploadNuevaFotoProductoFabrica = async(req, res) => {
+  if (req.fileValidationError == "Error") {
+    return res.render(__basedir + "/src/views/pages/nuevaFotoProductoFabrica", {
+      data: {
+        nombre: req.body.nombre,
+        img: req.body.nombreArchivo,
+        id: req.body.id,
+      },
+      errores: [{ msg: "Formato de archivo no admitido" }],
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+  res.redirect("/panel/productosFabrica/fotos");
+}
 
 module.exports = {
   index,
@@ -1049,4 +1080,6 @@ module.exports = {
   categoriasFabricaUpdate,
   categoriasFabricaEliminar,
   fotosProductosFabrica,
+  nuevaFotoProductoFabrica,
+  uploadNuevaFotoProductoFabrica,
 };

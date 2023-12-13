@@ -24,7 +24,7 @@ const getProductoFabrica = async (id) => {
 
 const insertProductoFabrica = async (datos) => {
   try {
-    await conectar.query(`INSERT INTO productosFabrica (categoria, nombre, costo, estado, descripcion, sector, unidad, codigo, img) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.costo}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}", "${datos.img}")`);  
+    await conectar.query(`INSERT INTO productosFabrica (categoria, nombre, costo, estado, descripcion, sector, unidad, codigo, img) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.costo}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}", "im/fabrica/${datos.codigo}.png")`);  
   } catch (error) {
     throw error;
   } finally {
@@ -34,7 +34,7 @@ const insertProductoFabrica = async (datos) => {
 
 const updateProductoFabrica = async (datos, id) => {
   try {
-    await conectar.query(`UPDATE productosFabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", costo = "${datos.costo}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}", img = "${datos.img}" WHERE id = "${id}"`);
+    await conectar.query(`UPDATE productosFabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", costo = "${datos.costo}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}", img = "im/fabrica/${datos.codigo}.png" WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {

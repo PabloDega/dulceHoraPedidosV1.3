@@ -1,0 +1,25 @@
+<form action="" method="post" enctype="multipart/form-data" class="editor">
+    <h1>Subir Nueva Foto</h1>
+    <b>
+    <span>Tipo: Producto de Fábrica</span>
+    <span>Nombre: <%= data.nombre %></span>
+    <input type="hidden" name="nombre" value="<%= data.nombre %>">
+    <span>Archivo: <%= data.codigo %></span>
+    <input type="hidden" name="nombreArchivo" value="<%= data.codigo %>">
+    <span>ID: <%= data.id %></span>
+    <input type="hidden" name="id" value="<%= data.id %>">
+    </b>
+    <span>
+        Seleccionar archivo PNG desde el dispositivo, el nombre será reasignado por el sistema
+    </span>
+    <span>
+        Caracteristicas:
+        Archivo de imágen caudrado de 700 * 700 pixeles, formato PNG
+    </span>
+    <span>
+        <input type="file" name="foto" id="foto">
+    </span>
+    <span>
+        <input type="submit" value="Subir">
+    </span>
+</form>

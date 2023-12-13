@@ -138,5 +138,8 @@ router.get("/categoriasFabrica/eliminar", auth.authSupervisor, panelControllers.
 
 router.get("/productosFabrica/fotos", auth.authSupervisor, panelControllers.fotosProductosFabrica);
 
+router.get("/productosFabrica/fotos/nueva", auth.authSupervisor, panelControllers.nuevaFotoProductoFabrica);
+
+router.post("/productosFabrica/fotos/nueva", auth.authSupervisor, fileUpload.subirArchivo.single("foto"), panelControllers.uploadNuevaFotoProductoFabrica);
 
 module.exports = router;

@@ -199,9 +199,10 @@ if (document.querySelectorAll(".btnProductos") != null) {
   })
 }
 if (document.querySelectorAll(".btnNuevaFotoFabrica") != null) {
-  document.querySelectorAll(".btnNuevaFotoFabrica").forEach((boton) => {
+  document.querySelectorAll(".btnNuevaFotoFabrica").forEach((boton  ) => {
     boton.addEventListener("click", (e) => {
-      location.href = "/productosFabrica/fotos/nueva?id=" + e.target.dataset.id;
+      console.log(e.target.dataset.id)
+      location.href = "/panel/productosFabrica/fotos/nueva?id=" + e.target.dataset.id;
     })
   })
 }
