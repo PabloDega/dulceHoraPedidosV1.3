@@ -614,11 +614,8 @@ const pedidoProduccionLocal = async(req, res) => {
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocales();
-  let fechaUltimoPedido = 0
-  if(data.length > 0){
-    fechaUltimoPedido = data[data.length-1].fechaentrega; 
-  }
-  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, fechaUltimoPedido);
+  const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
+  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, ultimosPedidos);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     categorias,
@@ -654,8 +651,8 @@ const pedidoProduccionFabrica = async(req, res) => {
     }
     dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
   }
-  let locales = await servicesLocal.getLocales();
-  let data = await servicesProduccion.getProduccionFabrica();
+  const locales = await servicesLocal.getLocales();
+  const data = await servicesProduccion.getProduccionFabrica();
   const productos = await servicesProductosFabrica.getProductosFabrica();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   
@@ -665,12 +662,10 @@ const pedidoProduccionFabrica = async(req, res) => {
     let serviciosLocal = JSON.parse(local.servicios);
     if(serviciosLocal.pedidos){
       const data = await servicesProduccion.getProduccionLocal(local.id);
-      if(data.length > 0){
-        let fechaUltimoPedido = data[data.length-1].fechaentrega;
-        let fechas = await produccionMiddleware.getFechasProduccionLocal(local.entrega, fechaUltimoPedido);
-        fechas.localId = local.id
-        fechasLocales.push(fechas);
-      }
+      const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
+      let fechas = await produccionMiddleware.getFechasProduccionLocal(local.entrega, ultimosPedidos);
+      fechas.localId = local.id;
+      fechasLocales.push(fechas);
     }
   }
   res.render(__basedir + "/src/views/pages/produccion", {

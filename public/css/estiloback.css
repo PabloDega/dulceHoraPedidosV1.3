@@ -706,21 +706,44 @@ footer img {
 #calendarioPedidos div span:first-child{
   font-weight: 600;
 }
-.pedidosProdInfo .cerrado{
-  font-weight: 600;
-  color: red;
+.pedidosProdInfo .localEstadoPedido{
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+.pedidosProdInfo .localSemaforo{
+  display: flex;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+.pedidosProdInfo .proximo{
+  background-color: gray;
+  border: 2px solid black;
 }
 .pedidosProdInfo .abierto{
-  font-weight: 600;
-  color: green;
+  background-color: yellow;
+  border: 2px solid black;
 }
-.pedidosProdInfo .pendiente{
-  font-weight: 600;
-  color: gray;
+.pedidosProdInfo .demorado{
+  background-color: orange;
+  border: 2px solid black;
 }
 .pedidosProdInfo .cargado{
-  font-weight: 600;
-  color: blue;
+  background-color: green;
+  border: 2px solid black;
+}
+.pedidosProdInfo .aceptado{
+  background-color: blue;
+  border: 2px solid black;
+}
+.pedidosProdInfo .entregado{
+  background-color: blueviolet;
+  border: 2px solid black;
+}
+.pedidosProdInfo .aplazado{
+  background-color: red;
+  border: 2px solid black;
 }
 #backRender #nuevaProduccion{
   width: 100%;
@@ -809,20 +832,26 @@ footer img {
   flex-direction: column;
   gap: 0.2em;
 }
-.prodSemaforoabierto{
-  background-color: green;
-}
-.prodSemaforocargado{
-  background-color: blue;
-}
-.prodSemaforopendiente{
+.prodSemaforoproximo{
   background-color: gray;
 }
-.prodSemaforocerrado{
-  background-color: red;
+.prodSemaforoabierto{
+  background-color: yellow;
 }
-.prodSemaforoAmarillo{
-  background-color: rgb(255, 234, 0);
+.prodSemaforodemorado{
+  background-color: orangered;
+}
+.prodSemaforocargado{
+  background-color: green;
+}
+.prodSemaforoaceptado{
+  background-color: blue;
+}
+.prodSemaforoentregado{
+  background-color: blueviolet;
+}
+.prodSemaforoaplazado{
+  background-color: red;
 }
 #pedidoProduccionModificar{
   display: flex;

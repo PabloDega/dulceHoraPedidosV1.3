@@ -19,15 +19,21 @@
             <div>
                 <span>Entrega: </span>
                 <span><%= verFechaFiltro(prodFecha.fechaEntregaPedido) %></span>
-                <span class="<%= prodFecha.pedidoEstado %>"> pedido <%= prodFecha.pedidoEstado %></span>
+                <span class="localEstadoPedido">
+                    <span class="localSemaforo <%= prodFecha.pedidoEstado %>"></span>
+                    pedido <%= prodFecha.pedidoEstado %>
+                </span>
             </div>
             <div>
                 <span>Proxima Entrega: </span>
                 <span><%= verFechaFiltro(prodFecha.fechaEntregaProxPedido) %></span>
-                <span class="<%= prodFecha.proximoPedidoEstado %>">pedido <%= prodFecha.proximoPedidoEstado %></span>
+                <span class="localEstadoPedido">
+                    <span class="localSemaforo <%= prodFecha.proximoPedidoEstado %>"></span>
+                    pedido <%= prodFecha.proximoPedidoEstado %>
+                </span>
             </div>
         </div>
-        <% if(prodFecha.pedidoEstado == "abierto" || prodFecha.proximoPedidoEstado == "abierto"){%>
+        <% if(prodFecha.pedidoEstado == "abierto" || prodFecha.proximoPedidoEstado == "abierto" || prodFecha.pedidoEstado == "demorado" || prodFecha.proximoPedidoEstado == "demorado"){%>
         <div id="botones">
             <span class="btn btnNaranja" id="pedidoProdNuevo">Nuevo Pedido</span>
         </div>
@@ -46,39 +52,39 @@
             if(fechas === undefined){
                 return;
             }
-            let pocasHoras1 = "";
+            /* let pocasHoras1 = "";
             if(fechas.pedidoEstado == "abierto" && fechas.horasRestanteEntregaPedido < 4){
                 pocasHoras1 = "prodSemaforoAmarillo";
             }
             let pocasHoras2 = "";
             if(fechas.proximoPedidoEstado == "abierto" && fechas.horasRestanteEntregaProximoPedido < 4){
                 pocasHoras2 = "prodSemaforoAmarillo";
-            }
-            if(fechas.pedidoEstado == "cerrado"){
+            } */
+            /* if(fechas.pedidoEstado == "cerrado"){
                 let pedidosLocal = data.filter((dato) => dato.local == local.id);
                 let resultado = pedidosLocal.filter((dato) => dato.fechaentrega == verFechaFiltro(fechas.fechaEntregaPedido));
                 if(resultado.length > 0){
                     fechas.pedidoEstado = "cargado";
                 }
-            }
+            } */
             %>
             <div id="produccionSemaforos">
                 <span><b><%= local.nombre %></b></span>
                 <div>
-                    <span class="produccionSemaforo <%= "prodSemaforo"+fechas.pedidoEstado %> <%= pocasHoras1 %>"></span>
+                    <span class="produccionSemaforo <%= "prodSemaforo"+fechas.pedidoEstado %>"></span>
                     <div>
                         <span ><%= verFechaFiltro(fechas.fechaEntregaPedido) %></span>
-                        <%if(fechas.pedidoEstado == "abierto"){%>
+                        <%if(fechas.pedidoEstado == "abierto" || fechas.pedidoEstado == "demorado"){%>
                             <span>Cierre en: <%= fechas.horasRestanteEntregaPedido %> hs</span>
                         <%}%>
                         <span><b><%= fechas.pedidoEstado %></b></span>
                     </div>
                 </div>
                 <div>
-                    <span class="produccionSemaforo <%= "prodSemaforo"+fechas.proximoPedidoEstado %> <%= pocasHoras2 %>"></span>
+                    <span class="produccionSemaforo <%= "prodSemaforo"+fechas.proximoPedidoEstado %>"></span>
                     <div>
                         <span ><%= verFechaFiltro(fechas.fechaEntregaProxPedido) %></span>
-                        <%if(fechas.proximoPedidoEstado == "abierto"){%>
+                        <%if(fechas.proximoPedidoEstado == "abierto"  || fechas.pedidoEstado == "demorado"){%>
                             <span>Cierre en: <%= fechas.horasRestanteEntregaProximoPedido %> hs</span>
                         <%}%>
                         <span><b><%= fechas.proximoPedidoEstado %></b></span>
