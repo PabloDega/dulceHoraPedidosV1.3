@@ -108,6 +108,8 @@ router.get("/produccion/editar", auth.authSupervisor, panelControllers.pedidoPro
 
 router.post("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionUpdate);
 
+router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccionFabrica);
+
 router.get("/productosFabrica", auth.authSupervisor, panelControllers.productosFabrica);
 
 router.get("/productosFabrica/nuevo", auth.authSupervisor, panelControllers.productosFabricaNuevo);

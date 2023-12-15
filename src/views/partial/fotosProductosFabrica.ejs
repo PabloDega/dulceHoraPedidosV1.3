@@ -9,14 +9,15 @@
             <h1>
                 <%= dato.nombre %>
             </h1>
-            <span>ID de producto: <%= dato.id %></span>
+            <span>ID: <%= dato.id %></span>
+            <span>Código de producto: <%= dato.codigo %></span>
             <div>
-                <span>Nombre de archivo: <b>
-                        <%= dato.imgCard %>
-                    </b></span>
+                <span>Nombre de archivo: <b><%= dato.img %></b></span>
             </div>
             <img src="/<%= dato.img %>" alt="" />
-            <div class="backListaProdCardBoton btnNaranja btnNuevaFotoFabrica" id="backFotosUpload" data-id="<%= dato.id %>">Subir nueva foto</div>
+            <div class="backListaProdCardBoton btnNaranja btnNuevaFotoFabrica" id="backFotosUpload" data-id="<%= dato.id %>">
+                Subir nueva foto
+            </div>
         </div>
         <% }) %>
 </div>
