@@ -1,0 +1,27 @@
+<form action="" method="post" id="nuevoPedidoPersonalizado" class="editor">
+    <h1>Nuevo pedido personalizado</h1>
+    <span>
+        <label for="fecha">Fecha de entrega</label>
+        <input type="date" name="fecha" id="fecha" />
+    </span>
+    <span>
+        <label for="local">Local</label>
+        <select name="local" id="local">
+            <option value="" selected disabled>
+                - Seleccionar un local -
+            </option>
+            <%locales.forEach((local) => { %>
+                <option value="<%= local.id %>">
+                    <%= local.nombre %>
+                </option>
+            <%}) %>
+        </select>
+    </span>
+    <span>
+        <label for="minimos">Minimos</label>
+        <input type="checkbox" name="minimos" id="minimos" checked value="true">
+    </span>
+    <span>
+        <input type="submit" value="Crear">
+    </span>
+</form>

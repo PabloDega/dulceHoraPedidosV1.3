@@ -111,7 +111,7 @@ function cerrarPopEliminar() {
 
 if (document.querySelector("#pedidoPagarMP") != null) {
   document.querySelector("#pedidoPagarMP").addEventListener("click", (e) => {
-    console.log(e.target.dataset)
+    // console.log(e.target.dataset)
     window.open(e.target.dataset.linkmp, "_blank");
   });
 }

@@ -5,7 +5,7 @@
     <div id="datosFloat">
         <span>
             <span><b>Fecha de entrega:</b></span>
-            <span id="pedidoProduccionDatosFechaEntrega">Martes 28/11/2023</span>
+            <span id="pedidoProduccionDatosFechaEntrega"><%= pedido.fechaentrega %></span>
         </span>
         <span id="pedidoProduccionTotal">
             <b>Total:</b>
@@ -35,34 +35,59 @@
             </tr>
         </thead>
         <tbody>
-            <% productos.forEach((producto) => {
-                let pedidoParsed = JSON.parse(pedido.pedido)
-                let cantidadPedida = 0;
-                if(pedidoParsed !== undefined && pedido.local !== "x"){
-                    cantidadPedida = pedidoParsed.find((dato) => dato[1] == producto.id);
-                    if(cantidadPedida !== undefined){
-                        cantidadPedida = cantidadPedida[0];
-                    } else {
-                        cantidadPedida = 0;
+            <% let minimosCategoria = {}
+            categorias.forEach((categoria) => {
+                minimosCategoria[categoria.categoriaProduccion] = [0, categoria.minimo];
+                let prodFiltrados = [];
+                productos.forEach((item) => {
+                    if(item.categoria == categoria.categoriaProduccion){
+                        prodFiltrados.push(item);
                     }
-                } 
-                %>
-                <tr>
-                    <td class="<%= producto.categoria %>"><%= producto.codigo %></td>
-                    <td><%= producto.nombre %></td>
-                    <td><%= producto.unidad %></td>
-                    <td class="pedidoProduccionCeldaImporte">
-                        <span>$</span>
-                        <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
-                    <td>
-                        <input type="number" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" class="pedidoProduccionCantidad" value="<%= cantidadPedida %>">
-                    </td>
-                    <td class="pedidoProduccionCeldaImporte">
-                        <span>$</span>
-                        <span class="importe" id="importe<%= producto.id %>">0</span>
-                    </td>
-                </tr>
-            <%}) %>
+                })
+                if(prodFiltrados.length > 0){%>
+                    <tr>
+                        <th colspan="7" class="categoriaTabla">
+                            <%= categoria.categoriaProduccion %>
+                            <%if(JSON.parse(pedido.minimos) && categoria.minimo > 0){%>
+                                - Compra mínima: <span id="cantidad<%=categoria.categoriaProduccion.split(" ").join("")%>" class="cantidadCategoria">0</span> /<%= categoria.minimo %>
+                            <%} console.log(pedido.minimos)%>
+                        </th>
+                    </tr>
+                    <%let pedidoParsed = JSON.parse(pedido.pedido);
+                    prodFiltrados.forEach((producto) => {
+                        let color = "#CCCCCC";
+                        let categoria = categorias.find((dato) => dato.categoriaProduccion == producto.categoria);
+                        let categoriaProduccion = categoria.categoriaProduccion.split(" ").join("");
+                        if(categoria){color = categoria.color};
+                        let cantidadPedida = 0;
+                        if(pedidoParsed !== undefined && pedido.local !== "x"){
+                            cantidadPedida = pedidoParsed.find((dato) => dato[1] == producto.id);
+                            if(cantidadPedida !== undefined){
+                                cantidadPedida = cantidadPedida[0];
+                            } else {
+                                cantidadPedida = 0;
+                            }
+                        } 
+                        %>
+                        <tr>
+                            <td style="border-color: <%= color %>;" class="categoriaProduccion"><%= producto.codigo %></td>
+                            <td><%= producto.nombre %></td>
+                            <td><%= producto.unidad %></td>
+                            <td class="pedidoProduccionCeldaImporte">
+                                <span>$</span>
+                                <span id="costo<%= producto.id %>"><%= producto.costo %></span></td>
+                            <td>
+                                <input type="number" min="0" name="<%= producto.id %>" id="cantidad<%= producto.id %>" data-id="<%= producto.id %>" data-categoria="<%= categoriaProduccion %>" class="pedidoProduccionCantidad <%= categoriaProduccion %>" value="<%= cantidadPedida %>">
+                            </td>
+                            <td class="pedidoProduccionCeldaImporte">
+                                <span>$</span>
+                                <span class="importe" id="importe<%= producto.id %>">0</span>
+                            </td>
+                            <td class="verProdFabrica">ver<span><img src="/<%= producto.img %>" alt=""><p><%= producto.descripcion %></p></span></td>
+                        </tr>
+                    <%})
+                }
+            })%>
             <tr style="display: none;">
                 <td> <input type="text" name="pedidoProduccionLocalId" id="pedidoProduccionLocalId" value="<%= pedido.id %>"> </td>
                 <td> <input type="text" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
@@ -70,4 +95,8 @@
         </tbody>
     </table>
 </form>
+<script>
+    window.minimos = <%- pedido.minimos %>;
+    window.minimosCategoria = <%- JSON.stringify(minimosCategoria) %>;
+</script>
 <% } %>

@@ -201,7 +201,7 @@ if (document.querySelectorAll(".btnProductos") != null) {
 if (document.querySelectorAll(".btnNuevaFotoFabrica") != null) {
   document.querySelectorAll(".btnNuevaFotoFabrica").forEach((boton  ) => {
     boton.addEventListener("click", (e) => {
-      console.log(e.target.dataset.id)
+      // console.log(e.target.dataset.id)
       location.href = "/panel/productosFabrica/fotos/nueva?id=" + e.target.dataset.id;
     })
   })
@@ -428,4 +428,10 @@ if (document.querySelector(".backListaCategoriaFabricaEliminar") != null) {
   document
     .querySelectorAll(".backListaCategoriaFabricaEliminar")
     .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
+}
+
+if (document.querySelector("#crearPedidoPesonalizado") != null) {
+  document
+    .querySelector("#crearPedidoPesonalizado")
+    .addEventListener("click", () => (location.href = "/panel/produccion/personalizado/nuevo"));
 }

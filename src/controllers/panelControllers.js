@@ -668,8 +668,8 @@ const pedidoProduccionLocal = async(req, res) => {
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocales();
-  const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
-  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, ultimosPedidos);
+  // const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
+  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     categorias,
@@ -719,8 +719,8 @@ const pedidoProduccionFabrica = async(req, res) => {
     let serviciosLocal = JSON.parse(local.servicios);
     if(serviciosLocal.pedidos){
       const data = await servicesProduccion.getProduccionLocal(local.id);
-      const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
-      let fechas = await produccionMiddleware.getFechasProduccionLocal(local.entrega, ultimosPedidos);
+      // const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
+      let fechas = await produccionMiddleware.getFechasProduccionLocal(local.entrega, data);
       fechas.localId = local.id;
       fechasLocales.push(fechas);
     }
@@ -828,11 +828,16 @@ const pedidoProduccionEditar = async(req, res) => {
   if(pedido === undefined){
     return res.redirect("/panel");
   }
+  if(req.session.userRol == "admin" && pedido.estado !== "personalizado"){
+    return res.redirect("/panel");
+  }
   let locales = await servicesLocal.getLocales();
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
     locales,
     productos,
     pedido,
+    categorias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -859,7 +864,28 @@ const pedidoProduccionUpdate = async(req, res) => {
     local: parseInt(req.body.pedidoProduccionLocalId),
   }
   await servicesProduccion.updatePedidoProduccion(datos);
+  if(req.session.userRol == "admin"){
+    return res.redirect("/panel/produccion/local?id=" + req.body.pedidoProduccionLocalId);
+  }
   return res.redirect("/panel/produccion/fabrica?id=" + req.body.pedidoProduccionLocalId);
+}
+
+const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
+  const locales = await servicesLocal.getLocales();
+  res.render(__basedir + "/src/views/pages/nuevoPedidoPersonalizado", {
+    locales,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
+const pedidoProduccionPersonalizadoCrear = async (req, res) => {
+  let data = {};
+  data.fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
+  data.local = req.body.local;
+  data.minimos = req.body.minimos;
+  await servicesProduccion.insertPedidoProduccionPersonalizado(data);
+  res.redirect("/panel/produccion/fabrica");
 }
 
 const productosFabricaNuevo = async(req, res) => {
@@ -1157,6 +1183,8 @@ module.exports = {
   productosFabricaEditar,
   productosFabricaUpdate,
   productosFabricaEliminar,
+  pedidoProduccionPersonalizadoNuevo,
+  pedidoProduccionPersonalizadoCrear,
   categoriasFabrica,
   categoriasFabricaNueva,
   categoriasFabricaInsert,

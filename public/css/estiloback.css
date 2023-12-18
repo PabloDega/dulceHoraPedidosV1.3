@@ -854,6 +854,10 @@ footer img {
 .prodSemaforoaplazado{
   background-color: red;
 }
+.prodSemaforopersonalizado{
+  background-color: white;
+  border: 1px solid black;
+}
 #pedidoProduccionModificar{
   display: flex;
   align-items: center;
@@ -910,4 +914,7 @@ footer img {
 }
 .verProdFabrica:hover span{
   visibility: visible;
+}
+#backRender .editor .cantidadCategoria{
+  display: inline;
 }

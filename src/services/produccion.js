@@ -89,13 +89,24 @@ const getUltimoPedido = async (local) => {
 
 const insertPedidoProduccion = async(datos) => {
   try {
-    await conectar.query(`INSERT INTO produccion (local, pedido, total, estado, fechaentrega, mensajes, buzon) VALUES ("${datos.local}", "${datos.pedido}", "${datos.total}", "cargado", "${datos.fechaDeEntrega}", "[]", "leido")`);
+    await conectar.query(`INSERT INTO produccion (local, pedido, total, estado, fechaentrega, mensajes, buzon, minimos) VALUES ("${datos.local}", "${datos.pedido}", "${datos.total}", "cargado", "${datos.fechaDeEntrega}", "[]", "leido", "true")`);
   } catch (error) {
     throw error;
   } finally {
     conectar.releaseConnection();
   }
 }
+
+const insertPedidoProduccionPersonalizado = async(datos) => {
+  try {
+    await conectar.query(`INSERT INTO produccion (local, pedido, total, estado, fechaentrega, mensajes, buzon, minimos) VALUES ("${datos.local}", "[]", "0", "personalizado", "${datos.fecha}", "[]", "leido", "${datos.minimos || false}")`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 
 const updateEstadoProduccion = async(estado, id) => {
   try {
@@ -139,4 +150,5 @@ module.exports = {
   updateEstadoProduccion,
   updatePedidoProduccion,
   deletePedidoProduccion,
+  insertPedidoProduccionPersonalizado,
 };

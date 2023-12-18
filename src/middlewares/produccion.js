@@ -1,22 +1,4 @@
-const getUltimosPedidos = async(data) => {
-  let ultimosPedidos = {
-    fecha1: "1/1/2000",
-    estado1: "Entregado",
-    fecha2: "1/1/2000",
-    estado2: "Entregado",
-  }
-  if(data.length > 0){
-    ultimosPedidos.fecha1 = data[data.length-1].fechaentrega;
-    ultimosPedidos.estado1 = data[data.length-1].estado;
-  }
-  if(data.length > 1){
-    ultimosPedidos.fecha2 = data[data.length-2].fechaentrega;
-    ultimosPedidos.estado2 = data[data.length-2].estado;
-  }
-  return ultimosPedidos;
-}
-
-const getFechasProduccionLocal = (diasEntrega, ultimosPedidos, fechaUltimoPedido, estadoUltimoPedido) => {
+const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
 
   function verFechaFiltro(fecha) {
     let year = fecha.getFullYear();
@@ -26,7 +8,7 @@ const getFechasProduccionLocal = (diasEntrega, ultimosPedidos, fechaUltimoPedido
   }
 
   let diasDeEntrega = JSON.parse(diasEntrega);
-  let fechaHoy = new Date();
+  let fechaHoy = new Date(2023, 11, 19, 13);
 
   //buscar dia de proxima entrega
   let proximaEntrega;
@@ -67,10 +49,10 @@ const getFechasProduccionLocal = (diasEntrega, ultimosPedidos, fechaUltimoPedido
   // verifica cuanto falta para la proxima entrega (hrs) y determina el estado
   let horasRestanteEntregaPedido = (fechaEntregaPedido - fechaHoy) / 1000 / 60 / 60;
   let pedidoEstado;
-  if (verFechaFiltro(fechaEntregaPedido) == ultimosPedidos.fecha1) {
-    pedidoEstado = ultimosPedidos.estado1;
-  } else if (verFechaFiltro(fechaEntregaPedido) == ultimosPedidos.fecha2) {
-    pedidoEstado = ultimosPedidos.estado2;
+  // reemplazar los 2 primeros ondicionales por un if con un find sobre array completo de consulta sobre pedidos del local
+  let pedidoCalendario1 = pedidosLocal.find((pedido) => pedido.fechaentrega == verFechaFiltro(fechaEntregaPedido));
+  if (pedidoCalendario1 !== undefined) {
+    pedidoEstado = pedidoCalendario1.estado;
   } else if (horasRestanteEntregaPedido > 72) {
     pedidoEstado = "proximo";
   } else if (horasRestanteEntregaPedido > 52) {
@@ -85,10 +67,10 @@ const getFechasProduccionLocal = (diasEntrega, ultimosPedidos, fechaUltimoPedido
   // habilita estado para el pedido siguiente en base al analisis anterior
   let horasRestanteEntregaProximoPedido = (fechaEntregaProxPedido - fechaHoy) / 1000 / 60 / 60;
   let proximoPedidoEstado;
-  if (verFechaFiltro(fechaEntregaProxPedido) == ultimosPedidos.fecha1) {
-    proximoPedidoEstado = ultimosPedidos.estado1;
-  } else if (verFechaFiltro(fechaEntregaProxPedido) == ultimosPedidos.fecha2) {
-    proximoPedidoEstado = ultimosPedidos.estado2;
+  // reemplazar los 2 primeros ondicionales por un if con un find sobre array completo de consulta sobre pedidos del local
+  let pedidoCalendario2 = pedidosLocal.find((pedido) => pedido.fechaentrega == verFechaFiltro(fechaEntregaProxPedido));
+  if (pedidoCalendario2 !== undefined) {
+    proximoPedidoEstado = pedidoCalendario2.estado;
   } else if (horasRestanteEntregaProximoPedido > 72) {
     proximoPedidoEstado = "proximo";
   } else if (horasRestanteEntregaProximoPedido > 52) {
@@ -114,9 +96,15 @@ const getFechasProduccionLocal = (diasEntrega, ultimosPedidos, fechaUltimoPedido
   return fechas;
 };
 
-
+const fechaProduccionNormalizada = async(info) => {
+  let fecha = new Date(info)
+  let year = fecha.getFullYear();
+  let month = fecha.getMonth() + 1;
+  let day = fecha.getDate() + 1;
+  return day + "/" + month + "/" + year;
+}
 
 module.exports = {
   getFechasProduccionLocal,
-  getUltimosPedidos,
+  fechaProduccionNormalizada,
 };

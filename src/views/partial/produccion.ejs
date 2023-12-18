@@ -84,16 +84,18 @@
                     <span class="produccionSemaforo <%= "prodSemaforo"+fechas.proximoPedidoEstado %>"></span>
                     <div>
                         <span ><%= verFechaFiltro(fechas.fechaEntregaProxPedido) %></span>
-                        <%if(fechas.proximoPedidoEstado == "abierto"  || fechas.pedidoEstado == "demorado"){%>
+                        <%if(fechas.proximoPedidoEstado == "abierto"  || fechas.proximoPedidoEstado == "demorado"){%>
                             <span>Cierre en: <%= fechas.horasRestanteEntregaProximoPedido %> hs</span>
                         <%}%>
                         <span><b><%= fechas.proximoPedidoEstado %></b></span>
                     </div>
                 </div>
+                
             </div>
         <%}
     })%>
-        </div>
+    </div>
+    <div>Pedido personalizado: <span class="btn btnNaranja" id="crearPedidoPesonalizado">Crear</span></div>
     </div>
 <%}%>
 
@@ -119,9 +121,9 @@
                 estilo = "pedidoProdProduccion";
                 imagen = "checked";
                 break;
-                case "cancelado":
-                estilo = "pedidoProdCerrado";
-                imagen = "cancel";
+                case "personalizado":
+                estilo = "pedidoProdPersonalizado";
+                imagen = "personalizado";
                 break;
                 default:
                 break;
@@ -220,25 +222,30 @@
                             <input type="hidden" name="emisor" value="local">
                             <input type="submit" data-form="formCancelado" value="Cancelar" class="pedidoEstadoBoton btnRojo">
                         </form>
+                <%} else if(dataPedido.estado === "personalizado"){%>
+                        <span class="btn btnAzul btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
                 <%} else {%>
-                    Actualmente no es posible modificar el estado del pedido, por cualquier modificación o consulta comunicarse con la fábrica, gracias
+                        Actualmente no es posible modificar el estado del pedido, por cualquier modificación o consulta comunicarse con la fábrica, gracias
                 <%}
                 }
                 if(lector == "fabrica"){
-                    if(dataPedido.estado === "cargado"){%>
+                    if(dataPedido.estado === "cargado" || dataPedido.estado === "personalizado"){%>
                         <form id="formAceptar" method="post" action="/panel/produccion/fabrica/updateEstado">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="aceptado">
                             <input type="hidden" name="emisor" value="fabrica">
                             <input type="submit" data-form="formAceptado" value="Aceptar" class="pedidoEstadoBoton btnVerde">
                         </form>
-                    <%} else if(dataPedido.estado === "aceptado"){%>
+                    <%};
+                    if(dataPedido.estado === "aceptado"){%>
                         <form id="formEntregado" method="post" action="/panel/produccion/fabrica/updateEstado">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="entregado">
                             <input type="hidden" name="emisor" value="fabrica">
-                            <input type="submit" data-form="forEntregado" value="Entregado" class="pedidoEstadoBoton btnNaranja">
+                            <input type="submit" data-form="formEntregado" value="Entregado" class="pedidoEstadoBoton btnNaranja">
                         </form>
+                    <%};
+                    if(dataPedido.estado === "aceptado" || dataPedido.estado === "personalizado"){%>
                         <form id="formCancelado" method="post" action="/panel/produccion/fabrica/updateEstado">
                             <input type="hidden" name="id" value="<%= dataPedido.id %>">
                             <input type="hidden" name="estado" value="cancelado">
@@ -246,7 +253,7 @@
                             <input type="submit" data-form="formCancelado" value="Cancelar" class="pedidoEstadoBoton btnRojo">
                         </form>
                         <span class="btn btnAzul btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
-                    <%}
+                    <%};
                 }%>
                 <form id="exportarExcel" method="post" action="/panel/productosFabrica/exportar/excel">
                     <input type="hidden" name="fecha" value="<%= dataPedido.fechaentrega %>">

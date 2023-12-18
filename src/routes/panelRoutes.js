@@ -104,11 +104,15 @@ router.post("/produccion/fabrica", auth.authSupervisor, panelControllers.pedidoP
 
 router.post("/produccion/fabrica/updateEstado", auth.authSupervisor, panelControllers.pedidoProduccionUpdateEstado);
 
-router.get("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionEditar);
+router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionEditar);
 
-router.post("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionUpdate);
+router.post("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionUpdate);
 
 router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccionFabrica);
+
+router.get("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoNuevo);
+
+router.post("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoCrear);
 
 router.get("/productosFabrica", auth.authSupervisor, panelControllers.productosFabrica);
 
