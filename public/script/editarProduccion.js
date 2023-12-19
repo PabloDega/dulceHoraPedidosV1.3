@@ -40,11 +40,9 @@ document.querySelectorAll(".pedidoProduccionCantidad").forEach((boton) => {
 
 if(window.minimos){
     for(categoria in window.minimosCategoria){
-        console.log(categoria)
         if(window.minimosCategoria[categoria][1] > 0){
             let itemsCategoria = document.querySelectorAll(`.${categoria}`);
-            console.log(itemsCategoria.length)
-            if(itemsCategoria > 0){
+            if(itemsCategoria.length > 0){
                 let suma = 0;
                 itemsCategoria.forEach((item) => {
                     suma = suma + parseInt(item.value);

@@ -120,13 +120,15 @@ function calcularCantidades(e){
 
 for(categoria in window.minimosCategoria){
     if(window.minimosCategoria[categoria][1] > 0){
-        let itemsCategoria = document.querySelectorAll(`.${categoria}`);   
-        let suma = 0;
-        itemsCategoria.forEach((item) => {
-            suma = suma + parseInt(item.value);
-        });
-        window.minimosCategoria[categoria][0] = suma;
-        document.querySelector(`#cantidad${categoria}`).innerHTML = suma;
+        let itemsCategoria = document.querySelectorAll(`.${categoria}`);
+        if(itemsCategoria.length > 0){
+            let suma = 0;
+            itemsCategoria.forEach((item) => {
+                suma = suma + parseInt(item.value);
+            });
+            window.minimosCategoria[categoria][0] = suma;
+            document.querySelector(`#cantidad${categoria}`).innerHTML = suma;
+        }
     }
 }
 
