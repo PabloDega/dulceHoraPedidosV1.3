@@ -1,6 +1,7 @@
 <% if(pedido.local == "x"){%>
     <h1>Pedido Inexistente</h1>
 <% } else { %>
+<div id="popScreen"></div>
 <form action="" method="post" id="nuevaProduccion" class="editor anchoMax">
     <div id="datosFloat">
         <span>
@@ -37,7 +38,8 @@
         <tbody>
             <% let minimosCategoria = {}
             categorias.forEach((categoria) => {
-                minimosCategoria[categoria.categoriaProduccion] = [0, categoria.minimo];
+                let joinNombre = categoria.categoriaProduccion.split(" ").join("");
+                minimosCategoria[joinNombre] = [0, categoria.minimo];
                 let prodFiltrados = [];
                 productos.forEach((item) => {
                     if(item.categoria == categoria.categoriaProduccion){
@@ -50,12 +52,11 @@
                             <%= categoria.categoriaProduccion %>
                             <%if(JSON.parse(pedido.minimos) && categoria.minimo > 0){%>
                                 - Compra mínima: <span id="cantidad<%=categoria.categoriaProduccion.split(" ").join("")%>" class="cantidadCategoria">0</span> /<%= categoria.minimo %>
-                            <%} console.log(pedido.minimos)%>
+                            <%}%>
                         </th>
                     </tr>
                     <%let pedidoParsed = JSON.parse(pedido.pedido);
                     prodFiltrados.forEach((producto) => {
-                        let color = "#CCCCCC";
                         let categoria = categorias.find((dato) => dato.categoriaProduccion == producto.categoria);
                         let categoriaProduccion = categoria.categoriaProduccion.split(" ").join("");
                         if(categoria){color = categoria.color};

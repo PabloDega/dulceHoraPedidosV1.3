@@ -40,21 +40,25 @@ document.querySelectorAll(".pedidoProduccionCantidad").forEach((boton) => {
 
 if(window.minimos){
     for(categoria in window.minimosCategoria){
+        console.log(categoria)
         if(window.minimosCategoria[categoria][1] > 0){
-            const catJoin = categoria.split(" ").join("");
-            let itemsCategoria = document.querySelectorAll(`.${catJoin}`);   
-            let suma = 0;
-            itemsCategoria.forEach((item) => suma = suma + parseInt(item.value));
-            window.minimosCategoria[categoria][0] = suma;
-            console.log(`#cantidad${catJoin}`)
-            document.querySelector(`#cantidad${catJoin}`).innerHTML = suma;
+            let itemsCategoria = document.querySelectorAll(`.${categoria}`);
+            console.log(itemsCategoria.length)
+            if(itemsCategoria > 0){
+                let suma = 0;
+                itemsCategoria.forEach((item) => {
+                    suma = suma + parseInt(item.value);
+                });
+                window.minimosCategoria[categoria][0] = suma;
+                document.querySelector(`#cantidad${categoria}`).innerHTML = suma;
+            }
         }
     }
 }
 
 function calcularCantidades(e){
     if(window.minimosCategoria[e.target.dataset.categoria][1] > 0){
-        let itemsCategoria = document.querySelectorAll(`.${e.target.dataset.categoria}`);   
+        let itemsCategoria = document.querySelectorAll(`.${e.target.dataset.categoria}`);
         let suma = 0;
         itemsCategoria.forEach((item) => suma = suma + parseInt(item.value));
         window.minimosCategoria[e.target.dataset.categoria][0] = suma;
@@ -62,11 +66,45 @@ function calcularCantidades(e){
     }
 }
 
-function evaluarCantidades(){
-    window.minimosCategoria.forEach((item) => {
-
-    })
+function validarCantidades(){
+    let x = 0;
+    for(item in window.minimosCategoria){
+        if(window.minimosCategoria[item][0] < window.minimosCategoria[item][1] && window.minimosCategoria[item][0] !== 0){
+            x++;
+        }
+    }
+    if(x > 0){
+        let popScreen = document.querySelector("#popScreen");
+        popScreen.innerHTML += `<div id="cortina">
+        <div id="confirmarEliminar">
+            Para poder continuar debe verificar si las cantidades seleccionadas cumplen con las cantidades mínimas de cada categoría.
+            <div class="btn btnRojo" id="btnEliminarCancelar">Continuar</div>
+        </div>
+        </div>`;
+        document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
+        return false;
+    }
+    return true;
 }
+
+//Evitar que el fomulario se envie con enter
+document.querySelector("#nuevaProduccion").addEventListener("keypress", (e) => {
+    if(e.keyCode == 13){
+        e.preventDefault();
+    }
+})
+
+//Validar cantidades previo envio
+document.querySelector("#pedidoProduccionUpdate").addEventListener("click", (e) => {
+    e.preventDefault();
+    if(window.minimos){
+        if(validarCantidades()){
+            document.querySelector("#nuevaProduccion").submit();
+        }
+    } else {
+        document.querySelector("#nuevaProduccion").submit();
+    }
+});
 
 pedidoProduccionCalcImportes();
 pedidoProduccionCalcTotal();

@@ -35,6 +35,7 @@ document.querySelectorAll(".pedidoProduccionCantidad").forEach((boton) => {
     boton.addEventListener("change", (e) => {
         pedidoProduccionCalcImporte(e);
         precargaLocalStorage();
+        calcularCantidades(e);
     })
 })
 
@@ -94,7 +95,9 @@ if(document.querySelector("#pedidoProduccionEnviar") != null){
     document.querySelector("#pedidoProduccionEnviar").addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("precargaPedidoProduccion");
-        document.querySelector("#nuevaProduccion").submit();
+        if(validarCantidades()){
+            document.querySelector("#nuevaProduccion").submit();
+        }
     })
 }
 
@@ -104,6 +107,49 @@ document.querySelector("#nuevaProduccion").addEventListener("keypress", (e) => {
         e.preventDefault();
     }
 })
+
+function calcularCantidades(e){
+    if(window.minimosCategoria[e.target.dataset.categoria][1] > 0){
+        let itemsCategoria = document.querySelectorAll(`.${e.target.dataset.categoria}`);
+        let suma = 0;
+        itemsCategoria.forEach((item) => suma = suma + parseInt(item.value));
+        window.minimosCategoria[e.target.dataset.categoria][0] = suma;
+        document.querySelector(`#cantidad${e.target.dataset.categoria}`).innerHTML = suma;
+    }
+}
+
+for(categoria in window.minimosCategoria){
+    if(window.minimosCategoria[categoria][1] > 0){
+        let itemsCategoria = document.querySelectorAll(`.${categoria}`);   
+        let suma = 0;
+        itemsCategoria.forEach((item) => {
+            suma = suma + parseInt(item.value);
+        });
+        window.minimosCategoria[categoria][0] = suma;
+        document.querySelector(`#cantidad${categoria}`).innerHTML = suma;
+    }
+}
+
+function validarCantidades(){
+    let x = 0;
+    for(item in window.minimosCategoria){
+        if(window.minimosCategoria[item][0] < window.minimosCategoria[item][1] && window.minimosCategoria[item][0] !== 0){
+            x++;
+        }
+    }
+    if(x > 0){
+        let popScreen = document.querySelector("#popScreen");
+        popScreen.innerHTML += `<div id="cortina">
+        <div id="confirmarEliminar">
+            Para poder continuar debe verificar si las cantidades seleccionadas cumplen con las cantidades mínimas de cada categoría.
+            <div class="btn btnRojo" id="btnEliminarCancelar">Continuar</div>
+        </div>
+        </div>`;
+        document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
+        return false;
+    }
+    return true;
+}
 
 
 pedidoProduccionCalcImportes();
