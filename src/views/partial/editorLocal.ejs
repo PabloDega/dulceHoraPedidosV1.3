@@ -42,6 +42,63 @@
         <label for="linkmp">Link MP</label>
         <input type="text" name="linkmp" id="linkmp" value="<%= data.linkmp %>" />
     </span>
+
+    <span>
+        <span>Dias de Entrega</span>
+        <span>
+            <div id="nuevoLocalCalendario">
+                <div>
+                    <span><input type="checkbox" name="1" id="" value="1" <% if(diasEntrega[1]){%>checked<%} %>></span>
+                    <span>Lunes</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="2" id="" value="2" <% if(diasEntrega[2]){%>checked<%} %>></span>
+                    <span>Martes</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="3" id="" value="3" <% if(diasEntrega[3]){%>checked<%} %>></span>
+                    <span>Miércoles</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="4" id="" value="4" <% if(diasEntrega[4]){%>checked<%} %>></span>
+                    <span>Jueves</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="5" id="" value="5" <% if(diasEntrega[5]){%>checked<%} %>></span>
+                    <span>Viernes</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="6" id="" value="6" <% if(diasEntrega[6]){%>checked<%} %>></span>
+                    <span>Sábado</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="0" id="" value="0" <% if(diasEntrega[0]){%>checked<%} %>></span>
+                    <span>Domingo</span>
+                </div>
+            </div>
+        </span>
+    </span>
+<span>
+    <span>Servicios</span>
+    <span>
+        <div id="nuevoLocalServicios">
+            <%  let servicioArray = [];
+                let serviciosActivos = JSON.parse(data.servicios);
+                servicios.forEach((servicio) => {
+                    servicioArray.push(servicio.servicio);
+                    let estado = "";
+                    if(serviciosActivos[servicio.servicio]){estado = "checked"}%>
+                    <div>
+                        <span><input type="checkbox" name="<%= servicio.servicio %>" value="true" <%= estado %>></span>
+                        <span>Servicio <%= servicio.servicio %></span>
+                    </div>
+                <%})%>
+        </div>
+    </span>
+</span>
+
+    <input type="hidden" name="serviciosArray" value="<%= JSON.stringify(servicioArray) %>">
+
     <span>
         <label for="estado">Estado</label>
         <% let estadoActivo = "selected";
@@ -55,6 +112,7 @@
             <option value="inactivo" <%= estadoInactivo %>>Inactivo</option>
         </select>
     </span>
+
     <span>
         <input type="submit" value="Modificar">
     </span>

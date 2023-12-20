@@ -38,9 +38,54 @@
             <td><%= dato.linkmp %></td>
           </tr>
           <tr>
-            <td>Estado</td>
-            <td><%= dato.estado %></td>
+            <td>Dias de Entrega</td>
+            <td>
+              <% let diasEntrega = [];
+                let diasActuales = JSON.parse(dato.entrega);
+                diasActuales.forEach((dia) => {
+                  switch (dia) {
+                    case 0:
+                      diasEntrega.push("Domingo");
+                      break;
+                    case 1:
+                      diasEntrega.push("Lunes");
+                      break;
+                    case 2:
+                      diasEntrega.push("Martes");
+                      break;
+                    case 3:
+                      diasEntrega.push("Miércoles");
+                      break;
+                    case 4:
+                      diasEntrega.push("Jueves");
+                      break;
+                    case 5:
+                      diasEntrega.push("Viernes");
+                      break;
+                    case 6:
+                      diasEntrega.push("Sábado");
+                      break;
+                    default:
+                      break;
+                  };
+                })
+                diasEntrega.forEach((dia) => {%> <%= dia %>, <%}) %>
+            </td>
           </tr>
+          <tr>
+            <td>Estado</td>
+            <td class="servicio<%= dato.estado %>"><%= dato.estado %></td>
+          </tr>
+          <% let servicios = dato.servicios;
+          servicios = JSON.parse(servicios);
+          for(servicio in servicios){
+            let estado = "inactivo";
+            if(servicios[servicio]){estado = "activo"}%>
+          <tr>
+            <td>Servicios <%= servicio %></td>
+            <td class="servicio<%=estado%>"><%= estado %></td>
+          </tr>
+          <%}%>
         </tbody>
       </table>
       <div class="backListaProdCardBoton btnNaranja" id="backListaLocalEditar" data-id="<%= dato.id %>">editar</div>

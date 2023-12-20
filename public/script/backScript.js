@@ -146,6 +146,24 @@ if (document.querySelector("#nuevoLocal") != null) {
     .querySelector("#nuevoLocal")
     .addEventListener("click", () => (location.href = "/panel/local/nuevo"));
 }
+if (document.querySelector("#verLocales") != null) {
+  document
+    .querySelector("#verLocales")
+    .addEventListener("click", () => (location.href = "/panel/local"));
+}if (document.querySelector("#verServicios") != null) {
+  document
+    .querySelector("#verServicios")
+    .addEventListener("click", () => (location.href = "/panel/servicios"));
+}if (document.querySelector("#nuevoServicio") != null) {
+  document
+    .querySelector("#nuevoServicio")
+    .addEventListener("click", () => (location.href = "/panel/servicios/nuevo "));
+}
+if (document.querySelector("#backListaServEliminar") != null) {
+  document
+    .querySelectorAll("#backListaServEliminar")
+    .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
+}
 if (document.querySelector("#verCategoria") != null) {
   document
     .querySelector("#verCategoria")

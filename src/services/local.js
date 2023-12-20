@@ -34,9 +34,9 @@ const getLocalesFront = async () => {
   }
 };
 
-const insertLocal = async(datos) => {
+const insertLocal = async(datos, diasEntrega, serviciosActivos) => {
   try {
-    const answer = await conectar.query(`INSERT INTO locales (franquicia, nombre, direccion, telefono, img, gmap, promobp, stock, estado, linkmp) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "${datos.promobp}", "1", "activo", ${datos.linkmp})`);
+    await conectar.query(`INSERT INTO locales (franquicia, nombre, direccion, telefono, img, gmap, promobp, stock, estado, linkmp, entrega, servicios) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "${datos.promobp}", "1", "activo", "${datos.linkmp}", "${diasEntrega}", '${serviciosActivos}')`);
   } catch (error) {
     throw error;
   } finally {
@@ -44,9 +44,9 @@ const insertLocal = async(datos) => {
   }
 }
 
-const updateLocal = async(datos) => {
+const updateLocal = async(datos, serviciosActivos, diasEntrega) => {
   try {
-    const answer = await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}" WHERE id = "${datos.id}"`);
+    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}" WHERE id = "${datos.id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -56,7 +56,7 @@ const updateLocal = async(datos) => {
 
 const deleteLocal = async(id) => {
   try {
-    const answer = await conectar.query(`DELETE FROM locales WHERE id = "${id}"`);
+    await conectar.query(`DELETE FROM locales WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -66,7 +66,7 @@ const deleteLocal = async(id) => {
 
 const updateStock = async(datos, local) => {
   try {
-    const answer = await conectar.query(`UPDATE locales SET stock = "${datos.stock}" WHERE id = "${local}"`);
+    await conectar.query(`UPDATE locales SET stock = "${datos.stock}" WHERE id = "${local}"`);
   } catch (error) {
     throw error;
   } finally {

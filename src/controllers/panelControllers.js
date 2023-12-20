@@ -7,11 +7,13 @@ const servicesChat = require(__basedir + "/src/services/chat");
 const servicesActividad = require(__basedir + "/src/services/actividad");
 const servicesProduccion = require(__basedir + "/src/services/produccion");
 const servicesReportes = require(__basedir + "/src/services/reportes");
+const servicesServicios = require(__basedir + "/src/services/servicios");
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
 const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
+const localMiddleware = require(__basedir + "/src/middlewares/local");
 
 const index = (req, res) => {
   res.render(__basedir + "/src/views/pages/panel", {
@@ -275,8 +277,12 @@ const localEditar = async (req, res) => {
   if(data === undefined){
     return res.redirect("/panel/local");
   }
+  const servicios = await servicesServicios.getServicios();
+  const diasEntrega = await localMiddleware.crearObjetoDiasEntrega2(data.entrega);
   res.render(__basedir + "/src/views/pages/editarLocal", {
     data,
+    servicios,
+    diasEntrega,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -292,8 +298,10 @@ const localUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesLocal.updateLocal(datos);
+  const servicios = await servicesServicios.getServicios();
+  const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body);
+  const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
+  await servicesLocal.updateLocal(req.body, serviciosActivos, diasEntrega);
   let data = await servicesLocal.getLocales();
   res.render(__basedir + "/src/views/pages/local", {
     data,
@@ -303,8 +311,10 @@ const localUpdate = async (req, res) => {
 };
 
 const localNuevo = async (req, res) => {
-  let data = await servicesProductos.lastId("locales");
+  const data = await servicesProductos.lastId("locales");
+  const servicios = await servicesServicios.getServicios();
   res.render(__basedir + "/src/views/pages/nuevoLocal", {
+    servicios,
     data,
     valoresForm: {},
     usuario: req.session.userLog,
@@ -313,9 +323,11 @@ const localNuevo = async (req, res) => {
 };
 
 const localInsert = async (req, res) => {
+  const servicios = await servicesServicios.getServicios();
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     return res.render(__basedir + "/src/views/pages/nuevoLocal", {
+      servicios,
       data: req.body.id,
       valoresForm: req.body,
       errores: errores.array({ onlyFirstError: true }),
@@ -323,14 +335,10 @@ const localInsert = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesLocal.insertLocal(datos);
-  let data = await servicesLocal.getLocales();
-  res.render(__basedir + "/src/views/pages/local", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  });
+  const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
+  const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body) 
+  await servicesLocal.insertLocal(req.body, diasEntrega, serviciosActivos);
+  res.redirect("/panel/local");
 };
 
 const localEliminar = async (req, res) => {
@@ -1126,6 +1134,57 @@ const uploadNuevaFotoProductoFabrica = async(req, res) => {
   });
  }
 
+ const servicios = async (req, res) => {
+  let data = await servicesServicios.getServicios();
+  res.render(__basedir + "/src/views/pages/servicios", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+ }
+
+ const servicioNuevo = async (req, res) => {
+  let data = await servicesProductos.lastId("servicios");
+  res.render(__basedir + "/src/views/pages/nuevoServicio", {
+    data,
+    valoresForm: {},
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+ }
+
+ const servicioInsert = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    return res.render(__basedir + "/src/views/pages/nuevoServicio", {
+      errores: errores.array({ onlyFirstError: true }),
+      valoresForm: req.body,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  }
+  await servicesServicios.insertServicio(req.body);
+  let data = await servicesServicios.getServicios();
+  res.render(__basedir + "/src/views/pages/servicios", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+ }
+
+ const servicioEliminar = async (req, res) => {
+  if(!req.query.id){
+    return res.redirect("/panel/servicios");
+  }
+  await servicesServicios.deleteServicio(req.query.id);
+  let data = await servicesServicios.getServicios();
+  res.render(__basedir + "/src/views/pages/servicios", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
+
 module.exports = {
   index,
   productosCard,
@@ -1195,4 +1254,8 @@ module.exports = {
   nuevaFotoProductoFabrica,
   uploadNuevaFotoProductoFabrica,
   reportesProduccionFabrica,
+  servicios,
+  servicioNuevo,
+  servicioInsert,
+  servicioEliminar,
 };

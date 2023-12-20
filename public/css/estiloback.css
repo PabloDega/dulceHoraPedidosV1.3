@@ -918,3 +918,17 @@ footer img {
 #backRender .editor .cantidadCategoria{
   display: inline;
 }
+.backListaLocalCard .servicioactivo{
+  font-weight: 600;
+  color: green;
+}
+#nuevoLocalCalendario, #nuevoLocalServicios{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+#nuevoLocalCalendario div, #nuevoLocalServicios div{
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}

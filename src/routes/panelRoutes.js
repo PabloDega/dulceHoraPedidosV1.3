@@ -148,4 +148,13 @@ router.get("/productosFabrica/fotos/nueva", auth.authSupervisor, panelController
 
 router.post("/productosFabrica/fotos/nueva", auth.authSupervisor, fileUpload.subirArchivo.single("foto"), panelControllers.uploadNuevaFotoProductoFabrica);
 
+router.get("/servicios", auth.authSupervisor, panelControllers.servicios);
+
+router.get("/servicios/nuevo", auth.authSupervisor, panelControllers.servicioNuevo);
+
+router.post("/servicios/nuevo", auth.authSupervisor, panelControllers.servicioInsert);
+
+router.get("/servicios/eliminar", auth.authSupervisor, panelControllers.servicioEliminar);
+
+
 module.exports = router;

@@ -1,0 +1,18 @@
+<table id="tablaCategorias">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% data.forEach(dato => { %>
+        <tr>
+          <td><%= dato.id %></td>
+          <td><%= dato.servicio %></td>
+          <td class="backListaProdTablaBoton" id="backListaServEliminar" data-id="<%= dato.id %>" data-tipo="servicios">eliminar</td>
+        </tr>
+      <%}); %>
+    </tbody>
+</table>
