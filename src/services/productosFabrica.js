@@ -115,6 +115,20 @@ const deleteCategoriaFabrica = async (id) => {
   }
 };
 
+const updatePreciosProductosFabrica = async (precios) => {
+  try {
+    for(id in precios){
+      if(precios[id] > 0){
+        await conectar.query(`UPDATE productosfabrica SET costo = "${precios[id]}" WHERE id = "${id}"`);
+      }
+    }
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 module.exports = {
   getProductosFabrica,
   getProductoFabrica,
@@ -127,4 +141,5 @@ module.exports = {
   updateCategoriaFabrica,
   deleteCategoriaFabrica,
   getSectoresFabrica,
+  updatePreciosProductosFabrica,
 };

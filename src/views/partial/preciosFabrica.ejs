@@ -1,0 +1,37 @@
+<div class="backMenu"><h1>Precios de Fábrica</h1></div>
+<form action="" method="post" id="preciosForm">
+<table id="preciosTabla">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Categoría</th>
+            <th>Nombre</th>
+            <th>Unidad</th>
+            <th>Precio</th>
+            <th>Nuevo Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+      <%categorias.forEach((categoria) => {%>
+        <tr>
+          <th colspan="6" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+        </tr>
+        <%let productosDeCategoria = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+
+        productosDeCategoria.forEach(producto => {%>
+          <tr>
+            <td><%= producto.codigo %></td>
+            <td><%= producto.categoria %></td>
+            <td><%= producto.nombre %></td>
+            <td><%= producto.unidad %></td>
+            <td class="numTabla">$<%= producto.costo %></td>
+            <td>
+              <input type="number" class="sinFlechas" min="0" name="<%= producto.id %>" id="preciosPrecio" data-id="<%= producto.id %>" value="">
+            </td>
+        <% });
+      })%>
+        </tr>
+    </tbody>
+</table>
+<input type="submit" value="Actualizar Precios" class="backListaProdCardBoton btnNaranja inputBtn" id="preciosFabricaEnviar">
+</form>

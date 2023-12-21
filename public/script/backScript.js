@@ -55,16 +55,15 @@ if (document.querySelector("#produccionFabrica") != null) {
     .addEventListener("click", () => (location.href = "/panel/produccion/fabrica"));
 }
 if (document.querySelector("#fotosFabrica") != null) {
-  document
-    .querySelector("#fotosFabrica")
-    .addEventListener("click", () => (location.href = "/panel/productosFabrica/fotos"));
+  document.querySelector("#fotosFabrica").addEventListener("click", () => (location.href = "/panel/productosFabrica/fotos"));
 }
 if (document.querySelector("#productosFabrica") != null) {
-  document
-    .querySelectorAll("#productosFabrica")
-    .forEach((boton) =>
-      boton.addEventListener("click", () => (location.href = "/panel/productosFabrica"))
-    );
+  document.querySelectorAll("#productosFabrica").forEach((boton) => {
+    boton.addEventListener("click", () => (location.href = "/panel/productosFabrica"));
+  })
+}
+if (document.querySelector("#preciosFabrica") != null) {
+  document.querySelector("#preciosFabrica").addEventListener("click", () => (location.href = "/panel/productosFabrica/precios"));
 }
 if (document.querySelector("#verCategoriaFabrica") != null) {
   document

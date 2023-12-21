@@ -1185,6 +1185,22 @@ const uploadNuevaFotoProductoFabrica = async(req, res) => {
   });
 };
 
+const preciosProductosFabrica = async(req, res) => {
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/preciosFabrica", {
+    categorias,
+    productos,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
+const preciosProductosFabricaUpdate = async(req, res) => {
+  await servicesProductosFabrica.updatePreciosProductosFabrica(req.body);
+  res.redirect("/panel/productosFabrica/precios");
+}
+
 module.exports = {
   index,
   productosCard,
@@ -1242,6 +1258,8 @@ module.exports = {
   productosFabricaEditar,
   productosFabricaUpdate,
   productosFabricaEliminar,
+  preciosProductosFabrica,
+  preciosProductosFabricaUpdate,
   pedidoProduccionPersonalizadoNuevo,
   pedidoProduccionPersonalizadoCrear,
   categoriasFabrica,
