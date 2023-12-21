@@ -59,7 +59,7 @@ const mensajeProduccionLeido = async(id) => {
 
 const getProductosProduccion = async () => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosFabrica WHERE estado = 'true' ORDER BY codigo");
+    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' ORDER BY codigo");
     return rows[0];
   } catch (error) {
     throw error;

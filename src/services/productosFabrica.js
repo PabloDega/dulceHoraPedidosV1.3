@@ -2,7 +2,7 @@ const { conectar } = require(__basedir + "/src/config/dbConnection");
 
 const getProductosFabrica = async () => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosFabrica ORDER BY codigo");
+    const rows = await conectar.query("SELECT * FROM productosfabrica ORDER BY codigo");
     return rows[0];
   } catch (error) {
     throw error;
@@ -13,7 +13,7 @@ const getProductosFabrica = async () => {
 
 const getProductoFabrica = async (id) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosFabrica WHERE ?", { id });
+    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE ?", { id });
     return rows[0][0];
   } catch (error) {
     throw error;
@@ -24,7 +24,7 @@ const getProductoFabrica = async (id) => {
 
 const insertProductoFabrica = async (datos) => {
   try {
-    await conectar.query(`INSERT INTO productosFabrica (categoria, nombre, costo, estado, descripcion, sector, unidad, codigo, img) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.costo}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}", "im/fabrica/${datos.codigo}.png")`);  
+    await conectar.query(`INSERT INTO productosfabrica (categoria, nombre, costo, estado, descripcion, sector, unidad, codigo, img) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.costo}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}", "im/fabrica/${datos.codigo}.png")`);  
   } catch (error) {
     throw error;
   } finally {
@@ -34,7 +34,7 @@ const insertProductoFabrica = async (datos) => {
 
 const updateProductoFabrica = async (datos, id) => {
   try {
-    await conectar.query(`UPDATE productosFabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", costo = "${datos.costo}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}", img = "im/fabrica/${datos.codigo}.png" WHERE id = "${id}"`);
+    await conectar.query(`UPDATE productosfabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", costo = "${datos.costo}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}", img = "im/fabrica/${datos.codigo}.png" WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -44,7 +44,7 @@ const updateProductoFabrica = async (datos, id) => {
 
 const deleteProductoFabrica = async (id) => {
   try {
-    await conectar.query(`DELETE FROM productosFabrica WHERE id = "${id}"`);
+    await conectar.query(`DELETE FROM productosfabrica WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {
