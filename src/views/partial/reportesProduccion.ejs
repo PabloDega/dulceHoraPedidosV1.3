@@ -1,0 +1,19 @@
+<form action="" method="post" id="reportesProduccion" class="editor">
+    <h1>Reportes de Produccion</h1>
+    <span>
+        <label for="fecha">Fecha</label>
+        <input type="date" name="fecha" id="fecha" />
+    </span>
+    <span>
+        <label for="reporteTipo">Reporte</label>
+        <select name="reporteTipo" id="reporteTipo">
+            <option value="" selected disabled>- Seleccionar un local -</option>
+            <option value="reporteFabrica">Reporte de Fábrica</option>
+            <option value="reporteAdministrativo">Reporte Administratvio</option>
+            <option value="reporteValuado">Reporte Valuado</option>
+        </select>
+    </span>
+    <span>
+        <input type="submit" value="Crear Reporte">
+    </span>
+</form>

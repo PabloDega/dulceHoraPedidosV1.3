@@ -108,7 +108,9 @@ router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProducci
 
 router.post("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionUpdate); //validar!!!
 
-router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccionFabrica);
+router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccion);
+
+router.post("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccionFabrica);
 
 router.get("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoNuevo);
 

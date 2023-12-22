@@ -1122,13 +1122,24 @@ const uploadNuevaFotoProductoFabrica = async(req, res) => {
   return res.redirect("/panel/productosFabrica/fotos");
 }
 
+const reportesProduccion = async (req, res) => {
+  res.render(__basedir + "/src/views/pages/reportesProduccion", {
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
  const reportesProduccionFabrica = async(req, res) => {
-  const fechas = await reportesMiddleware.fechasReportes();
-  const pedidos = await servicesReportes.getReportes(fechas);
-  const productos = await servicesProductosFabrica.getProductosFabrica();
-  const data = await reportesMiddleware.totalesPorDia(pedidos, productos);
-  res.render(__basedir + "/src/views/pages/reportesProduccionFabrica", {
-    data,
+  // const fechas = await reportesMiddleware.fechasReportes();
+  console.log(req.body)
+  const locales = await servicesLocal.getLocales();
+  fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
+  const pedidos = await servicesReportes.getReportes(fecha);
+  const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+  // const productos = await servicesProductosFabrica.getProductosFabrica();
+  // const data = await reportesMiddleware.totalesPorDia(pedidos, productos);
+  res.render(__basedir + "/src/views/pages/reportesProduccion", {
+    // data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -1271,6 +1282,7 @@ module.exports = {
   fotosProductosFabrica,
   nuevaFotoProductoFabrica,
   uploadNuevaFotoProductoFabrica,
+  reportesProduccion,
   reportesProduccionFabrica,
   servicios,
   servicioNuevo,

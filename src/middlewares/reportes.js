@@ -21,7 +21,7 @@ const fechasReportes = () => {
     return diasDeReportes;
 }
 
-const totalesPorDia = (pedidos, productos) => {
+/* const totalesPorDia = (pedidos, productos) => {
     let pedidosFiltrado = {}
     // console.log(pedidos);
     for(const dia of Object.keys(pedidos)){
@@ -57,11 +57,22 @@ const totalesPorDia = (pedidos, productos) => {
             pedidosFiltradoCantidades[dia].push(pedidoDelProducto)
         })
     }
-    console.log(pedidosFiltradoCantidades)
+    console.log(pedidosFiltradoCantidades);
     return pedidosFiltradoCantidades;
+} */
+
+const sumarPedidosMismaFecha = async(pedidos, locales) =>{
+    let pedidoFiltrado = [];
+    locales.forEach((local) => {
+        let pedidosPorLocal = pedidos.filter((pedido) => pedido.local == local.id);
+        console.log(pedidosPorLocal.length);
+        if(pedidosPorLocal.length = 0){return};
+        if(pedidosPorLocal.length = 1){pedidoFiltrado.push(pedidosPorLocal[0])}
+        if(pedidosPorLocal.length > 1){}
+    })
 }
 
 module.exports = {
     fechasReportes,
-    totalesPorDia,
+    sumarPedidosMismaFecha,
 }
