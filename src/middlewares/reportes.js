@@ -1,78 +1,59 @@
-const fechasReportes = () => {
-    function verFechaFiltro(fecha) {
-        let year = fecha.getFullYear();
-        let month = fecha.getMonth() + 1;
-        let day = fecha.getDate();
-        return day + "/" + month + "/" + year;
+const sumarPedidosMismaFecha = async(pedidos, locales) =>{
+    let pedidosFiltrados = [];
+    for(const local of locales) {
+        let pedidosPorLocal = await pedidos.filter((pedido) => pedido.local == local.id);
+        pedidosPorLocal = await pedidosPorLocal.filter((pedido) => pedido.estado == "aceptado" || pedido.estado == "entregado")
+        if(pedidosPorLocal.length == 1){
+            let pedidoAcumulado = await crearObjetoPedido(pedidosPorLocal);
+            pedidosFiltrados.push(pedidoAcumulado)
+        } else if(pedidosPorLocal.length > 1){
+            let sumaDePedidos = [];
+            await pedidosPorLocal.forEach(async(pedido) => {
+                sumaDePedidos = sumaDePedidos.concat(JSON.parse(pedido.pedido));
+            })
+            sumaDePedidos = await resumirProductosRepetidos(sumaDePedidos);
+            pedidosPorLocal[0].pedido = JSON.stringify(sumaDePedidos);
+            let pedidoAcumulado = await crearObjetoPedido(pedidosPorLocal);
+            pedidosFiltrados.push(pedidoAcumulado);
+        }
     }
-      
-    const fechaHoy = new Date();
-    const diasDeReportes = [];
-    const diasEnVista = 5;
-    for(let i = 0; i < diasEnVista; i++){
-    let diaI = new Date(
-        fechaHoy.getFullYear(),
-        fechaHoy.getMonth(),
-        fechaHoy.getDate() + i,
-      )
-      diasDeReportes.push(verFechaFiltro(diaI));
-    }
-    // console.log(diasDeReportes);
-    return diasDeReportes;
+    console.log(pedidosFiltrados);
+    return pedidosFiltrados;
 }
 
-/* const totalesPorDia = (pedidos, productos) => {
-    let pedidosFiltrado = {}
-    // console.log(pedidos);
-    for(const dia of Object.keys(pedidos)){
-        // console.log(pedidos[dia])
-        pedidosFiltrado[dia] = []
-        pedidos[dia].forEach((pedido) => {
-            pedidosFiltrado[dia].push(pedido.pedido);
-        })
-    };
-    // console.log(pedidosFiltrado);
-    let pedidosFiltradoCantidades = {}
-    for(const dia of Object.keys(pedidosFiltrado)){
-        // console.log(pedidosFiltrado[dia][0])
-        pedidosFiltradoCantidades[dia] = [];
-        productos.forEach((producto) => {
-            let pedidoDelProducto = {}
-            pedidoDelProducto.id = producto.id
-            pedidoDelProducto.sector = producto.sector
-            let cantidadPedida = 0;
-            // console.log(pedidosFiltrado[dia])
-            pedidosFiltrado[dia].forEach((pedido) => {
-                pedido = JSON.parse(pedido)
-                // console.log(pedido)
-                pedido.forEach((item) => {
-                    if(item[1] == producto.id){
-                        cantidadPedida = cantidadPedida + item[0]
-                        // console.log(producto.id, item[0])
-                    }
-                })
+const resumirProductosRepetidos = async(sumaDePedidos) => {
+    let pedidoUnido = [];
+    let productosDelPedido = [];
+    sumaDePedidos.forEach((pedido) => productosDelPedido.push(pedido[1]));
+    let productosUnicos = Array.from(new Set(productosDelPedido));
+    productosUnicos.forEach((producto) => {
+        let productoRepetido = sumaDePedidos.filter((pedido) => pedido[1] == producto);
+        if(productoRepetido.length == 1){
+            pedidoUnido.push(productoRepetido[0]);
+        }
+        if(productoRepetido.length > 1){
+            let productosUnidos = [];
+            let cantidad = 0;
+            productoRepetido.forEach((producto) => {
+                cantidad = cantidad + producto[0];
             })
-            pedidoDelProducto.cantidad = cantidadPedida;
-            
-            pedidosFiltradoCantidades[dia].push(pedidoDelProducto)
-        })
-    }
-    console.log(pedidosFiltradoCantidades);
-    return pedidosFiltradoCantidades;
-} */
-
-const sumarPedidosMismaFecha = async(pedidos, locales) =>{
-    let pedidoFiltrado = [];
-    locales.forEach((local) => {
-        let pedidosPorLocal = pedidos.filter((pedido) => pedido.local == local.id);
-        console.log(pedidosPorLocal.length);
-        if(pedidosPorLocal.length = 0){return};
-        if(pedidosPorLocal.length = 1){pedidoFiltrado.push(pedidosPorLocal[0])}
-        if(pedidosPorLocal.length > 1){}
+            productosUnidos.push(cantidad);
+            productosUnidos.push(productoRepetido[0][1]);
+            productosUnidos.push(productoRepetido[0][2]);
+            pedidoUnido.push(productosUnidos);
+        }
     })
+    return pedidoUnido;
+}
+
+const crearObjetoPedido = async(pedidosPorLocal) => {
+    let pedidoAcumulado = {};
+    pedidoAcumulado.fechaentrega = pedidosPorLocal[0].fechaentrega;
+    pedidoAcumulado.local = pedidosPorLocal[0].local;
+    pedidoAcumulado.pedido = pedidosPorLocal[0].pedido;
+    return pedidoAcumulado;
 }
 
 module.exports = {
-    fechasReportes,
     sumarPedidosMismaFecha,
 }

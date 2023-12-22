@@ -1130,14 +1130,11 @@ const reportesProduccion = async (req, res) => {
 }
 
  const reportesProduccionFabrica = async(req, res) => {
-  // const fechas = await reportesMiddleware.fechasReportes();
-  console.log(req.body)
   const locales = await servicesLocal.getLocales();
-  fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   // const productos = await servicesProductosFabrica.getProductosFabrica();
-  // const data = await reportesMiddleware.totalesPorDia(pedidos, productos);
   res.render(__basedir + "/src/views/pages/reportesProduccion", {
     // data,
     usuario: req.session.userLog,
