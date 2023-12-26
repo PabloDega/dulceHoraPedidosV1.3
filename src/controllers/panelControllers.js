@@ -1122,36 +1122,92 @@ const uploadNuevaFotoProductoFabrica = async(req, res) => {
   return res.redirect("/panel/productosFabrica/fotos");
 }
 
-const reportesProduccion = async (req, res) => {
+const reportes = async (req, res) => {
+  const sectores = await servicesProductosFabrica.getSectoresFabrica();
   res.render(__basedir + "/src/views/pages/reportesProduccion", {
+    sectores,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
 }
 
- const reportesProduccionFabrica = async(req, res) => {
+const reportesSelector = async(req, res) => {
+  res.redirect(`/panel/produccion/reportes/${req.body.tipo}?sector=${req.body.sector}&fecha=${req.body.fecha}`);
+}
+
+const reportePlanta = async(req, res) => {
+  //verificar querys
+  if(req.query.fecha === undefined || req.query.sector === undefined){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  //verificar validez del sector
+  const sectores = await servicesProductosFabrica.getSectoresFabrica();
+  if(sectores.find((dato) => dato.sector == req.query.sector) === undefined){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
+  const pedidos = await servicesReportes.getReportes(fecha);
+  // Verifica si la fecha contiene pedidos
+  if(pedidos.length == 0){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const data = await reportesMiddleware.reportePlanta(productos, pedidos, req.query.sector);
+  const productosDelPedido = await reportesMiddleware.productosDelPedido(productos, data);
+  res.render(__basedir + "/src/views/pages/reportePlanta", {
+    sector: req.query.sector,
+    fecha,
+    data,
+    categorias,
+    productos: productosDelPedido,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
+const reporteProduccion = async(req, res) => {
   const locales = await servicesLocal.getLocales();
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
-  // const productos = await servicesProductosFabrica.getProductosFabrica();
-  res.render(__basedir + "/src/views/pages/reportesProduccion", {
-    // data,
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const data = await reportesMiddleware.reportePlanta(categorias, productos, pedidosFiltrados);
+  res.render(__basedir + "/src/views/pages/reportePlanta", {
+    fecha,
+    data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
- }
+}
 
- const servicios = async (req, res) => {
+const reporteValorizado = async(req, res) => {
+  const locales = await servicesLocal.getLocales();
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
+  const pedidos = await servicesReportes.getReportes(fecha);
+  const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const data = await reportesMiddleware.reportePlanta(categorias, productos, pedidosFiltrados);
+  res.render(__basedir + "/src/views/pages/reportePlanta", {
+    fecha,
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
+const servicios = async (req, res) => {
   let data = await servicesServicios.getServicios();
   res.render(__basedir + "/src/views/pages/servicios", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
- }
+}
 
- const servicioNuevo = async (req, res) => {
+const servicioNuevo = async (req, res) => {
   let data = await servicesProductos.lastId("servicios");
   res.render(__basedir + "/src/views/pages/nuevoServicio", {
     data,
@@ -1159,9 +1215,9 @@ const reportesProduccion = async (req, res) => {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
- }
+}
 
- const servicioInsert = async (req, res) => {
+const servicioInsert = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     return res.render(__basedir + "/src/views/pages/nuevoServicio", {
@@ -1178,9 +1234,9 @@ const reportesProduccion = async (req, res) => {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
- }
+}
 
- const servicioEliminar = async (req, res) => {
+const servicioEliminar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/servicios");
   }
@@ -1279,8 +1335,11 @@ module.exports = {
   fotosProductosFabrica,
   nuevaFotoProductoFabrica,
   uploadNuevaFotoProductoFabrica,
-  reportesProduccion,
-  reportesProduccionFabrica,
+  reportes,
+  reportesSelector,
+  reportePlanta,
+  reporteProduccion,
+  reporteValorizado,
   servicios,
   servicioNuevo,
   servicioInsert,

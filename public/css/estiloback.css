@@ -932,3 +932,11 @@ footer img {
   align-items: center;
   gap: 0.5em;
 }
+.reporte{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.reporte h1, .reporte h2{
+  color: white;
+}

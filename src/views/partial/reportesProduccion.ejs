@@ -5,12 +5,21 @@
         <input type="date" name="fecha" id="fecha" />
     </span>
     <span>
-        <label for="reporteTipo">Reporte</label>
-        <select name="reporteTipo" id="reporteTipo">
+        <label for="tipo">Reporte</label>
+        <select name="tipo" id="tipo">
             <option value="" selected disabled>- Seleccionar un local -</option>
-            <option value="reporteFabrica">Reporte de Fábrica</option>
-            <option value="reporteAdministrativo">Reporte Administratvio</option>
-            <option value="reporteValuado">Reporte Valuado</option>
+            <option value="planta">Reporte de Planta</option>
+            <option value="pedidos">Reporte de Pedidos</option>
+            <option value="valorizado">Reporte Valorizado</option>
+        </select>
+    </span>
+    <span>
+        <label for="sector">Sector</label>
+        <select name="sector" id="sector">
+            <option value="" selected disabled>- Seleccionar un sector -</option>
+            <% sectores.forEach((sector) => {%>
+                <option value="<%= sector.sector  %>"><%= sector.sector  %></option>
+            <%}) %>
         </select>
     </span>
     <span>

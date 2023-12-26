@@ -1,0 +1,28 @@
+<h1>Reporte de Planta</h1>
+<h2>Sector: <%= sector %> - Fecha: <%= fecha %></h2>
+<table id="tablaReportePlanta">
+    <tbody>
+        <%  categorias.forEach((categoria) => {
+            let productosDeCategoria = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+            if(productosDeCategoria.length == 0){ return }%>
+            <tr>
+                <th colspan="2" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+            </tr>      
+        <%  //let idDelPedido = [];
+            //data.forEach((dato) => idDelPedido.push(dato[1]));
+            // agregar cantidades pedidas
+            productosDeCategoria.forEach((producto) => { %>
+                <tr>
+                    <td><%= producto.nombre %></td>
+                    <td><%= producto.cantidad %></td>
+                </tr>
+        <%    });
+        }) %>
+    </tbody>
+</table>
+<form id="exportarExcel" method="post" action="/panel/produccion/reporte/planta/exportar/excel">
+    <input type="hidden" name="fecha" value="<%= fecha %>">
+    <input type="hidden" name="sector" value="<%= sector %>">
+    <input type="hidden" name="productos" value="<%= JSON.stringify(productos) %>">
+    <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
+</form>

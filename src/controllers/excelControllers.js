@@ -36,7 +36,7 @@ const exportarExcelProduccion = async(req, res) => {
 
     let ws = wb.addWorksheet('Planilla de Pedidos');
 
-    //Setea amchos
+    //Setear anchos
     ws.column(1).setWidth(4);
     ws.column(2).setWidth(32);
     ws.column(3).setWidth(7);
@@ -94,6 +94,85 @@ const exportarExcelProduccion = async(req, res) => {
     wb.write(`Planilla de pedido ${req.body.local} - ${req.body.fecha}.xlsx`, res);
 }
 
+const exportarExcelReportePlanta = async (req, res) => {
+    const productos = JSON.parse(req.body.productos);
+    let fecha = req.body.fecha;
+    fecha = fecha.split("/")
+    fecha = new Date(fecha[2], fecha[1] - 1, fecha[0])
+    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    let wb = new xl.Workbook({
+        dateFormat: 'dd/mm/yy',
+    });
+
+    //estilos
+    let estiloNegro = wb.createStyle({
+        font: {
+          color: '#FFFFFF',
+          size: 12,
+          bold: true,
+        },
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#000000',
+        },
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloCentrado = wb.createStyle({
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloBorde = wb.createStyle({
+        border:{
+            left:{
+                style: "thin",
+                color: "#000000",
+            },
+            right:{
+                style: "thin",
+                color: "#000000",
+            },
+            top:{
+                style: "thin",
+                color: "#000000",
+            },
+            bottom:{
+                style: "thin",
+                color: "#000000",
+            }
+        }
+    });
+
+    let ws = wb.addWorksheet('Reporte de Planta');
+
+    //Setear anchos
+    ws.column(1).setWidth(35);
+    ws.column(2).setWidth(5);
+
+    ws.cell(1, 1).date(new Date(fecha)).style(estiloNegro).style({font: {size: 16,}});
+    ws.cell(1, 2).string("Total");
+
+    let iProductos = 2
+    categorias.forEach((categoria) => {
+        let prodFiltrados = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+        if(prodFiltrados.length > 0){
+            ws.cell(iProductos, 1, iProductos, 2, true).string(categoria.categoriaProduccion).style(estiloNegro);
+            iProductos++;
+            prodFiltrados.forEach((producto) => {
+                ws.cell(iProductos, 1).string(producto.nombre).style(estiloBorde);
+                ws.cell(iProductos, 2).number(producto.cantidad).style(estiloCentrado).style(estiloBorde);
+                iProductos++;
+            })
+        }
+    })
+
+    wb.write(`Reporte de Planta - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
+}
+
 module.exports = {
     exportarExcelProduccion,
+    exportarExcelReportePlanta,
 }

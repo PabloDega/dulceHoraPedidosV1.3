@@ -108,9 +108,17 @@ router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProducci
 
 router.post("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionUpdate); //validar!!!
 
-router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccion);
+router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportes);
 
-router.post("/produccion/reportes", auth.authSupervisor, panelControllers.reportesProduccionFabrica);
+router.post("/produccion/reportes", auth.authSupervisor, panelControllers.reportesSelector); // Validar!!!
+
+router.get("/produccion/reportes/planta", auth.authSupervisor, panelControllers.reportePlanta);
+
+router.post("/produccion/reporte/planta/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReportePlanta);
+
+router.get("/produccion/reportes/produccion", auth.authSupervisor, panelControllers.reporteProduccion);
+
+router.get("/produccion/reportes/valorizados", auth.authSupervisor, panelControllers.reporteValorizado);
 
 router.get("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoNuevo);
 

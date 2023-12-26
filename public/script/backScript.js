@@ -57,6 +57,9 @@ if (document.querySelector("#produccionFabrica") != null) {
 if (document.querySelector("#fotosFabrica") != null) {
   document.querySelector("#fotosFabrica").addEventListener("click", () => (location.href = "/panel/productosFabrica/fotos"));
 }
+if (document.querySelector("#reportesFabrica") != null) {
+  document.querySelector("#reportesFabrica").addEventListener("click", () => (location.href = "/panel/produccion/reportes"));
+}
 if (document.querySelector("#productosFabrica") != null) {
   document.querySelectorAll("#productosFabrica").forEach((boton) => {
     boton.addEventListener("click", () => (location.href = "/panel/productosFabrica"));
