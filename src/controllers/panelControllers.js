@@ -1166,17 +1166,31 @@ const reportePlanta = async(req, res) => {
   });
 }
 
-const reporteProduccion = async(req, res) => {
+const reportePedidos = async(req, res) => {
+  //verificar querys
+  if(req.query.fecha === undefined || req.query.sector === undefined){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  //verificar validez del sector
+  const sectores = await servicesProductosFabrica.getSectoresFabrica();
+  if(sectores.find((dato) => dato.sector == req.query.sector) === undefined){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
   const locales = await servicesLocal.getLocales();
-  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+  // console.log(pedidosFiltrados)
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabrica();
-  const data = await reportesMiddleware.reportePlanta(categorias, productos, pedidosFiltrados);
-  res.render(__basedir + "/src/views/pages/reportePlanta", {
+  // const data = await reportesMiddleware.reportePlanta(categorias, productos, pedidosFiltrados);
+  res.render(__basedir + "/src/views/pages/reportePedidos", {
+    sector: req.query.sector,
     fecha,
-    data,
+    pedidos: pedidosFiltrados,
+    categorias,
+    productos,
+    locales,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -1338,7 +1352,7 @@ module.exports = {
   reportes,
   reportesSelector,
   reportePlanta,
-  reporteProduccion,
+  reportePedidos,
   reporteValorizado,
   servicios,
   servicioNuevo,

@@ -8,10 +8,7 @@
             <tr>
                 <th colspan="2" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
             </tr>      
-        <%  //let idDelPedido = [];
-            //data.forEach((dato) => idDelPedido.push(dato[1]));
-            // agregar cantidades pedidas
-            productosDeCategoria.forEach((producto) => { %>
+        <%  productosDeCategoria.forEach((producto) => { %>
                 <tr>
                     <td><%= producto.nombre %></td>
                     <td><%= producto.cantidad %></td>

@@ -1,0 +1,54 @@
+<h1>Reportes de Pedidos </h1>
+<h2>Sector: <%= sector %> - Fecha: <%= fecha %></h2>
+<div id="reportesPedidos">
+<% pedidos.forEach((pedido) => {
+    let productosDelPedido = [];
+    let detallePedido = JSON.parse(pedido.pedido);
+    detallePedido.forEach((dato) => {
+        productosDelPedido.push(productos.find((producto) => producto.id == dato[1]))
+    })
+    productosDelPedido = productosDelPedido.filter((producto) => producto.sector == sector)
+    if(productosDelPedido.length == 0){
+        return
+    }
+    productosDelPedido.forEach((producto) => {
+        let info = detallePedido.find((dato) => dato[1] == producto.id);
+        producto.cantidad = info[0]
+    })
+    const local = locales.find((local) => local.id == pedido.local) %>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="3" class="categoriaTabla"><%= local.nombre %> - <%= fecha %></th>
+            </tr>
+            <tr>
+                <th>COD</th>
+                <th>ARTICULO</th>
+                <th>CANTIDAD</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%  categorias.forEach((categoria) => {
+                let productosDeCategoria = productosDelPedido.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+                if(productosDeCategoria.length == 0){ return }%>
+                <tr>
+                    <th colspan="3" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+                </tr>      
+            <%  productosDeCategoria.forEach((producto) => { %>
+                    <tr>
+                        <td><%= producto.codigo %></td>
+                        <td><%= producto.nombre %></td>
+                        <td class="tablaCeldaNumero"><%= producto.cantidad %></td>
+                    </tr>
+            <%    });
+            }) %>
+        </tbody>
+    </table>
+<%}) %>
+</div>
+<form id="exportarExcel" method="post" action="/panel/produccion/reporte/pedidos/exportar/excel">
+    <input type="hidden" name="fecha" value="<%= fecha %>">
+    <input type="hidden" name="sector" value="<%= sector %>">
+    <input type="hidden" name="pedidos" value="<%= JSON.stringify(pedidos) %>">
+    <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
+</form>

@@ -116,7 +116,9 @@ router.get("/produccion/reportes/planta", auth.authSupervisor, panelControllers.
 
 router.post("/produccion/reporte/planta/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReportePlanta);
 
-router.get("/produccion/reportes/produccion", auth.authSupervisor, panelControllers.reporteProduccion);
+router.get("/produccion/reportes/pedidos", auth.authSupervisor, panelControllers.reportePedidos);
+
+router.post("/produccion/reporte/pedidos/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReportePedidos);
 
 router.get("/produccion/reportes/valorizados", auth.authSupervisor, panelControllers.reporteValorizado);
 

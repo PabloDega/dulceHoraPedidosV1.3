@@ -940,3 +940,11 @@ footer img {
 .reporte h1, .reporte h2{
   color: white;
 }
+#reportesPedidos{
+  display: flex;
+  gap: 2em;
+  align-items: flex-start;
+}
+.tablaCeldaNumero{
+  text-align: center;
+}

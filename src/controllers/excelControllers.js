@@ -1,5 +1,6 @@
 const xl = require('excel4node');
 const servicesProductosFabrica = require(__basedir + "/src/services/productosFabrica");
+const servicesLocal = require(__basedir + "/src/services/local");
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
@@ -172,7 +173,118 @@ const exportarExcelReportePlanta = async (req, res) => {
     wb.write(`Reporte de Planta - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }
 
+const exportarExcelReportePedidos = async (req, res) => {
+    const pedidos = JSON.parse(req.body.pedidos);
+    let fecha = req.body.fecha;
+    fecha = fecha.split("/")
+    fecha = new Date(fecha[2], fecha[1] - 1, fecha[0])
+    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    const locales = await servicesLocal.getLocales();
+    const productos = await servicesProductosFabrica.getProductosFabrica();
+
+    let wb = new xl.Workbook({
+        dateFormat: 'dd/mm/yy',
+    });
+
+    //estilos
+    let estiloNegro = wb.createStyle({
+        font: {
+          color: '#FFFFFF',
+          size: 12,
+          bold: true,
+        },
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#000000',
+        },
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloCentrado = wb.createStyle({
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloBorde = wb.createStyle({
+        border:{
+            left:{
+                style: "thin",
+                color: "#000000",
+            },
+            right:{
+                style: "thin",
+                color: "#000000",
+            },
+            top:{
+                style: "thin",
+                color: "#000000",
+            },
+            bottom:{
+                style: "thin",
+                color: "#000000",
+            }
+        }
+    });
+
+    let ws = wb.addWorksheet('Reporte de Pedidos');
+
+    //Setear anchos
+    ws.column(1).setWidth(7);
+    ws.column(2).setWidth(35);
+    ws.column(3).setWidth(10);
+
+    let iPedidos = 1
+
+    pedidos.forEach((pedido) => {
+        let productosDelPedido = [];
+        let detallePedido = JSON.parse(pedido.pedido);
+        detallePedido.forEach((dato) => {
+            productosDelPedido.push(productos.find((producto) => producto.id == dato[1]))
+        })
+        productosDelPedido = productosDelPedido.filter((producto) => producto.sector == req.body.sector)
+        if(productosDelPedido.length == 0){
+            return
+        }
+        productosDelPedido.forEach((producto) => {
+            let info = detallePedido.find((dato) => dato[1] == producto.id);
+            producto.cantidad = info[0]
+        })
+        const local = locales.find((local) => local.id == pedido.local)
+
+        ws.cell(iPedidos, 1, iPedidos, 2, true).string(local.nombre).style(estiloNegro).style({font: {size: 16,}});
+        ws.cell(iPedidos, 3).date(fecha).style(estiloNegro);
+        iPedidos++;
+        ws.cell(iPedidos, 1).string("COD").style(estiloBorde).style(estiloCentrado);
+        ws.cell(iPedidos, 2).string("ARTICULO").style(estiloBorde).style(estiloCentrado);
+        ws.cell(iPedidos, 3).string("CANT").style(estiloBorde).style(estiloCentrado);
+        iPedidos++;
+
+        categorias.forEach((categoria) => {
+            let productosDeCategoria = productosDelPedido.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+            if(productosDeCategoria.length == 0){ return };
+
+            ws.cell(iPedidos, 1, iPedidos, 3, true).string(categoria.categoriaProduccion).style(estiloNegro);
+            iPedidos++;
+            
+            productosDeCategoria.forEach((producto) => {
+                ws.cell(iPedidos, 1).number(producto.codigo).style(estiloBorde).style(estiloCentrado);
+                ws.cell(iPedidos, 2).string(producto.nombre).style(estiloBorde);
+                ws.cell(iPedidos, 3).number(producto.cantidad).style(estiloBorde).style(estiloCentrado);
+                iPedidos++;
+                
+            });
+        });
+        iPedidos++;
+        iPedidos++;
+    });
+
+    wb.write(`Reporte de Pedidos - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
+}
+
 module.exports = {
     exportarExcelProduccion,
     exportarExcelReportePlanta,
+    exportarExcelReportePedidos,
 }
