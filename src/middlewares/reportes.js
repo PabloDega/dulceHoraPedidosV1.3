@@ -70,7 +70,7 @@ const reportePlanta = async(productos, pedidos, sector) => {
             sumaDePedidos = sumaDePedidos.concat(JSON.parse(pedido.pedido));
         })
         sumaDePedidos = await resumirProductosRepetidos(sumaDePedidos);
-        pedidoLimpio = sumaDePedidos
+        pedidoLimpio = sumaDePedidos;
     }
     // filtrar por sector
     pedidoLimpio = pedidoLimpio.filter((pedido) => idDelSector.includes(pedido[1]))
@@ -90,8 +90,46 @@ const productosDelPedido = async(productos, data) => {
     return productosDelPedido
 }
 
+const localesConPedido = async(pedidos) => {
+    let localesConPedido = [];
+    pedidos.forEach((pedido) => {
+        localesConPedido.push(pedido.local);
+    })
+    return localesConPedido;
+}
+
+const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
+    let cantidadesPorProducto = [];
+    productos.forEach((producto) => {
+        let x = false;
+        if(producto.sector !== sector){return}
+        let objeto = {};
+        objeto.id = producto.id;
+        objeto.categoria = producto.categoria;
+        let cantidades = [];
+        pedidosFiltrados.forEach((pedido) => {
+            let pedidoDetalle = JSON.parse(pedido.pedido);
+            let cantidadPedida = pedidoDetalle.find((item) => item[1] == producto.id);
+            if(cantidadPedida === undefined){
+                cantidades.push(0);
+            } else {
+                cantidades.push(cantidadPedida[0]);
+                x = true;
+            }
+        })
+        objeto.cantidades = cantidades;
+        if(x){
+            cantidadesPorProducto.push(objeto);
+        }  
+    })
+    // console.log(cantidadesPorProducto);
+    return cantidadesPorProducto;
+}
+
 module.exports = {
     sumarPedidosMismaFecha,
     reportePlanta,
     productosDelPedido,
+    localesConPedido,
+    cantidadesPorProducto,
 }

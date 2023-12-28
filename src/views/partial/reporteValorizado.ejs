@@ -1,0 +1,48 @@
+<h1>Reporte Valorizado </h1>
+<h2>Sector: <%= sector %> - Fecha: <%= fecha %></h2>
+<div id="reportesValorizados">
+    <table>
+        <thead>
+            <tr>
+                <th class="categoriaTabla"><%= fecha %></th>
+                <% let colspan = 4;
+                localesConPedido.forEach((local) => {
+                    colspan++;
+                    let nombreLocal = locales.find((dato) => dato.id == local);
+                    nombreLocal = nombreLocal.nombre;%>
+                    <th><%= nombreLocal %></th>
+                <%}) %>
+                <th class="categoriaTabla">Cantidad Total</th>
+                <th class="categoriaTabla">Precio</th>
+                <th class="categoriaTabla">Importe Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% categorias.forEach((categoria) => {
+                let pedidosDeCategoria = cantidadesPorProducto.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+                if(pedidosDeCategoria.length == 0){ return }%>
+                <tr><th colspan="<%= colspan %>" class="categoriaTabla"><%= categoria.categoriaProduccion %></th></tr>
+                <%pedidosDeCategoria.forEach((pedido) => {
+                    let acumulador = 0;
+                    let nombreProducto = productos.find((producto) => producto.id == pedido.id);%>
+                <tr>
+                    <td><%= nombreProducto.nombre %></td>
+                    <% pedido.cantidades.forEach((cantidad) => {
+                        acumulador = acumulador + cantidad;%>
+                        <td><%= cantidad %></td>
+                    <%})%>
+                    <td><%= acumulador %></td>
+                    <td>$<%= nombreProducto.costo %></td>
+                    <td>$<%let total = acumulador * nombreProducto.costo%><%=total%></td>
+                </tr>
+                <%})
+            }) %>
+        </tbody>
+    </table>
+<%  %>
+</div>
+<form id="exportarExcel" method="post" action="/panel/produccion/reporte/valorizado/exportar/excel">
+    <input type="hidden" name="fecha" value="<%= fecha %>">
+    <input type="hidden" name="sector" value="<%= sector %>">
+    <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
+</form>

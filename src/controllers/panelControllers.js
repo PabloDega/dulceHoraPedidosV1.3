@@ -1180,10 +1180,8 @@ const reportePedidos = async(req, res) => {
   const locales = await servicesLocal.getLocales();
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
-  // console.log(pedidosFiltrados)
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabrica();
-  // const data = await reportesMiddleware.reportePlanta(categorias, productos, pedidosFiltrados);
   res.render(__basedir + "/src/views/pages/reportePedidos", {
     sector: req.query.sector,
     fecha,
@@ -1197,16 +1195,32 @@ const reportePedidos = async(req, res) => {
 }
 
 const reporteValorizado = async(req, res) => {
+  //verificar querys
+  if(req.query.fecha === undefined || req.query.sector === undefined){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  //verificar validez del sector
+  const sectores = await servicesProductosFabrica.getSectoresFabrica();
+  if(sectores.find((dato) => dato.sector == req.query.sector) === undefined){
+    return res.redirect("/panel/produccion/reportes");
+  }
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
   const locales = await servicesLocal.getLocales();
-  const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+  const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabrica();
-  const data = await reportesMiddleware.reportePlanta(categorias, productos, pedidosFiltrados);
-  res.render(__basedir + "/src/views/pages/reportePlanta", {
+  const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.query.sector);
+  res.render(__basedir + "/src/views/pages/reporteValorizado", {
+    sector: req.query.sector,
     fecha,
-    data,
+    pedidos: pedidosFiltrados,
+    categorias,
+    productos,
+    locales,
+    localesConPedido,
+    cantidadesPorProducto,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });

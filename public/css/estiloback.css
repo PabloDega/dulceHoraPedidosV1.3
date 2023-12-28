@@ -948,3 +948,9 @@ footer img {
 .tablaCeldaNumero{
   text-align: center;
 }
+#reportesValorizados table tbody tr td:first-child{
+  text-align: left;
+}
+#reportesValorizados table tbody tr td{
+  text-align: center;
+}

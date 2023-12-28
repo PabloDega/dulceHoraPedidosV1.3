@@ -1,0 +1,13 @@
+<%- include("../partial/menu", {menu: "small"})%>
+<div id="backRender" class="reporte">
+    <%- include("../partial/reporteValorizado", {
+        sector,
+        fecha,
+        pedidos,
+        categorias,
+        productos,
+        locales,
+        localesConPedido,
+        cantidadesPorProducto,
+    }) %>
+</div>

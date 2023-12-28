@@ -1,6 +1,9 @@
 const xl = require('excel4node');
 const servicesProductosFabrica = require(__basedir + "/src/services/productosFabrica");
 const servicesLocal = require(__basedir + "/src/services/local");
+const servicesReportes = require(__basedir + "/src/services/reportes");
+const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
+
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
@@ -283,8 +286,142 @@ const exportarExcelReportePedidos = async (req, res) => {
     wb.write(`Reporte de Pedidos - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }
 
+const exportarExcelReporteValorizado = async(req, res) => {
+    let fecha = req.body.fecha;
+    fecha = fecha.split("/")
+    fecha = new Date(fecha[2], fecha[1] - 1, fecha[0])
+    const locales = await servicesLocal.getLocales();
+    const pedidos = await servicesReportes.getReportes(req.body.fecha);
+    const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+    const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
+    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    const productos = await servicesProductosFabrica.getProductosFabrica();
+    const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.body.sector);
+  
+    let wb = new xl.Workbook({
+        dateFormat: 'dd/mm/yy',
+    });
+
+    //estilos
+    let estiloNegro = wb.createStyle({
+        font: {
+          color: '#FFFFFF',
+          size: 12,
+          bold: true,
+        },
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#000000',
+        },
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloGris = wb.createStyle({
+        font: {
+          size: 12,
+          bold: true,
+        },
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#CCCCCC',
+        },
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloCentrado = wb.createStyle({
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloBorde = wb.createStyle({
+        border:{
+            left:{
+                style: "thin",
+                color: "#000000",
+            },
+            right:{
+                style: "thin",
+                color: "#000000",
+            },
+            top:{
+                style: "thin",
+                color: "#000000",
+            },
+            bottom:{
+                style: "thin",
+                color: "#000000",
+            }
+        }
+    });
+    let estiloImporte = wb.createStyle({
+        numberFormat: '$#,##0.00; ($#,##0.00); -',
+    })
+    
+
+    let ws = wb.addWorksheet('Reporte de Pedidos');
+
+    //Setear anchos
+    ws.column(1).setWidth(40);
+
+    let iPedidos = 1
+
+    ws.cell(iPedidos, 1).date(fecha).style(estiloNegro);
+    let colspan = 4;
+    let col = 2;
+    localesConPedido.forEach((local) => {
+        colspan++;
+        let nombreLocal = locales.find((dato) => dato.id == local);
+        ws.cell(iPedidos, col).string(nombreLocal.nombre).style(estiloBorde).style(estiloGris);
+        ws.column(col).setWidth(14);
+        col++;
+        
+    })
+    ws.cell(iPedidos, col).string("Cantidad Total").style(estiloBorde).style(estiloCentrado);
+    ws.column(col).setWidth(14);
+    col++;
+    ws.cell(iPedidos, col).string("Precio").style(estiloBorde).style(estiloCentrado);
+    ws.column(col).setWidth(14);
+    col++;
+    ws.cell(iPedidos, col).string("Importe Total").style(estiloBorde).style(estiloCentrado);
+    ws.column(col).setWidth(14);
+    iPedidos++;
+
+    categorias.forEach((categoria) => {
+        let pedidosDeCategoria = cantidadesPorProducto.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+        if(pedidosDeCategoria.length == 0){ return }
+        ws.cell(iPedidos, 1, iPedidos, colspan,true).string(categoria.categoriaProduccion).style(estiloCentrado).style(estiloNegro);
+        iPedidos++;
+        pedidosDeCategoria.forEach((pedido) => {
+            let acumulador = 0;
+            let col = 1;
+            let nombreProducto = productos.find((producto) => producto.id == pedido.id);
+            ws.cell(iPedidos, col).string(nombreProducto.nombre).style(estiloBorde).style(estiloCentrado);
+            col++;
+            pedido.cantidades.forEach((cantidad) => {
+                acumulador = acumulador + cantidad;
+                ws.cell(iPedidos, col).number(cantidad).style(estiloBorde).style(estiloCentrado);
+                col++;
+            })
+            ws.cell(iPedidos, col).number(acumulador).style(estiloBorde).style(estiloCentrado);
+            col++
+            ws.cell(iPedidos, col).number(nombreProducto.costo).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
+            col++;
+            let total = acumulador * nombreProducto.costo
+            ws.cell(iPedidos, col).number(total).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
+            iPedidos++;
+        });
+    });
+
+    wb.write(`Reporte Valorizado - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
+}
+
 module.exports = {
     exportarExcelProduccion,
     exportarExcelReportePlanta,
     exportarExcelReportePedidos,
+    exportarExcelReporteValorizado,
 }
