@@ -255,7 +255,7 @@
                         <span class="btn btnAzul btnSmall" id="pedidoProduccionModificar" data-id="<%= dataPedido.id %>">Modificar</span>
                     <%};
                 }%>
-                <form id="exportarExcel" method="post" action="/panel/productosFabrica/exportar/excel">
+                <form id="exportarExcel" method="post" action="/panel/produccion/exportar/excel">
                     <input type="hidden" name="fecha" value="<%= dataPedido.fechaentrega %>">
                     <%if(lector == "fabrica"){%>
                     <input type="hidden" name="local" value="<%= local.nombre %>">

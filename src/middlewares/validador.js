@@ -278,6 +278,40 @@ const dataValidator = (data) => {
   return true
 };
 
+const validarPedidoEstadoChain = [
+  body("id")
+    .notEmpty().withMessage("El campo 'ID' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'ID' incorrecto"),
+  body("estado")
+    .notEmpty().withMessage("El campo 'Estado' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'Estado' incorrecto"),
+]
+
+const validarStringsChain = [
+  body("**")
+    .notEmpty()
+    .trim()
+    .escape()
+    .isString()
+]
+
+const validarProduccionUpdateChain = [
+  body("pedidoProduccionLocalId")
+    .notEmpty()
+    .trim()
+    .escape()
+    .isString(),
+  body("pedidoProduccionImporteTotal")
+    .notEmpty()
+    .trim()
+    .escape()
+    .isString(),
+]
+
 
 module.exports = {
   validarInput,
@@ -290,5 +324,8 @@ module.exports = {
   validarLoginChain,
   validarProductoFabricaChain,
   validarCategoriaFabricaChain,
+  validarPedidoEstadoChain,
+  validarStringsChain,
+  validarProduccionUpdateChain,
   dataValidator,
 };

@@ -653,10 +653,18 @@ const stockForm = async(req, res) => {
 }
 
 const stockUpdate = async (req, res) => {
-  let datos = req.body;
+  let datos = req.body.stock;
+  // validacion
+  if(!Array.isArray(req.body.stock)){
+    return res.redirect("/panel/stock")
+  }
+  datos.forEach((dato) => {
+    if(isNaN(parseInt(dato))){
+      return res.redirect("/panel/stock")}
+  })
   let local = req.session.userLocal;
   await servicesLocal.updateStock(datos, local);
-  await actividadMiddleware.actividadUser(req.session.userLog, local, 0, "Stock", datos.stock.toString());
+  await actividadMiddleware.actividadUser(req.session.userLog, local, 0, "Stock", datos.toString());
   return res.redirect("/panel/stock")
 };
 
@@ -888,6 +896,7 @@ const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
 }
 
 const pedidoProduccionPersonalizadoCrear = async (req, res) => {
+  console.log(req.body)
   let data = {};
   data.fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   data.local = req.body.local;

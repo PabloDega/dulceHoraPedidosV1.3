@@ -66,7 +66,7 @@ const deleteLocal = async(id) => {
 
 const updateStock = async(datos, local) => {
   try {
-    await conectar.query(`UPDATE locales SET stock = "${datos.stock}" WHERE id = "${local}"`);
+    await conectar.query(`UPDATE locales SET stock = "${datos}" WHERE id = "${local}"`);
   } catch (error) {
     throw error;
   } finally {
