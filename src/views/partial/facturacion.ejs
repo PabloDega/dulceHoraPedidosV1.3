@@ -1,0 +1,74 @@
+<form action="" method="post" class="editor" id="nuevaVenta">
+    <h1>Facturacion</h1>
+    <span>
+        <label for="fecha">Fecha</label>
+        <input type="datetime-local" name="fecha" id="fecha" autocomplete="on">
+    </span>
+    <span>
+        <label for="tipo">Tipo</label>
+        <select name="tipo" id="tipo">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="X">X</option>
+            <option value="NC">NC</option>
+        </select>
+    </span>
+    <span>
+        <label for="formaDePago">Forma de Pago</label>
+        <select name="formaDePago" id="formaDePago">
+            <option value="efectivo" selected>Efectivo</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
+            <option value="transferencia">Transferencia</option>
+        </select>
+    </span>
+    <span>
+        <label for="cuitVer">CUIT</label>
+        <input type="text" name="cuitVer" id="cuitVer">
+        <input type="hidden" name="cuit" id="cuit">
+    </span>
+    <span>
+        <table id="detallesFacturacion">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Cód</th>
+                    <th>Detalle</th>
+                    <th>Cant</th>
+                    <th>Medida</th>
+                    <th>Precio</th>
+                    <th>IVA</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="itemsfacturacion">
+                
+            </tbody>
+        </table>
+    </span>
+    <span>
+        <div class="btn btnGris btnSmall agregarItems" data-cantidad="1">+1</div>
+        <div class="btn btnGris btnSmall agregarItems" data-cantidad="5">+5</div>
+    </span>
+    <span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Neto</th>
+                    <th>IVA 10,5%</th>
+                    <th>IVA 21%</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="neto"></td>
+                    <td id="iva10"></td>
+                    <td id="iva21"></td>
+                    <td id="total"></td>
+                </tr>
+            </tbody>
+        </table>
+    </span>
+</form> 

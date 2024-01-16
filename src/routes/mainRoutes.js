@@ -6,9 +6,11 @@ const limiter = require("../middlewares/limiter");
 
 router.get("/datos", limiter.limiterAPI, mainControllers.jsonProductos);
 
-router.get("/", limiter.limiterGeneral, mainControllers.indexSelect);
+// router.get("/", limiter.limiterGeneral, mainControllers.indexSelect);
 
-router.post("/", limiter.limiterGeneral, mainControllers.index);
+router.get("/", limiter.limiterGeneral, (req, res) => {res.render(__basedir + "/src/views/pages/login", {usuario: ""})});
+
+// router.post("/", limiter.limiterGeneral, mainControllers.index);
 
 router.get("/volver", limiter.limiterGeneral, mainControllers.volerIndexSelect);
 

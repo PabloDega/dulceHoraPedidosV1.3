@@ -163,6 +163,17 @@ const lastId = async (tabla) => {
   return getLastId[0][0].Auto_increment;
 };
 
+const getProductosLocal = async () => {
+  try {
+    const rows = await conectar.query("SELECT * FROM productoslocal WHERE estado = 'true' ORDER BY codigo");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getProductos,
   getProducto,
@@ -176,4 +187,5 @@ module.exports = {
   deleteCategoria,
   updatePrecios,
   lastId,
+  getProductosLocal,
 };

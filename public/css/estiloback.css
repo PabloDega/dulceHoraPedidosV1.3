@@ -250,6 +250,10 @@ table input{
   background-color: blue;
   color:white;
 }
+.btnGris{
+  background-color: gray;
+  color:white;
+}
 .btnSmall{
   /* transform: scale(0.9); */
   font-size: 0.9em;
@@ -953,4 +957,30 @@ footer img {
 }
 #reportesValorizados table tbody tr td{
   text-align: center;
+}
+#detallesFacturacion td{
+  padding: 0;
+}
+#nuevaVenta table tbody tr{
+  background-color: white;
+  border-bottom: 1px solid black;
+}
+#nuevaVenta table tbody tr:hover {
+  background-color: lightgray;
+  color: inherit;
+}
+#nuevaVenta table tbody tr td input {
+  border: 0;
+  background-color: transparent;
+}
+#backRender #nuevaVenta{
+  width: 100%;
+}
+#itemsfacturacion tr td:first-child,
+#itemsfacturacion tr td .cant{
+  text-align: center;
+}
+#itemsfacturacion tr td:nth-child(7),
+#itemsfacturacion tr td:nth-child(8){
+  text-align: right;
 }

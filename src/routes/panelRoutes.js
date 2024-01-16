@@ -172,5 +172,8 @@ router.post("/servicios/nuevo", auth.authSupervisor, validar.validarStringsChain
 
 router.get("/servicios/eliminar", auth.authSupervisor, panelControllers.servicioEliminar);
 
+router.get("/facturacion", auth.authAdmin, panelControllers.facturacion);
+
+router.post("/facturacion", auth.authAdmin, panelControllers.facturacionPost);
 
 module.exports = router;

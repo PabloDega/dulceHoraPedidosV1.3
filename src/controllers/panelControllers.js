@@ -1302,6 +1302,27 @@ const preciosProductosFabricaUpdate = async(req, res) => {
   res.redirect("/panel/productosFabrica/precios");
 }
 
+const facturacion = async(req, res) => {
+  if(req.session.userLocal == 0){
+    return res.redirect("/panel");
+  }
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  const serviciosLocal = JSON.parse(local.servicios);
+  if(!serviciosLocal.facturacion){
+    return res.redirect("/panel");
+  }
+  const productos = await servicesProductos.getProductosLocal();
+  const categorias = await servicesProductos.getCategorias();
+  res.render(__basedir + "/src/views/pages/facturacion", {
+    productos,
+    categorias,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionPost = async(req, res) => {}
+
 module.exports = {
   index,
   productosCard,
@@ -1381,4 +1402,6 @@ module.exports = {
   servicioNuevo,
   servicioInsert,
   servicioEliminar,
+  facturacion,
+  facturacionPost,
 };

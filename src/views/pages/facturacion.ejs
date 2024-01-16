@@ -1,0 +1,8 @@
+<%- include("../partial/menu", {menu: "small"})%>
+<div id="backRender">
+    <%- include("../partial/facturacion",  { productos, categorias }) %>
+</div>
+<script defer src="/script/facturacion.js"></script>
+<script>
+    window.productos = <%- JSON.stringify(productos) %>
+</script>
