@@ -12,21 +12,47 @@ function cargarFecha(){
     fecha.value = f[0];
 }
 
+// CUIT
+
+function checkCuitInput(e){
+    if(e.keyCode === 8 || e.keyCode === 46){
+        return;
+    }
+    if(isNaN(parseInt(e.key))){
+        e.preventDefault();
+    }
+}
+
+function checkCuitNumero(e){
+    let caracteres = parseInt(e.target.value.length)
+    if(caracteres == 0){
+        return;
+    }
+    if(caracteres !== 11){
+        console.log("ping")
+    }
+}
+
+document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)})
+document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)})
+
+
 function itemsCreador(cantidad){
     if(isNaN(cantidad)){
         cantidad = cantidad.target.dataset.cantidad
     }
     for (let i = 0; i < cantidad; i++) {
         let fila = document.createElement("tr")
+        fila.setAttribute("id", `fila${contador}`)
         fila.innerHTML = `<td id="item${contador}">${contador}</td>
             <td><input type="text" name="cod${contador}" id="cod${contador}" class="cod" data-item="${contador}"></td>
-            <td id="det${contador}"></td>
-            <td><input type="number" name="cant${contador}" id="cant${contador}" value="0" class="cant" data-item="${contador}"></td>
+            <td id="nom${contador}"></td>
+            <td><input type="number" name="cant${contador}" id="cant${contador}" value="0" class="cant" data-item="${contador}" min="0"></td>
             <td id="med${contador}"></td>
             <td><input type="text" name="precio${contador}" id="precio${contador}" data-item="${contador}" value="$0" class="precio"></td>
             <td id="iva${contador}">$0</td>
             <td id="subVer${contador}">$0</td>
-            <td><span class="btn">X</span></td>
+            <td><span class="btn eliminarItem" data-item="${contador}">X</span></td>
             <input type="hidden" name="porcentajeIva${contador}" id="porcentajeIva${contador}">
             <input type="hidden" name="sub${contador}" id="sub${contador}">
             <input type="hidden" name="estado${contador}" id="estado${contador}" value="false">`;
@@ -44,54 +70,90 @@ function cargarItem(e){
         return
     }
     let item = e.target.dataset.item
-    let detalle = document.querySelector(`#det${item}`);
+    let nombre = document.querySelector(`#nom${item}`);
     let medida = document.querySelector(`#med${item}`);
     let precio = document.querySelector(`#precio${item}`);
     let porcentajeIva = document.querySelector(`#porcentajeIva${item}`);
     let estado = document.querySelector(`#estado${item}`);
     
-    detalle.innerHTML = producto.descripcion;
+    nombre.innerHTML = producto.nombre;
     medida.innerHTML = producto.fraccionamiento;
     precio.value = "$" + producto.preciounidad;
     porcentajeIva.value = producto.iva;
     estado.value = "true";
+
+    if(producto.fraccionamiento !== "manual"){
+        precio.setAttribute("class", "inputBloqueado")
+    }
+
+    eventos();
+    calcularItem(e);    
 }
 
 function calcularItem(e){
     let item = e.target.dataset.item;
+
     let precio = document.querySelector(`#precio${item}`);
     if(precio.value.split("$").length < 2){
         precio.value = "$" + precio.value;
     }
-    if(precio.value === "$0"){
+    if(isNaN(parseInt(precio.value.split("$")[1]))){
+        vaciarItem(e)
         return
     }
-    let cantidad = document.querySelector(`#cant${item}`)
-    let porcentajeIva = document.querySelector(`#porcentajeIva${item}`).value / 10;
-    let iva = document.querySelector(`#iva${item}`);
+
+    let codigo = document.querySelector(`#cod${item}`);
+    let producto = productos.find((prod) => prod.codigo == codigo.value);
+    let cantidad = document.querySelector(`#cant${item}`);
     let subtotal = document.querySelector(`#sub${item}`);
-    let subtotalVisible = document.querySelector(`#subVer${item}`)
-    // iva.innerHTML = precio.split("$")
-    let calculo = precio.value.split("$")[1] * cantidad.value;
+    let subtotalVisible = document.querySelector(`#subVer${item}`);
+
+    let calculo
+    if(producto.fraccionamiento === "unidad"){
+        calculo = producto.preciounidad * cantidad.value;
+    } else if(producto.fraccionamiento === "kilo"){
+        calculo = producto.preciokilo * cantidad.value;
+    } else if(producto.fraccionamiento === "docena"){
+        calculo = producto.preciounidad * (cantidad.value % 12);
+        calculo += producto.preciodocena * (Math.trunc(cantidad.value / 12))
+    } else if(producto.fraccionamiento === "manual"){
+        calculo = precio.value.split("$")[1] * cantidad.value;
+    }
+
+    if(isNaN(calculo)){
+        vaciarItem(e);
+        return
+    }
+
+    calculo = Math.round(calculo*100)/100
+
     subtotal.value = calculo;
     subtotalVisible.innerHTML = "$" + calculo;
 }
 
 function vaciarItem(e){
     let item = e.target.dataset.item
-    document.querySelector(`#det${item}`).innerHTML = "";
+    document.querySelector(`#nom${item}`).innerHTML = "";
     document.querySelector(`#med${item}`).innerHTML = "";
+    document.querySelector(`#cant${item}`).value = "0"
     document.querySelector(`#precio${item}`).value = "$0";
     document.querySelector(`#subVer${item}`).innerHTML = "$0"
     // let porcentajeIva = document.querySelector(`#porcentajeIva${item}`);
     document.querySelector(`#estado${item}`).value = "false";
 }
 
+function eliminarItem(e){
+    console.log(e.target.dataset.item)
+    let item = e.target.dataset.item;
+    let fila = document.querySelector(`#fila${item}`);
+    fila.remove()
+}
+
 cargarFecha();
 
-setInterval(() => {
-    cargarFecha();
-}, 30000);
+const actualizarHora = setInterval(() => {cargarFecha();}, 20000);
+
+fecha.addEventListener("click", () => {clearInterval(actualizarHora)})
 
 itemsCreador(5);
 
@@ -112,5 +174,13 @@ function eventos(){
     document.querySelectorAll(".precio").forEach((boton) => {
         boton.addEventListener("change", calcularItem)
     });
+
+    document.querySelectorAll(".eliminarItem").forEach((boton) => {
+        boton.addEventListener("click", eliminarItem)
+    })
+
+    document.querySelectorAll(".inputBloqueado").forEach((boton) => {
+        boton.addEventListener("keydown", (e) => {e.preventDefault()})
+    })
 }
 eventos();
