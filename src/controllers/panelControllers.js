@@ -1321,7 +1321,10 @@ const facturacion = async(req, res) => {
   })
 }
 
-const facturacionPost = async(req, res) => {}
+const facturacionPost = async(req, res) => {
+  console.log(req.body);
+  return res.redirect("/panel/facturacion");
+}
 
 module.exports = {
   index,

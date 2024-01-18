@@ -400,6 +400,9 @@ footer img {
   gap: 1em;
 }
 .mensajeErrorForm{
+  position: fixed;
+  top: 10%;
+  left: 10%;
   max-width: 600px;
   background-color: darkred;
   color: white;
@@ -983,4 +986,18 @@ footer img {
 #itemsfacturacion tr td:nth-child(7),
 #itemsfacturacion tr td:nth-child(8){
   text-align: right;
+}
+#errorInfoFacturacion{
+  display: flex;
+  width: 20%;
+  position: fixed;
+  top: 50%;
+  left: 40%;
+  background-color: red;
+  color: white;
+  font-weight: 600;
+  justify-content: center;
+  padding: 1em;
+  border-radius: 1em;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }

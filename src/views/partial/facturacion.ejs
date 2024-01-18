@@ -1,8 +1,9 @@
+<div id="errores"></div>
 <form action="" method="post" class="editor" id="nuevaVenta">
     <h1>Facturacion</h1>
     <span>
         <label for="fecha">Fecha</label>
-        <input type="datetime-local" name="fecha" id="fecha" autocomplete="on">
+        <input type="date" name="fecha" id="fecha">
     </span>
     <span>
         <label for="tipo">Tipo</label>
@@ -69,5 +70,16 @@
                 </tr>
             </tbody>
         </table>
+    </span>
+    <span>
+        <input type="reset" value="Reiniciar" class="btn btnNaranja" id="resetFacturacion">
+        <input type="submit" value="Facturar" class="btn btnVerde">
+    </span>
+    <span>
+        <input type="hidden" name="datos" id="datosHide">
+        <input type="hidden" name="neto" id="netoHide">
+        <input type="hidden" name="iva10" id="iva10Hide">
+        <input type="hidden" name="iva21" id="iva21Hide">
+        <input type="hidden" name="total" id="totalHide">
     </span>
 </form> 
