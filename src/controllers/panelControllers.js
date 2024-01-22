@@ -896,7 +896,7 @@ const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
 }
 
 const pedidoProduccionPersonalizadoCrear = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   let data = {};
   data.fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   data.local = req.body.local;
