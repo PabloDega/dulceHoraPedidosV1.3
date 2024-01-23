@@ -1,23 +1,18 @@
 <div id="prodCards">
 <% data.forEach(dato => { 
-  let estado = "Baja"; 
-  if(dato.estado == "true"){estado = "Disponible"}; 
-  let topSale = "No";
-  if(dato.topSale == "true"){topSale = "Si"}; 
-  let destacado = "No"; 
-  if(dato.destacado == "true"){destacado ="Si"};
-  let precioDocena = "";
-  if(dato.precioDocena > 0){precioDocena = "$" + dato.precioDocena};
+  let estado = "Inactivo"; 
+  if(dato.estado == "true"){estado = "Activo"}; 
+  let ivaVer = parseFloat(dato.iva) / 10;
   %>
 
 <div class="backListaProdCard">
-  <img src="/<%= dato.imgCard %>" alt="" />
+  <img src="/<%= dato.img %>" alt="" />
   <h1><%= dato.nombre %></h1>
   <table>
     <tbody>
       <tr>
-        <td>id</td>
-        <td><%= dato.id %></td>
+        <td>Código</td>
+        <td><%= dato.codigo %></td>
       </tr>
       <tr>
         <td>Categoría</td>
@@ -32,32 +27,28 @@
         <td><%= dato.descripcion %></td>
       </tr>
       <tr>
-        <td>Variedad</td>
-        <td><%= dato.variedad %></td>
-      </tr>
-      <tr>
-        <td>Precio</td>
-        <td>$<%= dato.precio %></td>
-      </tr>
-      <tr>
-        <td>Precio Docena</td>
-        <td><%= precioDocena %></td>
-      </tr>
-      <tr>
         <td>Fraccionamiento</td>
         <td><%= dato.fraccionamiento %></td>
       </tr>
       <tr>
+        <td>Precio por Unidad</td>
+        <td>$<%= dato.preciounidad %></td>
+      </tr>
+      <tr>
+        <td>Precio por Docena</td>
+        <td>$<%= dato.preciodocena %></td>
+      </tr>
+      <tr>
+        <td>Precio por Kilo</td>
+        <td>$<%= dato.preciokilo %></td>
+      </tr>
+      <tr>
+        <td>IVA</td>
+        <td><%= ivaVer %>%</td>
+      </tr>
+      <tr>
         <td>Estado</td>
         <td><%= estado %></td>
-      </tr>
-      <tr>
-        <td>Top Sale</td>
-        <td><%= topSale %></td>
-      </tr>
-      <tr>
-        <td>Destacado</td>
-        <td><%= destacado %></td>
       </tr>
     </tbody>
   </table>

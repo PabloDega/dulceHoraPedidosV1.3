@@ -17,14 +17,14 @@ body {
 #cont {
   min-height: 100vh;
   margin: 0 auto;
-  /* display: flex; */
+  display: flex;
   /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   gap: 1em;
 }
 .backMenu{
-  /* width: 100%; */
+  width: 100%;
   max-width: var(--anchoMax);
   margin: 1em auto;
   padding: 0 1em;
@@ -363,6 +363,7 @@ footer {
   justify-self: flex-end;
   color: white;
   margin-top: 1em;
+  width: 100%;
 }
 footer a {
   color: inherit;

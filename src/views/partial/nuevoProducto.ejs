@@ -5,6 +5,14 @@
     <input type="text" name="id" id="id" readonly value="<%= lastId || data.id %>"/>
   </span>
   <span>
+    <label for="codigo">Código</label>
+    <input type="number" min="100" name="codigo" id="codigo" value="<%= data.codigo %>" />
+  </span>
+  <span>
+    <label for="nombre">Nombre</label>
+    <input type="text" name="nombre" id="nombre" value="<%= data.nombre %>" />
+  </span>
+  <span>
     <label for="categoria">Categoría</label>
     <select name="categoria" id="categoria">
       <option value="" disabled selected>- Seleccionar un item -</option>
@@ -16,69 +24,47 @@
     </select>
   </span>
   <span>
-    <label for="nombre">Nombre</label>
-    <input type="text" name="nombre" id="nombre" value="<%= data.nombre %>" />
-  </span>
-  <span>
     <label for="descripcion">Descripcion</label>
     <textarea name="descripcion" id="descripcion" rows="5" value="<%= data.descripcion %>"></textarea>
   </span>
   <span>
-    <label for="variedad">Variedad</label>
-    <span id="variedades">
-      <span id="editProdNuevaVariedad" class="backListaProdTablaBoton">+ variedad</span>
-      <%switch (typeof(data.variedad)) {
-        case "string":
-          if(data.variedad != ""){
-          %><input type="text" name="variedad" id="variedad" placeholder="nueva variedad" value="<%= data.variedad %>"><%
-          }
-          break;
-        case "object":
-          data.variedad.forEach((variedadX) => {
-            if(variedadX != ""){
-            %><input type="text" name="variedad" id="variedad" placeholder="nueva variedad" value="<%= variedadX %>"><%
-          }})
-          break;
-        default:
-          break;
-      } %>
-    </span>
+    <label for="preciounidad">Precio por Unidad</label>
+    <input type="number" min="0" name="preciounidad" id="preciounidad" value="<%= data.preciounidad || 0 %>" />
   </span>
   <span>
-    <label for="precio">Precio Unitario</label>
-    <input type="text" name="precio" id="precio" value="<%= data.precio || 0 %>" />
+    <label for="preciodocena">Precio por Docena</label>
+    <input type="number" min="0" name="preciodocena" id="preciodocena" value="<%= data.preciodocena || 0 %>" />
+  </span>
+  <span>
+    <label for="preciokilo">Precio por Kilo</label>
+    <input type="number" min="0" name="preciokilo" id="preciokilo" value="<%= data.preciokilo || 0 %>" />
   </span>
   <% 
   let fraccionUnidad = "";
-  let fraccionDocena = "selected";
-  let verPrecioDocena = "block";
-  if(data.fraccionamiento == "Unidad"){
+  let fraccionDocena = "";
+  let fraccionKilo = "";
+  if(data.fraccionamiento == "unidad"){
     fraccionUnidad = "selected";
-    fraccionDocena = "";
-    verPrecioDocena = "none";
+  }
+  if(data.fraccionamiento == "docena"){
+    fraccionDocena = "selected";
+  }
+  if(data.fraccionamiento == "kilo"){
+    fraccionKilo = "selected";
   }
   %>
   <span>
     <label for="fraccionamiento">Fraccionamiento</label>
     <select name="fraccionamiento" id="editProdFraccionamiento">
-      <option value="Unidad" <%= fraccionUnidad %>>Unidad</option>
-      <option value="Docena" <%= fraccionDocena %>>Docena</option>
+      <option value="" selected disabled>-Seleccione una opción-</option>
+      <option value="unidad" <%= fraccionUnidad %>>Unidad</option>
+      <option value="docena" <%= fraccionDocena %>>Docena</option>
+      <option value="kilo" <%= fraccionKilo %>>Kilo</option>
     </select>
-  </span>
-  <span id="editProdPrecioDocena" style="display: <%= verPrecioDocena %>;">
-    <label for="precioDoc">Precio por Docena</label>
-    <input type="text" name="precioDoc" id="precioDoc" value="<%= data.precioDoc || 0 %>"/>
   </span>
   <span>
     <label for="estado">Estado</label>
     <input type="checkbox" name="estado" id="estado" value="true" <% if(data.estado == "true"){%><%= "checked" %><%} %>>
-  </span>
-  <span>
-    <label for="topSale">Top Sale</label>
-    <input type="checkbox" name="topSale" id="topSale" value="true" <% if(data.topSale == "true"){%><%= "checked" %><%} %>>  </span>
-  <span>
-    <label for="destacado">Destacado</label>
-    <input type="checkbox" name="destacado" id="destacado" value="true" <% if(data.destacado == "true"){%><%= "checked" %><%} %>>  </span>
   </span>
   <span>
     <label for="nombreImg">Nombre de Imagen</label>

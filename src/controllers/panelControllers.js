@@ -23,7 +23,7 @@ const index = (req, res) => {
 };
 
 const productosCard = async (req, res) => {
-  let data = await servicesProductos.getProductos();
+  let data = await servicesProductos.getProductosLocal();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "card",
@@ -33,7 +33,7 @@ const productosCard = async (req, res) => {
 };
 
 const productosTabla = async (req, res) => {
-  let data = await servicesProductos.getProductos();
+  let data = await servicesProductos.getProductosLocal();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "tabla",

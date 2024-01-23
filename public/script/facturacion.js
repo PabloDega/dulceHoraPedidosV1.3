@@ -58,7 +58,7 @@ function itemsCreador(cantidad){
 
 function cargarItem(e){
     let producto = productos.find((prod) => prod.codigo == e.target.value);
-    console.log(producto)
+    // console.log(producto)
     if(producto == undefined){
         mostrarError(`Item ${e.target.value} inexistente`);
         vaciarItem(e);
@@ -118,7 +118,7 @@ function calcularItem(e){
 
     let codigo = document.querySelector(`#cod${item}`);
     let producto = productos.find((prod) => prod.codigo == codigo.value);
-    console.log(producto)
+    // console.log(producto)
     if(producto === undefined){
         return;
     }
@@ -161,7 +161,7 @@ function calcularTotal(detalle){
         detalles.splice(itemExistente, 1);
         detalles.push(detalle);
     }
-    console.log(detalles)
+    // console.log(detalles)
 
     let iva10Acumulador = 0;
     let iva21Acumulador = 0;
@@ -170,9 +170,11 @@ function calcularTotal(detalle){
     detalles.forEach((item) => {
         totalAcumulador += item[1]
         if(item[2] == 105){
-            iva10Acumulador += (item[1] * item[2] / 1000)
+            let valor = 1 + (item[2] / 1000)
+            iva10Acumulador += item[1] - (item[1] / valor)
         } else if(item[2] == 210){
-            iva21Acumulador += (item[1] * item[2] / 1000)
+            let valor = 1 + (item[2] / 1000)
+            iva21Acumulador += item[1] - (item[1] / valor)
         }
     })
 
@@ -211,7 +213,7 @@ function vaciarItem(e){
     
     let itemExistente = detalles.findIndex((dato) => dato[0] === item);
     detalles.splice(item, 1);
-    console.log(itemExistente)
+    // console.log(itemExistente)
     calcularTotal([item, 0, 0]);
 }
 
@@ -220,7 +222,7 @@ function eliminarItem(e){
     let fila = document.querySelector(`#fila${item}`);
     fila.remove();
     let itemExistente = detalles.findIndex((dato) => dato[0] === item);
-    console.log(itemExistente);
+    // console.log(itemExistente);
     detalles.splice(itemExistente, 1);
     calcularTotal([item, 0, 0]);
 }
