@@ -174,6 +174,39 @@ const getProductosLocal = async () => {
   }
 };
 
+const getProductoLocal = async (id) => {
+  try {
+    const rows = await conectar.query("SELECT * FROM productoslocal WHERE ?", { id });
+    return rows[0][0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const insertProductoLocal = async (datos) => {
+  try {
+    await conectar.query(`INSERT INTO productoslocal (codigo, nombre, categoria, descripcion, fraccionamiento, preciounidad, preciodocena, preciokilo, iva, img, estado) VALUES ("${datos.codigo}", "${datos.nombre}", "${datos.categoria}", "${datos.descripcion}", "${datos.fraccionamiento}", "${datos.preciounidad}", "${datos.preciodocena}", "${datos.preciokilo}", "${datos.iva}", "${datos.nombreImg}", "${datos.estado}")`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const updateProductoLocal = async (datos) => {
+  try {
+    const answer = await conectar.query(
+      `UPDATE productoslocal SET codigo = "${datos.codigo}", nombre = "${datos.nombre}", categoria = "${datos.categoria}", descripcion = "${datos.descripcion}", fraccionamiento = "${datos.fraccionamiento}", preciounidad = "${datos.preciounidad}", preciodocena = "${datos.preciodocena}", preciokilo = "${datos.preciokilo}", iva = "${datos.iva}" img = "${datos.nombreImg}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`
+    );
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getProductos,
   getProducto,
@@ -188,4 +221,7 @@ module.exports = {
   updatePrecios,
   lastId,
   getProductosLocal,
+  getProductoLocal,
+  insertProductoLocal,
+  updateProductoLocal,
 };

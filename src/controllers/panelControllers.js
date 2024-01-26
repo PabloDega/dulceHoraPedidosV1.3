@@ -46,8 +46,7 @@ const productosEditar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/productos/tabla");
   }
-  let id = req.query.id;
-  let data = await servicesProductos.getProducto(id);
+  let data = await servicesProductos.getProductoLocal(req.query.id);
   if(data === undefined){
     return res.redirect("/panel/productos/tabla");
   }
@@ -72,15 +71,15 @@ const productosUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesProductos.updateProducto(datos);
-  let data = await servicesProductos.getProductos();
+  await servicesProductos.updateProducto(req.body);
+  return res.redirect("/panel/productos/card");
+  /* let data = await servicesProductos.getProductos();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "card",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const productosNuevo = async (req, res) => {
@@ -109,14 +108,15 @@ const productosInsert = async (req, res) => {
     });
   }
   let datos = req.body;
-  await servicesProductos.insertProducto(datos);
-  let data = await servicesProductos.getProductos();
+  await servicesProductos.insertProductoLocal(datos);
+  return res.redirect("/panel/productos/card");
+  /* let data = await servicesProductos.getProductos();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "card",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const productosEliminar = async (req, res) => {
@@ -126,13 +126,14 @@ const productosEliminar = async (req, res) => {
   let id = req.query.id;
   // manejar error
   await servicesProductos.deleteProducto(id);
-  let data = await servicesProductos.getProductos();
+  return res.redirect("/panel/productos/card");
+  /* let data = await servicesProductos.getProductos();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "card",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const categoriasTabla = async (req, res) => {
@@ -291,7 +292,12 @@ const localEditar = async (req, res) => {
 const localUpdate = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
+    let diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body);
+    diasEntrega = await localMiddleware.crearObjetoDiasEntrega2(diasEntrega);
+    const servicios = await servicesServicios.getServicios();
     return res.render(__basedir + "/src/views/pages/editarLocal", {
+      diasEntrega,
+      servicios,
       data: req.body,
       errores: errores.array({ onlyFirstError: true }),
       usuario: req.session.userLog,
@@ -302,12 +308,13 @@ const localUpdate = async (req, res) => {
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body);
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
   await servicesLocal.updateLocal(req.body, serviciosActivos, diasEntrega);
-  let data = await servicesLocal.getLocales();
-  res.render(__basedir + "/src/views/pages/local", {
+  // let data = await servicesLocal.getLocales();
+  return res.redirect("/panel/local");
+  /* res.render(__basedir + "/src/views/pages/local", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const localNuevo = async (req, res) => {

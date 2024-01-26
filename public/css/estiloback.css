@@ -26,7 +26,7 @@ body {
 .backMenu{
   width: 100%;
   max-width: var(--anchoMax);
-  margin: 1em auto;
+  /* margin: 1em auto; */
   padding: 0 1em;
   display: flex;
   gap: 1em;
@@ -88,6 +88,7 @@ body {
   padding: 0 1em;
   flex-grow: 1;
   max-width: 1000px;
+  width: 100%;
 }
 #backRender #prodCards, #backRender #localCards{
   display: flex;
@@ -449,12 +450,15 @@ footer img {
     translate: 0;
   }
 }
-.pedidosCont, .produccionCont, #produccionHeader, .titulo{
+.pedidosCont, .produccionCont, #produccionHeader, .titulo, .reporte{
   display: flex;
   gap: 2em;
   margin: 1em auto;
-  width: 100%;
+  width: 100vw;
   max-width: 1000px;
+}
+.produccionCont{
+  width: 100%;
 }
 .pedidos, .produccion{
   display: flex;
@@ -780,6 +784,7 @@ footer img {
 }
 #backRender #nuevaProduccion{
   width: 100%;
+  max-width: max-content;
 }
 /* .pedidoProduccionCeldaImporte{
   display: flex;
@@ -835,6 +840,8 @@ footer img {
   display: flex;
   gap: 1em;
   flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 200px;
 }
 .produccionSemaforo{
   display: flex;

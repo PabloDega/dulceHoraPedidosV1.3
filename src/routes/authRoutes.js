@@ -9,11 +9,11 @@ const authControllers = require("../controllers/authControllers");
 
 router.get("/", limiter.limiterGeneral, isLogged, authControllers.loginForm);
 
-router.post("/", limiter.limiterLogin, validar.validarLoginChain, authControllers.loginQuery);
+router.post("/", validar.validarLoginChain, authControllers.loginQuery);
 
 router.get("/logout", limiter.limiterGeneral, async(req, res) => {
     servicesChat.chatLocalActivoSub(req.session.userLocal);
-    await actividad.actividadUser(req.session.userLog, req.session.userLocal, 0, "Logout", "")
+    // await actividad.actividadUser(req.session.userLog, req.session.userLocal, 0, "Logout", "")
     req.session = null;
     res.redirect("/login");
 })

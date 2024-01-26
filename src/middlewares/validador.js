@@ -46,34 +46,50 @@ const validarProductoChain = [
     .trim()
     .notEmpty().withMessage("Error en el ID, por favor recargar fomulario")
     .isNumeric().withMessage("Error en el ID, por favor recargar fomulario"),
-  body("categoria")
+  body("codigo")
     .trim()
-    .escape()
-    .notEmpty().withMessage("El campo 'Categoria' es obligatorio")
-    .isString().withMessage("La categoría solo puede contener texto"),
+    .notEmpty().withMessage("Error en el codigo, por favor recargar fomulario")
+    .isNumeric().withMessage("Error en el codigo, por favor recargar fomulario"),
   body("nombre")
     .trim()
     .escape()
     .notEmpty().withMessage("El campo 'Nombre' es obligatorio")
     .isString().withMessage("La categoría solo puede contener texto"),
+  body("categoria")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'Categoria' es obligatorio")
+    .isString().withMessage("La categoría solo puede contener texto"),
   body("descripcion")
     .optional({ values: "falsy" })
     .trim()
     .escape(),
-  body("precio")
+  body("fraccionamiento")
     .trim()
     .escape()
-    .notEmpty().withMessage("El campo 'Precio Unitario' es obligatorio")
-    .isNumeric().withMessage("El precio solo puede contener números"),
-  body("precioDoc")
-    .optional({ values: "falsy" })
+    .notEmpty().withMessage("El campo 'fraccionamiento' es obligatorio")
+    .isString().withMessage("El campo fraccionamiento solo puede contener texto"),
+  body("preciounidad")
     .trim()
     .escape()
     .isNumeric().withMessage("El precio solo puede contener números"),
-  body("variedad")
-    .optional({ values: "falsy" })
+  body("preciodocena")
     .trim()
-    .escape(),
+    .escape()
+    .isNumeric().withMessage("El precio solo puede contener números"),
+  body("preciokilo")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El precio solo puede contener números"),
+  body("iva")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El IVA solo puede contener números"),
+  body("estado")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'estado' es obligatorio")
+    .isString().withMessage("El campo estado solo puede contener texto"),
   body("nombreImg")
     .trim()
     .notEmpty().withMessage("El campo Nombre de Imagen es obligatorio")

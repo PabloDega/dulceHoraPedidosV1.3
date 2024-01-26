@@ -132,6 +132,14 @@ function calcularItem(e){
     } else if(producto.fraccionamiento === "kilo"){
         calculo = producto.preciokilo * cantidad.value;
     } else if(producto.fraccionamiento === "docena"){
+        let medida = document.querySelector(`#med${item}`);
+        if(cantidad.value < 12){
+            medida.innerHTML = "unidad";
+        } else if ((cantidad.value % 12) == 0){
+            medida.innerHTML = "docena";
+        } else {
+            medida.innerHTML = "doc/uni";
+        }
         calculo = producto.preciounidad * (cantidad.value % 12);
         calculo += producto.preciodocena * (Math.trunc(cantidad.value / 12))
     } else if(producto.fraccionamiento === "manual"){

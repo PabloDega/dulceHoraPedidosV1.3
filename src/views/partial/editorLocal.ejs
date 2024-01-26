@@ -83,7 +83,7 @@
     <span>
         <div id="nuevoLocalServicios">
             <%  let servicioArray = [];
-                let serviciosActivos = JSON.parse(data.servicios);
+                let serviciosActivos = JSON.parse(data.servicios || data.serviciosArray);
                 servicios.forEach((servicio) => {
                     servicioArray.push(servicio.servicio);
                     let estado = "";
