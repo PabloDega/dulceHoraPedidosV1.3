@@ -7,7 +7,7 @@ const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
-    const productos = await servicesProductosFabrica.getProductosFabrica();
+    const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     let wb = new xl.Workbook();
 
@@ -183,7 +183,7 @@ const exportarExcelReportePedidos = async (req, res) => {
     fecha = new Date(fecha[2], fecha[1] - 1, fecha[0])
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     const locales = await servicesLocal.getLocales();
-    const productos = await servicesProductosFabrica.getProductosFabrica();
+    const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
 
     let wb = new xl.Workbook({
         dateFormat: 'dd/mm/yy',
@@ -295,7 +295,7 @@ const exportarExcelReporteValorizado = async(req, res) => {
     const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
     const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-    const productos = await servicesProductosFabrica.getProductosFabrica();
+    const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
     const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.body.sector);
   
     let wb = new xl.Workbook({

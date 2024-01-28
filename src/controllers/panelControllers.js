@@ -687,7 +687,7 @@ const pedidoProduccionLocal = async(req, res) => {
     }
   }
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
-  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocales();
@@ -733,7 +733,7 @@ const pedidoProduccionFabrica = async(req, res) => {
   }
   const locales = await servicesLocal.getLocales();
   const data = await servicesProduccion.getProduccionFabrica();
-  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   
   // calcular estado del pedido de cada local segun fecha actual
@@ -846,7 +846,7 @@ const pedidoProduccionEditar = async(req, res) => {
   if(!req.query.id){
     return res.redirect("/panel");
   }
-  let productos = await servicesProductosFabrica.getProductosFabrica();
+  let productos = await servicesProductosFabrica.getProductosFabricaActivos();
   let pedido = await servicesProduccion.getProduccionPedido(req.query.id);
   if(pedido === undefined){
     return res.redirect("/panel");
@@ -1089,7 +1089,7 @@ const categoriasFabricaEliminar = async(req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/categoriasFabrica")
   }
-  await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
+  // await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
   let data = await servicesProductosFabrica.getCategoriasFabrica();
   res.render(__basedir + "/src/views/pages/categoriasFabrica", {
     data,

@@ -2,6 +2,28 @@ const { conectar } = require(__basedir + "/src/config/dbConnection");
 
 const getProductosFabrica = async () => {
   try {
+    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE visible = 'true' ORDER BY codigo");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getProductosFabricaActivos = async () => {
+  try {
+    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getProductosFabricaHistoricos = async () => {
+  try {
     const rows = await conectar.query("SELECT * FROM productosfabrica ORDER BY codigo");
     return rows[0];
   } catch (error) {
@@ -44,7 +66,8 @@ const updateProductoFabrica = async (datos, id) => {
 
 const deleteProductoFabrica = async (id) => {
   try {
-    await conectar.query(`DELETE FROM productosfabrica WHERE id = "${id}"`);
+    await conectar.query(`UPDATE productosfabrica SET visible = 'false' WHERE id = '${id}'`);
+    // await conectar.query(`DELETE FROM productosfabrica WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -65,7 +88,7 @@ const getSectoresFabrica = async () => {
 
 const getCategoriasFabrica = async () => {
   try {
-    const rows = await conectar.query("SELECT * FROM categoriasfabrica");
+    const rows = await conectar.query("SELECT * FROM categoriasfabrica ORDER BY categoriaProduccion");
     return rows[0];
   } catch (error) {
     throw error;
@@ -131,6 +154,8 @@ const updatePreciosProductosFabrica = async (precios) => {
 
 module.exports = {
   getProductosFabrica,
+  getProductosFabricaActivos,
+  getProductosFabricaHistoricos,
   getProductoFabrica,
   insertProductoFabrica,
   updateProductoFabrica,

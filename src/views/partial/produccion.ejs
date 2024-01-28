@@ -180,6 +180,7 @@
                             let prodFiltrados = [];
                             detallePedido.forEach((pedido) => {
                                 let producto = productos.find((prod) => prod.id == pedido[1])
+                                if(producto == undefined){return}
                                 if(producto.categoria == categoria.categoriaProduccion){
                                     prodFiltrados.push(pedido);
                                 }
