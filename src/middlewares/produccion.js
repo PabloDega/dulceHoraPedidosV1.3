@@ -104,7 +104,18 @@ const fechaProduccionNormalizada = async(info) => {
   return day + "/" + month + "/" + year;
 }
 
+const getCategoriasDeProductos = async (pedido, productos) => {
+  pedido = JSON.parse(pedido);
+  let categoriasPedido = new Set();
+  pedido.forEach((item) => {
+    let datosProducto = productos.find((prod) => prod.id == item[1]);
+    categoriasPedido.add(datosProducto.categoria)
+  })
+  return categoriasPedido;
+}
+
 module.exports = {
   getFechasProduccionLocal,
   fechaProduccionNormalizada,
+  getCategoriasDeProductos,
 };

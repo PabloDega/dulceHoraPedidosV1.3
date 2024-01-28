@@ -676,6 +676,8 @@ const stockUpdate = async (req, res) => {
 };
 
 const pedidoProduccionLocal = async(req, res) => {
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
+  let categoriasHistoricas = [];
   let dataPedido;
   if(req.query.id){
     const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
@@ -684,18 +686,19 @@ const pedidoProduccionLocal = async(req, res) => {
         await servicesProduccion.mensajeProduccionLeido(req.query.id)
       }
       dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
+      categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
     }
   }
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
-  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
-  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocales();
   // const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
   const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
-    categorias,
+    // categorias,
+    categoriasHistoricas,
     dataPedido,
     dataLocal,
     productos,
@@ -720,6 +723,8 @@ const pedidoProduccionAgregarMensajeLocal = async(req, res) => {
 }
 
 const pedidoProduccionFabrica = async(req, res) => {
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
+  let categoriasHistoricas = [];
   let dataPedido;
   if(req.query.id){
     const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
@@ -727,14 +732,14 @@ const pedidoProduccionFabrica = async(req, res) => {
       await servicesProduccion.mensajeProduccionLeido(req.query.id)
     }
     dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
+    categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
     if(dataPedido.local === "x"){
       return res.redirect("/panel/produccion/fabrica")
     }
   }
   const locales = await servicesLocal.getLocales();
   const data = await servicesProduccion.getProduccionFabrica();
-  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
-  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   
   // calcular estado del pedido de cada local segun fecha actual
   let fechasLocales = [];
@@ -752,7 +757,8 @@ const pedidoProduccionFabrica = async(req, res) => {
     data,
     dataPedido,
     productos,
-    categorias,
+    // categorias,
+    categoriasHistoricas,
     locales,
     fechasLocales,
     lector: "fabrica",

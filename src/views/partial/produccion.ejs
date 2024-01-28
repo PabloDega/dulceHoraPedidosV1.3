@@ -176,18 +176,18 @@
                     </thead>
                     <tbody>
                         <% let detallePedido = JSON.parse(dataPedido.pedido);
-                        categorias.forEach((categoria) => {
+                        categoriasHistoricas.forEach((categoria) => {
                             let prodFiltrados = [];
                             detallePedido.forEach((pedido) => {
                                 let producto = productos.find((prod) => prod.id == pedido[1])
                                 if(producto == undefined){return}
-                                if(producto.categoria == categoria.categoriaProduccion){
+                                if(producto.categoria == categoria){
                                     prodFiltrados.push(pedido);
                                 }
                             })
                             if(prodFiltrados.length > 0){%>
                                 <tr>
-                                    <th colspan="5" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+                                    <th colspan="5" class="categoriaTabla"><%= categoria %></th>
                                 </tr>
                             <%}
                             prodFiltrados.forEach((item)=> {
