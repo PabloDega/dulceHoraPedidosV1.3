@@ -810,6 +810,12 @@ const pedidoProduccionInsert = async (req, res) => {
       }
     }
   }
+
+  // manejo temporal de error
+  if(isNaN(parseInt(req.body.pedidoProduccionImporteTotal))){
+    return res.redirect("/panel/produccion/local");
+  }
+
   let datos = {
     local: parseInt(req.session.userLocal),
     pedido: JSON.stringify(pedido),
@@ -887,6 +893,12 @@ const pedidoProduccionUpdate = async(req, res) => {
       }
     }
   }
+
+  // manejo de error temporal
+  if(isNaN(parseInt(req.body.pedidoProduccionImporteTotal))){
+    return res.redirect("/panel/produccion/local?id=" + req.body.pedidoProduccionLocalId);
+  }
+
   let datos = {
     pedido: JSON.stringify(pedido),
     total: parseInt(req.body.pedidoProduccionImporteTotal),

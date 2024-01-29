@@ -3,12 +3,15 @@ const servicesProductosFabrica = require(__basedir + "/src/services/productosFab
 const servicesLocal = require(__basedir + "/src/services/local");
 const servicesReportes = require(__basedir + "/src/services/reportes");
 const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
+const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
     const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
-    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(req.body.pedido, productos);
+
     let wb = new xl.Workbook();
 
     //estilos
@@ -63,12 +66,12 @@ const exportarExcelProduccion = async(req, res) => {
 
     let iProductos = 3
 
-    categorias.forEach((categoria) => {
+    categoriasHistoricas.forEach((categoria) => {
         let prodFiltrados = [];
-        ws.cell(iProductos, 1, iProductos, 6, true).string(categoria.categoriaProduccion).style(estiloNegro);
+        ws.cell(iProductos, 1, iProductos, 6, true).string(categoria).style(estiloNegro);
         iProductos++;
         productos.forEach((producto) => {
-            if(producto.categoria == categoria.categoriaProduccion){
+            if(producto.categoria == categoria){
                 prodFiltrados.push(producto)
             }
         })
