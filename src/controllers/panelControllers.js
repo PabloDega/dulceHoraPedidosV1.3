@@ -743,10 +743,10 @@ const pedidoProduccionFabrica = async(req, res) => {
       await servicesProduccion.mensajeProduccionLeido(req.query.id)
     }
     dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
-    categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
     if(dataPedido.local === "x"){
       return res.redirect("/panel/produccion/fabrica")
     }
+    categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
   }
   const locales = await servicesLocal.getLocales();
   const data = await servicesProduccion.getProduccionFabrica();

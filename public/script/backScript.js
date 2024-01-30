@@ -455,3 +455,28 @@ if (document.querySelector("#crearPedidoPesonalizado") != null) {
     .querySelector("#crearPedidoPesonalizado")
     .addEventListener("click", () => (location.href = "/panel/produccion/personalizado/nuevo"));
 }
+
+if (document.querySelector("#formCancelado") != null) {
+  document.querySelector("#formCancelado").addEventListener("submit", (e) => {
+      e.preventDefault();
+      console.log("ping")
+      confirmarEliminarProduccion(e);
+  })
+}
+
+function confirmarEliminarProduccion(e){
+  let popScreen = document.querySelector("#popScreen");
+  popScreen.innerHTML += `<div id="cortina">
+  <div id="confirmarEliminar">
+    Está por borrar un registro. Esta acción no se puede deshacer. Desea
+    continuar?
+    <div class="btn btnNaranja" id="btnEliminar">Confirmar</div>
+    <div class="btn btnRojo" id="btnEliminarCancelar">Cancelar</div>
+  </div>
+</div>`;
+  document.querySelector("#btnEliminar").addEventListener("click", () => {
+    document.querySelector("#formCancelado").submit();
+  }
+    );
+  document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
+}

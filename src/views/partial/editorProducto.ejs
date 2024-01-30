@@ -76,11 +76,11 @@
   </span>
   <span>
     <label for="nombreImg">Nombre de Imagen</label>
-    <input type="text" name="nombreImg" id="nombreImg" value="<%= data.nombreImg || 'im/card' %>" />
+    <input type="text" name="nombreImg" id="nombreImg" readonly value="im/prodLocal<%= data.id %>.png" />
 </span>
   <span>
     <input type="submit" value="Modificar">
   </span>
   <input type="hidden" name="tipo" value="editar">
-  <input type="hidden" name="nombreImgOriginal" value="<%= data.imgCard || data.nombreImgOriginal %>">
+  <input type="hidden" name="nombreImgOriginal" value="<%= data.img || data.nombreImgOriginal %>">
 </form>

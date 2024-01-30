@@ -22,7 +22,7 @@ const validarNuevaCategoriaChain = [
     .escape()
     .notEmpty().withMessage("El campo categoria es obligatorio")
     .isString().withMessage("La categoría solo puede contener texto"),
-  body("nombreImg")
+  /* body("nombreImg")
     .trim()
     .notEmpty().withMessage("El campo Nombre de Imagen es obligatorio")
     .isString().withMessage("Ingresar nombre de archivo válido")
@@ -38,7 +38,7 @@ const validarNuevaCategoriaChain = [
           throw new Error("Nombre de imagen en uso");
         }
       }
-    }),
+    }) ,*/
 ];
 
 const validarProductoChain = [
@@ -267,6 +267,16 @@ const validarCategoriaFabricaChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo Color incorrecto"),
+  body("minimo")
+    .notEmpty().withMessage("El campo 'minimo' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El campo 'minimo' solo acepta numeros, sin espacios ni guiones"),
+  body("orden")
+    .notEmpty().withMessage("El campo 'orden' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El campo 'orden' solo acepta numeros, sin espacios ni guiones"),
 ]
 
 const dataValidator = (data) => { 

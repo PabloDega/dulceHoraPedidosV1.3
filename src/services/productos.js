@@ -91,7 +91,7 @@ const getCategoria = async (id) => {
 const insertCategoria = async (datos) => {
   try {
     const answer = await conectar.query(
-      `INSERT INTO categorias (categoria, imgCat) VALUES ("${datos.categoria}", "${datos.nombreImg}")`
+      `INSERT INTO categorias (categoria) VALUES ("${datos.categoria}")`
     );
   } catch (error) {
     throw error;
@@ -103,7 +103,7 @@ const insertCategoria = async (datos) => {
 const updateCategoria = async (datos) => {
   try {
     const answer = await conectar.query(
-      `UPDATE categorias SET categoria =  "${datos.categoria}", imgCat = "${datos.nombreImg}" WHERE id = "${datos.id}"`
+      `UPDATE categorias SET categoria = "${datos.categoria}" WHERE id = "${datos.id}"`
     );
   } catch (error) {
     throw error;
