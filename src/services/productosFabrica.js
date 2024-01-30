@@ -118,6 +118,7 @@ const insertCategoriaFabrica = async (datos) => {
   }
 };
 
+
 const updateCategoriaFabrica = async (datos, id) => {
   try {
     await conectar.query(`UPDATE categoriasfabrica SET categoriaProduccion = "${datos.categoria}", color = "${datos.color}", minimo = "${datos.minimo}", orden = "${datos.orden}" WHERE id = "${id}"`);

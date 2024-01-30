@@ -279,6 +279,7 @@ const validarCategoriaFabricaChain = [
     .isNumeric().withMessage("El campo 'orden' solo acepta numeros, sin espacios ni guiones"),
 ]
 
+
 const dataValidator = (data) => { 
   if(data.mensaje == ""){
     return false;

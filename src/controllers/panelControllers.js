@@ -1122,7 +1122,7 @@ const categoriasFabricaEliminar = async(req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/categoriasFabrica")
   }
-  // await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
+  await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
   return res.redirect("/panel/categoriasFabrica");
   /* let data = await servicesProductosFabrica.getCategoriasFabrica();
   res.render(__basedir + "/src/views/pages/categoriasFabrica", {
