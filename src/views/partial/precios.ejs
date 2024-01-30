@@ -3,44 +3,33 @@
 <table id="preciosTabla">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>Código</th>
             <th>Categoría</th>
             <th>Nombre</th>
-            <th>Precio</th>
+            <th>Precio Unidad</th>
             <th>Nuevo Precio</th>
             <th>Precio Docena</th>
-            <th>Nuevo Precio por Docena</th>
+            <th>Nuevo Precio</th>
+            <th>Precio Kilo</th>
+            <th>Nuevo Precio</th>
         </tr>
     </thead>
     <tbody>
-      <% 
-      data.forEach(dato => { 
-        let precioDocena = "-";
-        if(dato.precioDocena > 0){precioDocena = "$" + dato.precioDocena};
-        let preciosBody = valoresForm["dato"+dato.id];
-        let precioBody = "";
-        let precioDocenaBody = "";
-        if(preciosBody){
-          precioBody = preciosBody[1];
-          precioDocenaBody = preciosBody[2];
-        }
-        %>
+      <%data.forEach(dato => {%>
         <tr>
-          <td><%= dato.id %> <input type="text" name="dato<%= dato.id %>" value="<%= dato.id %>" hidden> </td>
+          <td><%= dato.codigo %> <input type="text" id="id<%= dato.id %>" value="<%= dato.id %>" hidden> </td>
           <td><%= dato.categoria %></td>
           <td><%= dato.nombre %></td>
-          <td class="numTabla">$<%= dato.precio %></td>
-          <td><input type="text" name="dato<%= dato.id %>" id="preciosPrecio" data-id="<%= dato.id %>" value="<%= precioBody %>"></td>
-          <% if(dato.fraccionamiento == "Docena"){ %>
-            <td class="numTabla"><%= precioDocena %></td>
-            <td><input type="text" name="dato<%= dato.id %>" id="preciosPrecioDocena" data-id="<%= dato.id %>" value="<%= precioDocenaBody %>"></td>
-          <% } else { %>
-            <td></td>
-            <td></td>
-          <% } %>
+          <td class="numTabla ">$<%= dato.preciounidad %></td>
+          <td><input type="number" class="precioUpdate" name="preciounidad<%= dato.id %>" id="preciosPrecio" data-id="<%= dato.id %>" min="0"></td>
+          <td class="numTabla">$<%= dato.preciodocena %></td>
+          <td><input type="number" class="precioUpdate" name="preciodocena<%= dato.id %>" id="preciosPrecio" data-id="<%= dato.id %>" min="0"></td>
+          <td class="numTabla">$<%= dato.preciokilo %></td>
+          <td><input type="number" class="precioUpdate" name="preciokilo<%= dato.id %>" id="preciosPrecio" data-id="<%= dato.id %>" min="0"></td>
         </tr>
       <%}); %>
     </tbody>
 </table>
 <input type="submit" value="Actualizar Precios" class="backListaProdCardBoton btnNaranja inputBtn" id="preciosEnviar">
 </form>
+<script src="/script/preciosUpdate.js"></script>

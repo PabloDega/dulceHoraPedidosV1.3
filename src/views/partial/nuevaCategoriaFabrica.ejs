@@ -1,5 +1,5 @@
 <form action="" method="post" class="editor">
-    <h1>Editar Categoria</h1>
+    <h1>Nueva Categoria</h1>
     <span>
         <label for="categoria">Categoría</label>
         <input type="text" name="categoria" id="categoria" value="<%= valoresForm.categoriaProduccion %>"/>
@@ -7,6 +7,14 @@
     <span>
         <label for="color">color</label>
         <input type="color" name="color" id="color" value="<%= valoresForm.color %>"/>
+    </span>
+    <span>
+        <label for="minimo">Compra mínima</label>
+        <input type="number" name="minimo" id="minimo" min="0" value="<%= valoresForm.minimo %>">
+    </span>
+    <span>
+        <label for="orden">Orden</label>
+        <input type="number" name="orden" id="orden" min="0" value="<%= valoresForm.orden %>">
     </span>
     <span>
         <input type="submit" value="Crear">

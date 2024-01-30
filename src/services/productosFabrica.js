@@ -88,7 +88,7 @@ const getSectoresFabrica = async () => {
 
 const getCategoriasFabrica = async () => {
   try {
-    const rows = await conectar.query("SELECT * FROM categoriasfabrica ORDER BY categoriaProduccion");
+    const rows = await conectar.query("SELECT * FROM categoriasfabrica ORDER BY orden");
     return rows[0];
   } catch (error) {
     throw error;
@@ -110,7 +110,7 @@ const getCategoriaFabrica = async (id) => {
 
 const insertCategoriaFabrica = async (datos) => {
   try {
-    await conectar.query(`INSERT INTO categoriasfabrica (categoriaProduccion, color) VALUES ("${datos.categoria}", "${datos.color}")`);  
+    await conectar.query(`INSERT INTO categoriasfabrica (categoriaProduccion, color, minimo, orden) VALUES ("${datos.categoria}", "${datos.color}", "${datos.minimo}", "${datos.orden}")`);  
   } catch (error) {
     throw error;
   } finally {
@@ -120,7 +120,7 @@ const insertCategoriaFabrica = async (datos) => {
 
 const updateCategoriaFabrica = async (datos, id) => {
   try {
-    await conectar.query(`UPDATE categoriasfabrica SET categoriaProduccion = "${datos.categoria}", color = "${datos.color}" WHERE id = "${id}"`);
+    await conectar.query(`UPDATE categoriasfabrica SET categoriaProduccion = "${datos.categoria}", color = "${datos.color}", minimo = "${datos.minimo}", orden = "${datos.orden}" WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {

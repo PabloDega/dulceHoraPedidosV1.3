@@ -12,6 +12,7 @@ const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
 const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
+const productosMiddleware = require(__basedir + "/src/middlewares/productos");
 const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
 const localMiddleware = require(__basedir + "/src/middlewares/local");
 
@@ -71,7 +72,7 @@ const productosUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  await servicesProductos.updateProducto(req.body);
+  await servicesProductos.updateProductoLocal(req.body);
   return res.redirect("/panel/productos/card");
   /* let data = await servicesProductos.getProductos();
   res.render(__basedir + "/src/views/pages/productos", {
@@ -125,7 +126,7 @@ const productosEliminar = async (req, res) => {
   }
   let id = req.query.id;
   // manejar error
-  await servicesProductos.deleteProducto(id);
+  await servicesProductos.deleteProductoLocal(id);
   return res.redirect("/panel/productos/card");
   /* let data = await servicesProductos.getProductos();
   res.render(__basedir + "/src/views/pages/productos", {
@@ -168,12 +169,13 @@ const categoriasInsert = async (req, res) => {
   }
   let datos = req.body;
   await servicesProductos.insertCategoria(datos);
-  let data = await servicesProductos.getCategorias();
+  return res.redirect("/panel/categorias");
+  /* let data = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/categorias", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const categoriasEditar = async (req, res) => {
@@ -204,12 +206,13 @@ const categoriasUpdate = async (req, res) => {
   }
   let datos = req.body;
   await servicesProductos.updateCategoria(datos);
-  let data = await servicesProductos.getCategorias();
+  return res.redirect("/panel/categorias");
+ /*  let data = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/categorias", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const categoriasEliminar = async (req, res) => {
@@ -219,16 +222,17 @@ const categoriasEliminar = async (req, res) => {
   let id = req.query.id;
   // manejar error
   await servicesProductos.deleteCategoria(id);
-  let data = await servicesProductos.getCategorias();
+  return res.redirect("/panel/categorias");
+  /* let data = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/categorias", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const precios = async (req, res) => {
-  let data = await servicesProductos.getProductos();
+  let data = await servicesProductos.getProductosLocal();
   res.render(__basedir + "/src/views/pages/precios", {
     data,
     valoresForm: {},
@@ -240,7 +244,7 @@ const precios = async (req, res) => {
 const preciosUpdate = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    let data = await servicesProductos.getProductos();
+    let data = await servicesProductos.getProductosLocal();
     return res.render(__basedir + "/src/views/pages/precios", {
       data,
       valoresForm: req.body,
@@ -249,15 +253,16 @@ const preciosUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesProductos.updatePrecios(datos);
-  let data = await servicesProductos.getProductos();
+  let objetoPrecios = await productosMiddleware.crearObjetoUpdatePrecios(req.body)
+  await servicesProductos.updatePrecios(objetoPrecios);
+  return res.redirect("/panel/precios");
+  /* let data = await servicesProductos.getProductos();
   res.render(__basedir + "/src/views/pages/precios", {
     data,
     valoresForm: {},
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const local = async (req, res) => {
@@ -343,9 +348,13 @@ const localInsert = async (req, res) => {
     });
   }
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
+  if(diasEntrega.length == 0){
+    return res.redirect("/panel/local");
+    // agregar manejo de error, un mensaje
+  }
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body) 
   await servicesLocal.insertLocal(req.body, diasEntrega, serviciosActivos);
-  res.redirect("/panel/local");
+  return res.redirect("/panel/local");
 };
 
 const localEliminar = async (req, res) => {
@@ -355,12 +364,13 @@ const localEliminar = async (req, res) => {
   let id = req.query.id;
   //manejar error
   await servicesLocal.deleteLocal(id);
-  let data = await servicesLocal.getLocales();
+  return res.redirect("/panel/local");
+  /* let data = await servicesLocal.getLocales();
   res.render(__basedir + "/src/views/pages/local", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const fotos = async (req, res) => {
@@ -372,7 +382,7 @@ const fotos = async (req, res) => {
 };
 
 const fotosProductos = async (req, res) => {
-  let data = await servicesProductos.getProductos();
+  let data = await servicesProductos.getProductosLocal();
   res.render(__basedir + "/src/views/pages/fotos", {
     data,
     mostrar: "productos",
@@ -410,7 +420,7 @@ const fotosNueva = async (req, res) => {
   let data;
   switch (tipo) {
     case "productos":
-      data = await servicesProductos.getProducto(id);
+      data = await servicesProductos.getProductoLocal(id);
       if(data === undefined){
         return res.redirect("/panel/fotos");
       }
@@ -470,7 +480,7 @@ const fotosNuevaSubida = async (req, res) => {
   let tipo = req.query.tipo;
   switch (tipo) {
     case "productos":
-      data = await servicesProductos.getProductos();
+      data = await servicesProductos.getProductosLocal();
       res.render(__basedir + "/src/views/pages/fotos", {
         data,
         mostrar: "productos",
@@ -533,12 +543,13 @@ const usuariosInsert = async (req, res) => {
   let datos = req.body;
   datos.passHash = await hashearPassword(datos.passUser);
   await servicesUsuarios.insertUsuario(datos);
-  let data = await servicesUsuarios.getUsuarios();
+  return res.redirect("/panel/usuarios");
+  /* let data = await servicesUsuarios.getUsuarios();
   res.render(__basedir + "/src/views/pages/usuarios", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const usuariosEditar = async (req, res) => {
@@ -558,29 +569,29 @@ const usuariosEditar = async (req, res) => {
 };
 
 const usuariosUpdate = async (req, res) => {
-  let datos = req.body;
-  await servicesUsuarios.updateUsuario(datos);
-  let data = await servicesUsuarios.getUsuarios();
+  await servicesUsuarios.updateUsuario(req.body);
+  return res.redirect("/panel/usuarios");
+  /* let data = await servicesUsuarios.getUsuarios();
   res.render(__basedir + "/src/views/pages/usuarios", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const usuariosEliminar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/usuarios");
   }
-  let usuario = req.query.id;
   // manejar error
-  await servicesUsuarios.deleteUsuario(usuario);
-  let data = await servicesUsuarios.getUsuarios();
+  await servicesUsuarios.deleteUsuario(req.query.id);
+  return res.redirect("/panel/usuarios");
+  /* let data = await servicesUsuarios.getUsuarios();
   res.render(__basedir + "/src/views/pages/usuarios", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const pedidos = async (req, res) => {
@@ -596,7 +607,7 @@ const pedidos = async (req, res) => {
     }
   }
   let dataPedidos = await servicesPedidos.getPedidos(idLocal);
-  let dataProds = await servicesProductos.getProductos();
+  let dataProds = await servicesProductos.getProductosLocal();
   let local = await servicesLocal.getLocal(idLocal);
   res.render(__basedir + "/src/views/pages/pedidos", {
     pedidoNumero: req.query.id || 0,
@@ -648,7 +659,7 @@ const actividadToda = async(req, res) => {
 
 const stockForm = async(req, res) => {
   const data = await servicesLocal.getLocal(req.session.userLocal);
-  const productos = await servicesProductos.getProductos();
+  const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/stock", {
     data,
@@ -845,15 +856,6 @@ const pedidoProduccionUpdateEstado = async(req, res) => {
   }
 }
 
-const productosFabrica = async(req, res) => {
-  let data = await servicesProductosFabrica.getProductosFabrica();
-  res.render(__basedir + "/src/views/pages/productosFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  })
-}
-
 const pedidoProduccionEditar = async(req, res) => {
   if(!req.query.id){
     return res.redirect("/panel");
@@ -921,13 +923,21 @@ const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
 }
 
 const pedidoProduccionPersonalizadoCrear = async (req, res) => {
-  // console.log(req.body)
   let data = {};
   data.fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   data.local = req.body.local;
   data.minimos = req.body.minimos;
   await servicesProduccion.insertPedidoProduccionPersonalizado(data);
   res.redirect("/panel/produccion/fabrica");
+}
+
+const productosFabrica = async(req, res) => {
+  let data = await servicesProductosFabrica.getProductosFabrica();
+  res.render(__basedir + "/src/views/pages/productosFabrica", {
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
 }
 
 const productosFabricaNuevo = async(req, res) => {
@@ -957,12 +967,13 @@ const productosFabricaInsert = async(req, res) => {
     });
   }
   await servicesProductosFabrica.insertProductoFabrica(req.body);
-  let data = await servicesProductosFabrica.getProductosFabrica();
+  return res.redirect("/panel/productosFabrica");
+  /* let data = await servicesProductosFabrica.getProductosFabrica();
   res.render(__basedir + "/src/views/pages/productosFabrica", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const productosFabricaEditar = async(req, res) => {
@@ -1002,12 +1013,13 @@ const productosFabricaUpdate = async(req, res) => {
     return res.redirect("/panel/productosFabrica")
   }
   await servicesProductosFabrica.updateProductoFabrica(req.body, req.query.id);
-  let data = await servicesProductosFabrica.getProductosFabrica();
+  return res.redirect("/panel/productosFabrica");
+  /* let data = await servicesProductosFabrica.getProductosFabrica();
   res.render(__basedir + "/src/views/pages/productosFabrica", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const productosFabricaEliminar = async(req, res) => {
@@ -1015,12 +1027,13 @@ const productosFabricaEliminar = async(req, res) => {
     return res.redirect("/panel/productosFabrica")
   }
   await servicesProductosFabrica.deleteProductoFabrica(req.query.id);
-  let data = await servicesProductosFabrica.getProductosFabrica();
+  return res.redirect("/panel/productosFabrica");
+  /* let data = await servicesProductosFabrica.getProductosFabrica();
   res.render(__basedir + "/src/views/pages/productosFabrica", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const categoriasFabrica = async(req, res) => {
@@ -1051,12 +1064,13 @@ const categoriasFabricaInsert = async(req, res) => {
     })
   }
   await servicesProductosFabrica.insertCategoriaFabrica(req.body);
-  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  return res.redirect("/panel/categoriasFabrica");
+  /* let data = await servicesProductosFabrica.getCategoriasFabrica();
   res.render(__basedir + "/src/views/pages/categoriasFabrica", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const categoriasFabricaEditar = async(req, res) => {
@@ -1095,12 +1109,13 @@ const categoriasFabricaUpdate = async(req, res) => {
     return res.redirect("/panel/categoriasFabrica")
   }
   await servicesProductosFabrica.updateCategoriaFabrica(req.body, req.query.id);
-  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  return res.redirect("/panel/categoriasFabrica");
+  /* let data = await servicesProductosFabrica.getCategoriasFabrica();
   res.render(__basedir + "/src/views/pages/categoriasFabrica", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const categoriasFabricaEliminar = async(req, res) => {
@@ -1108,12 +1123,13 @@ const categoriasFabricaEliminar = async(req, res) => {
     return res.redirect("/panel/categoriasFabrica")
   }
   // await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
-  let data = await servicesProductosFabrica.getCategoriasFabrica();
+  return res.redirect("/panel/categoriasFabrica");
+  /* let data = await servicesProductosFabrica.getCategoriasFabrica();
   res.render(__basedir + "/src/views/pages/categoriasFabrica", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const fotosProductosFabrica = async(req, res) => {
@@ -1290,12 +1306,13 @@ const servicioInsert = async (req, res) => {
     })
   }
   await servicesServicios.insertServicio(req.body);
-  let data = await servicesServicios.getServicios();
+  return res.redirect("/panel/servicios");
+  /* let data = await servicesServicios.getServicios();
   res.render(__basedir + "/src/views/pages/servicios", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  })
+  }) */
 }
 
 const servicioEliminar = async (req, res) => {
@@ -1303,12 +1320,13 @@ const servicioEliminar = async (req, res) => {
     return res.redirect("/panel/servicios");
   }
   await servicesServicios.deleteServicio(req.query.id);
-  let data = await servicesServicios.getServicios();
+  return res.redirect("/panel/servicios");
+  /* let data = await servicesServicios.getServicios();
   res.render(__basedir + "/src/views/pages/servicios", {
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
-  });
+  }); */
 };
 
 const preciosProductosFabrica = async(req, res) => {

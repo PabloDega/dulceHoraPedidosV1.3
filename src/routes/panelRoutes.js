@@ -24,9 +24,9 @@ router.post("/productos/nuevo", auth.authSupervisor, validar.validarProductoChai
 
 router.get("/productos/eliminar", auth.authSupervisor, panelControllers.productosEliminar);
 
-router.get("/stock", panelControllers.stockForm);
+// router.get("/stock", panelControllers.stockForm);
 
-router.post("/stock", panelControllers.stockUpdate);
+// router.post("/stock", panelControllers.stockUpdate);
 
 router.get("/categorias", auth.authSupervisor, panelControllers.categoriasTabla);
 

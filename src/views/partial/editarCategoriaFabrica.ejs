@@ -9,6 +9,14 @@
         <input type="color" name="color" id="color" value="<%= valoresForm.color %>"/>
     </span>
     <span>
+        <label for="minimo">Compra mínima</label>
+        <input type="number" name="minimo" id="minimo" min="0" value="<%= valoresForm.minimo %>">
+    </span>
+    <span>
+        <label for="orden">Orden</label>
+        <input type="number" name="orden" id="orden" min="0" value="<%= valoresForm.orden %>">
+    </span>
+    <span>
         <input type="submit" value="Modificar">
     </span>
 </form>

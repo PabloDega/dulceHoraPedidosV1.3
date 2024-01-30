@@ -4,6 +4,8 @@
             <th>ID</th>
             <th>Categoría</th>
             <th>Color</th>
+            <th>Compra mínima</th>
+            <th>Orden</th>
             <th>Editar</th>
             <th>Eliminar</th>
         </tr>
@@ -11,9 +13,11 @@
     <tbody>
       <% data.forEach((dato) => { %>
         <tr>
-          <td><%= dato.id %></td>
+          <td class="tablaCeldaNumero"><%= dato.id %></td>
           <td><%= dato.categoriaProduccion %></td>
           <td><%= dato.color %> <span id="muestraColorCategoria" style="background-color: <%= dato.color %>;"></span></td>
+          <td class="tablaCeldaNumero"><%= dato.minimo %></td>
+          <td class="tablaCeldaNumero"><%= dato.orden %></td>
           <td class="backListaProdFabricaBoton backListaCategoriaFabricaEditar" data-id="<%= dato.id %>">editar</td>
           <td class="backListaProdFabricaBoton backListaCategoriaFabricaEliminar" data-id="<%= dato.id %>" data-tipo="categoriasFabrica">eliminar</td>
         </tr>

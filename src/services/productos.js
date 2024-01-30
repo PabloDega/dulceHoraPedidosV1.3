@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { conectar } = require(__basedir + "/src/config/dbConnection");
 
-const getProductos = async () => {
+/* const getProductos = async () => {
   try {
     const rows = await conectar.query("SELECT * FROM productos ORDER BY categoria");
     return rows[0];
@@ -64,7 +64,7 @@ const deleteProducto = async (id) => {
   } finally {
     conectar.releaseConnection();
   }
-};
+}; */
 
 const getCategorias = async () => {
   try {
@@ -122,35 +122,12 @@ const deleteCategoria = async (id) => {
   }
 };
 
-const updatePrecios = async (datos) => {
+const updatePrecios = async (objetoPrecios) => {
   try {
-    // Toma el dato del form y lo ordena en un array
-    let datosOrdenados = Object.entries(datos);
-    let datosUpdate = [];
-    // Filtra el array por valor
-    datosOrdenados.forEach((dato) => {
-      if (dato[1][1] > 0 || dato[1][2] > 0) {
-        datosUpdate.push(dato[1]);
-      }
-    });
-    // constructor de la query sobre el array
-    datosUpdate.forEach(async (dato) => {
-      let updatePrecio = "";
-      let updatePrecioDocena = "";
-      let coma = "";
-      if (dato[1] > 0) {
-        updatePrecio = `precio = "${dato[1]}"`;
-      }
-      if (dato[2] > 0) {
-        updatePrecioDocena = `precioDocena = "${dato[2]}"`;
-      }
-      if (dato[1] > 0 && dato[2] > 0) {
-        coma = ",";
-      }
-      await conectar.query(
-        `UPDATE productos SET ${updatePrecio}${coma} ${updatePrecioDocena} WHERE id = "${dato[0]}"`
-      );
-    });
+    for(item in objetoPrecios){
+      await conectar.query(`UPDATE productoslocal SET preciounidad = "${objetoPrecios[item][0]}", preciodocena = "${objetoPrecios[item][1]}", preciokilo = "${objetoPrecios[item][2]}" WHERE id = "${item}"`);
+    }
+    return
   } catch (error) {
     throw error;
   } finally {
@@ -198,7 +175,7 @@ const insertProductoLocal = async (datos) => {
 const updateProductoLocal = async (datos) => {
   try {
     const answer = await conectar.query(
-      `UPDATE productoslocal SET codigo = "${datos.codigo}", nombre = "${datos.nombre}", categoria = "${datos.categoria}", descripcion = "${datos.descripcion}", fraccionamiento = "${datos.fraccionamiento}", preciounidad = "${datos.preciounidad}", preciodocena = "${datos.preciodocena}", preciokilo = "${datos.preciokilo}", iva = "${datos.iva}" img = "${datos.nombreImg}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`
+      `UPDATE productoslocal SET codigo = "${datos.codigo}", nombre = "${datos.nombre}", categoria = "${datos.categoria}", descripcion = "${datos.descripcion}", fraccionamiento = "${datos.fraccionamiento}", preciounidad = "${datos.preciounidad}", preciodocena = "${datos.preciodocena}", preciokilo = "${datos.preciokilo}", iva = "${datos.iva}", img = "${datos.nombreImg}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`
     );
   } catch (error) {
     throw error;
@@ -207,12 +184,22 @@ const updateProductoLocal = async (datos) => {
   }
 };
 
+const deleteProductoLocal = async (id) => {
+  try {
+    const answer = await conectar.query(`DELETE FROM productoslocal WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
-  getProductos,
+/*   getProductos,
   getProducto,
   insertProducto,
   updateProducto,
-  deleteProducto,
+  deleteProducto, */
   getCategorias,
   getCategoria,
   insertCategoria,
@@ -224,4 +211,5 @@ module.exports = {
   getProductoLocal,
   insertProductoLocal,
   updateProductoLocal,
+  deleteProductoLocal,
 };

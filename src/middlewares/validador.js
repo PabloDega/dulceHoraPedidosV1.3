@@ -94,7 +94,7 @@ const validarProductoChain = [
     .trim()
     .notEmpty().withMessage("El campo Nombre de Imagen es obligatorio")
     .isString().withMessage("Ingresar nombre de archivo válido")
-    .custom(async(nombre, { req }) => {
+    /* .custom(async(nombre, { req }) => {
       if (req.body.tipo == "nuevo") {
         const nombreDuplicado = await fileNames.buscarPathDuplicado(nombre,"productos","imgCard");
         if (nombreDuplicado) {
@@ -106,7 +106,7 @@ const validarProductoChain = [
           throw new Error("Nombre de imagen en uso");
         }
       }
-    }),
+    }) */,
 ];
 
 const validarPreciosChain = [

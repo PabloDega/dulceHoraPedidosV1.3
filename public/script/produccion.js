@@ -28,7 +28,7 @@ function pedidoProduccionCalcTotal(){
         return acumulador + valor;
     }, 0);
     document.querySelector("#pedidoProduccionTotal").innerHTML = "Total: $" + totalPedido;
-    pedidoProduccionImporteTotal.value = totalPedido
+    document.querySelector("#pedidoProduccionImporteTotal").value = totalPedido;
 }
 
 document.querySelectorAll(".pedidoProduccionCantidad").forEach((boton) => {
@@ -94,6 +94,7 @@ if(document.querySelector("#pedidoProduccionVaciar") !=null){
 if(document.querySelector("#pedidoProduccionEnviar") != null){
     document.querySelector("#pedidoProduccionEnviar").addEventListener("click", (e) => {
         e.preventDefault();
+        pedidoProduccionCalcTotal();
         localStorage.removeItem("precargaPedidoProduccion");
         if(validarCantidades()){
             document.querySelector("#nuevaProduccion").submit();
@@ -151,6 +152,10 @@ function validarCantidades(){
         return false;
     }
     return true;
+}
+
+function validarTotal(){
+    console.log()
 }
 
 
