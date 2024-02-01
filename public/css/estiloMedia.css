@@ -59,15 +59,6 @@
   .pedidoMap{
     flex-grow: 1;
   }
-  /* header .headerIcons{
-    flex-direction: row;
-    align-items: center;
-    position: static;
-  } */
-  /* header #cart, header #pedidoActivo {
-    background-color: transparent;
-    box-shadow: none;
-  } */
   header #cart {
     position: relative;
   }
@@ -84,7 +75,6 @@
   .slideH {
     flex-wrap: wrap;
     margin: 0 auto;
-    /* justify-content: space-around; */
   }
   .card {
     display: flex;
@@ -127,7 +117,6 @@
   }
   .selectLocalSeleccion {
     flex-direction: row;
-    /* width: 80%; */
     max-width: var(--anchoMax);
   }
   .pedidoNombreUsuario {

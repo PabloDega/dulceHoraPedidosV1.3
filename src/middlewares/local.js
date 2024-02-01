@@ -1,5 +1,4 @@
 const crearObjetoServicios = async (lista, data) => {
-  // lista = JSON.parse(lista);
   let servicios = {};
   lista.forEach((item) => {
     let estado = false;

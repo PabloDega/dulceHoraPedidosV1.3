@@ -1,31 +1,25 @@
-const { conectar } = require(__basedir + "/src/config/dbConnection");
+const crearFiltroParaQuery = async (filtros) => {
+  let query;
+  let filtroComillado = []
+  filtros.forEach((filtro) => {
+    let datos = filtro.split("=");
+    if(datos[0] == "page"){return};
+    datos[1] = datos[1].replace(/_/g, " ");
+    datos[1] = `"${datos[1]}"`;
+    let datosUnidos = datos.join("=");
+    filtroComillado.push(datosUnidos);
+  })
 
-const actividadUser = async (user, local, pedido, accion, datos) => {
-  try {
-    fecha = Date.now();
-    await conectar.query(
-      `INSERT INTO actividad (local, fecha, pedido, user, accion, datos) VALUES ("${local}", "${fecha}", "${pedido}", "${user}", "${accion}", "${datos}")`
-    );
-  } catch (error) {
-    throw error;
-  } finally {
-    conectar.releaseConnection();
+  if(filtroComillado.length == 0){
+    query = "";
+  } else if(filtroComillado.length == 1){
+    query = `WHERE ${filtroComillado[0]}`;
+  } else if(filtroComillado.length > 1){
+    query = "WHERE " + filtroComillado.join(" AND ");
   }
-};
-const actividadCliente = async (local, pedido, user, accion, datos) => {
-  try {
-    fecha = Date.now();
-    await conectar.query(
-      `INSERT INTO actividad (local, fecha, pedido, user, accion, datos) VALUES ("${local}", "${fecha}", "${pedido}", "${user}", "${accion}", "${datos}")`
-    );
-  } catch (error) {
-    throw error;
-  } finally {
-    conectar.releaseConnection();
-  }
-};
+  return query;
+}
 
 module.exports = {
-  actividadUser,
-  actividadCliente,
+  crearFiltroParaQuery
 };

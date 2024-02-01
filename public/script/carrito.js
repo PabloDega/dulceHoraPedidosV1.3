@@ -20,7 +20,6 @@ parseCookiePedido();
 //carga pedido guardado en localstorage
 function inicioCarrito() {
   if (localStorage.getItem("pedido") !== null) {
-    // let pedidoLocal = localStorage.getItem("pedido");
     pedido = cookiePedido;
     contador();
   }
@@ -119,14 +118,6 @@ actualizarCarrito();
 function enviarPedido() {
   localStorage.clear();
   // window.location.href = "/pedido"
-  /* fetch("/pedido", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(localStorage.getItem("pedido")),
-  }).then(localStorage.clear()); */
 }
 
 document.querySelector("#headerCambiar").addEventListener("click", () => {

@@ -98,7 +98,6 @@ const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
 
 const fechaProduccionNormalizada = async(info) => {
   let fechaArray = info.split("-")
-  // let fecha = new Date(info)
   let year = parseInt(fechaArray[0]);
   let month = parseInt(fechaArray[1]);
   let day = parseInt(fechaArray[2]);

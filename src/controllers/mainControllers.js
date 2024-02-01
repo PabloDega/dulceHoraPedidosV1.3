@@ -2,7 +2,7 @@ const servicesProductos = require(__basedir + "/src/services/productos");
 const servicesLocal = require(__basedir + "/src/services/local");
 const servicesFront = require(__basedir + "/src/services/front");
 const servicesChat = require(__basedir + "/src/services/chat");
-const actividad = require(__basedir + "/src/middlewares/actividad");
+// const actividad = require(__basedir + "/src/middlewares/actividad");
 const generateUniqueId = require('generate-unique-id');
 
 const jsonProductos = async (req, res) => {
@@ -19,7 +19,7 @@ const indexSelect = async(req, res) => {
   if(!req.session.clientId){
     req.session.clientId = generateUniqueId();
   }
-  await actividad.actividadCliente(0, 0, req.session.clientId, "Landing", "");
+  // await actividad.actividadCliente(0, 0, req.session.clientId, "Landing", "");
   res.render(__basedir + "/src/views/front/localSelect", {
     data,
     showLocal: "no",
@@ -57,7 +57,7 @@ const index = async(req, res) => {
     req.session.clientLocal = undefined;
     return res.redirect("/");
   }
-  await actividad.actividadCliente(localBody, 0, req.session.clientId, "Ingreso", "");
+  // await actividad.actividadCliente(localBody, 0, req.session.clientId, "Ingreso", "");
   let prodActivos = await servicesFront.prodActivos(data, local);
   let categorias = await servicesFront.categorias(prodActivos);
   //verificar Pedido Activo
@@ -83,7 +83,7 @@ const carrito = async (req, res) => {
     return res.redirect("/");
   }
   let local = req.session.clientLocal;
-  await actividad.actividadCliente(local.id, 0, req.session.clientId, "Carrito", "");
+  // await actividad.actividadCliente(local.id, 0, req.session.clientId, "Carrito", "");
   let data = await servicesProductos.getProductos();
   //verificar Pedido Activo
   let showPedido = "no";
@@ -129,7 +129,7 @@ const enviarPedido = async (req, res) => {
   let pedido = await req.cookies.pedido.replaceAll(`"`, `'`);
   let localId = req.session.clientLocal.id;
   let pedidoNumero = await servicesFront.insertPedido(localId, pedido, total);
-  await actividad.actividadCliente(req.session.clientLocal.id, pedidoNumero, req.session.clientId, "Pedido", "");
+  // await actividad.actividadCliente(req.session.clientLocal.id, pedidoNumero, req.session.clientId, "Pedido", "");
   res.cookie("pedidoEnviado", {pedidoNumero, localId, total, pedido}, {encode: String});
   res.clearCookie("pedido");
   res.redirect("pedido");
@@ -160,7 +160,7 @@ const verPedido = async(req, res) => {
 }
 
 const cancelarPedido = async(req, res) => {
-  await actividad.actividadCliente(req.session.clientLocal.id, req.cookies.pedidoEnviado.pedidoNumero, req.session.clientId, "Cancelado", "");
+  // await actividad.actividadCliente(req.session.clientLocal.id, req.cookies.pedidoEnviado.pedidoNumero, req.session.clientId, "Cancelado", "");
   res.clearCookie("pedidoEnviado");
   res.redirect("/gracias");
 }

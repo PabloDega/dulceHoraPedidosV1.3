@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 //-----------------------------
 // CHAT SERVER
 
-const actividad = require(__basedir + "/src/middlewares/actividad");
+// const actividad = require(__basedir + "/src/middlewares/actividad");
 const chatUsuarios = require("./src/services/chat");
 const validar = require("./src/middlewares/validador");
 const io = require("socket.io")(server);
@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
       datos[x] = data[x];
     }
     await chatUsuarios.insertMensaje(datos, sala);
-    await actividad.actividadCliente(Number(data.localId), data.pedidoNumero, data.usuario || data.nombre, "Mensaje", data.mensaje)
+    // await actividad.actividadCliente(Number(data.localId), data.pedidoNumero, data.usuario || data.nombre, "Mensaje", data.mensaje)
     io.to(usuario.sala).emit("chatMensaje", {
       mensaje: data.mensaje,
       emisor: data.emisor,

@@ -50,21 +50,6 @@
             if(fechas === undefined){
                 return;
             }
-            /* let pocasHoras1 = "";
-            if(fechas.pedidoEstado == "abierto" && fechas.horasRestanteEntregaPedido < 4){
-                pocasHoras1 = "prodSemaforoAmarillo";
-            }
-            let pocasHoras2 = "";
-            if(fechas.proximoPedidoEstado == "abierto" && fechas.horasRestanteEntregaProximoPedido < 4){
-                pocasHoras2 = "prodSemaforoAmarillo";
-            } */
-            /* if(fechas.pedidoEstado == "cerrado"){
-                let pedidosLocal = data.filter((dato) => dato.local == local.id);
-                let resultado = pedidosLocal.filter((dato) => dato.fechaentrega == verFechaFiltro(fechas.fechaEntregaPedido));
-                if(resultado.length > 0){
-                    fechas.pedidoEstado = "cargado";
-                }
-            } */
             %>
             <div id="produccionSemaforos">
                 <span><b><%= local.nombre %></b></span>
@@ -154,8 +139,12 @@
             <h3>Pedido Nº<%= dataPedido.id %></h3>
             <hr>
             <%if(lector == "fabrica"){
+                    fechaCargado = new Date(dataPedido.fecha);
+                    // console.log(fechaCargado)
                     local = locales.find((local) => dataPedido.local == local.id)%>
                     <h3>Local: <%= local.nombre %></h3>
+                    <hr>    
+                    <h3>Fecha de carga: <%= fechaCargado.toLocaleString("es-AR") %></h3>
                     <hr>
             <%}%>
             <h3>Fecha de Entrega: <%= dataPedido.fechaentrega %></h3>

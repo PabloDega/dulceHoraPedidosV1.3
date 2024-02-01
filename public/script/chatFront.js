@@ -48,14 +48,3 @@ socket.on("reload", () => {
   window.location.reload();
 });
 
-/* socket.on("pedidoFinaliza", (datos) => {
-  chatMensajes.innerHTML += `<div class="chatMensaje chatFinalizado" id="msjL">
-        <span class="chatMensajeFecha">${new Date().toLocaleString()}</span>
-        <span>
-          <b>${datos.nombre}:</b> El local cambió el estado del pedido a ${datos.estado}
-          <div class="pedidoBtn" id="cerrarPedidoChat">Cerrar pedido</div>
-        </span>
-    </div>`;
-  document.querySelector("#cerrarPedidoChat").addEventListener("click", () => {console.log("ping")})
-});
- */

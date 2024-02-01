@@ -3,36 +3,23 @@ if (window.location.pathname.split("/")[2] === "actividadToda") {
   full = true;
 }
 // toggle filter bar
-let barraFiltrar = document.querySelector("#actividadFiltrosTabla");
-let btnFiltrar = document.querySelector("#actividadFiltros");
-btnFiltrar.addEventListener("click", () => {
-  barraFiltrar.style.display = "table-row";
-  btnFiltrar.style.display = "none";
+document.querySelector("#actividadFiltrar").addEventListener("click", () => {
+  document.querySelector("#cortina").style.display = "flex";
+});
+document.querySelector("#actividadCerrarFiltros").addEventListener("click", () => {
+  document.querySelector("#cortina").style.display = "none";
 });
 document.querySelector("#actividadQuitarFiltros").addEventListener("click", () => {
-  window.location.reload();
+  window.location.href = "/panel/actividadToda";
 });
+document.querySelector("#actividadAplicarFiltros").addEventListener("click", () => {
+  document.querySelector("#actividadFiltros").submit();
+});
+
+
+
 // Filtrar datos en cliente
 let tabla = document.querySelector("#actividadTbody");
-if (full) {
-  let local = document.querySelector("table #local");
-  local.addEventListener("change", (e) => {
-    filtrar("local", e.target.value);
-  });
-}
-
-let pedido = document.querySelector("table #pedido");
-pedido.addEventListener("change", (e) => {
-  filtrar("pedido", e.target.value);
-});
-let usuario = document.querySelector("table #usuario");
-usuario.addEventListener("change", (e) => {
-  filtrar("user", e.target.value);
-});
-let accion = document.querySelector("table #accion");
-accion.addEventListener("change", (e) => {
-  filtrar("accion", e.target.value);
-});
 
 function filtrar(tipo, valor) {
   let filtrado = data.filter((dato) => dato[tipo] == valor);
@@ -73,13 +60,11 @@ function actualizarFiltros(filtrado) {
     filtroAccion.add(dato.accion);
     filtroLocal.add(dato.local);
   });
-  if (full) {
-    local.innerHTML = "";
-    filtroLocal.forEach((dato) => {
+  let query = window.location.search;
+  local.innerHTML = "";
+  filtroLocal.forEach((dato) => {
       local.innerHTML += `<option value="${dato}">${dato}</option>`;
-    });
-  }
-
+  });
   pedido.innerHTML = "";
   filtroPedido.forEach((dato) => {
     pedido.innerHTML += `<option value="${dato}">${dato}</option>`;
@@ -97,25 +82,38 @@ function actualizarFiltros(filtrado) {
 //Control de páginacion
 let pagActual;
 let pagTotal = Math.floor((window.filasTotal / 25) + 1)
-if(window.location.search){
-  let params = new URLSearchParams(window.location.search)
-  pagActual = params.get("page");
+if(window.page){
+  pagActual = window.page;
 } else {
   pagActual = 1;
 }
-let pagPrevBtn = document.querySelector("#actividadPaginado #prev");
-let pagProxBtn = document.querySelector("#actividadPaginado #next");
+let pagPrevBtn = document.querySelector("#prev");
+let pagProxBtn = document.querySelector("#next");
 document.querySelector("#paginadoInfo #act").innerHTML = pagActual;
 document.querySelector("#paginadoInfo #tot").innerHTML = pagTotal;
+document.querySelector("#pageNumero").value = pagActual;
+// toggle botones
 if(pagActual < 2){
   pagPrevBtn.style.display = "none";
 }
 if(pagActual >= pagTotal){
   pagProxBtn.style.display = "none";
 }
+// Eventos paginacion
 pagPrevBtn.addEventListener("click", () => {
-  window.location.href = window.location.pathname.split("/")[2] + "?page=" + (Number(pagActual) - 1);
+  document.querySelector("#pageNumero").value = parseInt(pagActual) - 1;
+  document.querySelector("#actividadFiltros").submit();
+
 })
 pagProxBtn.addEventListener("click", () => {
-  window.location.href = window.location.pathname.split("/")[2] + "?page=" + (Number(pagActual) + 1);
+  document.querySelector("#pageNumero").value = parseInt(pagActual) + 1;
+  document.querySelector("#actividadFiltros").submit();
 })
+
+
+/* let query = new URLSearchParams(window.location.search);
+let localSelected = query.get("local");
+let usuarioSelected = query.get("usuario");
+let accionSelected = query.get("accion");
+let pageSelected = query.get("page");
+ */

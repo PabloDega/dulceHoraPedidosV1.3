@@ -1,4 +1,3 @@
-// const { server } = require(__basedir + "/index");
 const { conectar } = require(__basedir + "/src/config/dbConnection");
 const io = require(__basedir + "/index");
 const limiter = require("../middlewares/limiter");

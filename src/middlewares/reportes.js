@@ -17,7 +17,6 @@ const sumarPedidosMismaFecha = async(pedidos, locales) =>{
             pedidosFiltrados.push(pedidoAcumulado);
         }
     }
-    // console.log(pedidosFiltrados);
     return pedidosFiltrados;
 }
 
@@ -86,7 +85,6 @@ const productosDelPedido = async(productos, data) => {
         let info = data.find((dato) => dato[1] == producto.id);
         producto.cantidad = info[0]
     })
-    // console.log(productosDelPedido)
     return productosDelPedido
 }
 
@@ -122,7 +120,6 @@ const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
             cantidadesPorProducto.push(objeto);
         }  
     })
-    // console.log(cantidadesPorProducto);
     return cantidadesPorProducto;
 }
 

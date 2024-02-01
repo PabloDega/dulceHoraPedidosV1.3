@@ -6,8 +6,6 @@ const fileUpload = require("../services/fileUpload");
 const validar = require("../middlewares/validador");
 const auth = require("../middlewares/auth")
 
-// const { conectar } = require(__basedir + "/src/config/dbConnection");
-
 router.get("/", panelControllers.index);
 
 router.get("/productos/card", auth.authSupervisor, panelControllers.productosCard);
@@ -87,6 +85,8 @@ router.post("/pedidos", validar.validarPedidoEstadoChain, panelControllers.pedid
 router.get("/actividad", panelControllers.actividad);
 
 router.get("/actividadToda", auth.authSupervisor, panelControllers.actividadToda);
+
+router.post("/actividadToda", auth.authSupervisor, validar.validarQueryActividadChain, panelControllers.actividadTodaFiltro);
 
 router.get("/produccion/local", auth.authAdmin, panelControllers.pedidoProduccionLocal);
 

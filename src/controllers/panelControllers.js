@@ -24,7 +24,7 @@ const index = (req, res) => {
 };
 
 const productosCard = async (req, res) => {
-  let data = await servicesProductos.getProductosLocal();
+  let data = await servicesProductos.getProductosLocalTodos();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "card",
@@ -34,7 +34,7 @@ const productosCard = async (req, res) => {
 };
 
 const productosTabla = async (req, res) => {
-  let data = await servicesProductos.getProductosLocal();
+  let data = await servicesProductos.getProductosLocalTodos();
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "tabla",
@@ -73,19 +73,13 @@ const productosUpdate = async (req, res) => {
     });
   }
   await servicesProductos.updateProductoLocal(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de Producto", `Id de pord: ${req.body.id}`)
   return res.redirect("/panel/productos/card");
-  /* let data = await servicesProductos.getProductos();
-  res.render(__basedir + "/src/views/pages/productos", {
-    data,
-    vista: "card",
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const productosNuevo = async (req, res) => {
   let dataCategorias = await servicesProductos.getCategorias();
-  let lastId = await servicesProductos.lastId("productos");
+  let lastId = await servicesProductos.lastId("productoslocal");
   res.render(__basedir + "/src/views/pages/nuevoProducto", {
     lastId,
     dataCategorias,
@@ -108,33 +102,19 @@ const productosInsert = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesProductos.insertProductoLocal(datos);
+  await servicesProductos.insertProductoLocal(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de Producto", `Id de pord: ${req.body.id}`)
   return res.redirect("/panel/productos/card");
-  /* let data = await servicesProductos.getProductos();
-  res.render(__basedir + "/src/views/pages/productos", {
-    data,
-    vista: "card",
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const productosEliminar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/productos/tabla");
   }
-  let id = req.query.id;
   // manejar error
-  await servicesProductos.deleteProductoLocal(id);
+  await servicesProductos.deleteProductoLocal(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de Producto", `Id de pord: ${req.query.id}`);
   return res.redirect("/panel/productos/card");
-  /* let data = await servicesProductos.getProductos();
-  res.render(__basedir + "/src/views/pages/productos", {
-    data,
-    vista: "card",
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const categoriasTabla = async (req, res) => {
@@ -167,15 +147,10 @@ const categoriasInsert = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesProductos.insertCategoria(datos);
+  await servicesProductos.insertCategoria(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de categoria", `Id de cat: ${req.body.id}`);
+
   return res.redirect("/panel/categorias");
-  /* let data = await servicesProductos.getCategorias();
-  res.render(__basedir + "/src/views/pages/categorias", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const categoriasEditar = async (req, res) => {
@@ -204,31 +179,20 @@ const categoriasUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  await servicesProductos.updateCategoria(datos);
+  await servicesProductos.updateCategoria(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de categoria", `Id de cat: ${req.body.id}`);
   return res.redirect("/panel/categorias");
- /*  let data = await servicesProductos.getCategorias();
-  res.render(__basedir + "/src/views/pages/categorias", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const categoriasEliminar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/categorias");
   }
-  let id = req.query.id;
   // manejar error
-  await servicesProductos.deleteCategoria(id);
+  await servicesProductos.deleteCategoria(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de categoria", `Id de cat: ${req.query.id}`);
+
   return res.redirect("/panel/categorias");
-  /* let data = await servicesProductos.getCategorias();
-  res.render(__basedir + "/src/views/pages/categorias", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const precios = async (req, res) => {
@@ -255,14 +219,9 @@ const preciosUpdate = async (req, res) => {
   }
   let objetoPrecios = await productosMiddleware.crearObjetoUpdatePrecios(req.body)
   await servicesProductos.updatePrecios(objetoPrecios);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de precios", "");
+
   return res.redirect("/panel/precios");
-  /* let data = await servicesProductos.getProductos();
-  res.render(__basedir + "/src/views/pages/precios", {
-    data,
-    valoresForm: {},
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const local = async (req, res) => {
@@ -313,13 +272,9 @@ const localUpdate = async (req, res) => {
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body);
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
   await servicesLocal.updateLocal(req.body, serviciosActivos, diasEntrega);
-  // let data = await servicesLocal.getLocales();
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de local", `Id de local: ${req.body.id}`);
+
   return res.redirect("/panel/local");
-  /* res.render(__basedir + "/src/views/pages/local", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const localNuevo = async (req, res) => {
@@ -354,6 +309,7 @@ const localInsert = async (req, res) => {
   }
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body) 
   await servicesLocal.insertLocal(req.body, diasEntrega, serviciosActivos);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de local", `Id de local: ${req.body.id}`);
   return res.redirect("/panel/local");
 };
 
@@ -361,16 +317,10 @@ const localEliminar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/local");
   }
-  let id = req.query.id;
   //manejar error
-  await servicesLocal.deleteLocal(id);
+  await servicesLocal.deleteLocal(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de local", `Id de local: ${req.query.id}`);
   return res.redirect("/panel/local");
-  /* let data = await servicesLocal.getLocales();
-  res.render(__basedir + "/src/views/pages/local", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const fotos = async (req, res) => {
@@ -543,13 +493,8 @@ const usuariosInsert = async (req, res) => {
   let datos = req.body;
   datos.passHash = await hashearPassword(datos.passUser);
   await servicesUsuarios.insertUsuario(datos);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de usuario", `Usuario creado: ${req.body.usuario}`);
   return res.redirect("/panel/usuarios");
-  /* let data = await servicesUsuarios.getUsuarios();
-  res.render(__basedir + "/src/views/pages/usuarios", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const usuariosEditar = async (req, res) => {
@@ -571,12 +516,6 @@ const usuariosEditar = async (req, res) => {
 const usuariosUpdate = async (req, res) => {
   await servicesUsuarios.updateUsuario(req.body);
   return res.redirect("/panel/usuarios");
-  /* let data = await servicesUsuarios.getUsuarios();
-  res.render(__basedir + "/src/views/pages/usuarios", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const usuariosEliminar = async (req, res) => {
@@ -585,13 +524,9 @@ const usuariosEliminar = async (req, res) => {
   }
   // manejar error
   await servicesUsuarios.deleteUsuario(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de usuario", `Usuario eliminado: ${req.query.id}`);
+
   return res.redirect("/panel/usuarios");
-  /* let data = await servicesUsuarios.getUsuarios();
-  res.render(__basedir + "/src/views/pages/usuarios", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const pedidos = async (req, res) => {
@@ -603,7 +538,8 @@ const pedidos = async (req, res) => {
     if(dataPedidoCheck.local === idLocal){
       dataPedido = dataPedidoCheck;
       dataMensajes = await servicesChat.getMensajes(req.query.id);
-      await actividadMiddleware.actividadUser(req.session.userLog, idLocal, req.query.id, "Lectura", "");
+/*       await actividadMiddleware.actividadUser(req.session.userLog, idLocal, req.query.id, "Lectura", "");
+ */
     }
   }
   let dataPedidos = await servicesPedidos.getPedidos(idLocal);
@@ -623,16 +559,16 @@ const pedidos = async (req, res) => {
 
 const pedidosEstado = async (req, res) => {
   await servicesPedidos.updateEstadoPedidos(req.body.id, req.body.estado);
-  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, req.body.id, "Estado", req.body.estado);
-  return res.redirect("/panel/pedidos");
+/*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, req.body.id, "Estado", req.body.estado);
+ */  return res.redirect("/panel/pedidos");
 };
 
 const actividad = async(req, res) => {
   let page;
-  if(isNaN(req.query.page) || req.query.page < 1){
+  if(isNaN(req.body.page) || req.body.page < 1){
     page = 1;
   }else{
-    page = req.query.page;
+    page = req.body.page;
   }
   let data = await servicesActividad.getActividad(req.session.userLocal, page);
   res.render(__basedir + "/src/views/pages/actividad", {
@@ -644,18 +580,80 @@ const actividad = async(req, res) => {
 
 const actividadToda = async(req, res) => {
   let page;
-  if(isNaN(req.query.page) || req.query.page < 1){
+  if(isNaN(req.body.page) || req.body.page < 1){
     page = 1;
+    req.body.page = 1;
   }else{
-    page = req.query.page;
+    page = req.body.page;
   }
+
   let data = await servicesActividad.getActividadAll(page);
   res.render(__basedir + "/src/views/pages/actividadFull", {
+    query: req.body,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
 };
+
+const actividadTodaFiltro = async (req, res) => {
+
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    let page;
+    if(isNaN(req.body.page) || req.body.page < 1){
+      page = 1;
+    }else{
+      page = req.body.page;
+    }
+    let data = await servicesActividad.getActividadAll(page);
+    return res.render(__basedir + "/src/views/pages/actividadFull", {
+      errores: errores.array({ onlyFirstError: true }),
+      query: req.body,
+      data,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+  
+  let filtros = [];
+  if(req.body.page !== ""){
+    if(isNaN(parseInt(req.body.page))){
+      return res.redirect("/panel/actividadToda");
+    }
+    // filtros.push(`page=${req.body.page}`);
+  }
+  if(req.body.local !== ""){
+    if(isNaN(parseInt(req.body.local))){
+      return res.redirect("/panel/actividadToda");
+    }
+    filtros.push(`local=${req.body.local}`);
+  }
+  if(req.body.user !== ""){
+    filtros.push(`user=${req.body.user}`);
+  }
+  if(req.body.accion !== ""){
+    filtros.push(`accion=${req.body.accion.replace(/\s/g, "_")}`);
+  }
+
+  let filtrosQuery = await actividadMiddleware.crearFiltroParaQuery(filtros);
+
+  let page;
+  if(isNaN(req.body.page) || req.body.page < 1){
+    page = 1;
+  }else{
+    page = req.body.page;
+  }
+
+  let data = await servicesActividad.getActividadAll(page, filtrosQuery);
+  res.render(__basedir + "/src/views/pages/actividadFull", {
+    query: req.body,
+    data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+
+}
 
 const stockForm = async(req, res) => {
   const data = await servicesLocal.getLocal(req.session.userLocal);
@@ -682,8 +680,8 @@ const stockUpdate = async (req, res) => {
   })
   let local = req.session.userLocal;
   await servicesLocal.updateStock(datos, local);
-  await actividadMiddleware.actividadUser(req.session.userLog, local, 0, "Stock", datos.toString());
-  return res.redirect("/panel/stock")
+/*   await actividadMiddleware.actividadUser(req.session.userLog, local, 0, "Stock", datos.toString());
+ */  return res.redirect("/panel/stock")
 };
 
 const pedidoProduccionLocal = async(req, res) => {
@@ -701,14 +699,11 @@ const pedidoProduccionLocal = async(req, res) => {
     }
   }
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
-  // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocales();
-  // const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
   const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
-    // categorias,
     categoriasHistoricas,
     dataPedido,
     dataLocal,
@@ -750,7 +745,6 @@ const pedidoProduccionFabrica = async(req, res) => {
   }
   const locales = await servicesLocal.getLocales();
   const data = await servicesProduccion.getProduccionFabrica();
-  // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   
   // calcular estado del pedido de cada local segun fecha actual
   let fechasLocales = [];
@@ -758,7 +752,6 @@ const pedidoProduccionFabrica = async(req, res) => {
     let serviciosLocal = JSON.parse(local.servicios);
     if(serviciosLocal.pedidos){
       const data = await servicesProduccion.getProduccionLocal(local.id);
-      // const ultimosPedidos = await produccionMiddleware.getUltimosPedidos(data);
       let fechas = await produccionMiddleware.getFechasProduccionLocal(local.entrega, data);
       fechas.localId = local.id;
       fechasLocales.push(fechas);
@@ -768,7 +761,6 @@ const pedidoProduccionFabrica = async(req, res) => {
     data,
     dataPedido,
     productos,
-    // categorias,
     categoriasHistoricas,
     locales,
     fechasLocales,
@@ -806,8 +798,8 @@ const pedidoProduccionNuevo = async (req, res) => {
 }
 
 const pedidoProduccionInsert = async (req, res) => {
-  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Nuevo Pedido a Produccion", "");
-  let pedido = [];
+/*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Nuevo Pedido a Produccion", "");
+ */  let pedido = [];
   const productos = await servicesProduccion.getProductosProduccion();
   for(dato in req.body){
     if(!isNaN(dato)){
@@ -833,14 +825,19 @@ const pedidoProduccionInsert = async (req, res) => {
     total: parseInt(req.body.pedidoProduccionImporteTotal),
     fechaDeEntrega: req.body.pedidoProduccionFechaEntrega,
   }
+  let proxId = await servicesProductos.lastId("produccion");
   await servicesProduccion.insertPedidoProduccion(datos);
+  await servicesActividad.insertActividad(req.session.userLocal, proxId, req.session.userLog, "Alta de pedido a produccion", `Id de pedido: ${proxId}`);
+
   return res.redirect("/panel/produccion/local");  
 }
 
 const pedidoProduccionUpdateEstado = async(req, res) => {
-  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Cambio de estado de pedido", req.body.estado);
-  if(req.body.estado == "cancelado"){
+/*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Cambio de estado de pedido", req.body.estado);
+ */  if(req.body.estado == "cancelado"){
     await servicesProduccion.deletePedidoProduccion(req.body.id);
+    await servicesActividad.insertActividad(req.session.userLocal, req.body.id, req.session.userLog, "Baja de pedido a produccion", `Id de pedido: ${req.body.id}`);
+
     if(req.body.emisor == "fabrica"){
       return res.redirect("/panel/produccion/fabrica");
     } else if(req.body.emisor == "local"){
@@ -848,6 +845,7 @@ const pedidoProduccionUpdateEstado = async(req, res) => {
     }
   } else {
     await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
+    await servicesActividad.insertActividad(req.session.userLocal, req.body.id, req.session.userLog, "Modificacion de pedido a produccion", `Nuevo estado: ${req.body.estado}`);
     if(req.body.emisor == "fabrica"){
       return res.redirect("/panel/produccion/fabrica?id=" + req.body.id);
     } else if(req.body.emisor == "local"){
@@ -907,6 +905,8 @@ const pedidoProduccionUpdate = async(req, res) => {
     local: parseInt(req.body.pedidoProduccionLocalId),
   }
   await servicesProduccion.updatePedidoProduccion(datos);
+  await servicesActividad.insertActividad(req.session.userLocal, req.body.pedidoProduccionLocalId, req.session.userLog, "Modificacion de pedido a produccion", "Actualizacion de pedido");
+
   if(req.session.userRol == "admin"){
     return res.redirect("/panel/produccion/local?id=" + req.body.pedidoProduccionLocalId);
   }
@@ -927,7 +927,10 @@ const pedidoProduccionPersonalizadoCrear = async (req, res) => {
   data.fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   data.local = req.body.local;
   data.minimos = req.body.minimos;
+  let proxId = await servicesProductos.lastId("produccion");
   await servicesProduccion.insertPedidoProduccionPersonalizado(data);
+  await servicesActividad.insertActividad(req.session.userLocal, proxId, req.session.userLog, "Alta de pedido personalizado", "");
+
   res.redirect("/panel/produccion/fabrica");
 }
 
@@ -966,14 +969,10 @@ const productosFabricaInsert = async(req, res) => {
       userRol: req.session.userRol,
     });
   }
+  let proxId = await servicesProductos.lastId("productosfabrica");
   await servicesProductosFabrica.insertProductoFabrica(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de producto fabrica", `Id de prod: ${proxId}`);
   return res.redirect("/panel/productosFabrica");
-  /* let data = await servicesProductosFabrica.getProductosFabrica();
-  res.render(__basedir + "/src/views/pages/productosFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const productosFabricaEditar = async(req, res) => {
@@ -1013,13 +1012,9 @@ const productosFabricaUpdate = async(req, res) => {
     return res.redirect("/panel/productosFabrica")
   }
   await servicesProductosFabrica.updateProductoFabrica(req.body, req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de producto fabrica", `Id de prod: ${req.query.id}`);
+
   return res.redirect("/panel/productosFabrica");
-  /* let data = await servicesProductosFabrica.getProductosFabrica();
-  res.render(__basedir + "/src/views/pages/productosFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const productosFabricaEliminar = async(req, res) => {
@@ -1027,13 +1022,8 @@ const productosFabricaEliminar = async(req, res) => {
     return res.redirect("/panel/productosFabrica")
   }
   await servicesProductosFabrica.deleteProductoFabrica(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de producto fabrica", `Id de prod: ${req.query.id}`);
   return res.redirect("/panel/productosFabrica");
-  /* let data = await servicesProductosFabrica.getProductosFabrica();
-  res.render(__basedir + "/src/views/pages/productosFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const categoriasFabrica = async(req, res) => {
@@ -1063,14 +1053,10 @@ const categoriasFabricaInsert = async(req, res) => {
       userRol: req.session.userRol,
     })
   }
+  let proxId = await servicesProductos.lastId("categoriasfabrica");
   await servicesProductosFabrica.insertCategoriaFabrica(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de categoria fabrica", `Id de cat: ${proxId}`);
   return res.redirect("/panel/categoriasFabrica");
-  /* let data = await servicesProductosFabrica.getCategoriasFabrica();
-  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const categoriasFabricaEditar = async(req, res) => {
@@ -1109,13 +1095,8 @@ const categoriasFabricaUpdate = async(req, res) => {
     return res.redirect("/panel/categoriasFabrica")
   }
   await servicesProductosFabrica.updateCategoriaFabrica(req.body, req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de categoria fabrica", `Id de cat: ${req.query.id}`);
   return res.redirect("/panel/categoriasFabrica");
-  /* let data = await servicesProductosFabrica.getCategoriasFabrica();
-  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const categoriasFabricaEliminar = async(req, res) => {
@@ -1123,13 +1104,8 @@ const categoriasFabricaEliminar = async(req, res) => {
     return res.redirect("/panel/categoriasFabrica")
   }
   await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de categoria fabrica", `Id de cat: ${req.query.id}`);
   return res.redirect("/panel/categoriasFabrica");
-  /* let data = await servicesProductosFabrica.getCategoriasFabrica();
-  res.render(__basedir + "/src/views/pages/categoriasFabrica", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const fotosProductosFabrica = async(req, res) => {
@@ -1307,12 +1283,6 @@ const servicioInsert = async (req, res) => {
   }
   await servicesServicios.insertServicio(req.body);
   return res.redirect("/panel/servicios");
-  /* let data = await servicesServicios.getServicios();
-  res.render(__basedir + "/src/views/pages/servicios", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }) */
 }
 
 const servicioEliminar = async (req, res) => {
@@ -1321,12 +1291,6 @@ const servicioEliminar = async (req, res) => {
   }
   await servicesServicios.deleteServicio(req.query.id);
   return res.redirect("/panel/servicios");
-  /* let data = await servicesServicios.getServicios();
-  res.render(__basedir + "/src/views/pages/servicios", {
-    data,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-  }); */
 };
 
 const preciosProductosFabrica = async(req, res) => {
@@ -1342,6 +1306,7 @@ const preciosProductosFabrica = async(req, res) => {
 
 const preciosProductosFabricaUpdate = async(req, res) => {
   await servicesProductosFabrica.updatePreciosProductosFabrica(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion precios de productos de fabrica", "");
   res.redirect("/panel/productosFabrica/precios");
 }
 
@@ -1409,6 +1374,7 @@ module.exports = {
   pedidosEstado,
   actividad,
   actividadToda,
+  actividadTodaFiltro,
   stockForm,
   stockUpdate,
   pedidoProduccionLocal,

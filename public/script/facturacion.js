@@ -2,16 +2,6 @@ let contador = 1;
 const itemsfacturacion = document.querySelector("#itemsfacturacion");
 document.querySelector("#fecha").valueAsDate = new Date();
 
- /* function cargarFecha(){
-   let f = new Date()
-    let g = f.getTimezoneOffset()
-    let h = new Date().getHours()
-    f.setHours(h - (g / 60));
-    f = f.toISOString();
-    f = f.split(".");
-    fecha.value = f[0]; 
-}*/
-
 // CUIT
 
 function checkCuitInput(e){
@@ -49,7 +39,6 @@ function itemsCreador(cantidad){
             <td id="iva${contador}">$0</td>
             <td id="subVer${contador}" class="subtotales">$0</td>
             <td><span class="btn eliminarItem" data-item="${contador}">X</span></td>`;
-        // itemsfacturacion.innerHTML += texto;
         itemsfacturacion.appendChild(fila)
         contador++;
     }
@@ -58,7 +47,6 @@ function itemsCreador(cantidad){
 
 function cargarItem(e){
     let producto = productos.find((prod) => prod.codigo == e.target.value);
-    // console.log(producto)
     if(producto == undefined){
         mostrarError(`Item ${e.target.value} inexistente`);
         vaciarItem(e);
@@ -69,8 +57,6 @@ function cargarItem(e){
     let medida = document.querySelector(`#med${item}`);
     let precio = document.querySelector(`#precio${item}`);
     let cantidad = document.querySelector(`#cant${item}`);
-    // let porcentajeIva = document.querySelector(`#porcentajeIva${item}`);
-    // let estado = document.querySelector(`#estado${item}`);
     
     nombre.innerHTML = producto.nombre;
     medida.innerHTML = producto.fraccionamiento;
@@ -81,8 +67,6 @@ function cargarItem(e){
         precio.value = "$" + producto.preciounidad;
         cantidad.removeAttribute("step")
     }
-    // porcentajeIva.value = producto.iva;
-    // estado.value = "true";
 
     if(producto.fraccionamiento !== "manual"){
         precio.classList.add("inputBloqueado")
@@ -118,12 +102,10 @@ function calcularItem(e){
 
     let codigo = document.querySelector(`#cod${item}`);
     let producto = productos.find((prod) => prod.codigo == codigo.value);
-    // console.log(producto)
     if(producto === undefined){
         return;
     }
     let cantidad = document.querySelector(`#cant${item}`);
-    // let subtotal = document.querySelector(`#sub${item}`);
     let subtotalVisible = document.querySelector(`#subVer${item}`);
 
     let calculo;
@@ -153,7 +135,6 @@ function calcularItem(e){
 
     calculo = Math.round(calculo*100)/100
 
-    // subtotal.value = calculo;
     subtotalVisible.innerHTML = "$" + calculo;
 
     let detalle = [item, calculo, producto.iva, producto.codigo, parseFloat(cantidad.value)];
@@ -169,7 +150,6 @@ function calcularTotal(detalle){
         detalles.splice(itemExistente, 1);
         detalles.push(detalle);
     }
-    // console.log(detalles)
 
     let iva10Acumulador = 0;
     let iva21Acumulador = 0;
@@ -216,12 +196,10 @@ function vaciarItem(e){
     document.querySelector(`#cant${item}`).value = "0";
     document.querySelector(`#precio${item}`).value = "$0";
     document.querySelector(`#subVer${item}`).innerHTML = "$0";
-    // let porcentajeIva = document.querySelector(`#porcentajeIva${item}`);
     document.querySelector(`#estado${item}`).value = "false";
     
     let itemExistente = detalles.findIndex((dato) => dato[0] === item);
     detalles.splice(item, 1);
-    // console.log(itemExistente)
     calcularTotal([item, 0, 0]);
 }
 
@@ -230,7 +208,6 @@ function eliminarItem(e){
     let fila = document.querySelector(`#fila${item}`);
     fila.remove();
     let itemExistente = detalles.findIndex((dato) => dato[0] === item);
-    // console.log(itemExistente);
     detalles.splice(itemExistente, 1);
     calcularTotal([item, 0, 0]);
 }
@@ -244,12 +221,6 @@ function mostrarError(info){
     document.querySelector("#errores").innerHTML = mensaje;
     document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
 }
-
-/* cargarFecha();
-
-const actualizarHora = setInterval(() => {cargarFecha();}, 200);
-
-fecha.addEventListener("click", () => {clearInterval(actualizarHora)}) */
 
 itemsCreador(5);
 

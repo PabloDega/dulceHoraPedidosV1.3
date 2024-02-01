@@ -32,12 +32,6 @@
             categorias.forEach((categoria) => {
                 let joinNombre = categoria.categoriaProduccion.split(" ").join("");
                 minimosCategoria[joinNombre] = [0, categoria.minimo];
-                /* let prodFiltrados = [];
-                productos.forEach((item) => {
-                    if(item.categoria == categoria.categoriaProduccion){
-                        prodFiltrados.push(item);
-                    }
-                } */
                 let prodFiltrados = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
                 if(prodFiltrados.length > 0){%>
                     <tr>

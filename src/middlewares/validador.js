@@ -88,8 +88,8 @@ const validarProductoChain = [
   body("estado")
     .trim()
     .escape()
-    .notEmpty().withMessage("El campo 'estado' es obligatorio")
-    .isString().withMessage("El campo estado solo puede contener texto"),
+    /* .notEmpty().withMessage("El campo 'estado' es obligatorio")
+    .isString().withMessage("El campo estado solo puede contener texto") */,
   body("nombreImg")
     .trim()
     .notEmpty().withMessage("El campo Nombre de Imagen es obligatorio")
@@ -339,6 +339,25 @@ const validarProduccionUpdateChain = [
     .isString(),
 ]
 
+const validarQueryActividadChain = [
+  body("usuario")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape(),
+  body("accion")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape(),
+  body("local")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape(),
+  body("page")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+]
+
 
 module.exports = {
   validarInput,
@@ -354,5 +373,6 @@ module.exports = {
   validarPedidoEstadoChain,
   validarStringsChain,
   validarProduccionUpdateChain,
+  validarQueryActividadChain,
   dataValidator,
 };

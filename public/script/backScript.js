@@ -459,7 +459,7 @@ if (document.querySelector("#crearPedidoPesonalizado") != null) {
 if (document.querySelector("#formCancelado") != null) {
   document.querySelector("#formCancelado").addEventListener("submit", (e) => {
       e.preventDefault();
-      console.log("ping")
+      // console.log("ping")
       confirmarEliminarProduccion(e);
   })
 }

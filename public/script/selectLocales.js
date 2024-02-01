@@ -20,10 +20,8 @@ function seleccionarLocal(id, boton) {
     .querySelectorAll(".selectLocalLocales")
     .forEach((boton) => {
       boton.classList.remove("selectLocalLocalesActivo");
-      // boton.style.order = "1";
     });
   boton.classList.add("selectLocalLocalesActivo");
-  // boton.style.order = "0";
   document.querySelectorAll(".localDireccion").forEach((direccion) => {
     direccion.style.display = "none";
   });

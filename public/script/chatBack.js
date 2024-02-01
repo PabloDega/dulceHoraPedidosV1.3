@@ -19,7 +19,6 @@ socket.on("notificarNewChat", (data) => {
       e.preventDefault();
       window.location.href = `/panel/pedidos?id=${data.pedidoNumero}`;
     };
-    // let audio = new Audio("/audio/pedido.mp3");
     audioPedido.play();
     setTimeout(() => location.reload(), 2000);
   }
@@ -35,7 +34,6 @@ socket.on("notificarMensaje", (data) => {
       e.preventDefault();
       window.location.href = `/panel/pedidos?id=${data.pedidoNumero}`;
     };
-    // let audio = new Audio("/audio/ding.mp3");
     audioDing.play();
   }
 })
@@ -53,7 +51,6 @@ socket.on("inputError", (() => {
 const pedidoFinalizado = (pedido, estado) => {
   let mensaje = `El local cambió el estado del pedido a ${estado}`;
   mensaje = JSON.stringify(mensaje);
-  // socket.emit("pedidoFinaliza", { pedido, estado, nombre: chatNombre.value, mensaje})
   socket.emit("envioMensaje", {
     mensaje,
     emisor: chatEmisor.value,
