@@ -1,0 +1,21 @@
+<header>
+    <span>
+      <img src="/im/logoDH.png" alt="logo Dulce Hora" />
+      <span>
+        <h1>Panel de control</h1>
+        <h2>Facturación</h2>
+      </span>
+      <% if(usuario != ""){ %>
+            <span id="userIcon">
+              <img src="/im/backuser.svg" alt="icono usuario" />
+              <%= usuario %>
+              <div id="cerrarSesion" style="display: none">
+                <span>Usuario: <%= usuario %></span>
+                <span>Rol: <%= userRol %></span>
+                <span id="cerrarSesionBtn">Cerrar sesión</span>
+              </div>
+            </span>
+      <% } %>
+  </span>
+  </header>
+  

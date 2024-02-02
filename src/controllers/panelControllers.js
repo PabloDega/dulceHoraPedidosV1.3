@@ -1326,6 +1326,7 @@ const facturacion = async(req, res) => {
     categorias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    layout: __basedir + "/src/views/layouts/facturacion",
   })
 }
 

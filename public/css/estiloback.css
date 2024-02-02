@@ -1079,4 +1079,61 @@ footer img {
     flex-direction: column;
   }
 }
+.factCont .factSubCont{
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  gap: 1em;
+  width: 100%;
+}
+.factCont #backRender{
+  max-width: inherit;
+}
+.factCont > header img{
+  width: 100px;
+}
+.factCont > header span{
+  padding: 0.5em;
+}
+.factCont #factBotonesRapidos{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1em;
+}
+.factCont #factBotonesRapidos > h1{
+  font-size: 1.5em;
+  color: white;
+  width: 100%;
+  border-bottom: 2px solid white;
+  margin-bottom: 0.5em;
+}
 
+.factCont .factBotonRapido {
+  display: flex;
+  position: relative;
+  background-color: white;
+  overflow: hidden;
+  overflow-block:hidden ;
+  height: 75px;
+  width: 150px;
+  cursor: pointer;
+}
+
+.factCont .factBotonRapido span{
+  position: absolute;
+  top: 15px;
+  left: 5px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.5em;
+  text-shadow: 2px 2px 3px black;
+}
+
+.factCont .factBotonRapido img{
+  width: 150px;
+  height: 150px;
+/*   position: absolute;
+  bottom: 0;
+  right: 0; */
+}

@@ -2,6 +2,31 @@ let contador = 1;
 const itemsfacturacion = document.querySelector("#itemsfacturacion");
 document.querySelector("#fecha").valueAsDate = new Date();
 
+// Creacion de botones
+
+function crearBotonesRapidos(){
+    let contenedor = document.querySelector("#factBotonesRapidos")
+    categorias.forEach((categoria) => {
+        let prodCategorizados = [];
+        productos.forEach((producto) => {
+            if(producto.categoria == categoria.categoria){
+                prodCategorizados.push(producto);
+            }
+        })
+        if(prodCategorizados.length > 0){
+            // contenedor.innerHTML += `<h1>${categoria.categoria}</h1>`;
+            prodCategorizados.forEach((producto) => {
+                contenedor.innerHTML += `<div class="factBotonRapido" data-id="${producto.id}">
+                <span>${producto.nombre}</span>
+                <img src="/${producto.img}">
+                </div>`;
+            })
+        }
+       
+    })
+}
+
+crearBotonesRapidos();
 // CUIT
 
 function checkCuitInput(e){
@@ -30,13 +55,11 @@ function itemsCreador(cantidad){
     for (let i = 0; i < cantidad; i++) {
         let fila = document.createElement("tr")
         fila.setAttribute("id", `fila${contador}`)
-        fila.innerHTML = `<td id="item${contador}">${contador}</td>
-            <td><input type="text" id="cod${contador}" class="cod" data-item="${contador}"></td>
+        fila.innerHTML = `<td><input type="text" id="cod${contador}" class="cod" data-item="${contador}"></td>
             <td id="nom${contador}" class="nombres"></td>
             <td><input type="number" id="cant${contador}" value="0" class="cant" data-item="${contador}" min="0"></td>
             <td id="med${contador}" class="medidas"></td>
             <td><input type="text" id="precio${contador}" data-item="${contador}" value="$0" class="precio"></td>
-            <td id="iva${contador}">$0</td>
             <td id="subVer${contador}" class="subtotales">$0</td>
             <td><span class="btn eliminarItem" data-item="${contador}">X</span></td>`;
         itemsfacturacion.appendChild(fila)
