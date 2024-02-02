@@ -1319,11 +1319,13 @@ const facturacion = async(req, res) => {
   if(!serviciosLocal.facturacion){
     return res.redirect("/panel");
   }
+  const botonesfacturacion = await servicesProductos.getBotonesFacturacion();
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
     categorias,
+    botonesfacturacion,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     layout: __basedir + "/src/views/layouts/facturacion",
@@ -1333,6 +1335,36 @@ const facturacion = async(req, res) => {
 const facturacionPost = async(req, res) => {
   console.log(req.body);
   return res.redirect("/panel/facturacion");
+}
+
+const facturacionFabrica = async (req, res) => {
+  res.render(__basedir + "/src/views/pages/facturacionFabrica", {
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionFabricaBotones = async (req, res) => {
+  const botonesfacturacion = await servicesProductos.getBotonesFacturacion();
+  const productos = await servicesProductos.getProductosLocal();
+  res.render(__basedir + "/src/views/pages/facturacionBotones", {
+    botonesfacturacion,
+    productos,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionFabricaBotonesNuevo = async (req, res) => {
+  const proxId = await servicesProductos.lastId("botonesfacturacion");
+  const productos = await servicesProductos.getProductosLocal();
+  res.render(__basedir + "/src/views/pages/nuevoBotonFacturacion", {
+    proxId,
+    productos,
+    valoresForm: {},
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
 }
 
 module.exports = {
@@ -1417,4 +1449,7 @@ module.exports = {
   servicioEliminar,
   facturacion,
   facturacionPost,
+  facturacionFabrica,
+  facturacionFabricaBotones,
+  facturacionFabricaBotonesNuevo,
 };

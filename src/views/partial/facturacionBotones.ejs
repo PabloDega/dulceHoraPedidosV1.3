@@ -1,0 +1,32 @@
+<% if(botonesfacturacion.length == 0){
+    return
+}%>
+<table id="tablaFactBotones">
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Detalle</th>
+            <th>Cantidad</th>
+            <th>Orden</th>
+            <th>Estado</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%botonesfacturacion.forEach((boton) => {
+            let info = productos.find((prod) => prod.codigo === boton.codigo)%>
+            <tr>
+                <td><%= boton.codigo %></td>
+                <td><%= info.nombre %></td>
+                <td><%= boton.detalle %></td>
+                <td><%= boton.cantidad %></td>
+                <td><%= boton.orden %></td>
+                <td><%= boton.estado %></td>
+                <td class="backListaProdTablaBoton" id="backListaFactBotonEditar" data-id="<%= boton.id %>">editar</td>
+                <td class="backListaProdTablaBoton" id="backListaFactBotonEliminar" data-id="<%= boton.id %>" data-tipo="boton">eliminar</td>
+            </tr>
+        <%});%>
+    </tbody>
+</table>

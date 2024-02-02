@@ -140,6 +140,17 @@ const deleteProductoLocal = async (id) => {
   }
 };
 
+const getBotonesFacturacion = async () => {
+  try {
+    const rows = await conectar.query("SELECT * FROM botonesfacturacion WHERE estado = 'true' ORDER BY orden");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getCategorias,
   getCategoria,
@@ -154,4 +165,5 @@ module.exports = {
   insertProductoLocal,
   updateProductoLocal,
   deleteProductoLocal,
+  getBotonesFacturacion,
 };

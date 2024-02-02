@@ -1,0 +1,35 @@
+<form action="" method="post" id="nuevoBotonFacturacion" class="editor">
+    <h1>Nuevo Botón</h1>
+    <span>
+        <%console.log(proxId)%>
+        <label for="id">ID</label>
+        <input type="text" name="id" id="id" value="<%= proxId || valoresForm.id %>" readonly />
+    </span>
+    <span>
+        <label for="codigo">Código</label>
+        <input type="number" min="0" name="codigo" id="codigo" value="<%= valoresForm.codigo %>" />
+    </span>
+    <span>
+        <label for="id">Nombre</label>
+        <input type="text" id="nombre" value="<%= valoresForm.nombre %>" />
+    </span>
+    <span>
+        <label for="detalle">Detalle</label>
+        <input type="text" name="detalle" id="detalle" value="<%= valoresForm.detalle %>" />
+    </span>
+    <span>
+        <label for="cantidad">Cantidad</label>
+        <input type="number" min="0" step="0.01" name="cantidad" id="cantidad" value="<%= valoresForm.cantidad %>" />
+    </span>
+    <span>
+        <label for="orden">Orden</label>
+        <input type="number" min="0" name="orden" id="orden" value="<%= valoresForm.orden %>" />
+    </span>
+    <span>
+        <label for="estado">Estado</label>
+        <input type="checkbox" name="estado" id="estado" value="true" checked>
+    </span>
+    <span>
+        <input type="submit" value="Crear">
+    </span>
+</form>

@@ -1,29 +1,26 @@
 let contador = 1;
+let numerador = 1;
 const itemsfacturacion = document.querySelector("#itemsfacturacion");
 document.querySelector("#fecha").valueAsDate = new Date();
+
+let neto = 0;
+let iva10 = 0;
+let iva21 = 0;
+let total = 0;
+let detalles = [];
 
 // Creacion de botones
 
 function crearBotonesRapidos(){
     let contenedor = document.querySelector("#factBotonesRapidos")
-    categorias.forEach((categoria) => {
-        let prodCategorizados = [];
-        productos.forEach((producto) => {
-            if(producto.categoria == categoria.categoria){
-                prodCategorizados.push(producto);
-            }
-        })
-        if(prodCategorizados.length > 0){
-            // contenedor.innerHTML += `<h1>${categoria.categoria}</h1>`;
-            prodCategorizados.forEach((producto) => {
-                contenedor.innerHTML += `<div class="factBotonRapido" data-id="${producto.id}">
-                <span>${producto.nombre}</span>
-                <img src="/${producto.img}">
-                </div>`;
-            })
-        }
-       
+    botones.forEach((boton) => {
+        let prodInfo = productos.find((prod) => prod.codigo == boton.codigo)
+        contenedor.innerHTML += `<div class="factBotonRapido" data-codigo="${prodInfo.codigo}" data-cantidad="${boton.cantidad}" style="order: ${boton.orden};">
+                <img src="/${prodInfo.img}">
+                <span class="factBotonTxt"><h1>${prodInfo.nombre}</h1><h2>${boton.detalle}</h2></span>
+                </div>`
     })
+    
 }
 
 crearBotonesRapidos();
@@ -54,19 +51,22 @@ function itemsCreador(cantidad){
     }
     for (let i = 0; i < cantidad; i++) {
         let fila = document.createElement("tr")
-        fila.setAttribute("id", `fila${contador}`)
-        fila.innerHTML = `<td><input type="text" id="cod${contador}" class="cod" data-item="${contador}"></td>
-            <td id="nom${contador}" class="nombres"></td>
-            <td><input type="number" id="cant${contador}" value="0" class="cant" data-item="${contador}" min="0"></td>
-            <td id="med${contador}" class="medidas"></td>
-            <td><input type="text" id="precio${contador}" data-item="${contador}" value="$0" class="precio"></td>
-            <td id="subVer${contador}" class="subtotales">$0</td>
-            <td><span class="btn eliminarItem" data-item="${contador}">X</span></td>`;
+        fila.setAttribute("id", `fila${numerador}`)
+        fila.innerHTML = `<td><input type="text" id="cod${numerador}" class="cod" data-item="${numerador}"></td>
+            <td id="nom${numerador}" class="nombres"></td>
+            <td><input type="number" id="cant${numerador}" value="0" class="cant" data-item="${numerador}" min="0"></td>
+            <td id="med${numerador}" class="medidas"></td>
+            <td><input type="text" id="precio${numerador}" data-item="${numerador}" value="$0" class="precio tablaCeldaNumero"></td>
+            <td id="subVer${numerador}" class="subtotales tablaCeldaNumero">$0</td>
+            <td><span class="btn eliminarItem" data-item="${numerador}">X</span></td>`;
         itemsfacturacion.appendChild(fila)
         contador++;
+        numerador++;
     }
     eventos();
 }
+
+itemsCreador(7);
 
 function cargarItem(e){
     let producto = productos.find((prod) => prod.codigo == e.target.value);
@@ -101,12 +101,6 @@ function cargarItem(e){
     eventos();
     calcularItem(e);    
 }
-
-let neto = 0;
-let iva10 = 0;
-let iva21 = 0;
-let total = 0;
-let detalles = [];
 
 function calcularItem(e){
     let item = e.target.dataset.item;
@@ -219,19 +213,23 @@ function vaciarItem(e){
     document.querySelector(`#cant${item}`).value = "0";
     document.querySelector(`#precio${item}`).value = "$0";
     document.querySelector(`#subVer${item}`).innerHTML = "$0";
-    document.querySelector(`#estado${item}`).value = "false";
+    // document.querySelector(`#estado${item}`).value = "false";
     
-    let itemExistente = detalles.findIndex((dato) => dato[0] === item);
+    // let itemExistente = detalles.findIndex((dato) => dato[0] === item);
     detalles.splice(item, 1);
     calcularTotal([item, 0, 0]);
 }
 
 function eliminarItem(e){
+    if(contador < 3){
+        return
+    }
     let item = e.target.dataset.item;
     let fila = document.querySelector(`#fila${item}`);
     fila.remove();
     let itemExistente = detalles.findIndex((dato) => dato[0] === item);
     detalles.splice(itemExistente, 1);
+    contador--;
     calcularTotal([item, 0, 0]);
 }
 
@@ -244,8 +242,6 @@ function mostrarError(info){
     document.querySelector("#errores").innerHTML = mensaje;
     document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
 }
-
-itemsCreador(5);
 
 function vaciarFormualrio(){
     document.querySelectorAll(".nombres").forEach((elem) => {
@@ -270,12 +266,37 @@ function vaciarFormualrio(){
     detalles = [];
 }
 
+function buscarInputVacio(){
+    let inputs = document.querySelectorAll(".cod");
+    for (let i = 0; i < (contador - 1); i++) {
+        if(inputs[i].value === ""){
+            return inputs[i]
+        }
+    }
+}
+
+function cargarBotonRapido(e){
+    let idLibre = buscarInputVacio();
+    if(idLibre === undefined){
+        itemsCreador(1);
+        cargarBotonRapido(e);
+        return;
+    }
+    let codigo = document.querySelector(`#cod${idLibre.dataset.item}`)
+    codigo.value = e.currentTarget.dataset.codigo;
+    document.querySelector(`#cant${idLibre.dataset.item}`).value = e.currentTarget.dataset.cantidad;
+    let event = new Event("change");
+    codigo.dispatchEvent(event);
+}
+
 // Botones
 
-document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)})
-document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)})
-document.querySelector("#resetFacturacion").addEventListener("click", vaciarFormualrio)
-
+document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
+document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)});
+document.querySelector("#resetFacturacion").addEventListener("click", vaciarFormualrio);
+document.querySelectorAll(".factBotonRapido").forEach((boton) => {
+    boton.addEventListener("click", (e) => {cargarBotonRapido(e)})
+})
 
 function eventos(){
     document.querySelectorAll(".agregarItems").forEach((boton) => {

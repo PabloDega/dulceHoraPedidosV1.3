@@ -323,6 +323,7 @@ header span img {
   padding: 1em;
   border-radius: 0.5em;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 10;
 }
 #cerrarSesionBtn{
   cursor: pointer;
@@ -999,8 +1000,23 @@ footer img {
 #reportesValorizados table tbody tr td{
   text-align: center;
 }
+#detallesFacturacion{
+  font-size: 1em;
+}
+#detallesFacturacion input{
+  font-size: 1em;
+}
 #detallesFacturacion td{
   padding: 0;
+}
+#detallesFacturacion .cod{
+  width: 3em;
+}
+#detallesFacturacion .cant{
+  width: 5em;
+}
+#detallesFacturacion .precio{
+  width: 4em;
 }
 #nuevaVenta table tbody tr{
   background-color: white;
@@ -1100,6 +1116,7 @@ footer img {
   flex-wrap: wrap;
   flex-direction: row;
   gap: 1em;
+  height: fit-content;
 }
 .factCont #factBotonesRapidos > h1{
   font-size: 1.5em;
@@ -1109,31 +1126,43 @@ footer img {
   margin-bottom: 0.5em;
 }
 
-.factCont .factBotonRapido {
+.factCont .factBotonRapido{
   display: flex;
   position: relative;
-  background-color: white;
   overflow: hidden;
-  overflow-block:hidden ;
-  height: 75px;
+  height: 90px;
   width: 150px;
   cursor: pointer;
+  border-radius: 15px 0 0 0;
+  transition: 0.3s;
 }
 
-.factCont .factBotonRapido span{
+.factCont .factBotonRapido .factBotonTxt{
   position: absolute;
-  top: 15px;
-  left: 5px;
-  color: white;
+  bottom: 0px;
+  left: 0px;
+  width: 150px;
+  /* color: white; */
   font-weight: 600;
   font-size: 1.5em;
-  text-shadow: 2px 2px 3px black;
+  /* text-shadow: 3px 3px 2px black; */
+  background-color: rgba(255,255,255,0.7);
+  padding: 0.2em;
+}
+
+.factCont .factBotonRapido .factBotonTxt h1{
+  font-size: 0.7em;
+  text-wrap: nowrap;
+}
+.factCont .factBotonRapido .factBotonTxt h2{
+  font-size: 0.5em;
 }
 
 .factCont .factBotonRapido img{
   width: 150px;
   height: 150px;
-/*   position: absolute;
-  bottom: 0;
-  right: 0; */
+}
+
+.factCont .factBotonRapido:hover{
+  filter: grayscale(100%);
 }

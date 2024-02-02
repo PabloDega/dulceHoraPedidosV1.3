@@ -176,4 +176,12 @@ router.get("/facturacion", auth.authAdmin, panelControllers.facturacion);
 
 router.post("/facturacion", auth.authAdmin, panelControllers.facturacionPost);
 
+router.get("/facturacion/fabrica", auth.authSupervisor, panelControllers.facturacionFabrica);
+
+router.get("/facturacion/fabrica/botones", auth.authSupervisor, panelControllers.facturacionFabricaBotones);
+
+router.get("/facturacion/fabrica/botones/nuevo", auth.authSupervisor, panelControllers.facturacionFabricaBotonesNuevo);
+
+
+
 module.exports = router;
