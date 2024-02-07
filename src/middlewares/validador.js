@@ -358,6 +358,34 @@ const validarQueryActividadChain = [
     .escape()
 ]
 
+const validarBotonFacturacionChain = [
+  body("codigo")
+    .notEmpty().withMessage("El campo 'Codigo' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'Codigo' incorrecto"),
+  body("detalle")
+    .notEmpty().withMessage("El campo 'detalle' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'detalle' incorrecto"),
+  body("cantidad")
+    .notEmpty().withMessage("El campo 'cantidad' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'cantidad' incorrecto"),
+  body("orden")
+    .notEmpty().withMessage("El campo 'orden' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'orden' incorrecto"),
+  body("estado")
+    .notEmpty().withMessage("El campo 'estado' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'estado' incorrecto"),
+]
+
 
 module.exports = {
   validarInput,
@@ -374,5 +402,6 @@ module.exports = {
   validarStringsChain,
   validarProduccionUpdateChain,
   validarQueryActividadChain,
+  validarBotonFacturacionChain,
   dataValidator,
 };

@@ -18,10 +18,10 @@
             </tr>
         </thead>
         <tbody>
-            <% categorias.forEach((categoria) => {
-                let pedidosDeCategoria = cantidadesPorProducto.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+            <%categorias.forEach((categoria) => {
+                let pedidosDeCategoria = cantidadesPorProducto.filter((producto) => producto.categoria == categoria);
                 if(pedidosDeCategoria.length == 0){ return }%>
-                <tr><th colspan="<%= colspan %>" class="categoriaTabla"><%= categoria.categoriaProduccion %></th></tr>
+                <tr><th colspan="<%= colspan %>" class="categoriaTabla"><%= categoria %></th></tr>
                 <%pedidosDeCategoria.forEach((pedido) => {
                     let acumulador = 0;
                     let nombreProducto = productos.find((producto) => producto.id == pedido.id);%>
@@ -32,8 +32,8 @@
                         <td><%= cantidad %></td>
                     <%})%>
                     <td><%= acumulador %></td>
-                    <td>$<%= nombreProducto.costo %></td>
-                    <td>$<%let total = acumulador * nombreProducto.costo%><%=total%></td>
+                    <td>$<%= pedido.precio %></td>
+                    <td>$<%let total = acumulador * pedido.precio%><%=total%></td>
                 </tr>
                 <%})
             }) %>

@@ -24,9 +24,10 @@
                 <td><%= boton.cantidad %></td>
                 <td><%= boton.orden %></td>
                 <td><%= boton.estado %></td>
-                <td class="backListaProdTablaBoton" id="backListaFactBotonEditar" data-id="<%= boton.id %>">editar</td>
-                <td class="backListaProdTablaBoton" id="backListaFactBotonEliminar" data-id="<%= boton.id %>" data-tipo="boton">eliminar</td>
+                <td class="backListaProdTablaBoton FactBotonEditar" id="backListaFactBotonEditar" data-id="<%= boton.id %>">editar</td>
+                <td class="backListaProdTablaBoton FactBotonEliminar" id="backListaFactBotonEliminar" data-id="<%= boton.id %>" data-tipo="facturacion/fabrica/botones">eliminar</td>
             </tr>
         <%});%>
     </tbody>
 </table>
+<script src="/script/botonesfacturacion.js"></script>

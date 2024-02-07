@@ -9,8 +9,8 @@ const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
     const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
-    // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-    const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(req.body.pedido, productos);
+    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    // const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(req.body.pedido, productos);
 
     let wb = new xl.Workbook();
 
@@ -66,12 +66,12 @@ const exportarExcelProduccion = async(req, res) => {
 
     let iProductos = 3
 
-    categoriasHistoricas.forEach((categoria) => {
+    categorias.forEach((categoria) => {
         let prodFiltrados = [];
-        ws.cell(iProductos, 1, iProductos, 6, true).string(categoria).style(estiloNegro);
+        ws.cell(iProductos, 1, iProductos, 6, true).string(categoria.categoriaProduccion).style(estiloNegro);
         iProductos++;
         productos.forEach((producto) => {
-            if(producto.categoria == categoria){
+            if(producto.categoria == categoria.categoriaProduccion){
                 prodFiltrados.push(producto)
             }
         })
@@ -297,8 +297,9 @@ const exportarExcelReporteValorizado = async(req, res) => {
     const pedidos = await servicesReportes.getReportes(req.body.fecha);
     const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
     const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
-    const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+    // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
+    const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductosArray(pedidosFiltrados, productos, req.body.sector);
     const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.body.sector);
   
     let wb = new xl.Workbook({
@@ -371,6 +372,7 @@ const exportarExcelReporteValorizado = async(req, res) => {
     ws.column(1).setWidth(40);
 
     let iPedidos = 1
+    let colPrecio;
 
     ws.cell(iPedidos, 1).date(fecha).style(estiloNegro);
     let colspan = 4;
@@ -393,10 +395,10 @@ const exportarExcelReporteValorizado = async(req, res) => {
     ws.column(col).setWidth(14);
     iPedidos++;
 
-    categorias.forEach((categoria) => {
-        let pedidosDeCategoria = cantidadesPorProducto.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+    categoriasHistoricas.forEach((categoria) => {
+        let pedidosDeCategoria = cantidadesPorProducto.filter((producto) => producto.categoria == categoria);
         if(pedidosDeCategoria.length == 0){ return }
-        ws.cell(iPedidos, 1, iPedidos, colspan,true).string(categoria.categoriaProduccion).style(estiloCentrado).style(estiloNegro);
+        ws.cell(iPedidos, 1, iPedidos, colspan,true).string(categoria).style(estiloCentrado).style(estiloNegro);
         iPedidos++;
         pedidosDeCategoria.forEach((pedido) => {
             let acumulador = 0;
@@ -411,13 +413,28 @@ const exportarExcelReporteValorizado = async(req, res) => {
             })
             ws.cell(iPedidos, col).number(acumulador).style(estiloBorde).style(estiloCentrado);
             col++
-            ws.cell(iPedidos, col).number(nombreProducto.costo).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
+            colPrecio = col;
+            ws.cell(iPedidos, col).number(pedido.precio).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
             col++;
-            let total = acumulador * nombreProducto.costo
+            let total = acumulador * pedido.precio;
             ws.cell(iPedidos, col).number(total).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
             iPedidos++;
         });
     });
+
+    col = 2;
+
+    localesConPedido.forEach((local) => {
+        let formulaTotal = "=";
+        for(let i = 3; i < iPedidos; i++) {
+            let colLetra = String.fromCharCode(96 + col)
+            let colPrecioLetra = String.fromCharCode(96 + colPrecio)
+            formulaTotal += `${colLetra}${i}*${colPrecioLetra}${i}+`
+        }
+        formulaTotal = formulaTotal.substring(0, formulaTotal.length-1);
+        ws.cell(iPedidos, col).formula(formulaTotal).style(estiloBorde).style(estiloGris).style(estiloImporte);
+        col++;
+    })
 
     wb.write(`Reporte Valorizado - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }

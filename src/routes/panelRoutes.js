@@ -182,6 +182,13 @@ router.get("/facturacion/fabrica/botones", auth.authSupervisor, panelControllers
 
 router.get("/facturacion/fabrica/botones/nuevo", auth.authSupervisor, panelControllers.facturacionFabricaBotonesNuevo);
 
+router.post("/facturacion/fabrica/botones/nuevo", auth.authSupervisor, validar.validarBotonFacturacionChain, panelControllers.facturacionFabricaBotonesInsert);
+
+router.get("/facturacion/fabrica/botones/editar", auth.authSupervisor, panelControllers.facturacionFabricaBotonesEditar);
+
+router.post("/facturacion/fabrica/botones/editar", auth.authSupervisor, validar.validarBotonFacturacionChain, panelControllers.facturacionFabricaBotonesUpdate);
+
+router.get("/facturacion/fabrica/botones/eliminar", auth.authSupervisor, panelControllers.facturacionFabricaBotonesEliminar);
 
 
 module.exports = router;

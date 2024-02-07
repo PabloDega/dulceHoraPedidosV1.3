@@ -9,6 +9,11 @@ if (document.querySelector("#precios") != null) {
     .querySelector("#precios")
     .addEventListener("click", () => (location.href = "/panel/precios"));
 }
+if (document.querySelector("#facturacion") != null) {
+  document
+    .querySelector("#facturacion")
+    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica"));
+}
 if (document.querySelector("#local") != null) {
   document
     .querySelector("#local")
@@ -479,4 +484,16 @@ function confirmarEliminarProduccion(e){
   }
     );
   document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
+}
+
+if (document.querySelector("#factFabBotones") != null) {
+  document
+    .querySelector("#factFabBotones")
+    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica/botones"));
+}
+
+if (document.querySelector("#factFabBotonesNuevo") != null) {
+  document
+    .querySelector("#factFabBotonesNuevo")
+    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica/botones/nuevo"));
 }

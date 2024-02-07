@@ -7,13 +7,17 @@ const sumarPedidosMismaFecha = async(pedidos, locales) =>{
             let pedidoAcumulado = await crearObjetoPedido(pedidosPorLocal);
             pedidosFiltrados.push(pedidoAcumulado)
         } else if(pedidosPorLocal.length > 1){
+            // sumar totales de mismo local
             let sumaDePedidos = [];
+            // let totalAcumulado = 0;
             await pedidosPorLocal.forEach(async(pedido) => {
                 sumaDePedidos = sumaDePedidos.concat(JSON.parse(pedido.pedido));
+                // totalAcumulado += pedido.total;
             })
             sumaDePedidos = await resumirProductosRepetidos(sumaDePedidos);
             pedidosPorLocal[0].pedido = JSON.stringify(sumaDePedidos);
             let pedidoAcumulado = await crearObjetoPedido(pedidosPorLocal);
+            // pedidoAcumulado.total = totalAcumulado;
             pedidosFiltrados.push(pedidoAcumulado);
         }
     }
@@ -50,6 +54,7 @@ const crearObjetoPedido = async(pedidosPorLocal) => {
     pedidoAcumulado.fechaentrega = pedidosPorLocal[0].fechaentrega;
     pedidoAcumulado.local = pedidosPorLocal[0].local;
     pedidoAcumulado.pedido = pedidosPorLocal[0].pedido;
+    // pedidoAcumulado.total = pedidosPorLocal[0].total;
     return pedidoAcumulado;
 }
 
@@ -100,6 +105,7 @@ const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
     let cantidadesPorProducto = [];
     productos.forEach((producto) => {
         let x = false;
+        let precio = 0;
         if(producto.sector !== sector){return}
         let objeto = {};
         objeto.id = producto.id;
@@ -112,10 +118,12 @@ const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
                 cantidades.push(0);
             } else {
                 cantidades.push(cantidadPedida[0]);
+                precio = cantidadPedida[2];
                 x = true;
             }
         })
         objeto.cantidades = cantidades;
+        objeto.precio = precio;
         if(x){
             cantidadesPorProducto.push(objeto);
         }  

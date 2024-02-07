@@ -114,8 +114,22 @@ const getCategoriasDeProductos = async (pedido, productos) => {
   return categoriasPedido;
 }
 
+const getCategoriasDeProductosArray = async(pedidos, productos, sector) => {
+  let categoriasPedido = new Set();
+  pedidos.forEach((pedido) => {
+    pedido = JSON.parse(pedido.pedido);
+    pedido.forEach((item) => {
+      let datosProducto = productos.find((prod) => prod.id == item[1]);
+      if(datosProducto.sector !== sector){return}
+      categoriasPedido.add(datosProducto.categoria);
+    })
+  })
+  return categoriasPedido;
+}
+
 module.exports = {
   getFechasProduccionLocal,
   fechaProduccionNormalizada,
   getCategoriasDeProductos,
+  getCategoriasDeProductosArray,
 };

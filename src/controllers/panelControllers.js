@@ -8,6 +8,7 @@ const servicesActividad = require(__basedir + "/src/services/actividad");
 const servicesProduccion = require(__basedir + "/src/services/produccion");
 const servicesReportes = require(__basedir + "/src/services/reportes");
 const servicesServicios = require(__basedir + "/src/services/servicios");
+const servicesFacturacion = require(__basedir + "/src/services/facturacion");
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
@@ -79,9 +80,9 @@ const productosUpdate = async (req, res) => {
 
 const productosNuevo = async (req, res) => {
   let dataCategorias = await servicesProductos.getCategorias();
-  let lastId = await servicesProductos.lastId("productoslocal");
+  let proxId = await servicesProductos.lastId("productoslocal");
   res.render(__basedir + "/src/views/pages/nuevoProducto", {
-    lastId,
+    proxId,
     dataCategorias,
     data: {},
     usuario: req.session.userLog,
@@ -1235,8 +1236,9 @@ const reporteValorizado = async(req, res) => {
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
-  const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-  const productos = await servicesProductosFabrica.getProductosFabrica();
+  // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
+  const categorias = await produccionMiddleware.getCategoriasDeProductosArray(pedidosFiltrados, productos, req.query.sector);
   const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.query.sector);
   res.render(__basedir + "/src/views/pages/reporteValorizado", {
     sector: req.query.sector,
@@ -1319,7 +1321,7 @@ const facturacion = async(req, res) => {
   if(!serviciosLocal.facturacion){
     return res.redirect("/panel");
   }
-  const botonesfacturacion = await servicesProductos.getBotonesFacturacion();
+  const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/facturacion", {
@@ -1345,7 +1347,7 @@ const facturacionFabrica = async (req, res) => {
 }
 
 const facturacionFabricaBotones = async (req, res) => {
-  const botonesfacturacion = await servicesProductos.getBotonesFacturacion();
+  const botonesfacturacion = await servicesFacturacion.getBotonesFacturacionTodos();
   const productos = await servicesProductos.getProductosLocal();
   res.render(__basedir + "/src/views/pages/facturacionBotones", {
     botonesfacturacion,
@@ -1366,6 +1368,48 @@ const facturacionFabricaBotonesNuevo = async (req, res) => {
     userRol: req.session.userRol,
   })
 }
+
+const facturacionFabricaBotonesInsert = async(req, res) => {
+  await servicesFacturacion.insertBotonFacturacion(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Nuevo boton rápido", `Codigo de prod ${req.body.codigo}`);
+  return res.redirect("/panel/facturacion/fabrica/botones")
+}
+
+const facturacionFabricaBotonesEditar = async (req, res) => {
+  if(!req.query.id){
+    return res.redirect("/panel/facturacion/fabrica/botones");
+  }
+  let data = await servicesFacturacion.getBotonFacturacion(req.query.id);
+  if(data === undefined){
+    return res.redirect("/panel/facturacion/fabrica/botones");
+  }
+  const productos = await servicesProductos.getProductosLocal();
+  res.render(__basedir + "/src/views/pages/editarBotonFacturacion", {
+    productos,
+    valoresForm: data,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionFabricaBotonesUpdate = async (req, res) => {
+  await servicesFacturacion.updateBotonFacturacion(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion botones rápidos de faturacion", `Codigo de prod ${req.body.codigo}`);
+  res.redirect("/panel/facturacion/fabrica/botones");
+}
+
+const facturacionFabricaBotonesEliminar = async (req, res) => {
+  if(req.query.id){
+    if(!isNaN(parseInt(req.query.id))){
+      let data = await servicesFacturacion.getBotonFacturacion(req.query.id);
+      if(data !== undefined){
+        await servicesFacturacion.deleteBotonFacturacion(req.query.id);
+      }
+    }
+  }
+  return res.redirect("/panel/facturacion/fabrica/botones");
+}
+
 
 module.exports = {
   index,
@@ -1452,4 +1496,8 @@ module.exports = {
   facturacionFabrica,
   facturacionFabricaBotones,
   facturacionFabricaBotonesNuevo,
+  facturacionFabricaBotonesInsert,
+  facturacionFabricaBotonesEditar,
+  facturacionFabricaBotonesUpdate,
+  facturacionFabricaBotonesEliminar,
 };

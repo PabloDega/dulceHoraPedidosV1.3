@@ -72,12 +72,13 @@ const updatePrecios = async (objetoPrecios) => {
 
 const lastId = async (tabla) => {
   const getLastId = await conectar.query(`SHOW TABLE STATUS LIKE '${tabla}'`);
+  conectar.releaseConnection();
   return getLastId[0][0].Auto_increment;
 };
 
 const getProductosLocal = async () => {
   try {
-    const rows = await conectar.query("SELECT * FROM productoslocal WHERE estado = 'true' ORDER BY codigo");
+    const rows = await conectar.query("SELECT * FROM productoslocal WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
     return rows[0];
   } catch (error) {
     throw error;
@@ -132,7 +133,8 @@ const updateProductoLocal = async (datos) => {
 
 const deleteProductoLocal = async (id) => {
   try {
-    const answer = await conectar.query(`DELETE FROM productoslocal WHERE id = "${id}"`);
+    // const answer = await conectar.query(`DELETE FROM productoslocal WHERE id = "${id}"`);
+    await conectar.query(`UPDATE productoslocal SET visible = 'false' WHERE id = '${id}'`);
   } catch (error) {
     throw error;
   } finally {
@@ -140,16 +142,6 @@ const deleteProductoLocal = async (id) => {
   }
 };
 
-const getBotonesFacturacion = async () => {
-  try {
-    const rows = await conectar.query("SELECT * FROM botonesfacturacion WHERE estado = 'true' ORDER BY orden");
-    return rows[0];
-  } catch (error) {
-    throw error;
-  } finally {
-    conectar.releaseConnection();
-  }
-};
 
 module.exports = {
   getCategorias,
@@ -165,5 +157,4 @@ module.exports = {
   insertProductoLocal,
   updateProductoLocal,
   deleteProductoLocal,
-  getBotonesFacturacion,
 };
