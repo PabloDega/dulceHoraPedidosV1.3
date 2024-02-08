@@ -1,3 +1,4 @@
+<div id="errores"></div>
 <div id="localCards">
   <% data.forEach(dato => {%>
     <div class="backListaLocalCard">
@@ -16,6 +17,14 @@
           <tr>
             <td>Nombre</td>
             <td><%= dato.nombre %></td>
+          </tr>
+          <tr>
+            <td>CUIT</td>
+            <td><%= dato.cuit %></td>
+          </tr>
+          <tr>
+            <td>Estado Impositivo</td>
+            <td><%= dato.impuestos %></td>
           </tr>
           <tr>
             <td>Dirección</td>

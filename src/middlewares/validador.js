@@ -132,6 +132,16 @@ const validarLocalesChain = [
     .escape()
     .notEmpty().withMessage("El campo 'Nombre' es obligatorio")
     .isString().withMessage("Formato incorrecto, reingresar datos"),
+  body("cuit")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'cuit' es obligatorio")
+    .isNumeric().withMessage("Formato incorrecto, reingresar datos"),
+  body("impuestos")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'impuestos' es obligatorio")
+    .isString().withMessage("Formato incorrecto, reingresar datos"),
   body("direccion")
     .optional({ values: "falsy" })
     .trim()
@@ -386,6 +396,54 @@ const validarBotonFacturacionChain = [
     .isString().withMessage("Formato del campo 'estado' incorrecto"),
 ]
 
+const validarFacturacionChain = [
+  body("fecha")
+    .notEmpty().withMessage("El campo 'fecha' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'fecha' incorrecto"),
+  body("tipo")
+    .notEmpty().withMessage("El campo 'tipo' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'tipo' incorrecto"),
+  body("formaDePago")
+    .notEmpty().withMessage("El campo 'formaDePago' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'formaDePago' incorrecto"),
+  body("cuit")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'cuit' incorrecto"),
+  body("datos")
+    .notEmpty().withMessage("El campo 'datos' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'datos' incorrecto"),
+  body("neto")
+    .notEmpty().withMessage("El campo 'neto:' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'neto:' incorrecto"),
+  body("iva10")
+    .notEmpty().withMessage("El campo 'iva10' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'iva10' incorrecto"),
+  body("iva21")
+    .notEmpty().withMessage("El campo 'iva21' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'iva21' incorrecto"),
+  body("total")
+    .notEmpty().withMessage("El campo 'total' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'total' incorrecto"),
+]
+
 
 module.exports = {
   validarInput,
@@ -403,5 +461,6 @@ module.exports = {
   validarProduccionUpdateChain,
   validarQueryActividadChain,
   validarBotonFacturacionChain,
+  validarFacturacionChain,
   dataValidator,
 };

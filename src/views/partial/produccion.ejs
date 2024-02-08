@@ -91,6 +91,8 @@
         </div>
         <% data.forEach((pedido)=> {
             let estilo;
+            let imagen;
+            let botonEntregado = false;
             switch (pedido.estado) {
                 case "cargado":
                 estilo = "pedidoProdCargado";
@@ -99,6 +101,7 @@
                 case "aceptado":
                 estilo = "pedidoProdAceptado";
                 imagen = "produccion";
+                botonEntregado = true;
                 break;
                 case "entregado":
                 estilo = "pedidoProdProduccion";
@@ -127,6 +130,14 @@
                 <%}%>
                 <span>Fecha: <%= pedido.fechaentrega %></span>
                 <span><b>Estado: <%= pedido.estado %></b></span>
+                <%if(lector == "fabrica" && botonEntregado){%>
+                <form id="formEntregado" method="post" action="/panel/produccion/fabrica/updateEstado">
+                    <input type="hidden" name="id" value="<%= pedido.id %>">
+                    <input type="hidden" name="estado" value="entregado">
+                    <input type="hidden" name="emisor" value="fabrica">
+                    <input type="submit" data-form="formEntregado" value="Registrar entrega" class="btn btnNaranja btnPedidoEntregado">
+                </form>
+                <%}%>
             </div>
             <% }) %>
     </div>

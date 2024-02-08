@@ -1335,8 +1335,34 @@ const facturacion = async(req, res) => {
 }
 
 const facturacionPost = async(req, res) => {
-  console.log(req.body);
-  return res.redirect("/panel/facturacion");
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
+    const productos = await servicesProductos.getProductosLocal();
+    const categorias = await servicesProductos.getCategorias();
+    return res.render(__basedir + "/src/views/pages/facturacion", {
+      errores: errores.array({ onlyFirstError: true }),
+      productos,
+      categorias,
+      botonesfacturacion,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+      layout: __basedir + "/src/views/layouts/facturacion",
+    })
+  }
+
+  // Get ultimo numero para tipo de factura y local
+  if(req.body.tipo == "X" || (req.body.tipo == "NC" && req.body.nctipo == "X")){
+    console.log("Fact X");
+    console.log(req.body);
+    return res.redirect("/panel/facturacion");
+  } else {
+    // enviar req a AFIP
+    console.log("ping AFIP");
+    return res.redirect("/panel/facturacion");
+  }
+  
+  
 }
 
 const facturacionFabrica = async (req, res) => {

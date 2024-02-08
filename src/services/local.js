@@ -36,7 +36,7 @@ const getLocalesFront = async () => {
 
 const insertLocal = async(datos, diasEntrega, serviciosActivos) => {
   try {
-    await conectar.query(`INSERT INTO locales (franquicia, nombre, direccion, telefono, img, gmap, promobp, stock, estado, linkmp, entrega, servicios) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "${datos.promobp}", "1", "activo", "${datos.linkmp}", "${diasEntrega}", '${serviciosActivos}')`);
+    await conectar.query(`INSERT INTO locales (franquicia, nombre, cuit, impuestos, direccion, telefono, img, gmap, promobp, stock, estado, linkmp, entrega, servicios) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.cuit}", "${datos.impuestos}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "${datos.promobp}", "1", "activo", "${datos.linkmp}", "${diasEntrega}", '${serviciosActivos}')`);
   } catch (error) {
     throw error;
   } finally {
@@ -46,7 +46,7 @@ const insertLocal = async(datos, diasEntrega, serviciosActivos) => {
 
 const updateLocal = async(datos, serviciosActivos, diasEntrega) => {
   try {
-    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}" WHERE id = "${datos.id}"`);
+    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", cuit = "${datos.cuit}", impuestos = "${datos.impuestos}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}" WHERE id = "${datos.id}"`);
   } catch (error) {
     throw error;
   } finally {

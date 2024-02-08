@@ -416,6 +416,7 @@ footer img {
   flex-direction: column;
   padding: 1em;
   gap: 1em;
+  z-index: 10;
 }
 .mensajeErrorForm{
   position: fixed;
@@ -1125,7 +1126,6 @@ footer img {
   border-bottom: 2px solid white;
   margin-bottom: 0.5em;
 }
-
 .factCont .factBotonRapido{
   display: flex;
   position: relative;
@@ -1136,7 +1136,6 @@ footer img {
   border-radius: 15px 0 0 0;
   transition: 0.3s;
 }
-
 .factCont .factBotonRapido .factBotonTxt{
   position: absolute;
   bottom: 0px;
@@ -1149,7 +1148,6 @@ footer img {
   background-color: rgba(255,255,255,0.7);
   padding: 0.2em;
 }
-
 .factCont .factBotonRapido .factBotonTxt h1{
   font-size: 0.7em;
   text-wrap: nowrap;
@@ -1157,12 +1155,30 @@ footer img {
 .factCont .factBotonRapido .factBotonTxt h2{
   font-size: 0.5em;
 }
-
 .factCont .factBotonRapido img{
   width: 150px;
   height: 150px;
 }
-
 .factCont .factBotonRapido:hover{
   filter: grayscale(100%);
+}
+.flexgrow{
+  flex-grow: 1;
+  justify-content: center;
+}
+#facturacionDetalles{
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 3;
+}
+.btnPedidoEntregado{
+  font-size: 0.8em;
+  margin-top: 0.5em;
 }

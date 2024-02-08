@@ -174,7 +174,7 @@ router.get("/servicios/eliminar", auth.authSupervisor, panelControllers.servicio
 
 router.get("/facturacion", auth.authAdmin, panelControllers.facturacion);
 
-router.post("/facturacion", auth.authAdmin, panelControllers.facturacionPost);
+router.post("/facturacion", auth.authAdmin, validar.validarFacturacionChain, panelControllers.facturacionPost);
 
 router.get("/facturacion/fabrica", auth.authSupervisor, panelControllers.facturacionFabrica);
 
@@ -189,6 +189,5 @@ router.get("/facturacion/fabrica/botones/editar", auth.authSupervisor, panelCont
 router.post("/facturacion/fabrica/botones/editar", auth.authSupervisor, validar.validarBotonFacturacionChain, panelControllers.facturacionFabricaBotonesUpdate);
 
 router.get("/facturacion/fabrica/botones/eliminar", auth.authSupervisor, panelControllers.facturacionFabricaBotonesEliminar);
-
 
 module.exports = router;

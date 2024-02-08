@@ -1,7 +1,8 @@
-let contador = 1;
+let contador = 0;
 let numerador = 1;
 const itemsfacturacion = document.querySelector("#itemsfacturacion");
 document.querySelector("#fecha").valueAsDate = new Date();
+let formulario = document.querySelector("#nuevaVenta");
 
 let neto = 0;
 let iva10 = 0;
@@ -26,7 +27,7 @@ function crearBotonesRapidos(){
 crearBotonesRapidos();
 // CUIT
 
-function checkCuitInput(e){
+/* function checkCuitInput(e){
     if(e.keyCode === 8 || e.keyCode === 46){
         return;
     }
@@ -41,9 +42,11 @@ function checkCuitNumero(e){
         return;
     }
     if(caracteres !== 11){
-        mostrarError(`Número de CUIT inválido`);
+        mostrarError(`Número de CUIT ${e.target.value} inválido`);
+        document.querySelector("#cuit").value = "";
+        // hacer foco en elemento cuit document.querySelector("#cuit")
     }
-}
+} */
 
 function itemsCreador(cantidad){
     if(isNaN(cantidad)){
@@ -85,7 +88,7 @@ function cargarItem(e){
     medida.innerHTML = producto.fraccionamiento;
     if(producto.fraccionamiento === "kilo"){
         precio.value = "$" + producto.preciokilo;
-        cantidad.setAttribute("step", "0.001")
+        cantidad.setAttribute("step", "0.01")
     } else {
         precio.value = "$" + producto.preciounidad;
         cantidad.removeAttribute("step")
@@ -154,18 +157,20 @@ function calcularItem(e){
 
     subtotalVisible.innerHTML = "$" + calculo;
 
-    let detalle = [item, calculo, producto.iva, producto.codigo, parseFloat(cantidad.value)];
+    let detalle = [parseInt(item), calculo, producto.iva, producto.codigo, parseFloat(cantidad.value)];
 
     calcularTotal(detalle)
 }
 
 function calcularTotal(detalle){
     let itemExistente = detalles.findIndex((item) => item[0] === detalle[0]);
-    if(itemExistente < 0){
-        detalles.push(detalle);
-    } else {
-        detalles.splice(itemExistente, 1);
-        detalles.push(detalle);
+    if(detalle[1] !== 0){
+        if(itemExistente < 0){
+                detalles.push(detalle);
+            } else {
+                detalles.splice(itemExistente, 1);
+                detalles.push(detalle);
+            }
     }
 
     let iva10Acumulador = 0;
@@ -221,16 +226,17 @@ function vaciarItem(e){
 }
 
 function eliminarItem(e){
-    if(contador < 3){
-        return
-    }
     let item = e.target.dataset.item;
     let fila = document.querySelector(`#fila${item}`);
     fila.remove();
-    let itemExistente = detalles.findIndex((dato) => dato[0] === item);
+    let itemExistente = detalles.findIndex((dato) => dato[0] == item);
     detalles.splice(itemExistente, 1);
     contador--;
     calcularTotal([item, 0, 0]);
+    if(contador < 1){
+        itemsCreador(1);
+        return
+    }
 }
 
 function bloquearInput(e){
@@ -264,6 +270,20 @@ function vaciarFormualrio(){
     iva21 = 0;
     total = 0;
     detalles = [];
+
+    document.querySelector("#facturacionDetalles").style.display = "none";
+    formulario.reset();
+    document.querySelector("#fecha").valueAsDate = new Date();
+}
+
+function buscarMismoItem(codigo){
+    let inputs = document.querySelectorAll(".cod");
+    for (let i = 0; i < (contador - 1); i++) {
+        if(inputs[i].value === codigo){
+            // console.log(inputs[i])
+            return inputs[i]
+        }
+    }
 }
 
 function buscarInputVacio(){
@@ -275,27 +295,71 @@ function buscarInputVacio(){
     }
 }
 
-function cargarBotonRapido(e){
-    let idLibre = buscarInputVacio();
-    if(idLibre === undefined){
-        itemsCreador(1);
-        cargarBotonRapido(e);
-        return;
+function buscarInputCargado(){
+    let inputs = document.querySelectorAll(".cod");
+    for (let i = 0; i < (contador - 1); i++) {
+        if(inputs[i].value !== ""){
+            return inputs[i]
+        }
     }
-    let codigo = document.querySelector(`#cod${idLibre.dataset.item}`)
-    codigo.value = e.currentTarget.dataset.codigo;
-    document.querySelector(`#cant${idLibre.dataset.item}`).value = e.currentTarget.dataset.cantidad;
+}
+
+function cargarBotonRapido(e){
+    let itemCargado = buscarMismoItem(e.currentTarget.dataset.codigo);
+    let codigo;
+    let medida;
+    if(itemCargado !== undefined){
+        medida = document.querySelector(`#med${itemCargado.dataset.item}`).innerHTML;
+    }
+    if(itemCargado !== undefined && medida !== "manual"){
+        let cantidadPrevia = parseFloat(document.querySelector(`#cant${itemCargado.dataset.item}`).value);
+        let nuevaCantidad = parseFloat(e.currentTarget.dataset.cantidad);
+        let total = cantidadPrevia + nuevaCantidad
+        document.querySelector(`#cant${itemCargado.dataset.item}`).value = total;
+        codigo = itemCargado
+    } else {
+        let idLibre = buscarInputVacio();
+        if(idLibre === undefined){
+            itemsCreador(1);
+            cargarBotonRapido(e);
+            return;
+        }
+        codigo = document.querySelector(`#cod${idLibre.dataset.item}`);
+        codigo.value = e.currentTarget.dataset.codigo;
+        document.querySelector(`#cant${idLibre.dataset.item}`).value = e.currentTarget.dataset.cantidad;
+    }
     let event = new Event("change");
     codigo.dispatchEvent(event);
 }
 
+function enviarFactura(){
+    if(buscarInputCargado() === undefined){
+        document.querySelector("#facturacionDetalles").style.display = "none";
+        mostrarError("No hay items para facturar");
+        return;
+    }
+    formulario.submit()
+}
+
 // Botones
 
-document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
-document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)});
-document.querySelector("#resetFacturacion").addEventListener("click", vaciarFormualrio);
+/* document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
+document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)}); */
+document.querySelectorAll("#resetFacturacion").forEach((boton) => {
+    boton.addEventListener("click", vaciarFormualrio);
+});
 document.querySelectorAll(".factBotonRapido").forEach((boton) => {
     boton.addEventListener("click", (e) => {cargarBotonRapido(e)})
+});
+document.querySelector("#enviarFacturacion").addEventListener("click", () => {
+    document.querySelector("#facturacionDetalles").style.display = "flex";
+});
+document.querySelector("#confirmarFacturacion").addEventListener("click", () => {enviarFactura()});
+document.querySelector("#tipo").addEventListener("change", (e) => {
+    // console.log(e.target.value)
+    if(e.target.value == "NC"){
+        document.querySelector("#ncSpan").style.display = "flex";
+    }
 })
 
 function eventos(){

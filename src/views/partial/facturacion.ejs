@@ -46,9 +46,58 @@
             </table>
         </span>
         <span>
-            <input type="reset" value="Reiniciar" class="btn btnNaranja" id="resetFacturacion">
-            <input type="submit" value="Facturar" class="btn btnVerde">
+            <!-- <input type="reset" value="Reiniciar" class="btn btnNaranja" id="resetFacturacion"> -->
+            <!-- <input type="submit" value="Facturar" class="btn btnVerde"> -->
+            <span class="btn btnNaranja flexgrow" id="resetFacturacion">Limpiar</span>
+            <span class="btn btnVerde flexgrow" id="enviarFacturacion">Facturar</span>
         </span>
+
+        <div id="facturacionDetalles" style="display: none;">
+            <div class="editor">
+                <span>
+                    <label for="fecha">Fecha</label>
+                    <input type="date" name="fecha" id="fecha">
+                </span>
+                <span>
+                    <label for="tipo">Tipo</label>
+                    <select name="tipo" id="tipo">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="X" selected>X</option>
+                        <option value="NC">NC</option>
+                    </select>
+                </span>
+                <span id="ncSpan" style="display: none;">
+                    <label for="nc">Tipo</label>
+                    <select name="nc" id="nc">
+                        <option value="" selected disabled>-Seleccione un item-</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="X">X</option>
+                    </select>
+                </span>
+                <span>
+                    <label for="formaDePago">Forma de Pago</label>
+                    <select name="formaDePago" id="formaDePago">
+                        <option value="efectivo" selected>Efectivo</option>
+                        <option value="debito">Débito</option>
+                        <option value="credito">Crédito</option>
+                        <option value="transferencia">Transferencia</option>
+                    </select>
+                </span>
+                <span>
+                    <label for="cuit">CUIT</label>
+                    <input type="text" name="cuit" id="cuit">
+                </span>
+                <span>
+                    <span class="btn btnRojo flexgrow" id="resetFacturacion">Cancelar</span>
+                    <span class="btn btnVerde flexgrow" id="confirmarFacturacion">Facturar</span>
+                </span> 
+            </div>
+        </div>
+
         <span>
             <input type="hidden" name="datos" id="datosHide">
             <input type="hidden" name="neto" id="netoHide">
@@ -57,39 +106,12 @@
             <input type="hidden" name="total" id="totalHide">
         </span>
     </form> 
+
     <div id="factBotonesRapidos">
-        
+        <!-- autofill javascript -->
     </div>
 
-    <div id="facturacionDetalles" style="display: none;">
-        <span>
-            <label for="fecha">Fecha</label>
-            <input type="date" name="fecha" id="fecha">
-        </span>
-        <span>
-            <label for="tipo">Tipo</label>
-            <select name="tipo" id="tipo">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="X" selected>X</option>
-                <option value="NC">NC</option>
-            </select>
-        </span>
-        <span>
-            <label for="formaDePago">Forma de Pago</label>
-            <select name="formaDePago" id="formaDePago">
-                <option value="efectivo" selected>Efectivo</option>
-                <option value="debito">Débito</option>
-                <option value="credito">Crédito</option>
-                <option value="transferencia">Transferencia</option>
-            </select>
-        </span>
-        <span>
-            <label for="cuit">CUIT</label>
-            <input type="text" name="cuit" id="cuit">
-        </span>
-    </div>
+    
     <script>
         window.categorias = <%- JSON.stringify(categorias) %>
         window.productos = <%- JSON.stringify(productos) %>

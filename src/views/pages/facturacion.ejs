@@ -1,7 +1,9 @@
+<%- include("../partial/erroresForm")%>
 <div id="backRender" class="factBackRender">
     <%- include("../partial/facturacion",  { productos, categorias }) %>
 </div>
 <script defer src="/script/facturacion.js"></script>
+<script defer src="/script/cuit.js"></script>
 <script>
     window.productos = <%- JSON.stringify(productos) %>
 </script>

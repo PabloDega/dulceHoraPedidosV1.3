@@ -31,6 +31,7 @@
   let fraccionUnidad = "";
   let fraccionDocena = "";
   let fraccionKilo = "";
+  let fraccionManual = "";
   if(data.fraccionamiento == "unidad"){
     fraccionUnidad = "selected";
   }
@@ -40,6 +41,9 @@
   if(data.fraccionamiento == "kilo"){
     fraccionKilo = "selected";
   }
+  if(data.fraccionamiento == "manual"){
+    fraccionManual = "selected";
+  }
   %>
   <span>
     <label for="fraccionamiento">Fraccionamiento</label>
@@ -48,6 +52,7 @@
       <option value="unidad" <%= fraccionUnidad %>>Unidad</option>
       <option value="docena" <%= fraccionDocena %>>Docena</option>
       <option value="kilo" <%= fraccionKilo %>>Kilo</option>
+      <option value="manual" <%= fraccionManual %>>Manual</option>
     </select>
   </span>
   <span>

@@ -13,6 +13,17 @@
         <input type="text" name="nombre" id="nombre" value="<%= data.nombre %>" />
     </span>
     <span>
+        <label for="cuit">CUIT</label>
+        <input type="text" name="cuit" id="cuit" value="<%= data.cuit %>" />
+    </span>
+    <span>
+        <label for="impuestos">Estado Impositivo</label>
+        <select name="impuestos" id="impuestos">
+            <option value="monotributista" <%if(data.impuestos == "monotributista"){%><%="selected"%><%}%>>Monotributista</option>
+            <option value="responsable" <%if(data.impuestos == "responsable"){%><%="selected"%><%}%>>Resposable Inscripto</option>
+        </select>
+    </span>
+    <span>
         <label for="direccion">Dirección</label>
         <input type="text" name="direccion" id="direccion" value="<%= data.direccion %>" />
     </span>
@@ -119,3 +130,5 @@
     <input type="hidden" name="tipo" value="editar">
     <input type="hidden" name="nombreImgOriginal" value="<%= data.img || data.nombreImgOriginal %>">
 </form>
+
+<script defer src="/script/cuit.js"></script>
