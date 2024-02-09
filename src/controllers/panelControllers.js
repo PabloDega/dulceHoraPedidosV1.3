@@ -16,6 +16,8 @@ const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 const productosMiddleware = require(__basedir + "/src/middlewares/productos");
 const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
 const localMiddleware = require(__basedir + "/src/middlewares/local");
+const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
+
 
 const index = (req, res) => {
   res.render(__basedir + "/src/views/pages/panel", {
@@ -869,7 +871,7 @@ const pedidoProduccionEditar = async(req, res) => {
   }
   let locales = await servicesLocal.getLocales();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-  res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
+  return res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
     locales,
     productos,
     pedido,
@@ -1351,19 +1353,47 @@ const facturacionPost = async(req, res) => {
     })
   }
 
-  // Get ultimo numero para tipo de factura y local
-  if(req.body.tipo == "X" || (req.body.tipo == "NC" && req.body.nctipo == "X")){
-    console.log("Fact X");
-    console.log(req.body);
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  if(req.body.tipo == "X" || (req.body.tipo == "NC" && req.body.nc == "X")){
+    let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
+    numeracion = numeracion.length + 1
+    const idFactura = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion)
+    if(req.body.imprimir == "true"){
+      res.redirect(`/panel/facturacion/comprobante?id=${idFactura}`);
+      return
+    }
     return res.redirect("/panel/facturacion");
   } else {
     // enviar req a AFIP
     console.log("ping AFIP");
+    // console.log(req.body);
     return res.redirect("/panel/facturacion");
   }
-  
-  
 }
+
+const facturacionComprobante = async(req, res) => {
+  if(!req.query.id){
+    return res.redirect("/panel/facturacion");
+  } else if(isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/facturacion");
+  }
+  let factura = await servicesFacturacion.getFacturaNF(req.query.id);
+  if(factura.length !== 1){
+    return res.redirect("/panel/facturacion");
+  }
+  factura = factura[0];
+  const local = await servicesLocal.getLocal(factura.local);
+  const productos = await servicesProductos.getProductosLocal();
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(factura.fecha);
+  res.render(__basedir + "/src/views/pages/facturacionComprobante", {
+    factura,
+    local,
+    productos,
+    fecha,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+    layout: __basedir + "/src/views/layouts/comprobante",
+  })}
 
 const facturacionFabrica = async (req, res) => {
   res.render(__basedir + "/src/views/pages/facturacionFabrica", {
@@ -1519,6 +1549,7 @@ module.exports = {
   servicioEliminar,
   facturacion,
   facturacionPost,
+  facturacionComprobante,
   facturacionFabrica,
   facturacionFabricaBotones,
   facturacionFabricaBotonesNuevo,

@@ -14,6 +14,11 @@ if (document.querySelector("#facturacion") != null) {
     .querySelector("#facturacion")
     .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica"));
 }
+if (document.querySelector("#facturacionLocal") != null) {
+  document
+    .querySelector("#facturacionLocal")
+    .addEventListener("click", () => (location.href = "/panel/facturacion"));
+}
 if (document.querySelector("#local") != null) {
   document
     .querySelector("#local")

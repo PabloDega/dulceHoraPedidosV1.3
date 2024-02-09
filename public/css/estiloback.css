@@ -1182,3 +1182,6 @@ footer img {
   font-size: 0.8em;
   margin-top: 0.5em;
 }
+#backRender .editor #btnSenia{
+  display: none;
+}

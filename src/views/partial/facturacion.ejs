@@ -55,6 +55,22 @@
         <div id="facturacionDetalles" style="display: none;">
             <div class="editor">
                 <span>
+                    <label for="vueltoTotal">Total</label>
+                    <div type="text" id="vueltoTotal">$0</div>
+                </span>
+                <span>
+                    <label for="vueltoPago">Pago</label>
+                    <input type="number" id="vueltoPago" min="0">
+                </span>
+                <span>
+                    <label for="vuelto">Vuelto</label>
+                    <div type="number" id="vuelto">$0</div>
+                </span>
+                <span id="btnSenia">
+                    <div class="btn btnNaranja" id="tomarSenia">Tomar seña</div>
+                </span>
+                <hr>
+                <span>
                     <label for="fecha">Fecha</label>
                     <input type="date" name="fecha" id="fecha">
                 </span>
@@ -94,7 +110,8 @@
                 <span>
                     <span class="btn btnRojo flexgrow" id="resetFacturacion">Cancelar</span>
                     <span class="btn btnVerde flexgrow" id="confirmarFacturacion">Facturar</span>
-                </span> 
+                </span>
+                <span class="btn btnVerde flexgrow" id="confirmarFacturacionEImpresion">Facturar e Imprimir</span>
             </div>
         </div>
 
@@ -104,6 +121,7 @@
             <input type="hidden" name="iva10" id="iva10Hide">
             <input type="hidden" name="iva21" id="iva21Hide">
             <input type="hidden" name="total" id="totalHide">
+            <input type="hidden" name="imprimir" id="imprimir" value="false">
         </span>
     </form> 
 

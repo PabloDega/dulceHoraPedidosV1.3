@@ -207,6 +207,7 @@ function mostrarTotal(){
     document.querySelector("#iva10Hide").value = iva10;
     document.querySelector("#iva21Hide").value = iva21;
     document.querySelector("#totalHide").value = total;
+    document.querySelector("#vueltoTotal").innerHTML = "$"+total;
     document.querySelector("#datosHide").value = JSON.stringify(detalles);
 }
 
@@ -259,6 +260,8 @@ function vaciarFormualrio(){
     document.querySelectorAll(".subtotales").forEach((elem) => {
         elem.innerHTML = "$0";
     })
+    document.querySelector("#vuelto").innerHTML = "$0"
+    document.querySelector("#vueltoTotal").innerHTML = "$0"
 
     document.querySelector("#neto").innerHTML = "$0";
     document.querySelector("#iva10").innerHTML = "$0";
@@ -272,6 +275,7 @@ function vaciarFormualrio(){
     detalles = [];
 
     document.querySelector("#facturacionDetalles").style.display = "none";
+    document.querySelector("#btnSenia").style.display = "none";
     formulario.reset();
     document.querySelector("#fecha").valueAsDate = new Date();
 }
@@ -341,6 +345,9 @@ function enviarFactura(){
     formulario.submit()
 }
 
+function registrarSeña(total, pago){
+}
+
 // Botones
 
 /* document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
@@ -353,12 +360,28 @@ document.querySelectorAll(".factBotonRapido").forEach((boton) => {
 });
 document.querySelector("#enviarFacturacion").addEventListener("click", () => {
     document.querySelector("#facturacionDetalles").style.display = "flex";
+    document.querySelector("#vueltoPago").focus();
 });
 document.querySelector("#confirmarFacturacion").addEventListener("click", () => {enviarFactura()});
+document.querySelector("#confirmarFacturacionEImpresion").addEventListener("click", () => {
+    document.querySelector("#imprimir").value = "true";
+    enviarFactura();
+});
 document.querySelector("#tipo").addEventListener("change", (e) => {
     // console.log(e.target.value)
     if(e.target.value == "NC"){
         document.querySelector("#ncSpan").style.display = "flex";
+    }
+})
+document.querySelector("#vueltoPago").addEventListener("change", (e) => {
+    let vuelto = parseFloat(e.target.value) - parseFloat(total);
+    document.querySelector("#vuelto").innerHTML = "$" + vuelto;
+    if(vuelto < 0){
+        document.querySelector("#btnSenia").style.display = "flex";
+        registrarSeña(parseFloat(total), parseFloat(e.target.value));
+    } else {
+        document.querySelector("#btnSenia").style.display = "none";
+
     }
 })
 

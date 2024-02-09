@@ -63,6 +63,39 @@ const deleteBotonFacturacion = async(id) => {
   }
 }
 
+const getFacturasNF = async(local, tipo) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND tipo = '${tipo}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const getFacturaNF = async(id) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE id = '${id}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const insertFacturaNF = async (local, datos, numeracion) => {
+  try {
+    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total) VALUES ("${local.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}")`);
+    return  insert[0].insertId;
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getBotonesFacturacion,
   getBotonesFacturacionTodos,
@@ -70,4 +103,7 @@ module.exports = {
   insertBotonFacturacion,
   updateBotonFacturacion,
   deleteBotonFacturacion,
+  getFacturasNF,
+  getFacturaNF,
+  insertFacturaNF,
 };

@@ -60,23 +60,31 @@
 <% } %>
 <% if(userRol == "admin" ||userRol == "atencion"){ %>
   <div class="backMenu" id="admin">
-  <div class="backCard <%= menu %>" id="stock" style="display: none;">
+  <!-- <div class="backCard <%= //menu %>" id="stock" style="display: none;">
     <img src="/im/backprods.svg" alt="icono stock" />
     <h1>Stock</h1>
   </div>
-  <div class="backCard <%= menu %>" id="pedidos" style="display: none;">
+  <div class="backCard <%= //menu %>" id="pedidos" style="display: none;">
     <img src="/im/backventas.svg" alt="icono pedidos" />
     <h1>Ventas Online</h1>
-  </div>
+  </div> -->
 <% } %>
 <% if(userRol == "admin"){ %>
   <div class="backCard <%= menu %>" id="produccionLocal">
     <img src="/im/backproduccion.svg" alt="icono produccion" />
     <h1>Pedidos Produccion</h1>
   </div>
-  <div class="backCard <%= menu %>" id="actividad" style="display: none;">
+  <div class="backCard <%= menu %>" id="facturacionLocal" style="display: none;">
+    <img src="/im/backventas.svg" alt="icono facturacion" />
+    <h1>Facturacion</h1>
+  </div>
+  <div class="backCard <%= menu %>" id="facturacionLocal" style="display: none;">
+    <img src="/im/backventas.svg" alt="icono facturacion" />
+    <h1>Facturacion Registros</h1>
+  </div>
+  <!-- <div class="backCard <%= //menu %>" id="actividad" style="display: none;">
     <img src="/im/backactividad.svg" alt="icono actividad" />
     <h1>Actividad</h1>
-  </div>
+  </div> -->
 <% } %>
 </div>

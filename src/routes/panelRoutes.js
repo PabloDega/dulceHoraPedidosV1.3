@@ -82,7 +82,7 @@ router.get("/pedidos", panelControllers.pedidos);
 
 router.post("/pedidos", validar.validarPedidoEstadoChain, panelControllers.pedidosEstado);
 
-router.get("/actividad", panelControllers.actividad);
+// router.get("/actividad", panelControllers.actividad);
 
 router.get("/actividadToda", auth.authSupervisor, panelControllers.actividadToda);
 
@@ -175,6 +175,8 @@ router.get("/servicios/eliminar", auth.authSupervisor, panelControllers.servicio
 router.get("/facturacion", auth.authAdmin, panelControllers.facturacion);
 
 router.post("/facturacion", auth.authAdmin, validar.validarFacturacionChain, panelControllers.facturacionPost);
+
+router.get("/facturacion/comprobante", auth.authAdmin, panelControllers.facturacionComprobante);
 
 router.get("/facturacion/fabrica", auth.authSupervisor, panelControllers.facturacionFabrica);
 

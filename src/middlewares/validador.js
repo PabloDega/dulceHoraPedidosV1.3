@@ -377,7 +377,6 @@ const validarBotonFacturacionChain = [
   body("detalle")
     .notEmpty().withMessage("El campo 'detalle' es obligatorio")
     .trim()
-    .escape()
     .isString().withMessage("Formato del campo 'detalle' incorrecto"),
   body("cantidad")
     .notEmpty().withMessage("El campo 'cantidad' es obligatorio")
@@ -442,6 +441,11 @@ const validarFacturacionChain = [
     .trim()
     .escape()
     .isNumeric().withMessage("Formato del campo 'total' incorrecto"),
+  body("imprimir")
+    .notEmpty().withMessage("El campo 'imprimir' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'imprimir' incorrecto"),
 ]
 
 

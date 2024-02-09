@@ -1,0 +1,30 @@
+<div id="comprobante">
+    <%console.log(productos)%>
+    <span style="display: flex; justify-content: center;">
+        <img src="/im/logoDH.png" alt="">
+    </span>
+    <span><h1>"Dulce Hora <%=local.nombre%>"</h1></span>
+    <span><h3><%=factura.fechaevento.toLocaleString("es-AR")%></h3></span>
+    <span><h3>Comprobante Nº <%= factura.numero%></h3></span>
+    <span>Detalle:</span>
+    <table>
+        <tbody>
+            <%factura.detalle.forEach((item) => {
+            let producto = productos.find(prod => prod.codigo === item[3])%>
+            <tr>
+                <td><%=item[0]%></td>
+                <td><%=producto.nombre%></td>
+                <td><%=item[4]%></td>
+                <td>$<%=item[1]%></td>
+            </tr>
+        <%})%>
+        </tbody>
+    </table>
+    <span style="align-self: flex-end;">Total: $<%=factura.total%></span>
+    <span style="text-align: center;"><h3><i>Ticket no válido como factura</i></h3></span>
+</div>
+
+<div id="botonera">
+    <span class="btn btnVerde" id="imprimir">Imprimir y regresar</span>
+    <span class="btn btnNaranja" id="regresar">Regresar</span>
+</div>
