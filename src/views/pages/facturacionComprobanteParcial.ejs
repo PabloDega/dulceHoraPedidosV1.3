@@ -10,15 +10,16 @@
     <span>Detalle:</span>
     <table>
         <tbody>
-            <%factura.detalle.forEach((item) => {
-            let producto = productos.find(prod => prod.codigo === item[3])%>
-            <tr>
-                <td><%=item[0]%></td>
-                <td><%=producto.nombre%></td>
-                <td><%=item[4]%></td>
-                <td>$<%=item[1]%></td>
-            </tr>
-        <%})%>
+            <%let detalle = JSON.parse(factura.detalle);
+            detalle.forEach((item) => {
+                let producto = productos.find(prod => prod.codigo === item[3])%>
+                <tr>
+                    <td><%=item[0]%></td>
+                    <td><%=producto.nombre%></td>
+                    <td><%=item[4]%></td>
+                    <td>$<%=item[1]%></td>
+                </tr>
+            <%})%>
         </tbody>
     </table>
     <span style="align-self: flex-end;">Total: $<%=factura.total%></span>
