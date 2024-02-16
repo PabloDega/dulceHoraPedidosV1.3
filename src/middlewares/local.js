@@ -1,3 +1,5 @@
+const servicesLocal = require(__basedir + "/src/services/local");
+
 const crearObjetoServicios = async (lista, data) => {
   let servicios = {};
   lista.forEach((item) => {
@@ -31,8 +33,24 @@ const crearObjetoDiasEntrega2 = async (data) => {
   return dias;
 }
 
+const filtarServicios = async (local) => {
+  let servicios;
+  if(local == 0){
+    servicios = {}
+  } else {
+    data = await servicesLocal.getLocal(local);
+    if(data === undefined){
+      servicios = {};
+    } else{
+      servicios = JSON.parse(data.servicios);
+    }
+  }
+  return servicios;
+}
+
 module.exports = {
   crearObjetoServicios,
   crearObjetoDiasEntrega,
   crearObjetoDiasEntrega2,
+  filtarServicios,
 };

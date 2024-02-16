@@ -1,0 +1,49 @@
+<h2 id="InputRegistroFacturacion">Facturacion del <input type="date" name="fechaRegFact" id="fechaRegFact" value="<%=fechaHyphen%>"></h2> 
+<div id="contRegistroFact">
+
+    <%if(facturasNF.length > 0){%>
+    <table id="tablaFacturacionLocalRegistros">
+        <thead>
+            <tr>
+                <th>Fecha de factuación</th>
+                <th>Tipo</th>
+                <th>Numero</th>
+                <th>Total</th>
+                <th>Medio de Pago</th>
+                <th>Fecha de emisión</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%  let totalDia = 0;
+            facturasNF.forEach(factura => {
+                if(factura.tipo == "X"){totalDia += factura.total};
+                let fechaFacturacion = new Date(factura.fecha);%>
+            <tr>
+                <td><%= fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%></td>
+                <td><%= factura.tipo %></td>
+                <td><%= factura.numero %></td>
+                <td>$<%= factura.total %></td>
+                <td><%= factura.formaPago %></td>
+                <td><%= factura.fechaevento.toLocaleString("es-AR") %></td>
+
+            </tr>
+        <%}); %>
+        </tbody>
+    </table>
+
+    <div id="resumenRegistroFact">
+        <h3>Resumen</h3>
+        <span>Fecha: <%=fechaNormalizada%></span>
+        <hr>
+        <span>Total de Movimientos: <%=facturasNF.length%></span>
+        <hr>
+        <% let totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(totalDia)%>
+        <span>Venta total: <%= totalFormateado %></span>
+    </div>
+    <%} else {%>
+        <span>No se encuentran registros para la fecha</span>
+    <%};%>
+
+</div>
+
+<script defer src="/script/registroFacturacion.js"></script>

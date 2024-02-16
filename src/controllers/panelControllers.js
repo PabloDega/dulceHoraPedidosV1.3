@@ -19,10 +19,12 @@ const localMiddleware = require(__basedir + "/src/middlewares/local");
 const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
 
 
-const index = (req, res) => {
+const index = async (req, res) => {
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal)
   res.render(__basedir + "/src/views/pages/panel", {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    servicios,
   });
 };
 
@@ -240,8 +242,7 @@ const localEditar = async (req, res) => {
   if(!req.query.id){
     return res.redirect("/panel/local");
   }
-  let id = req.query.id;
-  let data = await servicesLocal.getLocal(id);
+  let data = await servicesLocal.getLocal(req.query.id);
   if(data === undefined){
     return res.redirect("/panel/local");
   }
@@ -705,6 +706,7 @@ const pedidoProduccionLocal = async(req, res) => {
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocales();
   const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/produccion", {
     data,
     categoriasHistoricas,
@@ -717,6 +719,7 @@ const pedidoProduccionLocal = async(req, res) => {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     userLocal: req.session.userLocal,
+    servicios,
   });
 };
 
@@ -785,24 +788,35 @@ const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
 }
 
 const pedidoProduccionNuevo = async (req, res) => {
+  // verificar si el pedido ya está tomado antes de abrir
+  const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
+  const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
+  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
+  if(prodFecha.pedidoEstado !== "abierto" && prodFecha.proximoPedidoEstado !== "abierto" && prodFecha.pedidoEstado !== "demorado" && prodFecha.proximoPedidoEstado !== "demorado"){
+    return res.redirect("/panel/produccion/local")
+  }
+
   const productos = await servicesProduccion.getProductosProduccion();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   let ultimoPedido = await servicesProduccion.getUltimoPedido(req.session.userLocal);
   if(ultimoPedido == undefined){
     ultimoPedido = 0;
   }
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/nuevaProduccion", {
     ultimoPedido,
     productos,
     categorias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    servicios,
   })
 }
 
 const pedidoProduccionInsert = async (req, res) => {
 /*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Nuevo Pedido a Produccion", "");
- */  let pedido = [];
+ */
+  let pedido = [];
   const productos = await servicesProduccion.getProductosProduccion();
   for(dato in req.body){
     if(!isNaN(dato)){
@@ -871,6 +885,7 @@ const pedidoProduccionEditar = async(req, res) => {
   }
   let locales = await servicesLocal.getLocales();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   return res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
     locales,
     productos,
@@ -878,6 +893,7 @@ const pedidoProduccionEditar = async(req, res) => {
     categorias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    servicios,
   })
 }
 
@@ -1354,12 +1370,15 @@ const facturacionPost = async(req, res) => {
   }
 
   const local = await servicesLocal.getLocal(req.session.userLocal);
-  if(req.body.tipo == "X" || (req.body.tipo == "NC" && req.body.nc == "X")){
+  if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
-    numeracion = numeracion.length + 1
-    const idFactura = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion)
-    if(req.body.imprimir == "true"){
+    numeracion = numeracion.length + 1;
+    const idFactura = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion); 
+    if(req.body.imprimir == "true" && req.body.tipo !== "S"){
       res.redirect(`/panel/facturacion/comprobante?id=${idFactura}`);
+      return
+    } else if(req.body.tipo == "S"){
+      res.redirect(`/panel/facturacion/comprobante/parcial?id=${idFactura}`);
       return
     }
     return res.redirect("/panel/facturacion");
@@ -1371,14 +1390,14 @@ const facturacionPost = async(req, res) => {
   }
 }
 
-const facturacionComprobante = async(req, res) => {
-  if(!req.query.id){
+const facturacionComprobante = async (req, res) => {
+  if (!req.query.id) {
     return res.redirect("/panel/facturacion");
-  } else if(isNaN(parseInt(req.query.id))){
+  } else if (isNaN(parseInt(req.query.id))) {
     return res.redirect("/panel/facturacion");
   }
   let factura = await servicesFacturacion.getFacturaNF(req.query.id);
-  if(factura.length !== 1){
+  if (factura.length !== 1) {
     return res.redirect("/panel/facturacion");
   }
   factura = factura[0];
@@ -1393,10 +1412,70 @@ const facturacionComprobante = async(req, res) => {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     layout: __basedir + "/src/views/layouts/comprobante",
-  })}
+  });
+};
+
+const facturacionComprobanteParcial = async (req, res) => {
+  if (!req.query.id) {
+    return res.redirect("/panel/facturacion");
+  } else if (isNaN(parseInt(req.query.id))) {
+    return res.redirect("/panel/facturacion");
+  }
+  let factura = await servicesFacturacion.getFacturaNF(req.query.id);
+  if (factura.length !== 1) {
+    return res.redirect("/panel/facturacion");
+  }
+  factura = factura[0];
+  const local = await servicesLocal.getLocal(factura.local);
+  const productos = await servicesProductos.getProductosLocal();
+  const fecha = await produccionMiddleware.fechaProduccionNormalizada(factura.fecha);
+  res.render(__basedir + "/src/views/pages/facturacionComprobanteParcial", {
+    factura,
+    local,
+    productos,
+    fecha,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+    layout: __basedir + "/src/views/layouts/comprobante",
+  });
+};
 
 const facturacionFabrica = async (req, res) => {
   res.render(__basedir + "/src/views/pages/facturacionFabrica", {
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionRegistros = async (req, res) => {
+  let fecha;
+  if (req.query.fecha && !isNaN(Number(req.query.fecha)) && req.query.fecha.length == 8) {
+    fecha = req.query.fecha;
+  } else {
+    fecha = await facturacionMiddleware.fechaHoy();
+  }
+  if (fecha === undefined) {
+    return res.redirect("/panel");
+  }
+  let fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
+  let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
+  let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fechaHyphen);
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/facturacionLocalRegistros", {
+    facturasNF,
+    fechaNormalizada,
+    fechaHyphen,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+    servicios,
+  })
+};
+
+const facturacionRegistrosSenias = async (req, res) => {
+  let senias = await servicesFacturacion.getSenias();
+  res.render(__basedir + "/src/views/pages/.....", {
+    botonesfacturacion,
+    productos,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -1465,6 +1544,8 @@ const facturacionFabricaBotonesEliminar = async (req, res) => {
   }
   return res.redirect("/panel/facturacion/fabrica/botones");
 }
+
+
 
 
 module.exports = {
@@ -1550,7 +1631,10 @@ module.exports = {
   facturacion,
   facturacionPost,
   facturacionComprobante,
+  facturacionComprobanteParcial,
   facturacionFabrica,
+  facturacionRegistros,
+  facturacionRegistrosSenias,
   facturacionFabricaBotones,
   facturacionFabricaBotonesNuevo,
   facturacionFabricaBotonesInsert,

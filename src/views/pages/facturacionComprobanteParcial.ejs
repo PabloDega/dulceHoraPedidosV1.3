@@ -1,10 +1,12 @@
+<% const resto = parseFloat(factura.total) - parseFloat(factura.senia)%>
 <div id="comprobante">
     <span style="display: flex; justify-content: center;">
         <img src="/im/logoDH.png" alt="">
     </span>
     <span><h1>"Dulce Hora <%=local.nombre%>"</h1></span>
+    <span><h1>-- SEÑA --</h1></span>
     <span><h3><%=factura.fechaevento.toLocaleString("es-AR")%></h3></span>
-    <span><h3>Comprobante Nº <%= factura.numero%></h3></span>
+    <span><h3>Seña Nº <%= factura.numero%></h3></span>
     <span>Detalle:</span>
     <table>
         <tbody>
@@ -20,6 +22,8 @@
         </tbody>
     </table>
     <span style="align-self: flex-end;">Total: $<%=factura.total%></span>
+    <span style="align-self: flex-end;">Seña: $<%=factura.senia%></span>
+    <span style="align-self: flex-end;">Restante: $<%=resto%></span>
     <span style="text-align: center;"><h3><i>Ticket no válido como factura</i></h3></span>
 </div>
 

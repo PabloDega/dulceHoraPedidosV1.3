@@ -1185,3 +1185,36 @@ footer img {
 #backRender .editor #btnSenia{
   display: none;
 }
+#backHome{
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 3em;
+}
+#backHome img{
+  width: 2em;
+}
+#InputRegistroFacturacion input{
+  margin-left: 0.5em;
+  font-size: 1em;
+  border: 0;
+}
+#InputRegistroFacturacion{
+  margin-bottom: 1em;
+}
+#contRegistroFact{
+  display: flex;
+  gap: 2em;
+}
+#resumenRegistroFact{
+  background-color: white;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border-radius: 1em;
+  height: fit-content;
+}

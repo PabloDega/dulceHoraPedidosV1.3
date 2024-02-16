@@ -69,19 +69,26 @@
     <h1>Ventas Online</h1>
   </div> -->
 <% } %>
-<% if(userRol == "admin"){ %>
-  <div class="backCard <%= menu %>" id="produccionLocal">
-    <img src="/im/backproduccion.svg" alt="icono produccion" />
-    <h1>Pedidos Produccion</h1>
-  </div>
-  <div class="backCard <%= menu %>" id="facturacionLocal" style="display: none;">
-    <img src="/im/backventas.svg" alt="icono facturacion" />
-    <h1>Facturacion</h1>
-  </div>
-  <div class="backCard <%= menu %>" id="facturacionLocal" style="display: none;">
-    <img src="/im/backventas.svg" alt="icono facturacion" />
-    <h1>Facturacion Registros</h1>
-  </div>
+<% if(userRol == "admin"){
+      if(servicios.pedidos){%>
+        <div class="backCard <%= menu %>" id="produccionLocal">
+          <img src="/im/backproduccion.svg" alt="icono produccion" />
+          <h1>Pedidos Produccion</h1>
+        </div>
+        <%};
+      if(servicios.facturacion){%>
+        <div class="backCard <%= menu %>" id="facturacionLocal" >
+          <img src="/im/backventas.svg" alt="icono facturacion" />
+          <h1>Facturacion</h1>
+        </div>
+        <div class="backCard <%= menu %>" id="facturacionRegistros" >
+          <img src="/im/backventas.svg" alt="icono facturacion" />
+          <h1>Facturacion Registros</h1>
+        </div>
+        <%};
+        if(!servicios.facturacion && !servicios.pedidos){%>
+          <b>Usted no posee servicios activos, por favor comunicarse con administración</b>
+        <%};%>
   <!-- <div class="backCard <%= //menu %>" id="actividad" style="display: none;">
     <img src="/im/backactividad.svg" alt="icono actividad" />
     <h1>Actividad</h1>

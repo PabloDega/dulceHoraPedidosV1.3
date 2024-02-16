@@ -178,6 +178,12 @@ router.post("/facturacion", auth.authAdmin, validar.validarFacturacionChain, pan
 
 router.get("/facturacion/comprobante", auth.authAdmin, panelControllers.facturacionComprobante);
 
+router.get("/facturacion/comprobante/parcial", auth.authAdmin, panelControllers.facturacionComprobanteParcial);
+
+router.get("/facturacion/registros", auth.authAdmin, panelControllers.facturacionRegistros);
+
+router.get("/facturacion/registros/senias", auth.authAdmin, panelControllers.facturacionRegistrosSenias);
+
 router.get("/facturacion/fabrica", auth.authSupervisor, panelControllers.facturacionFabrica);
 
 router.get("/facturacion/fabrica/botones", auth.authSupervisor, panelControllers.facturacionFabricaBotones);

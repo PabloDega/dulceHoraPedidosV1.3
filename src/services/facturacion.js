@@ -74,6 +74,28 @@ const getFacturasNF = async(local, tipo) => {
   }
 }
 
+const getFacturasNFxfecha = async(local, fecha) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND fecha = '${fecha}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const getSenias = async(local) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND tipo = 'S'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 const getFacturaNF = async(id) => {
   try {
     const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE id = '${id}'`);
@@ -87,7 +109,7 @@ const getFacturaNF = async(id) => {
 
 const insertFacturaNF = async (local, datos, numeracion) => {
   try {
-    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total) VALUES ("${local.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}")`);
+    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total, senia) VALUES ("${local.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}", "${datos.senia}")`);
     return  insert[0].insertId;
   } catch (error) {
     throw error;
@@ -105,5 +127,7 @@ module.exports = {
   deleteBotonFacturacion,
   getFacturasNF,
   getFacturaNF,
+  getFacturasNFxfecha,
   insertFacturaNF,
+  getSenias,
 };

@@ -16,6 +16,7 @@ function crearBotonesRapidos(){
     let contenedor = document.querySelector("#factBotonesRapidos")
     botones.forEach((boton) => {
         let prodInfo = productos.find((prod) => prod.codigo == boton.codigo)
+        if(prodInfo == undefined){return}
         contenedor.innerHTML += `<div class="factBotonRapido" data-codigo="${prodInfo.codigo}" data-cantidad="${boton.cantidad}" style="order: ${boton.orden};">
                 <img src="/${prodInfo.img}">
                 <span class="factBotonTxt"><h1>${prodInfo.nombre}</h1><h2>${boton.detalle}</h2></span>
@@ -346,6 +347,16 @@ function enviarFactura(){
 }
 
 function registrarSeña(total, pago){
+    // cambiar tipo de factura a S, registrar NF
+    // eliminar input select
+    document.querySelector("#tipo").remove();
+    // agregar campo Tipo
+    document.querySelector("#camposOcultos").innerHTML += '<input type="hidden" name="tipo" id="tipoSenia" value="S"></input>';
+    // cargar monto de la seña
+    let montoSenia = document.querySelector("#vueltoPago").value;
+    document.querySelector("#seniaHiden").value = montoSenia;
+    // enviar Formulario
+    formulario.submit()
 }
 
 // Botones
@@ -378,11 +389,15 @@ document.querySelector("#vueltoPago").addEventListener("change", (e) => {
     document.querySelector("#vuelto").innerHTML = "$" + vuelto;
     if(vuelto < 0){
         document.querySelector("#btnSenia").style.display = "flex";
-        registrarSeña(parseFloat(total), parseFloat(e.target.value));
     } else {
         document.querySelector("#btnSenia").style.display = "none";
 
     }
+})
+document.querySelector("#tomarSenia").addEventListener("click", () => {registrarSeña()})
+
+document.querySelector("#backHome").addEventListener("click", () => {
+    window.location.href = "/panel"
 })
 
 function eventos(){

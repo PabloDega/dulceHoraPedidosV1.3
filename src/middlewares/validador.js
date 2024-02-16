@@ -441,6 +441,11 @@ const validarFacturacionChain = [
     .trim()
     .escape()
     .isNumeric().withMessage("Formato del campo 'total' incorrecto"),
+  body("senia")
+    .notEmpty().withMessage("El campo 'senia' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'senia' incorrecto"),
   body("imprimir")
     .notEmpty().withMessage("El campo 'imprimir' es obligatorio")
     .trim()

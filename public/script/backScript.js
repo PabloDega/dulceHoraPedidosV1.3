@@ -502,3 +502,9 @@ if (document.querySelector("#factFabBotonesNuevo") != null) {
     .querySelector("#factFabBotonesNuevo")
     .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica/botones/nuevo"));
 }
+
+if (document.querySelector("#facturacionRegistros") != null) {
+  document
+    .querySelector("#facturacionRegistros")
+    .addEventListener("click", () => (location.href = "/panel/facturacion/registros"));
+}
