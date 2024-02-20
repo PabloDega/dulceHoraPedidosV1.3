@@ -851,23 +851,24 @@ const pedidoProduccionInsert = async (req, res) => {
 
 const pedidoProduccionUpdateEstado = async(req, res) => {
 /*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Cambio de estado de pedido", req.body.estado);
- */  if(req.body.estado == "cancelado"){
+ */if(req.body.estado == "cancelado"){
     await servicesProduccion.deletePedidoProduccion(req.body.id);
     await servicesActividad.insertActividad(req.session.userLocal, req.body.id, req.session.userLog, "Baja de pedido a produccion", `Id de pedido: ${req.body.id}`);
-
     if(req.body.emisor == "fabrica"){
       return res.redirect("/panel/produccion/fabrica");
     } else if(req.body.emisor == "local"){
       return res.redirect("/panel/produccion/local");
     }
-  } else {
+  } else if(req.body.estado == "entregado" && req.session.userLocal == 0){
     await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
     await servicesActividad.insertActividad(req.session.userLocal, req.body.id, req.session.userLog, "Modificacion de pedido a produccion", `Nuevo estado: ${req.body.estado}`);
-    if(req.body.emisor == "fabrica"){
-      return res.redirect("/panel/produccion/fabrica?id=" + req.body.id);
-    } else if(req.body.emisor == "local"){
-      return res.redirect("/panel/produccion/local?id=" + req.body.id);
-    }
+    return res.redirect("/panel/produccion/fabrica");
+  } else if(req.body.emisor == "fabrica" && req.session.userLocal == 0){
+    await servicesProduccion.updateEstadoProduccion(req.body.estado, req.body.id);
+    await servicesActividad.insertActividad(req.session.userLocal, req.body.id, req.session.userLog, "Modificacion de pedido a produccion", `Nuevo estado: ${req.body.estado}`);
+    return res.redirect("/panel/produccion/fabrica?id=" + req.body.id);
+  } else {
+    return res.redirect("/panel");
   }
 }
 
