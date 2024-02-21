@@ -436,6 +436,11 @@ const exportarExcelReporteValorizado = async(req, res) => {
         col++;
     })
 
+    const colLetra = String.fromCharCode(96 + colPrecio + 1)
+    const ultimoTotal = iPedidos-1;
+    const sumarTotales = `=sum(${colLetra}3:${colLetra}${ultimoTotal})`;
+    ws.cell(iPedidos, colPrecio + 1).formula(sumarTotales).style(estiloBorde).style(estiloImporte);
+
     wb.write(`Reporte Valorizado - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }
 

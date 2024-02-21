@@ -97,6 +97,7 @@ if(document.querySelector("#pedidoProduccionEnviar") != null){
         pedidoProduccionCalcTotal();
         localStorage.removeItem("precargaPedidoProduccion");
         if(validarCantidades()){
+            document.querySelector("#cortinaLoad").style.display = "flex";
             document.querySelector("#nuevaProduccion").submit();
         }
     })

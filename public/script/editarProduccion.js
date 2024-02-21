@@ -97,9 +97,11 @@ document.querySelector("#pedidoProduccionUpdate").addEventListener("click", (e) 
     e.preventDefault();
     if(window.minimos){
         if(validarCantidades()){
+            document.querySelector("#cortinaLoad").style.display = "flex";
             document.querySelector("#nuevaProduccion").submit();
         }
     } else {
+        document.querySelector("#cortinaLoad").style.display = "flex";
         document.querySelector("#nuevaProduccion").submit();
     }
 });

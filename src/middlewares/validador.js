@@ -329,11 +329,21 @@ const validarPedidoEstadoChain = [
 ]
 
 const validarStringsChain = [
-  body("**")
-    .notEmpty()
+  body("fecha")
+    .notEmpty().withMessage("Todos los campos son obligatorios")
     .trim()
     .escape()
-    .isString()
+    .isString(),
+  body("minimos")
+    .notEmpty().withMessage("Todos los campos son obligatorios")
+    .trim()
+    .escape()
+    .isString(),
+  body("local")
+    .notEmpty().withMessage("Todos los campos son obligatorios")
+    .trim()
+    .escape()
+    .isString(),
 ]
 
 const validarProduccionUpdateChain = [

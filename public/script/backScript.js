@@ -289,6 +289,7 @@ if (document.querySelector(".pedidosCard") != null) {
 if (document.querySelector(".pedidosProdCard") != null) {
   document.querySelectorAll(".pedidosProdCard").forEach((boton) =>
     boton.addEventListener("click", (e) => {
+      document.querySelector("#cortinaLoad").style.display = "flex";
       let destino = "Local"
       if(e.currentTarget.dataset.lector == "fabrica"){destino = "fabrica"}
       location.href = "/panel/produccion/" + destino + "?id=" + e.currentTarget.dataset.id;
@@ -402,7 +403,8 @@ if((window.location.pathname !== "/panel" && window.location.pathname !== "/logi
 
 if (document.querySelector("#pedidoProdNuevo") != null) {
   document.querySelector("#pedidoProdNuevo").addEventListener("click", () => {
-      location.href = "/panel/produccion/nueva"
+    document.querySelector("#cortinaLoad").style.display = "flex";
+    location.href = "/panel/produccion/nueva"
   });
 }
 
@@ -416,6 +418,7 @@ if (document.querySelector("#verPedidosProduccion") != null) {
 
 if(document.querySelector("#pedidoProduccionModificar") != null){
   document.querySelector("#pedidoProduccionModificar").addEventListener("click", (e) => {
+    document.querySelector("#cortinaLoad").style.display = "flex";
     location.href = "/panel/produccion/editar?id=" + e.target.dataset.id;
   })
 }
@@ -463,12 +466,16 @@ if (document.querySelector(".backListaCategoriaFabricaEliminar") != null) {
 if (document.querySelector("#crearPedidoPesonalizado") != null) {
   document
     .querySelector("#crearPedidoPesonalizado")
-    .addEventListener("click", () => (location.href = "/panel/produccion/personalizado/nuevo"));
+    .addEventListener("click", () => {
+      document.querySelector("#cortinaLoad").style.display = "flex";
+      location.href = "/panel/produccion/personalizado/nuevo";
+    });
 }
 
 if (document.querySelector("#formCancelado") != null) {
   document.querySelector("#formCancelado").addEventListener("submit", (e) => {
       e.preventDefault();
+      
       // console.log("ping")
       confirmarEliminarProduccion(e);
   })
@@ -485,6 +492,8 @@ function confirmarEliminarProduccion(e){
   </div>
 </div>`;
   document.querySelector("#btnEliminar").addEventListener("click", () => {
+    popScreen.innerHTML = "";
+    document.querySelector("#cortinaLoad").style.display = "flex";
     document.querySelector("#formCancelado").submit();
   }
     );
@@ -507,4 +516,28 @@ if (document.querySelector("#facturacionRegistros") != null) {
   document
     .querySelector("#facturacionRegistros")
     .addEventListener("click", () => (location.href = "/panel/facturacion/registros"));
+}
+
+if (document.querySelector("#chatProduccionSend") != null) {
+  document
+    .querySelector("#chatProduccionSend").addEventListener("submit", () => {
+      document.querySelector("#cortinaLoad").style.display = "flex";
+    });
+}
+if (document.querySelector("#formAceptar") != null) {
+  document.querySelector("#formAceptar").addEventListener("submit", () => {
+      document.querySelector("#cortinaLoad").style.display = "flex";
+    });
+}
+if (document.querySelector("#formEntregado") != null) {
+  document.querySelectorAll("#formEntregado").forEach((boton) => {
+    boton.addEventListener("submit", () => {
+      document.querySelector("#cortinaLoad").style.display = "flex";
+    })
+  })
+}
+if (document.querySelector("#nuevoPedidoPersonalizado") != null) {
+  document.querySelector("#nuevoPedidoPersonalizado").addEventListener("submit", () => {
+      document.querySelector("#cortinaLoad").style.display = "flex";
+    });
 }

@@ -387,7 +387,7 @@ footer img {
 .fotosHeader h2{
   font-size: 1.3em;
 }
-#cortina{
+#cortina, .cortina{
   position: fixed;
   top: 0;
   left: 0;
@@ -397,7 +397,7 @@ footer img {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 20;
 }
 #cortina #confirmarEliminar{
   background-color: white;
@@ -1217,4 +1217,48 @@ footer img {
   gap: 0.5em;
   border-radius: 1em;
   height: fit-content;
+}
+.cortina span{
+  display: flex;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  background-color: black;
+  animation-name: cortinaSpan;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+.cortina span #loadingImg{
+  width: 80px;
+  transform: translate(0, -7px);
+  filter: invert(100%);
+  animation-name: loadingImg;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+@keyframes cortinaSpan {
+  0%{
+    box-shadow: 0 0 0 black;
+  }
+  100%{
+    box-shadow: 0 0 20px black;
+  }
+}
+@keyframes loadingImg {
+  0%{
+    transform: rotate(0deg);
+  }
+  90%{
+    transform: rotate(360deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+  
 }
