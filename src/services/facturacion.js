@@ -74,6 +74,17 @@ const getFacturasNF = async(local, tipo) => {
   }
 }
 
+const getFacturasNFTodas = async() => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 const getFacturasNFxfecha = async(local, fecha) => {
   try {
     const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND fecha = '${fecha}'`);
@@ -126,6 +137,7 @@ module.exports = {
   updateBotonFacturacion,
   deleteBotonFacturacion,
   getFacturasNF,
+  getFacturasNFTodas,
   getFacturaNF,
   getFacturasNFxfecha,
   insertFacturaNF,

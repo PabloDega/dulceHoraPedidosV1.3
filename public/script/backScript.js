@@ -500,6 +500,12 @@ function confirmarEliminarProduccion(e){
   document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
 }
 
+if (document.querySelector("#factFabRegistros") != null) {
+  document
+    .querySelector("#factFabRegistros")
+    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica"));
+}
+
 if (document.querySelector("#factFabBotones") != null) {
   document
     .querySelector("#factFabBotones")

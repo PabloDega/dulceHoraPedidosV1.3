@@ -1,0 +1,30 @@
+<h2>Señas</h2>
+
+<%console.log(senias)%>
+
+<table id="facturacionLocalSenias">
+    <thead>
+        <tr>
+            <th>Numero</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Seña</th>
+            <th>Resto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%senias.forEach((seña) => {
+            const totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.total);
+            const señaFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.senia);
+            let resto = seña.total - seña.senia;
+            resto = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(resto);%>
+            <tr>
+                <td><%=seña.numero%></td>
+                <td><%=seña.fecha%></td>
+                <td><%=totalFormateado%></td>
+                <td><%=señaFormateado%></td>
+                <td><%=resto%></td>
+            </tr>
+        <%})%>
+    </tbody>
+</table>

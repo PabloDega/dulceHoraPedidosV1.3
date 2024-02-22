@@ -1260,5 +1260,7 @@ footer img {
   100%{
     transform: rotate(360deg);
   }
-  
+}
+.resumenFacturaciones{
+  font-size: 1.1em;
 }

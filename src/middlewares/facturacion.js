@@ -35,9 +35,36 @@ const fechaNormalizada = async (fecha) => {
     return fechaNormalizada;
 }
 
+const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
+    const facturas = await servicesFacturacion.getFacturasNFTodas();
+    let factucionxLocal = [];
+    locales.forEach((local) => {
+        let datos = {};
+        datos.local = local.nombre;
+        datos.localId = local.id;
+        let facturasLocal = facturas.filter((factura) => factura.local == local.id);
+        facturasLocal = facturasLocal.filter((factura) => factura.fecha == fecha);
+        let total = 0;
+        let operaciones = 0;
+        facturasLocal.forEach((factura) => {
+            if(factura.tipo == "X"){
+                total += factura.total;
+                operaciones++;
+            } else if(factura.tipo == "NC"){
+                total -= factura.total;
+            }
+        });
+        datos.total = total;
+        datos.operaciones = operaciones;
+        factucionxLocal.push(datos);
+    });
+    return factucionxLocal;
+}
+
 module.exports = {
     imprimirTicket,
     fechaHoy,
     fechaHyphen,
     fechaNormalizada,
+    calcularFacturacionxFechaxLocal,
 }

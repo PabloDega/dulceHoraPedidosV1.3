@@ -1,0 +1,23 @@
+<h2 id="InputRegistroFacturacion">Resumen del <input type="date" name="fechaRegFact" id="fechaFactFabrica" value="<%=fechaHyphen%>"></h2> 
+
+<table class="resumenFacturaciones">
+    <thead>
+        <tr>
+            <th>Local</th>
+            <th>Operaciones</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%facturacionDiaria.forEach((local) => {
+            let totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(local.total)%>
+            <tr>
+                <td><%=local.local%></td>
+                <td style="text-align: center;"><%=local.operaciones%></td>
+                <td style="text-align: right;"><%=totalFormateado%></td>
+            </tr>
+        <%})%>
+    </tbody>
+</table>
+
+<script src="/script/registroFacturacionFabrica.js"></script>

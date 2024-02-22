@@ -12,6 +12,7 @@ const getLocales = async () => {
   }
 };
 
+
 const getLocal = async (id) => {
   try {
     const rows = await conectar.query("SELECT * FROM locales WHERE ?", { id });

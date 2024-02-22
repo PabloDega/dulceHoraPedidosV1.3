@@ -48,9 +48,20 @@ const filtarServicios = async (local) => {
   return servicios;
 }
 
+const localesConFacturacion = async (locales) => {
+  let localesConFacturacion = [];
+  locales.forEach((local) => {
+    if(JSON.parse(local.servicios).facturacion){
+      localesConFacturacion.push(local)
+    }
+  });
+  return localesConFacturacion;
+}
+
 module.exports = {
   crearObjetoServicios,
   crearObjetoDiasEntrega,
   crearObjetoDiasEntrega2,
   filtarServicios,
+  localesConFacturacion,
 };

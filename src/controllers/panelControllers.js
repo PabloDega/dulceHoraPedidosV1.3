@@ -1446,7 +1446,26 @@ const facturacionComprobanteParcial = async (req, res) => {
 };
 
 const facturacionFabrica = async (req, res) => {
+  let fecha;
+  if (req.query.fecha && !isNaN(Number(req.query.fecha)) && req.query.fecha.length == 8) {
+    fecha = req.query.fecha;
+  } else {
+    fecha = await facturacionMiddleware.fechaHoy();
+  }
+  if (fecha === undefined) {
+    return res.redirect("/panel");
+  }
+  let fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
+  let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
+  const locales = await servicesLocal.getLocales();
+  const localesConFacturacion = await localMiddleware.localesConFacturacion(locales);
+  const facturacionDiaria = await facturacionMiddleware.calcularFacturacionxFechaxLocal(localesConFacturacion, fechaHyphen)
   res.render(__basedir + "/src/views/pages/facturacionFabrica", {
+    locales,
+    fechaHyphen,
+    fechaNormalizada,
+    localesConFacturacion,
+    facturacionDiaria,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -1477,12 +1496,13 @@ const facturacionRegistros = async (req, res) => {
 };
 
 const facturacionRegistrosSenias = async (req, res) => {
-  let senias = await servicesFacturacion.getSenias();
-  res.render(__basedir + "/src/views/pages/.....", {
-    botonesfacturacion,
-    productos,
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  let senias = await servicesFacturacion.getSenias(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/facturacionLocalSenias", {
+    senias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    servicios,
   })
 }
 
