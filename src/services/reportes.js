@@ -22,7 +22,18 @@ const getCategoriasReporte = async () => {
   }
 };
 
+const insertCategoriasReporte = async (datos) => {
+  try {
+    await conectar.query(`INSERT INTO categoriasreporteplanta (categoria, productos, seccion, orden) VALUES ("${datos.categoria}", "${datos.productos}", "${datos.seccion}", "${datos.orden}")`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
     getReportes,
     getCategoriasReporte,
+    insertCategoriasReporte,
 }

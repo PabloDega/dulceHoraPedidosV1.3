@@ -1311,7 +1311,7 @@ const reportePlantaCategoriasInsert = async (req, res) => {
     })
   };
 
-  // await insert
+  await servicesReportes.insertCategoriasReporte(req.body)
   return res.redirect("/panel/produccion/reportes/categorias");
 }
 

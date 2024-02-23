@@ -3,7 +3,7 @@ let productosDeCategoria = [];
 document.querySelectorAll(".productoFabricaCodigo").forEach((checkbox) => {
     checkbox.addEventListener("change", (e) => {
         if(e.target.checked == true){
-            productosDeCategoria.push(e.target.id);
+            productosDeCategoria.push(parseInt(e.target.id));
             document.querySelector("#inputProductos").value = JSON.stringify(productosDeCategoria);
         } else {
             quitarCodigo(e.target.id);
