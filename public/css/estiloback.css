@@ -1264,3 +1264,27 @@ footer img {
 .resumenFacturaciones{
   font-size: 1.1em;
 }
+#reportePlantaCategorias .nombresProductos{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  max-width: 400px;
+}
+#reportePlantaCategorias .nombreProducto, #AMcategoriaReportePlanta .productosFabrica span{
+  background-color: rgb(62, 62, 62);
+  padding: 0.5em;
+  color: white;
+}
+#AMcategoriaReportePlanta .productosFabrica{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5em;  
+}
+#backRender #AMcategoriaReportePlanta{
+  max-width: 90vw;
+}
+#backRender #AMcategoriaReportePlanta input{
+  max-width: 10em;
+}

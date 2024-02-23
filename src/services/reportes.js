@@ -11,6 +11,18 @@ const getReportes = async (fecha) => {
   }
 };
 
+const getCategoriasReporte = async () => {
+  try {
+    const info = await conectar.query(`SELECT * FROM categoriasreporteplanta`);
+    return info[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
     getReportes,
+    getCategoriasReporte,
 }

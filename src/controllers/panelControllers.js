@@ -1277,6 +1277,44 @@ const reporteValorizado = async(req, res) => {
   });
 }
 
+const reportePlantaCategorias = async (req, res) => {
+  const categorias = await servicesReportes.getCategoriasReporte();
+  const productosFabrica = await servicesProductosFabrica.getProductosFabricaActivos();
+  res.render(__basedir + "/src/views/pages/reportePlantaCategorias", {
+    categorias,
+    productosFabrica,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
+const reportePlantaCategoriasNueva = async (req, res) => {
+  const productosFabrica = await servicesProductosFabrica.getProductosFabricaActivos();
+  res.render(__basedir + "/src/views/pages/nuevaCategoriaReportePlanta", {
+    valoresForm: {},
+    productosFabrica,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
+const reportePlantaCategoriasInsert = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const productosFabrica = await servicesProductosFabrica.getProductosFabricaActivos();
+    return res.render(__basedir + "/src/views/pages/nuevaCategoriaReportePlanta", {
+      errores: errores.array({ onlyFirstError: true }),
+      valoresForm: req.body,
+      productosFabrica,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  };
+
+  // await insert
+  return res.redirect("/panel/produccion/reportes/categorias");
+}
+
 const servicios = async (req, res) => {
   let data = await servicesServicios.getServicios();
   res.render(__basedir + "/src/views/pages/servicios", {
@@ -1647,6 +1685,9 @@ module.exports = {
   reportes,
   reportesSelector,
   reportePlanta,
+  reportePlantaCategorias,
+  reportePlantaCategoriasNueva,
+  reportePlantaCategoriasInsert,
   reportePedidos,
   reporteValorizado,
   servicios,

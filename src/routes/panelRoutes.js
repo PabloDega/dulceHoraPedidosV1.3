@@ -126,6 +126,12 @@ router.get("/produccion/reportes/valorizado", auth.authSupervisor, panelControll
 
 router.post("/produccion/reporte/valorizado/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReporteValorizado);
 
+router.get("/produccion/reportes/categorias", auth.authSupervisor, panelControllers.reportePlantaCategorias);
+
+router.get("/produccion/reportes/categorias/nueva", auth.authSupervisor, panelControllers.reportePlantaCategoriasNueva);
+
+router.post("/produccion/reportes/categorias/nueva", auth.authSupervisor, validar.validarCategoriaReporteChain, panelControllers.reportePlantaCategoriasInsert);
+
 router.get("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoNuevo);
 
 router.post("/produccion/personalizado/nuevo", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionPersonalizadoCrear);

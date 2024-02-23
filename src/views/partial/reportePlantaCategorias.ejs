@@ -1,0 +1,33 @@
+<table id="reportePlantaCategorias">
+    <thead>
+        <tr>
+            <th>Categoría</th>
+            <th>Productos</th>
+            <th>Sección</th>
+            <th>Orden</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%categorias.forEach((categoria) => {
+            let productos = [];
+            categoria.productos.forEach((producto) => {
+                let data = productosFabrica.find((prod) => prod.codigo == producto);
+                productos.push(data);
+            });%>
+            <tr>
+                <td><%=categoria.categoria%></td>
+                <td class="nombresProductos">
+                <%productos.forEach((producto) => {%>
+                    <span class="nombreProducto"><%=producto.nombre%></span>
+                <%})%>
+                </td>
+                <td><%=categoria.seccion%></td>
+                <td><%=categoria.orden%></td>
+                <td class="backListaProdTablaBoton" id="reportePlantaCategoriasEditar" data-id="<%= categoria.id %>">editar</td>
+                <td class="backListaProdTablaBoton" id="reportePlantaCategoriasEliminar" data-id="<%= categoria.id %>" data-tipo="productos">eliminar</td>
+            </tr>
+        <%})%>
+    </tbody>
+</table>

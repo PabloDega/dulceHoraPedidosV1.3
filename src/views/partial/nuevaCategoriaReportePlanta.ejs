@@ -1,0 +1,25 @@
+<form action="" method="post" class="editor" id="AMcategoriaReportePlanta">
+    <h1>Nueva Categoria Reporte Planta</h1>
+    <span>
+        <label for="categoria">Categoría</label>
+        <input type="text" name="categoria" id="categoria" value="<%= valoresForm.categoria %>"/>
+    </span>
+    <span class="productosFabrica">
+        <%productosFabrica.forEach((producto) => {%>
+            <span><input type="checkbox" name="" id="<%=producto.codigo%>" class="productoFabricaCodigo"><%=producto.nombre%></span>
+        <%})%>
+        <input type="hidden" name="productos" id="inputProductos" value="<%= valoresForm.productos %>"/>
+    </span>
+    <span>
+        <label for="seccion">Sección</label>
+        <input type="number" name="seccion" id="seccion" min="0" value="<%= valoresForm.minimo %>">
+    </span>
+    <span>
+        <label for="orden">Orden</label>
+        <input type="number" name="orden" id="orden" min="0" value="<%= valoresForm.orden %>">
+    </span>
+    <span>
+        <input type="submit" value="Crear">
+    </span>
+</form>
+<script defer src="/script/nuevaCategoriaReportePlanta.js"></script>
