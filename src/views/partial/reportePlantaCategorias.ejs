@@ -12,7 +12,8 @@
     <tbody>
         <%categorias.forEach((categoria) => {
             let productos = [];
-            categoria.productos.forEach((producto) => {
+            productosCategoria = JSON.parse(categoria.productos)
+            productosCategoria.forEach((producto) => {
                 let data = productosFabrica.find((prod) => prod.codigo == producto);
                 productos.push(data);
             });%>
