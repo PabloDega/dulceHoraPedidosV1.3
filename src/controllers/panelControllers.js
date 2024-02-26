@@ -704,7 +704,7 @@ const pedidoProduccionLocal = async(req, res) => {
   }
   const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
-  const locales = await servicesLocal.getLocales();
+  const locales = await servicesLocal.getLocalesHistoricos();
   const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/produccion", {
@@ -749,7 +749,7 @@ const pedidoProduccionFabrica = async(req, res) => {
     }
     categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
   }
-  const locales = await servicesLocal.getLocales();
+  const locales = await servicesLocal.getLocalesHistoricos();
   const data = await servicesProduccion.getProduccionFabrica();
   
   // calcular estado del pedido de cada local segun fecha actual
@@ -884,7 +884,7 @@ const pedidoProduccionEditar = async(req, res) => {
   if(req.session.userRol == "admin" && pedido.estado !== "personalizado"){
     return res.redirect("/panel");
   }
-  let locales = await servicesLocal.getLocales();
+  let locales = await servicesLocal.getLocalesHistoricos();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   return res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
@@ -934,7 +934,7 @@ const pedidoProduccionUpdate = async(req, res) => {
 }
 
 const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
-  const locales = await servicesLocal.getLocales();
+  const locales = await servicesLocal.getLocalesHistoricos();
   res.render(__basedir + "/src/views/pages/nuevoPedidoPersonalizado", {
     locales,
     usuario: req.session.userLog,
@@ -1205,11 +1205,13 @@ const reportePlanta = async(req, res) => {
   const productos = await servicesProductosFabrica.getProductosFabrica();
   const data = await reportesMiddleware.reportePlanta(productos, pedidos, req.query.sector);
   const productosDelPedido = await reportesMiddleware.productosDelPedido(productos, data);
+  const categoriasReportePlanta = await servicesReportes.getCategoriasReporte();
   res.render(__basedir + "/src/views/pages/reportePlanta", {
     sector: req.query.sector,
     fecha,
     data,
     categorias,
+    categoriasReportePlanta,
     productos: productosDelPedido,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1227,7 +1229,7 @@ const reportePedidos = async(req, res) => {
     return res.redirect("/panel/produccion/reportes");
   }
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
-  const locales = await servicesLocal.getLocales();
+  const locales = await servicesLocal.getLocalesHistoricos();
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
@@ -1255,7 +1257,7 @@ const reporteValorizado = async(req, res) => {
     return res.redirect("/panel/produccion/reportes");
   }
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
-  const locales = await servicesLocal.getLocales();
+  const locales = await servicesLocal.getLocalesHistoricos();
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
@@ -1495,7 +1497,7 @@ const facturacionFabrica = async (req, res) => {
   }
   let fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
   let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
-  const locales = await servicesLocal.getLocales();
+  const locales = await servicesLocal.getLocalesHistoricos();
   const localesConFacturacion = await localMiddleware.localesConFacturacion(locales);
   const facturacionDiaria = await facturacionMiddleware.calcularFacturacionxFechaxLocal(localesConFacturacion, fechaHyphen)
   res.render(__basedir + "/src/views/pages/facturacionFabrica", {
@@ -1626,6 +1628,7 @@ module.exports = {
   categoriasInsert,
   categoriasUpdate,
   categoriasEliminar,
+  local,
   localEditar,
   localUpdate,
   localNuevo,
@@ -1633,8 +1636,6 @@ module.exports = {
   localEliminar,
   precios,
   preciosUpdate,
-  local,
-  localInsert,
   fotos,
   fotosProductos,
   fotosCategorias,

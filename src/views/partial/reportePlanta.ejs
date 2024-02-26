@@ -1,22 +1,75 @@
 <h1>Reporte de Planta</h1>
 <h2>Sector: <%= sector %> - Fecha: <%= fecha %></h2>
-<table id="tablaReportePlanta">
-    <tbody>
+    <%if(sector === "panificado"){
+        let secciones = new Set();
+        categoriasReportePlanta.forEach((categoria) => {
+            secciones.add(categoria.seccion);
+        })
+        secciones = Array.from(secciones);
+        secciones.sort();
+        secciones.forEach((dato) => {%>
+        <table id="tablaReportePlanta">
+            <tbody>
+                <tr>
+                    <th class="categoriaTabla"><%= fecha %></th>
+                    <th>Total</th>
+                </tr>
+            <%categoriaDeSeccion = categoriasReportePlanta.filter((cat) => cat.seccion == dato);
+            let ordenado = new Set();
+            categoriaDeSeccion.forEach((categoria) => {
+                ordenado.add(categoria.orden);
+            })
+            ordenado = Array.from(ordenado)
+            ordenado.sort();
+            ordenado.forEach((orden) => {
+                categoriasEnOrden = categoriaDeSeccion.filter((categoria) => categoria.orden === orden)
+                categoriasEnOrden.forEach((categoria) => {
+                    // let productos = JSON.parse(categoria.productos);
+                    let codigos = categoria.productos;
+                    let pedido = [];
+                    codigos.forEach((codigo) => {
+                        let pedidoDelCodigo = productos.filter((prod) => prod.codigo == codigo);
+                        if(pedidoDelCodigo.length !== 1){
+                            return
+                        } else {
+                            pedido.push(pedidoDelCodigo[0])
+                        };
+                    })
+                    if(pedido.length > 0){%>
+                        <tr><th colspan="2" class="categoriaTabla"><%=categoria.categoria%></th></tr>
+                        <%pedido.forEach((item) => {%>
+                            <tr>
+                                <td><%=item.nombre%></td>
+                                <td><%=item.cantidad%></td>
+                            </tr>
+                        <%})
+                    } else {
+                        return;
+                    }
+                });
+            });
+        });%>
+            </tbody>
+        </table>
+        <%} else {%>
+        <table id="tablaReportePlanta">
+            <tbody>
         <%  categorias.forEach((categoria) => {
             let productosDeCategoria = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
             if(productosDeCategoria.length == 0){ return }%>
-            <tr>
-                <th colspan="2" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
-            </tr>      
-        <%  productosDeCategoria.forEach((producto) => { %>
+                <tr>
+                    <th colspan="2" class="categoriaTabla"><%= categoria.categoriaProduccion %></th>
+                </tr>      
+            <%  productosDeCategoria.forEach((producto) => { %>
                 <tr>
                     <td><%= producto.nombre %></td>
                     <td><%= producto.cantidad %></td>
                 </tr>
-        <%    });
-        }) %>
-    </tbody>
-</table>
+            <%})})%>
+            </tbody>
+        </table>
+        <%} %>
+    
 <form id="exportarExcel" method="post" action="/panel/produccion/reporte/planta/exportar/excel">
     <input type="hidden" name="fecha" value="<%= fecha %>">
     <input type="hidden" name="sector" value="<%= sector %>">

@@ -8,6 +8,7 @@ const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
+    console.log(pedido)
     const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     // const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(req.body.pedido, productos);
@@ -68,13 +69,14 @@ const exportarExcelProduccion = async(req, res) => {
 
     categorias.forEach((categoria) => {
         let prodFiltrados = [];
-        ws.cell(iProductos, 1, iProductos, 6, true).string(categoria.categoriaProduccion).style(estiloNegro);
-        iProductos++;
         productos.forEach((producto) => {
             if(producto.categoria == categoria.categoriaProduccion){
                 prodFiltrados.push(producto)
             }
         })
+        if(prodFiltrados.length === 0){return}
+        ws.cell(iProductos, 1, iProductos, 6, true).string(categoria.categoriaProduccion).style(estiloNegro);
+        iProductos++;
         prodFiltrados.forEach((producto) => {
             let prodPedido = pedido.find((item) => item[1] == producto.id)
             let pedidoPrecio = 0;
@@ -159,22 +161,72 @@ const exportarExcelReportePlanta = async (req, res) => {
     ws.column(1).setWidth(35);
     ws.column(2).setWidth(5);
 
-    ws.cell(1, 1).date(new Date(fecha)).style(estiloNegro).style({font: {size: 16,}});
-    ws.cell(1, 2).string("Total");
-
-    let iProductos = 2
-    categorias.forEach((categoria) => {
-        let prodFiltrados = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
-        if(prodFiltrados.length > 0){
-            ws.cell(iProductos, 1, iProductos, 2, true).string(categoria.categoriaProduccion).style(estiloNegro);
+    if(req.body.sector === "panificado"){
+        const categoriasReportePlanta = await servicesReportes.getCategoriasReporte();
+        let secciones = new Set();
+        categoriasReportePlanta.forEach((categoria) => {
+            secciones.add(categoria.seccion);
+        })
+        secciones = Array.from(secciones);
+        secciones.sort();
+        let iProductos = 1
+        secciones.forEach((dato) => {
+            ws.cell(iProductos, 1).date(new Date(fecha)).style(estiloNegro).style({font: {size: 16,}});
+            ws.cell(iProductos, 2).string("Total");
             iProductos++;
-            prodFiltrados.forEach((producto) => {
-                ws.cell(iProductos, 1).string(producto.nombre).style(estiloBorde);
-                ws.cell(iProductos, 2).number(producto.cantidad).style(estiloCentrado).style(estiloBorde);
-                iProductos++;
+            categoriaDeSeccion = categoriasReportePlanta.filter((cat) => cat.seccion == dato);
+            let ordenado = new Set();
+            categoriaDeSeccion.forEach((categoria) => {
+                ordenado.add(categoria.orden);
             })
-        }
-    })
+            ordenado = Array.from(ordenado)
+            ordenado.sort();
+            ordenado.forEach((orden) => {
+                categoriasEnOrden = categoriaDeSeccion.filter((categoria) => categoria.orden === orden)
+                categoriasEnOrden.forEach((categoria) => {
+                    // let productos = JSON.parse(categoria.productos);
+                    let codigos = categoria.productos;
+                    let pedido = [];
+                    codigos.forEach((codigo) => {
+                        let pedidoDelCodigo = productos.filter((prod) => prod.codigo == codigo);
+                        if(pedidoDelCodigo.length !== 1){
+                            return
+                        } else {
+                            pedido.push(pedidoDelCodigo[0])
+                        };
+                    })
+                    if(pedido.length > 0){
+                        ws.cell(iProductos, 1, iProductos, 2, true).string(categoria.categoria).style(estiloNegro);
+                        iProductos++;
+                        pedido.forEach((item) => {
+                            ws.cell(iProductos, 1).string(item.nombre).style(estiloBorde);
+                            ws.cell(iProductos, 2).number(item.cantidad).style(estiloCentrado).style(estiloBorde);
+                            iProductos++;
+                        })
+                    } else {
+                        return;
+                    }
+                });
+            });
+            iProductos++;
+        });
+    } else {
+        ws.cell(1, 1).date(new Date(fecha)).style(estiloNegro).style({font: {size: 16,}});
+        ws.cell(1, 2).string("Total");
+        let iProductos = 2
+        categorias.forEach((categoria) => {
+            let prodFiltrados = productos.filter((producto) => producto.categoria == categoria.categoriaProduccion);
+            if(prodFiltrados.length > 0){
+                ws.cell(iProductos, 1, iProductos, 2, true).string(categoria.categoriaProduccion).style(estiloNegro);
+                iProductos++;
+                prodFiltrados.forEach((producto) => {
+                    ws.cell(iProductos, 1).string(producto.nombre).style(estiloBorde);
+                    ws.cell(iProductos, 2).number(producto.cantidad).style(estiloCentrado).style(estiloBorde);
+                    iProductos++;
+                });
+            };
+        });
+    };
 
     wb.write(`Reporte de Planta - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }

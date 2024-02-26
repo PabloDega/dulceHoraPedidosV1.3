@@ -3,6 +3,17 @@ const { conectar } = require(__basedir + "/src/config/dbConnection");
 
 const getLocales = async () => {
   try {
+    const rows = await conectar.query("SELECT * FROM locales WHERE visible = 'true'");
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getLocalesHistoricos = async () => {
+  try {
     const rows = await conectar.query("SELECT * FROM locales");
     return rows[0];
   } catch (error) {
@@ -57,7 +68,8 @@ const updateLocal = async(datos, serviciosActivos, diasEntrega) => {
 
 const deleteLocal = async(id) => {
   try {
-    await conectar.query(`DELETE FROM locales WHERE id = "${id}"`);
+    // await conectar.query(`DELETE FROM locales WHERE id = "${id}"`);
+    await conectar.query(`UPDATE locales SET visible = 'false' WHERE id = '${id}'`);
   } catch (error) {
     throw error;
   } finally {
@@ -77,6 +89,7 @@ const updateStock = async(datos, local) => {
 
 module.exports = {
   getLocales,
+  getLocalesHistoricos,
   getLocal,
   getLocalesFront,
   insertLocal,
