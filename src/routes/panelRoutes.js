@@ -204,4 +204,6 @@ router.post("/facturacion/fabrica/botones/editar", auth.authSupervisor, validar.
 
 router.get("/facturacion/fabrica/botones/eliminar", auth.authSupervisor, panelControllers.facturacionFabricaBotonesEliminar);
 
+// router.get("/facturacion/checkAFIP", auth.authAdmin, panelControllers.facturacionCheckAfip);
+
 module.exports = router;

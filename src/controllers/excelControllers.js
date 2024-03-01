@@ -71,7 +71,7 @@ const exportarExcelProduccion = async(req, res) => {
         let prodFiltrados = [];
         productos.forEach((producto) => {
             if(producto.categoria == categoria.categoriaProduccion){
-                prodFiltrados.push(producto)
+                prodFiltrados.push(producto);
             }
         })
         if(prodFiltrados.length === 0){return}

@@ -14,10 +14,8 @@
             </tr>
         </thead>
         <tbody>
-        <%  let totalDia = 0;
-            facturasNF.forEach(factura => {
-                if(factura.tipo == "X"){totalDia += factura.total};
-                let fechaFacturacion = new Date(factura.fecha);%>
+        <%facturasNF.forEach(factura => {
+            let fechaFacturacion = new Date(factura.fecha);%>
             <tr>
                 <td><%= fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%></td>
                 <td><%= factura.tipo %></td>
@@ -25,21 +23,37 @@
                 <td>$<%= factura.total %></td>
                 <td><%= factura.formaPago %></td>
                 <td><%= factura.fechaevento.toLocaleString("es-AR") %></td>
-
             </tr>
         <%}); %>
         </tbody>
     </table>
+    <span>
 
-    <div id="resumenRegistroFact">
-        <h3>Resumen</h3>
-        <span>Fecha: <%=fechaNormalizada%></span>
-        <hr>
-        <span>Total de Movimientos: <%=facturasNF.length%></span>
-        <hr>
-        <% let totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(totalDia)%>
-        <span>Venta total: <%= totalFormateado %></span>
-    </div>
+        <div id="resumenRegistroFact">
+            <h3>Resumen</h3>
+            <span>Fecha: <%=fechaNormalizada%></span>
+            <hr>
+            <span>Total de operaciones: <%=facturasNF.length%></span>
+            <hr>
+            <span>Venta total: <%= resumen.totalDia %></span>
+            <hr>
+            <span>Ticket promedio: <%=resumen.promedio%></span>
+        </div>
+        <br>
+        <div id="resumenRegistroFact">
+            <h3>Distribución</h3>
+            <span>Efectivo: <%=resumen.totalEfectivo%></span>
+            <hr>
+            <span>Débito: <%=resumen.totalDebito%></span>
+            <hr>
+            <span>Crédito: <%=resumen.totalCredito%></span>
+            <hr>
+            <span>Tranf. NB: <%=resumen.totalNB%></span>
+        </div>
+
+    </span>
+    
+
     <%} else {%>
         <span>No se encuentran registros para la fecha</span>
     <%};%>

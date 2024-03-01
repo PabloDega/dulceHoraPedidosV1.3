@@ -6,15 +6,22 @@
             <th>Local</th>
             <th>Operaciones</th>
             <th>Total</th>
+            <th>Promedio</th>
         </tr>
     </thead>
     <tbody>
-        <%facturacionDiaria.forEach((local) => {
-            let totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(local.total)%>
+        <%facturacionDiaria.sort((a, b) => b.operaciones - a.operaciones)
+        facturacionDiaria.forEach((local) => {
+            let promedio = local.total / local.operaciones;
+            if(isNaN(promedio)){promedio = 0};
+            let totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(local.total);
+            promedio = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(promedio);%>
+
             <tr>
                 <td><%=local.local%></td>
                 <td style="text-align: center;"><%=local.operaciones%></td>
                 <td style="text-align: right;"><%=totalFormateado%></td>
+                <td style="text-align: right;"><%=promedio%></td>
             </tr>
         <%})%>
     </tbody>

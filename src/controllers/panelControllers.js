@@ -9,6 +9,7 @@ const servicesProduccion = require(__basedir + "/src/services/produccion");
 const servicesReportes = require(__basedir + "/src/services/reportes");
 const servicesServicios = require(__basedir + "/src/services/servicios");
 const servicesFacturacion = require(__basedir + "/src/services/facturacion");
+const servicesAfip = require(__basedir + "/src/services/afip");
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
@@ -1524,8 +1525,10 @@ const facturacionRegistros = async (req, res) => {
   let fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
   let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
   let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fechaHyphen);
+  const resumen = await facturacionMiddleware.crearResumenVistaLocal(req.session.userLocal, fechaHyphen)
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/facturacionLocalRegistros", {
+    resumen,
     facturasNF,
     fechaNormalizada,
     fechaHyphen,
@@ -1610,7 +1613,13 @@ const facturacionFabricaBotonesEliminar = async (req, res) => {
   return res.redirect("/panel/facturacion/fabrica/botones");
 }
 
-
+const facturacionCheckAfip = async (req, res) => {
+  const estado = servicesAfip.checkDummy();
+  res.render(__basedir + "/src/views/pages/facturacionCheckAfip", {
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
 
 
 module.exports = {
@@ -1708,4 +1717,5 @@ module.exports = {
   facturacionFabricaBotonesEditar,
   facturacionFabricaBotonesUpdate,
   facturacionFabricaBotonesEliminar,
+  facturacionCheckAfip,
 };

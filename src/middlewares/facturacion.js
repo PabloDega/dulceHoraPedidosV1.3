@@ -61,10 +61,72 @@ const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
     return factucionxLocal;
 }
 
+const crearResumenVistaLocal = async (local, fecha) => {
+    let facturasNF = await servicesFacturacion.getFacturasNFxfecha(local, fecha);
+
+    let totalDia = 0;
+    let totalNF = 0;
+    let totalEfectivo = 0;
+    let totalDebito = 0;
+    let totalCredito = 0;
+    let totalNB = 0;
+    let totalFiscal = 0;
+    let contadorOperaciones = 0;
+
+    facturasNF.forEach((factura) => {
+        if(factura.tipo === "X"){
+            totalDia += factura.total;
+            totalNF += factura.total;
+            contadorOperaciones++;
+        };
+        switch (factura.formaPago) {
+            case "efectivo":
+                totalEfectivo += factura.total;
+                break;
+            case "debito":
+                totalDebito += factura.total;
+                break;
+            case "credito":
+                totalCredito += factura.total;
+                break;
+            case "transferencia":
+                totalNB += factura.total;
+                break;
+            default:
+                break;
+        }
+    });
+
+    let promedio = totalDia / contadorOperaciones
+
+    let resumen = {
+        totalDia: monetarizar(totalDia),
+        totalNF: monetarizar(totalNF),
+        totalEfectivo: monetarizar(totalEfectivo),
+        totalDebito: monetarizar(totalDebito),
+        totalCredito: monetarizar(totalCredito),
+        totalNB: monetarizar(totalNB),
+        contadorOperaciones,
+        promedio: monetarizar(promedio),
+    }
+    return resumen;
+}
+
+function monetarizar(valor){
+    valor = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(valor);
+    return valor;
+}
+
+const checkDummy = async () => {
+    
+}
+
 module.exports = {
     imprimirTicket,
     fechaHoy,
     fechaHyphen,
     fechaNormalizada,
     calcularFacturacionxFechaxLocal,
+    crearResumenVistaLocal,
+    checkDummy,
 }
