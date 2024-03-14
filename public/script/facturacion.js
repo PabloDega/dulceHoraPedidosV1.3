@@ -5,7 +5,9 @@ document.querySelector("#fecha").valueAsDate = new Date();
 let formulario = document.querySelector("#nuevaVenta");
 
 let neto = 0;
+let netoiva10 = 0;
 let iva10 = 0;
+let netoiva21 = 0;
 let iva21 = 0;
 let total = 0;
 let detalles = [];
@@ -173,24 +175,30 @@ function calcularTotal(detalle){
                 detalles.push(detalle);
             }
     }
-
+    let netoiva10Acumulador = 0;
     let iva10Acumulador = 0;
+    let netoiva21Acumulador = 0;
     let iva21Acumulador = 0;
     let totalAcumulador = 0;
 
     detalles.forEach((item) => {
         totalAcumulador += item[1]
         if(item[2] == 105){
-            let valor = 1 + (item[2] / 1000)
-            iva10Acumulador += item[1] - (item[1] / valor)
+            // let valor = (item[2] / 1000)
+            netoiva10Acumulador += item[1];
+            // iva10Acumulador += item[1] - (item[1] / valor) que es esto???
+            iva10Acumulador += item[1] * (item[2] / 1000)
         } else if(item[2] == 210){
-            let valor = 1 + (item[2] / 1000)
-            iva21Acumulador += item[1] - (item[1] / valor)
+            // let valor = 1 + (item[2] / 1000);
+            netoiva21Acumulador += item[1];
+            iva21Acumulador += item[1] * (item[2] / 1000)
         }
     })
 
     total = Math.round(totalAcumulador*100)/100;
+    netoiva10 = Math.round(netoiva10Acumulador*100)/100;
     iva10 = Math.round(iva10Acumulador*100)/100;
+    netoiva21 = Math.round(netoiva21Acumulador*100)/100;
     iva21 = Math.round(iva21Acumulador*100)/100;
     neto = totalAcumulador - iva10Acumulador - iva21Acumulador;
     neto = Math.round(neto*100)/100;
@@ -205,7 +213,9 @@ function mostrarTotal(){
     document.querySelector("#total").innerHTML = "$" + total;
 
     document.querySelector("#netoHide").value = neto;
+    document.querySelector("#netoiva10Hide").value = netoiva10;
     document.querySelector("#iva10Hide").value = iva10;
+    document.querySelector("#netoiva21Hide").value = netoiva21;
     document.querySelector("#iva21Hide").value = iva21;
     document.querySelector("#totalHide").value = total;
     document.querySelector("#vueltoTotal").innerHTML = "$"+total;
@@ -268,6 +278,15 @@ function vaciarFormualrio(){
     document.querySelector("#iva10").innerHTML = "$0";
     document.querySelector("#iva21").innerHTML = "$0";
     document.querySelector("#total").innerHTML = "$0";
+
+    document.querySelector("#netoHide").value = 0;
+    document.querySelector("#netoiva10Hide").value = 0;
+    document.querySelector("#iva10Hide").value = 0;
+    document.querySelector("#netoiva21Hide").value = 0;
+    document.querySelector("#iva21Hide").value = 0;
+    document.querySelector("#totalHide").value = 0;
+    document.querySelector("#vueltoTotal").innerHTML = "$"+0;
+    document.querySelector("#datosHide").value = "";
 
     neto = 0;
     iva10 = 0;
