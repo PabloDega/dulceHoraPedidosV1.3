@@ -1429,9 +1429,13 @@ const facturacionPost = async(req, res) => {
     }
     return res.redirect("/panel/facturacion");
   } else {
+    // ajustar req.body para API
+    let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local);
     // enviar req a AFIP
+    let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos))) 
+    // Grabar en BBDD
+    
     console.log("ping AFIP");
-    // console.log(req.body);
     return res.redirect("/panel/facturacion");
   }
 }

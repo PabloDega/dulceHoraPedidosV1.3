@@ -133,6 +133,7 @@ const validarLocalesChain = [
     .notEmpty().withMessage("El campo 'Nombre' es obligatorio")
     .isString().withMessage("Formato incorrecto, reingresar datos"),
   body("cuit")
+    
     .trim()
     .escape()
     .notEmpty().withMessage("El campo 'cuit' es obligatorio")
@@ -142,6 +143,11 @@ const validarLocalesChain = [
     .escape()
     .notEmpty().withMessage("El campo 'impuestos' es obligatorio")
     .isString().withMessage("Formato incorrecto, reingresar datos"),
+  body("ptoventa")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'pto de venta' es obligatorio")
+    .isNumeric().withMessage("Formato incorrecto, reingresar datos"),
   body("direccion")
     .optional({ values: "falsy" })
     .trim()

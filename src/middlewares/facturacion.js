@@ -1,5 +1,7 @@
 const servicesFacturacion = require(__basedir + "/src/services/facturacion");
 
+const axios = require('axios');
+
 const imprimirTicket = async (idFactura) => {
     console.log(factura)
 }
@@ -121,6 +123,47 @@ const checkDummy = async () => {
     
 }
 
+const crearReqAPIWSFE = async (body, local) => {
+    let datos = {};
+    datos.cuit = local.cuit;
+    datos.punto = local.ptoventa;
+    datos.tipo = body.tipo;
+    datos.importe = body.total;
+    datos.neto = body.neto;
+    datos.iva10 = body.iva10;
+    datos.baseiva10 = body.netoiva10;
+    datos.iva21 = body.iva21;
+    datos.baseiva21 = body.netoiva21;
+    datos.total = body.total;
+    datos.cuitR = body.cuitR;
+    return datos
+}
+
+const fetchAPIWSFE = async (data) => {
+  let CAE;
+  data = new URLSearchParams(data);
+  const URL = `http://localhost:4004/wsfe/solicitarCAE/api`;
+    try {
+        const respuesta = await axios.post(URL, data);
+        CAE = respuesta.data;
+        console.log(respuesta.data);
+    } catch (error) {
+        console.log(error)
+        CAE = error;
+    }
+  
+/*     .then(function (response) {
+      CAE = response;
+      console.log(response);
+    })
+    .catch(function (error) {
+      CAE = "error";
+      console.log(error);
+    }); */
+
+  return CAE;
+}; 
+
 module.exports = {
     imprimirTicket,
     fechaHoy,
@@ -129,4 +172,6 @@ module.exports = {
     calcularFacturacionxFechaxLocal,
     crearResumenVistaLocal,
     checkDummy,
+    crearReqAPIWSFE,
+    fetchAPIWSFE,
 }

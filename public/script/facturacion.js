@@ -60,7 +60,7 @@ function itemsCreador(cantidad){
         fila.setAttribute("id", `fila${numerador}`)
         fila.innerHTML = `<td><input type="text" id="cod${numerador}" class="cod" data-item="${numerador}"></td>
             <td id="nom${numerador}" class="nombres"></td>
-            <td><input type="number" id="cant${numerador}" value="0" class="cant" data-item="${numerador}" min="0"></td>
+            <td><input type="number" id="cant${numerador}" value="0" class="cant" data-item="${numerador}" min="1"></td>
             <td id="med${numerador}" class="medidas"></td>
             <td><input type="text" id="precio${numerador}" data-item="${numerador}" value="$0" class="precio tablaCeldaNumero"></td>
             <td id="subVer${numerador}" class="subtotales tablaCeldaNumero">$0</td>
@@ -182,16 +182,16 @@ function calcularTotal(detalle){
     let totalAcumulador = 0;
 
     detalles.forEach((item) => {
+        console.log(item)
         totalAcumulador += item[1]
         if(item[2] == 105){
-            // let valor = (item[2] / 1000)
-            netoiva10Acumulador += item[1];
-            // iva10Acumulador += item[1] - (item[1] / valor) que es esto???
-            iva10Acumulador += item[1] * (item[2] / 1000)
+            let neto = item[1] / (1 + (item[2] / 1000));
+            netoiva10Acumulador += neto;
+            iva10Acumulador += neto * (item[2] / 1000);
         } else if(item[2] == 210){
-            // let valor = 1 + (item[2] / 1000);
-            netoiva21Acumulador += item[1];
-            iva21Acumulador += item[1] * (item[2] / 1000)
+            let neto = item[1] / (1 + (item[2] / 1000));
+            netoiva21Acumulador += neto;
+            iva21Acumulador += neto * (item[2] / 1000);
         }
     })
 
