@@ -1,7 +1,7 @@
 <h2 id="InputRegistroFacturacion">Facturacion del <input type="date" name="fechaRegFact" id="fechaRegFact" value="<%=fechaHyphen%>"></h2> 
 <div id="contRegistroFact">
 
-    <%if(facturasNF.length > 0){%>
+    <%if(facturas.length > 0){%>
     <table id="tablaFacturacionLocalRegistros">
         <thead>
             <tr>
@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-        <%facturasNF.forEach(factura => {
+        <%facturas.forEach(factura => {
             let fechaFacturacion = new Date(factura.fecha);%>
             <tr>
                 <td><%= fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%></td>
@@ -33,7 +33,7 @@
             <h3>Resumen</h3>
             <span>Fecha: <%=fechaNormalizada%></span>
             <hr>
-            <span>Total de operaciones: <%=facturasNF.length%></span>
+            <span>Total de operaciones: <%=facturas.length%></span>
             <hr>
             <span>Venta total: <%= resumen.totalDia %></span>
             <hr>
@@ -49,6 +49,13 @@
             <span>Crédito: <%=resumen.totalCredito%></span>
             <hr>
             <span>Tranf. NB: <%=resumen.totalNB%></span>
+        </div>
+        <br>
+        <div id="resumenRegistroFact">
+            <h3>Registro</h3>
+            <span>Total con CAE: <%=resumen.totalCAE%></span>
+            <hr>
+            <span>Total sin CAE: <%=resumen.totalNF%></span>
         </div>
 
     </span>

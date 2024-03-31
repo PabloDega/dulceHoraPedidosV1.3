@@ -1433,9 +1433,14 @@ const facturacionPost = async(req, res) => {
     let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local);
     // enviar req a AFIP
     let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos))) 
-    // Grabar en BBDD
-    
-    console.log("ping AFIP");
+    // check si hay .error en el objeto de respuesta
+    if(CAE.error){
+      console.log("Error detectado en CAE" + CAE.error);
+      // Crear vista de error
+    } else {
+      // Grabar en BBDD obj datos y CAE
+      await servicesFacturacion.insertFacturaConCAE(CAE, datos, req.body);
+    }
     return res.redirect("/panel/facturacion");
   }
 }
@@ -1529,11 +1534,14 @@ const facturacionRegistros = async (req, res) => {
   let fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
   let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
   let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fechaHyphen);
-  const resumen = await facturacionMiddleware.crearResumenVistaLocal(req.session.userLocal, fechaHyphen)
+  let facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fechaHyphen);
+  let facturas = facturasNF.concat(facturasCAE);
+  facturas.sort((a, b) => a.fechaevento - b.fechaevento);
+  const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas)
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/facturacionLocalRegistros", {
     resumen,
-    facturasNF,
+    facturas,
     fechaNormalizada,
     fechaHyphen,
     usuario: req.session.userLog,

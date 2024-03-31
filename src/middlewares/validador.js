@@ -493,6 +493,8 @@ const validarCategoriaReporteChain = [
 ]
 
 
+
+
 module.exports = {
   validarInput,
   validarNuevaCategoriaChain,

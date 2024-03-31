@@ -8,7 +8,7 @@ const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
-    console.log(pedido)
+    // console.log(pedido)
     const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     // const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(req.body.pedido, productos);

@@ -63,24 +63,29 @@ const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
     return factucionxLocal;
 }
 
-const crearResumenVistaLocal = async (local, fecha) => {
-    let facturasNF = await servicesFacturacion.getFacturasNFxfecha(local, fecha);
+const crearResumenVistaLocal = async (facturas) => {
 
     let totalDia = 0;
     let totalNF = 0;
+    let totalCAE = 0;
     let totalEfectivo = 0;
     let totalDebito = 0;
     let totalCredito = 0;
     let totalNB = 0;
-    let totalFiscal = 0;
     let contadorOperaciones = 0;
 
-    facturasNF.forEach((factura) => {
+    facturas.forEach((factura) => {
         if(factura.tipo === "X"){
             totalDia += factura.total;
             totalNF += factura.total;
             contadorOperaciones++;
         };
+        if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
+            totalDia += factura.total;
+            totalCAE += factura.total;
+            contadorOperaciones++;
+        }
+        // Restar Notas de credito con y sin CAE
         switch (factura.formaPago) {
             case "efectivo":
                 totalEfectivo += factura.total;
@@ -104,6 +109,7 @@ const crearResumenVistaLocal = async (local, fecha) => {
     let resumen = {
         totalDia: monetarizar(totalDia),
         totalNF: monetarizar(totalNF),
+        totalCAE: monetarizar(totalCAE),
         totalEfectivo: monetarizar(totalEfectivo),
         totalDebito: monetarizar(totalDebito),
         totalCredito: monetarizar(totalCredito),
@@ -135,7 +141,8 @@ const crearReqAPIWSFE = async (body, local) => {
     datos.iva21 = body.iva21;
     datos.baseiva21 = body.netoiva21;
     datos.total = body.total;
-    datos.cuitR = body.cuitR;
+    datos.cuitR = body.cuit;
+    datos.local = local.id;
     return datos
 }
 
@@ -146,23 +153,17 @@ const fetchAPIWSFE = async (data) => {
     try {
         const respuesta = await axios.post(URL, data);
         CAE = respuesta.data;
-        console.log(respuesta.data);
+        console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
-        console.log(error)
+        console.log("--> Error CAE: " + error)
         CAE = error;
     }
-  
-/*     .then(function (response) {
-      CAE = response;
-      console.log(response);
-    })
-    .catch(function (error) {
-      CAE = "error";
-      console.log(error);
-    }); */
-
   return CAE;
 }; 
+
+const validarReq = async(body) => {
+  
+}
 
 module.exports = {
     imprimirTicket,
@@ -174,4 +175,5 @@ module.exports = {
     checkDummy,
     crearReqAPIWSFE,
     fetchAPIWSFE,
+    validarReq,
 }

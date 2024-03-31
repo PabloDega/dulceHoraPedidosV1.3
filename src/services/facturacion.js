@@ -129,6 +129,29 @@ const insertFacturaNF = async (local, datos, numeracion) => {
   }
 };
 
+const getFacturasCAExfecha = async(local, fecha) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM registrosWSFE WHERE local = '${local}' AND fecha = '${fecha}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const insertFacturaConCAE = async (CAERaw, datos, body) => {
+  let CAE = CAERaw["respuesta"]["FECAESolicitarResult"]["FeDetResp"]["FECAEDetResponse"][0];
+  try {
+    const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR}", "${datos.local}", "${CAE.CbteDesde}", "${body.fecha}", "${datos.tipo}", "${body.formaDePago}", "${body.datos}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}")`);
+    return  insert[0].insertId;
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getBotonesFacturacion,
   getBotonesFacturacionTodos,
@@ -142,4 +165,6 @@ module.exports = {
   getFacturasNFxfecha,
   insertFacturaNF,
   getSenias,
+  getFacturasCAExfecha,
+  insertFacturaConCAE,
 };

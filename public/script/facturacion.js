@@ -182,7 +182,7 @@ function calcularTotal(detalle){
     let totalAcumulador = 0;
 
     detalles.forEach((item) => {
-        console.log(item)
+        // console.log(item)
         totalAcumulador += item[1]
         if(item[2] == 105){
             let neto = item[1] / (1 + (item[2] / 1000));
