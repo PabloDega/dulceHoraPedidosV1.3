@@ -418,7 +418,7 @@ footer img {
   gap: 1em;
   z-index: 10;
 }
-.mensajeErrorForm{
+.mensajeErrorForm, .mensajeInfo{
   position: fixed;
   top: 10%;
   left: 10%;
@@ -443,6 +443,9 @@ footer img {
     opacity: 1;
     translate: 0;
   }
+}
+.mensajeInfo{
+  background-color: darkgreen;
 }
 .pedidosCont, .produccionCont, #produccionHeader, .titulo, .reporte{
   display: flex;

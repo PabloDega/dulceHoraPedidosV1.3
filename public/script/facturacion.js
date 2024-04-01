@@ -261,6 +261,12 @@ function mostrarError(info){
     document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
 }
 
+function mostrarInfo(info){
+    let mensaje = `<div class="mensajeInfo"><span>${info}</span></div>`;
+    document.querySelector("#errores").innerHTML = mensaje;
+    document.querySelector(".mensajeInfo").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
+}
+
 function vaciarFormualrio(){
     document.querySelectorAll(".nombres").forEach((elem) => {
         elem.innerHTML = "";
@@ -356,13 +362,28 @@ function cargarBotonRapido(e){
     codigo.dispatchEvent(event);
 }
 
-function enviarFactura(){
+async function enviarFactura(e){
     if(buscarInputCargado() === undefined){
         document.querySelector("#facturacionDetalles").style.display = "none";
         mostrarError("No hay items para facturar");
         return;
     }
-    formulario.submit()
+    // Reemplazar por AJAX o fetch
+    
+    const dataBody = new URLSearchParams(new FormData(formulario));
+    let resp = await fetch("/panel/facturacion", {
+        method: "POST",
+        body: dataBody,
+    })
+    resp = await resp.json();
+    console.log(resp);
+    if(resp.resultado){
+        mostrarInfo("Operación registrada");
+        vaciarFormualrio();
+    } else {
+        mostrarError(resp.error);
+    }
+    // formulario.submit()
 }
 
 function registrarSeña(total, pago){

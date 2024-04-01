@@ -1414,34 +1414,33 @@ const facturacionPost = async(req, res) => {
       layout: __basedir + "/src/views/layouts/facturacion",
     })
   }
-
+  
   const local = await servicesLocal.getLocal(req.session.userLocal);
   if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
     numeracion = numeracion.length + 1;
     const idFactura = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion); 
     if(req.body.imprimir == "true" && req.body.tipo !== "S"){
-      res.redirect(`/panel/facturacion/comprobante?id=${idFactura}`);
-      return
+      return res.send({error: "", resultado: true, imprimir: true, tipo: "x"});
     } else if(req.body.tipo == "S"){
-      res.redirect(`/panel/facturacion/comprobante/parcial?id=${idFactura}`);
-      return
+      return res.send({error: "", resultado: true, imprimir: true, tipo: "s"});
     }
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "", resultado: true, imprimir: false, tipo: "x"});
   } else {
-    // ajustar req.body para API
     let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local);
     // enviar req a AFIP
     let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos))) 
-    // check si hay .error en el objeto de respuesta
     if(CAE.error){
       console.log("Error detectado en CAE" + CAE.error);
-      // Crear vista de error
+      return res.send({error: CAE.error, resultado: false, imprimir: false, tipo: "CAE"});
     } else {
-      // Grabar en BBDD obj datos y CAE
       await servicesFacturacion.insertFacturaConCAE(CAE, datos, req.body);
     }
-    return res.redirect("/panel/facturacion");
+    if(req.body.imprimir == "false"){
+      return res.send({error: "", resultado: true, imprimir: false, tipo: "CAE"});
+    } else {
+      return res.send({error: "", resultado: true, imprimir: true, tipo: "CAE"});
+    }
   }
 }
 
