@@ -1399,6 +1399,7 @@ const facturacion = async(req, res) => {
 }
 
 const facturacionPost = async(req, res) => {
+  console.log(req.body)
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();

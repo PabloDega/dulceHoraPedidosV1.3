@@ -420,8 +420,8 @@ footer img {
 }
 .mensajeErrorForm, .mensajeInfo{
   position: fixed;
-  top: 10%;
-  left: 10%;
+  top: 10px;
+  left: 10px;
   max-width: 600px;
   background-color: darkred;
   color: white;
@@ -446,6 +446,10 @@ footer img {
 }
 .mensajeInfo{
   background-color: darkgreen;
+  top: unset;
+  left: unset;
+  bottom: 10px;
+  right: 10px;
 }
 .pedidosCont, .produccionCont, #produccionHeader, .titulo, .reporte{
   display: flex;

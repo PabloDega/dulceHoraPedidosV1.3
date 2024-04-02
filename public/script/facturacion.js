@@ -363,9 +363,11 @@ function cargarBotonRapido(e){
 }
 
 async function enviarFactura(e){
+    document.querySelector("#cortinaLoad").style.display = "flex";
     if(buscarInputCargado() === undefined){
         document.querySelector("#facturacionDetalles").style.display = "none";
         mostrarError("No hay items para facturar");
+        document.querySelector("#cortinaLoad").style.display = "none";
         return;
     }
     // Reemplazar por AJAX o fetch
@@ -383,6 +385,7 @@ async function enviarFactura(e){
     } else {
         mostrarError(resp.error);
     }
+    document.querySelector("#cortinaLoad").style.display = "none";
     // formulario.submit()
 }
 
@@ -396,7 +399,8 @@ function registrarSeña(total, pago){
     let montoSenia = document.querySelector("#vueltoPago").value;
     document.querySelector("#seniaHiden").value = montoSenia;
     // enviar Formulario
-    formulario.submit()
+    enviarFactura();
+    // formulario.submit()
 }
 
 // Botones
