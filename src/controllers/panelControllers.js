@@ -1391,6 +1391,7 @@ const facturacion = async(req, res) => {
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
     categorias,
+    impuestos: local.impuestos,
     botonesfacturacion,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1399,7 +1400,6 @@ const facturacion = async(req, res) => {
 }
 
 const facturacionPost = async(req, res) => {
-  console.log(req.body)
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
@@ -1420,13 +1420,14 @@ const facturacionPost = async(req, res) => {
   if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
     numeracion = numeracion.length + 1;
-    const idFactura = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion); 
+    console.log(req.body)
+    let respQuery = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion);
     if(req.body.imprimir == "true" && req.body.tipo !== "S"){
-      return res.send({error: "", resultado: true, imprimir: true, tipo: "x"});
+      return res.send({error: "", resultado: true, imprimir: true, tipo: "x", numero: respQuery});
     } else if(req.body.tipo == "S"){
-      return res.send({error: "", resultado: true, imprimir: true, tipo: "s"});
+      return res.send({error: "", resultado: true, imprimir: true, tipo: "s", numero: respQuery});
     }
-    return res.send({error: "", resultado: true, imprimir: false, tipo: "x"});
+    return res.send({error: "", resultado: true, imprimir: false, tipo: "x", numero: respQuery});
   } else {
     let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local);
     // enviar req a AFIP
@@ -1559,6 +1560,28 @@ const facturacionRegistrosSenias = async (req, res) => {
     userRol: req.session.userRol,
     servicios,
   })
+}
+
+const facturacionSeniasActualizarEstado = async (req, res) => {
+  if(isNaN(parseInt(req.query.id)) && (req.query.accion !== "registrar" || req.query.accion !== "facturar" || req.query.accion !== "cancelar")){
+    return res.redirect("/panel/facturacion/registros/senias");
+  }
+  const datosSenia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
+  let observaciones = JSON.parse(datosSenia.observaciones);
+  if(req.query.accion === "registrar"){
+    // grabar movimiento en NF;
+    observaciones.estadoSenia = "retirado";
+  } else if(req.query.accion === "facturar"){
+    // grabar movimiento con CAE (ver tipo fiscal del local);
+    observaciones.estadoSenia = "retirado";
+  } else if(req.query.accion === "cancelar"){
+    observaciones.estadoSenia = "cancelado";
+  }
+  console.log(observaciones)
+  observaciones = JSON.stringify(observaciones)
+  // grabar nuevo estado en BBDD
+  await servicesFacturacion.updateSenias(req.query.id, observaciones)
+  res.redirect("/panel/facturacion/registros/senias");
 }
 
 const facturacionFabricaBotones = async (req, res) => {
@@ -1723,6 +1746,7 @@ module.exports = {
   facturacionFabrica,
   facturacionRegistros,
   facturacionRegistrosSenias,
+  facturacionSeniasActualizarEstado,
   facturacionFabricaBotones,
   facturacionFabricaBotonesNuevo,
   facturacionFabricaBotonesInsert,

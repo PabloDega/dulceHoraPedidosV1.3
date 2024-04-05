@@ -98,7 +98,7 @@ const getFacturasNFxfecha = async(local, fecha) => {
 
 const getSenias = async(local) => {
   try {
-    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND tipo = 'S'`);
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND tipo = 'S' ORDER BY id DESC`);
     return facturas[0];
   } catch (error) {
     throw error;
@@ -106,6 +106,27 @@ const getSenias = async(local) => {
     conectar.releaseConnection();
   }
 }
+
+const getSenia = async(local, id) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND tipo = 'S' AND id = '${id}'`);
+    return facturas[0][0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const updateSenias = async (id, observaciones) => {
+  try {
+    await conectar.query(`UPDATE facturacionnf SET observaciones = '${observaciones}' WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
 
 const getFacturaNF = async(id) => {
   try {
@@ -120,7 +141,12 @@ const getFacturaNF = async(id) => {
 
 const insertFacturaNF = async (local, datos, numeracion) => {
   try {
-    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total, senia) VALUES ("${local.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}", "${datos.senia}")`);
+    const obs = {} 
+    if(datos.senia > 0){
+      obs.nombre = datos.nombreSenia,
+      obs.estadoSenia = "pendiente";
+    }
+    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total, senia, observaciones) VALUES ("${local.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}", "${datos.senia}", '${JSON.stringify(obs)}')`);
     return  insert[0].insertId;
   } catch (error) {
     throw error;
@@ -165,6 +191,8 @@ module.exports = {
   getFacturasNFxfecha,
   insertFacturaNF,
   getSenias,
+  getSenia,
+  updateSenias,
   getFacturasCAExfecha,
   insertFacturaConCAE,
 };

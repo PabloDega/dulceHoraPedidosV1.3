@@ -255,6 +255,10 @@ table input{
   background-color: green;
   color:white;
 }
+.btnVerdeOutline{
+  color: green;
+  border: 3px solid green;
+}
 .btnAzul{
   background-color: blue;
   color:white;
@@ -262,9 +266,13 @@ table input{
 .btnGris{
   background-color: gray;
   color:white;
+  cursor: auto;
 }
 .btnSmall{
   font-size: 0.9em;
+}
+.off{
+  opacity: 0.5;
 }
 .inputBtn{
   border: 0;
@@ -1175,6 +1183,7 @@ footer img {
 }
 #facturacionDetalles{
   display: flex;
+  flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
@@ -1294,4 +1303,30 @@ footer img {
 }
 #backRender #AMcategoriaReportePlanta input{
   max-width: 10em;
+}
+#editorFacturacion{
+  position: relative;
+  z-index: 3;
+}
+#btnFactA{
+  background-color: darkorange;
+  padding: 1em;
+  position: absolute;
+  height: 3em;
+  bottom: -3em;
+  left: 1em;
+  border-radius: 0 0 1em 1em;
+  z-index: 2;
+}
+#inputCuit{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+#tablaFacturacionLocalRegistros{
+  height: fit-content;
+}
+#facturacionLocalSenias tbody img{
+  width: 25px;
+  cursor: pointer;
 }

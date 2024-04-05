@@ -8,8 +8,8 @@
     <span>Detalle:</span>
     <table>
         <tbody>
-            <%//let detalle = JSON.parse(factura.detalle);
-            let detalle = factura.detalle;
+            <%let detalle = JSON.parse(factura.detalle);
+            // let detalle = factura.detalle;
             detalle.forEach((item) => {
                 let producto = productos.find(prod => prod.codigo === item[3])%>
                 <tr>

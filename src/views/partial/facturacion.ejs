@@ -46,14 +46,12 @@
             </table>
         </span>
         <span>
-            <!-- <input type="reset" value="Reiniciar" class="btn btnNaranja" id="resetFacturacion"> -->
-            <!-- <input type="submit" value="Facturar" class="btn btnVerde"> -->
-            <span class="btn btnNaranja flexgrow" id="resetFacturacion">Limpiar</span>
+            <span class="btn btnNaranja flexgrow" id="limpiarFacturacion">Limpiar</span>
             <span class="btn btnVerde flexgrow" id="enviarFacturacion">Registrar</span>
         </span>
 
         <div id="facturacionDetalles" style="display: none;">
-            <div class="editor">
+            <div class="editor" id="editorFacturacion">
                 <span>
                     <label for="vueltoTotal">Total</label>
                     <div type="text" id="vueltoTotal">$0</div>
@@ -68,13 +66,14 @@
                 </span>
                 <span id="btnSenia">
                     <div class="btn btnNaranja" id="tomarSenia">Tomar seña</div>
+                    <input type="text" name="nombreSenia" id="nombresenia" placeholder="Nombre">
                 </span>
                 <hr>
                 <span>
                     <label for="fecha">Fecha</label>
                     <input type="date" name="fecha" id="fecha">
                 </span>
-                <span>
+                <!-- <span>
                     <label for="tipo">Tipo</label>
                     <select name="tipo" id="tipo">
                         <option value="1">A</option>
@@ -83,8 +82,8 @@
                         <option value="X" selected>X</option>
                         <option value="NC">NC</option>
                     </select>
-                </span>
-                <span id="ncSpan" style="display: none;">
+                </span> -->
+                <!-- <span id="ncSpan" style="display: none;">
                     <label for="nc">Tipo</label>
                     <select name="nc" id="nc">
                         <option value="" selected disabled>-Seleccione un item-</option>
@@ -93,7 +92,7 @@
                         <option value="C">C</option>
                         <option value="X">X</option>
                     </select>
-                </span>
+                </span> -->
                 <span>
                     <label for="formaDePago">Forma de Pago</label>
                     <select name="formaDePago" id="formaDePago">
@@ -103,15 +102,31 @@
                         <option value="transferencia">Transferencia</option>
                     </select>
                 </span>
-                <span>
-                    <label for="cuit">CUIT</label>
-                    <input type="text" name="cuit" id="cuit">
+                <span id="factBotonera">
+                    <span class="btn btnVerde flexgrow" id="enviarRegistro">Registrar</span>
+                    <span class="btn btnAzul flexgrow" id="registrarFacturacion">Facturar</span>
+                    <span class="btn btnVerdeOutline flexgrow off" id="confirmarImpresion" data-estado="off"><span>&#10006;</span> Imprimir</span>
                 </span>
-                <span>
-                    <span class="btn btnRojo flexgrow" id="resetFacturacion">Cancelar</span>
-                    <span class="btn btnVerde flexgrow" id="confirmarFacturacion">Facturar</span>
-                </span>
-                <span class="btn btnVerde flexgrow" id="confirmarFacturacionEImpresion">Facturar e Imprimir</span>
+                <span class="btn btnRojo flexgrow" id="resetFacturacion">Cancelar</span>
+                <div style="display: none;" id="inputCuit">
+                    <span>
+                        <label for="cuit">CUIT dest.</label>
+                        <input type="text" name="cuit" id="cuit">
+                    </span>
+                    <span>
+                        <label for="cuitNombre">Validación</label>
+                        <input type="text" id="cuitNombre" disabled>
+                    </span>
+                    <span>
+                        <span class="btn btnGris flexgrow" id="registrarFacturacionA">Emitir Fact A</span>
+                        <span class="btn btnRojo flexgrow" id="resetFacturacionA">Cancelar Fact A</span>
+                    </span>
+                </div>
+                
+
+                <%if(impuestos == "responsable"){%>
+                    <div class="btn" id="btnFactA">Factura A</div>
+                <%}%>
             </div>
         </div>
 
@@ -125,6 +140,7 @@
             <input type="hidden" name="total" id="totalHide">
             <input type="hidden" name="imprimir" id="imprimir" value="false">
             <input type="hidden" name="senia" id="seniaHiden" value="0">
+            <input type="hidden" name="tipo" id="tipo" value="X">
         </span>
     </form> 
 
@@ -137,5 +153,6 @@
         window.categorias = <%- JSON.stringify(categorias) %>
         window.productos = <%- JSON.stringify(productos) %>
         window.botones = <%- JSON.stringify(botonesfacturacion) %>
+        window.impuestos = <%- JSON.stringify(impuestos) %>
     </script>
 </div>

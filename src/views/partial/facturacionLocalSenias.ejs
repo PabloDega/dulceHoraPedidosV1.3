@@ -8,10 +8,14 @@
             <th>Total</th>
             <th>Seña</th>
             <th>Resto</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         <%senias.forEach((seña) => {
+            const observaciones = JSON.parse(seña.observaciones)
             const totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.total);
             const señaFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.senia);
             let resto = seña.total - seña.senia;
@@ -22,6 +26,15 @@
                 <td><%=totalFormateado%></td>
                 <td><%=señaFormateado%></td>
                 <td><%=resto%></td>
+                <td><%=observaciones.nombre%></td>
+                <td><%=observaciones.estadoSenia%></td>
+                <td>
+                    <%if(observaciones.estadoSenia == "pendiente"){%>
+                        <img src="/im/checked.svg" alt="icono facturar" title="Registrar" data-id="<%=seña.id%>" data-accion="registrar" id="modificarSenia">
+                        <img src="/im/facturado.svg" alt="icono facturar" title="Facturar" data-id="<%=seña.id%>" data-accion="facturar" id="modificarSenia">
+                        <img src="/im/cancel.svg" alt="icono facturar" title="Cancelar" data-id="<%=seña.id%>" data-accion="cancelar" id="modificarSenia">
+                    <%}%>
+                </td>
             </tr>
         <%})%>
     </tbody>

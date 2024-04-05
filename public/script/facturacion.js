@@ -293,6 +293,7 @@ function vaciarFormualrio(){
     document.querySelector("#totalHide").value = 0;
     document.querySelector("#vueltoTotal").innerHTML = "$"+0;
     document.querySelector("#datosHide").value = "";
+    document.querySelector("#cuit").value = "";
 
     neto = 0;
     iva10 = 0;
@@ -304,6 +305,9 @@ function vaciarFormualrio(){
     document.querySelector("#btnSenia").style.display = "none";
     formulario.reset();
     document.querySelector("#fecha").valueAsDate = new Date();
+
+    impresionOff();
+    factAOcultar();
 }
 
 function buscarMismoItem(codigo){
@@ -362,7 +366,14 @@ function cargarBotonRapido(e){
     codigo.dispatchEvent(event);
 }
 
-async function enviarFactura(e){
+async function enviarFactura(tipo){
+    if(tipo === "CAE"){
+        if(window.impuestos === "responsable"){
+            document.querySelector("#tipo").value = "6";
+        } else if(window.impuestos === "monotributista"){
+            document.querySelector("#tipo").value = "11";
+        }
+    }
     document.querySelector("#cortinaLoad").style.display = "flex";
     if(buscarInputCargado() === undefined){
         document.querySelector("#facturacionDetalles").style.display = "none";
@@ -370,8 +381,7 @@ async function enviarFactura(e){
         document.querySelector("#cortinaLoad").style.display = "none";
         return;
     }
-    // Reemplazar por AJAX o fetch
-    
+    // POST via fetch    
     const dataBody = new URLSearchParams(new FormData(formulario));
     let resp = await fetch("/panel/facturacion", {
         method: "POST",
@@ -382,24 +392,29 @@ async function enviarFactura(e){
     if(resp.resultado){
         mostrarInfo("Operación registrada");
         vaciarFormualrio();
+        if(resp.imprimir){
+            console.log("imprime....");
+            // abrir popup con ticket
+            window.open(`/panel/facturacion/comprobante?id=${resp.numero}`)
+        }
     } else {
         mostrarError(resp.error);
     }
     document.querySelector("#cortinaLoad").style.display = "none";
+    
     // formulario.submit()
 }
 
 function registrarSeña(total, pago){
     // cambiar tipo de factura a S, registrar NF
-    // eliminar input select
-    document.querySelector("#tipo").remove();
-    // agregar campo Tipo
-    document.querySelector("#camposOcultos").innerHTML += '<input type="hidden" name="tipo" id="tipoSenia" value="S"></input>';
+    // modificar tipo
+    document.querySelector("#tipo").value = "S";
     // cargar monto de la seña
     let montoSenia = document.querySelector("#vueltoPago").value;
     document.querySelector("#seniaHiden").value = montoSenia;
+    document.querySelector("#imprimir").value = "true";
     // enviar Formulario
-    enviarFactura();
+    enviarFactura("S");
     // formulario.submit()
 }
 
@@ -407,9 +422,8 @@ function registrarSeña(total, pago){
 
 /* document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
 document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)}); */
-document.querySelectorAll("#resetFacturacion").forEach((boton) => {
-    boton.addEventListener("click", vaciarFormualrio);
-});
+document.querySelector("#limpiarFacturacion").addEventListener("click", () => {vaciarFormualrio()});
+document.querySelector("#resetFacturacion").addEventListener("click", () => {vaciarFormualrio()});
 document.querySelectorAll(".factBotonRapido").forEach((boton) => {
     boton.addEventListener("click", (e) => {cargarBotonRapido(e)})
 });
@@ -417,17 +431,41 @@ document.querySelector("#enviarFacturacion").addEventListener("click", () => {
     document.querySelector("#facturacionDetalles").style.display = "flex";
     document.querySelector("#vueltoPago").focus();
 });
-document.querySelector("#confirmarFacturacion").addEventListener("click", () => {enviarFactura()});
-document.querySelector("#confirmarFacturacionEImpresion").addEventListener("click", () => {
-    document.querySelector("#imprimir").value = "true";
-    enviarFactura();
+document.querySelector("#enviarRegistro").addEventListener("click", () => {enviarFactura("X")});
+document.querySelector("#registrarFacturacion").addEventListener("click", () => {enviarFactura("CAE")});
+
+document.querySelector("#confirmarImpresion").addEventListener("click", (e) => {
+    if(e.target.dataset.estado === "off"){
+        impresionOn()
+    } else {
+       impresionOff()
+    }
+    
 });
-document.querySelector("#tipo").addEventListener("change", (e) => {
+const impresionOn = () => {
+    const boton = document.querySelector("#confirmarImpresion");
+    boton.classList.remove("off");
+    boton.classList.remove("btnVerdeOutline");
+    boton.classList.add("btnVerde");
+    boton.dataset.estado = "on";
+    document.querySelector("#confirmarImpresion > span").innerHTML = "&#10003;";
+    document.querySelector("#imprimir").value = "true";
+}
+const impresionOff = () => {
+    const boton = document.querySelector("#confirmarImpresion");
+    boton.classList.add("off");
+    boton.classList.add("btnVerdeOutline");
+    boton.classList.remove("btnVerde");
+    boton.dataset.estado = "off";
+    document.querySelector("#confirmarImpresion > span").innerHTML = "&#10006;";
+    document.querySelector("#imprimir").value = "false";
+}
+/* document.querySelector("#tipo").addEventListener("change", (e) => {
     // console.log(e.target.value)
     if(e.target.value == "NC"){
         document.querySelector("#ncSpan").style.display = "flex";
     }
-})
+}) */
 document.querySelector("#vueltoPago").addEventListener("change", (e) => {
     let vuelto = parseFloat(e.target.value) - parseFloat(total);
     document.querySelector("#vuelto").innerHTML = "$" + vuelto;
@@ -435,7 +473,7 @@ document.querySelector("#vueltoPago").addEventListener("change", (e) => {
         document.querySelector("#btnSenia").style.display = "flex";
     } else {
         document.querySelector("#btnSenia").style.display = "none";
-
+        document.querySelector("#nombresenia").value = "";
     }
 })
 document.querySelector("#tomarSenia").addEventListener("click", () => {registrarSeña()})
@@ -443,6 +481,29 @@ document.querySelector("#tomarSenia").addEventListener("click", () => {registrar
 document.querySelector("#backHome").addEventListener("click", () => {
     window.location.href = "/panel"
 })
+
+document.querySelector("#btnFactA").addEventListener("click", () => {
+    factAMostrar();
+})
+
+const factAMostrar = () => {
+    document.querySelector("#inputCuit").style.display = "flex";
+    document.querySelector("#factBotonera").style.display = "none";
+    document.querySelector("#resetFacturacion").style.display = "none";
+    document.querySelector("#imprimir").value = "true";
+    impresionOn();
+}
+
+const factAOcultar = () => {
+    document.querySelector("#inputCuit").style.display = "none";
+    document.querySelector("#factBotonera").style.display = "flex";
+    document.querySelector("#resetFacturacion").style.display = "block";
+    document.querySelector("#cuit").value = "";
+    document.querySelector("#imprimir").value = "false";
+    impresionOff();
+}
+
+document.querySelector("#resetFacturacionA").addEventListener("click", () => {factAOcultar()})
 
 function eventos(){
     document.querySelectorAll(".agregarItems").forEach((boton) => {
