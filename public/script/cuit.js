@@ -16,11 +16,18 @@ function checkCuitNumero(e){
         mostrarError(`Número de CUIT ${e.target.value} inválido`);
         document.querySelector("#cuit").value = "";
         // hacer foco en elemento cuit document.querySelector("#cuit")
+        return;
+    }
+    if(document.querySelector("#registrarFacturacionA") != null){
+        const boton = document.querySelector("#registrarFacturacionA")
+        boton.classList.remove("btnGris");
+        boton.classList.add("btnAzul");
     }
 }
 
 document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
 document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)});
+
 
 function mostrarError(info){
     let mensaje = `<div class="mensajeErrorForm"><span>${info}</span></div>`;

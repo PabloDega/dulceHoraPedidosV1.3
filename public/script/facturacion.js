@@ -294,6 +294,7 @@ function vaciarFormualrio(){
     document.querySelector("#vueltoTotal").innerHTML = "$"+0;
     document.querySelector("#datosHide").value = "";
     document.querySelector("#cuit").value = "";
+    document.querySelector("#tipo").value = "X";
 
     neto = 0;
     iva10 = 0;
@@ -374,6 +375,15 @@ async function enviarFactura(tipo){
             document.querySelector("#tipo").value = "11";
         }
     }
+    if(tipo === "A"){
+        if(window.impuestos === "responsable"){
+            document.querySelector("#tipo").value = "1";
+            // validarCuit
+        } else if(window.impuestos === "monotributista"){
+            mostrarInfo("Operación inválida");
+            return;
+        }
+    }
     document.querySelector("#cortinaLoad").style.display = "flex";
     if(buscarInputCargado() === undefined){
         document.querySelector("#facturacionDetalles").style.display = "none";
@@ -433,6 +443,7 @@ document.querySelector("#enviarFacturacion").addEventListener("click", () => {
 });
 document.querySelector("#enviarRegistro").addEventListener("click", () => {enviarFactura("X")});
 document.querySelector("#registrarFacturacion").addEventListener("click", () => {enviarFactura("CAE")});
+document.querySelector("#registrarFacturacionA").addEventListener("click", () => {enviarFactura("A")});
 
 document.querySelector("#confirmarImpresion").addEventListener("click", (e) => {
     if(e.target.dataset.estado === "off"){
@@ -504,6 +515,7 @@ const factAOcultar = () => {
 }
 
 document.querySelector("#resetFacturacionA").addEventListener("click", () => {factAOcultar()})
+
 
 function eventos(){
     document.querySelectorAll(".agregarItems").forEach((boton) => {
