@@ -1330,3 +1330,10 @@ footer img {
   width: 25px;
   cursor: pointer;
 }
+#formasDePago{
+  display: flex;
+  flex-direction: column;
+}
+.pagoMultiple{
+  display: none;
+}

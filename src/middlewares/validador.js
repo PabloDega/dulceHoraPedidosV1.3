@@ -472,6 +472,9 @@ const validarFacturacionChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo 'imprimir' incorrecto"),
+  body("pagoMultiple")
+    .optional({ values: "falsy" })
+    .isJSON().withMessage("Formato del campo 'Pago Multiple' incorrecto"),
 ]
 
 const validarCategoriaReporteChain = [

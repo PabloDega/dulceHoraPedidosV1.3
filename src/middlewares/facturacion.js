@@ -99,6 +99,15 @@ const crearResumenVistaLocal = async (facturas) => {
             case "transferencia":
                 totalNB += factura.total;
                 break;
+            case "multiple":
+                // zazaraza
+                let pagoMultiple = JSON.parse(factura.observaciones);
+                pagoMultiple = pagoMultiple.pagoMultiple;
+                totalEfectivo += pagoMultiple.montoefectivo;
+                totalDebito += pagoMultiple.montodebito;
+                totalCredito += pagoMultiple.montocredito;
+                totalNB += pagoMultiple.montovirtual;
+                break;
             default:
                 break;
         }
@@ -143,6 +152,7 @@ const crearReqAPIWSFE = async (body, local) => {
     datos.total = body.total;
     datos.cuitR = body.cuit;
     datos.local = local.id;
+    datos.pagoMultiple = body.pagoMultiple;
     return datos
 }
 

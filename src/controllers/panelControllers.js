@@ -1405,10 +1405,16 @@ const facturacionPost = async(req, res) => {
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
     const productos = await servicesProductos.getProductosLocal();
     const categorias = await servicesProductos.getCategorias();
+    const local = await servicesLocal.getLocal(req.session.userLocal);
+    const serviciosLocal = JSON.parse(local.servicios);
+    if(!serviciosLocal.facturacion){
+      return res.redirect("/panel");
+    }
     return res.render(__basedir + "/src/views/pages/facturacion", {
       errores: errores.array({ onlyFirstError: true }),
       productos,
       categorias,
+      impuestos: local.impuestos,
       botonesfacturacion,
       usuario: req.session.userLog,
       userRol: req.session.userRol,

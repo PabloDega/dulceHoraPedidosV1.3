@@ -11,6 +11,7 @@ let netoiva21 = 0;
 let iva21 = 0;
 let total = 0;
 let detalles = [];
+let FDP = {};
 
 // Creacion de botones
 
@@ -307,8 +308,18 @@ function vaciarFormualrio(){
     formulario.reset();
     document.querySelector("#fecha").valueAsDate = new Date();
 
+    document.querySelector("#formaDePago").value = "efectivo";
+    document.querySelector("#pagoMultiple").value = "";
+
     impresionOff();
     factAOcultar();
+    vaciarMontosFDP();
+    crearFDP();
+    ocultarMontosInputFDP();
+}
+
+function cerrarFacturacionDetalles(){
+    document.querySelector("#facturacionDetalles").style.display = "none";
 }
 
 function buscarMismoItem(codigo){
@@ -433,13 +444,14 @@ function registrarSeña(total, pago){
 /* document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
 document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)}); */
 document.querySelector("#limpiarFacturacion").addEventListener("click", () => {vaciarFormualrio()});
-document.querySelector("#resetFacturacion").addEventListener("click", () => {vaciarFormualrio()});
+document.querySelector("#resetFacturacion").addEventListener("click", () => {cerrarFacturacionDetalles()});
 document.querySelectorAll(".factBotonRapido").forEach((boton) => {
     boton.addEventListener("click", (e) => {cargarBotonRapido(e)})
 });
 document.querySelector("#enviarFacturacion").addEventListener("click", () => {
     document.querySelector("#facturacionDetalles").style.display = "flex";
     document.querySelector("#vueltoPago").focus();
+    eventoVuelto();
 });
 document.querySelector("#enviarRegistro").addEventListener("click", () => {enviarFactura("X")});
 document.querySelector("#registrarFacturacion").addEventListener("click", () => {enviarFactura("CAE")});
@@ -478,24 +490,32 @@ const impresionOff = () => {
     }
 }) */
 document.querySelector("#vueltoPago").addEventListener("change", (e) => {
-    let vuelto = parseFloat(e.target.value) - parseFloat(total);
-    document.querySelector("#vuelto").innerHTML = "$" + vuelto;
-    if(vuelto < 0){
-        document.querySelector("#btnSenia").style.display = "flex";
-    } else {
-        document.querySelector("#btnSenia").style.display = "none";
-        document.querySelector("#nombresenia").value = "";
-    }
-})
+  calcularVuelto(e);
+  return;
+});
+
+function calcularVuelto(e) {
+  let vuelto = parseFloat(e.target.value)- parseFloat(total);
+  document.querySelector("#vuelto").innerHTML = "$" + (vuelto || 0);
+  if (vuelto < 0) {
+    document.querySelector("#btnSenia").style.display = "flex";
+  } else {
+    document.querySelector("#btnSenia").style.display = "none";
+    document.querySelector("#nombresenia").value = "";
+  }
+}
+
 document.querySelector("#tomarSenia").addEventListener("click", () => {registrarSeña()})
 
 document.querySelector("#backHome").addEventListener("click", () => {
     window.location.href = "/panel"
 })
+if(document.querySelector("#btnFactA") != null){
+    document.querySelector("#btnFactA").addEventListener("click", () => {
+        factAMostrar();
+    })
+}
 
-document.querySelector("#btnFactA").addEventListener("click", () => {
-    factAMostrar();
-})
 
 const factAMostrar = () => {
     document.querySelector("#inputCuit").style.display = "flex";
@@ -516,6 +536,113 @@ const factAOcultar = () => {
 
 document.querySelector("#resetFacturacionA").addEventListener("click", () => {factAOcultar()})
 
+// Crear forma de pago
+document.querySelectorAll(".FDP").forEach((boton) => {
+  boton.addEventListener("click", (e) => {
+    const forma = e.target.dataset.fdp;
+    FDP[forma] = !FDP[forma];
+    let FDPArray = [];
+    for (item in FDP) {
+      if (FDP[item] === true) {
+        FDPArray.push(item);
+      }
+    }
+    if (FDPArray.length == 0) {
+      document.querySelector("#formaDePago").value = "";
+      vaciarMontosFDP();
+      ocultarMontosInputFDP();
+      eventoVuelto();
+    } else if (FDPArray.length > 1) {
+      document.querySelector("#formaDePago").value = "multiple";
+      cargarMontosFDP();
+      mostrarMontosInputFDP();
+      eventoVuelto();
+      document.querySelector("#pagoMultiple").value = JSON.stringify(FDP);
+    } else {
+      document.querySelector("#formaDePago").value = FDPArray[0];
+      vaciarMontosFDP();
+      ocultarMontosInputFDP();
+      eventoVuelto();
+    }
+  });
+});
+
+function crearFDP() {
+  FDP = {};
+  FDP = {
+    efectivo: true,
+    montoefectivo: 0,
+    debito: false,
+    montodebito: 0,
+    credito: false,
+    montocredito: 0,
+    virtual: false,
+    montovirtual: 0,
+  };
+}
+
+crearFDP();
+
+function vaciarMontosFDP(){
+    FDP.montoefectivo = 0;
+    FDP.montodebito = 0;
+    FDP.montocredito = 0;
+    FDP.montovirtual = 0;
+    document.querySelector("#PMefectivo").value = 0;
+    document.querySelector("#PMdebito").value = 0;
+    document.querySelector("#PMcredito").value = 0;
+    document.querySelector("#PMvirtual").value = 0;
+    document.querySelector("#vueltoPago").value = "";
+}
+
+function cargarMontosFDP(){
+    FDP.montoefectivo = parseFloat(document.querySelector("#PMefectivo").value);
+    FDP.montodebito = parseFloat(document.querySelector("#PMdebito").value);
+    FDP.montocredito = parseFloat(document.querySelector("#PMcredito").value);
+    FDP.montovirtual = parseFloat(document.querySelector("#PMvirtual").value);
+}
+
+function mostrarMontosInputFDP(){
+    for (item in FDP) {
+        if (FDP[item] === true) {
+            document.querySelector(`#PM${item}`).style.display = "block";
+        } else if(FDP[item] === false){
+            document.querySelector(`#PM${item}`).style.display = "none";
+        }
+    }
+}
+
+function ocultarMontosInputFDP(){
+  document.querySelector("#PMefectivo").style.display = "none";
+  document.querySelector("#PMdebito").style.display = "none";
+  document.querySelector("#PMcredito").style.display = "none";
+  document.querySelector("#PMvirtual").style.display = "none";
+}
+
+document.querySelectorAll(".pagoMultiple").forEach((input) => {
+  input.addEventListener("change", (e) => {
+    const forma = e.target.dataset.fdp;
+    FDP[forma] = parseInt(e.target.value);
+    document.querySelector("#pagoMultiple").value = JSON.stringify(FDP);
+    let total = sumarVueltoParciales();
+    document.querySelector("#vueltoPago").value = total;
+    eventoVuelto();
+  })
+})
+
+function eventoVuelto(){
+  let evento = new Event("change");
+  document.querySelector("#vueltoPago").dispatchEvent(evento);
+}
+
+function sumarVueltoParciales(){
+  let total = 0;
+  total += FDP.montoefectivo;
+  total += FDP.montodebito;
+  total += FDP.montocredito;
+  total += FDP.montovirtual;
+  return total;
+}
 
 function eventos(){
     document.querySelectorAll(".agregarItems").forEach((boton) => {
