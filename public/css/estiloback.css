@@ -1213,19 +1213,19 @@ footer img {
 #backHome img{
   width: 2em;
 }
-#InputRegistroFacturacion input{
+#InputRegistroFacturacion input, #InputRegistroGastos input{
   margin-left: 0.5em;
   font-size: 1em;
   border: 0;
 }
-#InputRegistroFacturacion{
+#InputRegistroFacturacion, #InputRegistroGastos{
   margin-bottom: 1em;
 }
-#contRegistroFact{
+#contRegistroFact, #contRegistroGastos{
   display: flex;
   gap: 2em;
 }
-#resumenRegistroFact{
+#resumenRegistroFact, #resumenRegistroGastos{
   background-color: white;
   padding: 1em;
   display: flex;
@@ -1323,7 +1323,7 @@ footer img {
   flex-direction: column;
   gap: 1em;
 }
-#tablaFacturacionLocalRegistros{
+#tablaFacturacionLocalRegistros, #tablaGastosLocalRegistros{
   height: fit-content;
 }
 #facturacionLocalSenias tbody img{
@@ -1336,4 +1336,8 @@ footer img {
 }
 .pagoMultiple{
   display: none;
+}
+#preloadSenia{
+  display: flex;
+  flex-direction: column;
 }

@@ -5,24 +5,28 @@
     <table id="tablaFacturacionLocalRegistros">
         <thead>
             <tr>
-                <th>Fecha de factuación</th>
+                <th>Fecha</th>
+                <!-- <th>Fecha de emisión</th> -->
                 <th>Tipo</th>
                 <th>Numero</th>
                 <th>Total</th>
                 <th>Medio de Pago</th>
-                <th>Fecha de emisión</th>
             </tr>
         </thead>
         <tbody>
         <%facturas.forEach(factura => {
             let fechaFacturacion = new Date(factura.fecha);%>
             <tr>
-                <td><%= fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%></td>
+                <%= // fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%>
+                <td><%= factura.fechaevento.toLocaleString("es-AR") %></td>
                 <td><%= factura.tipo %></td>
                 <td><%= factura.numero %></td>
-                <td>$<%= factura.total %></td>
+                <%let total = factura.total - factura.senia;
+                if(factura.tipo === "S"){
+                    total = factura.senia;
+                }%>
+                <td>$<%= total %></td>
                 <td><%= factura.formaPago %></td>
-                <td><%= factura.fechaevento.toLocaleString("es-AR") %></td>
             </tr>
         <%}); %>
         </tbody>

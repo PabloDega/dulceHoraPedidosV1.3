@@ -75,32 +75,74 @@ const crearResumenVistaLocal = async (facturas) => {
     let contadorOperaciones = 0;
 
     facturas.forEach((factura) => {
+        if(factura.tipo === "S"){
+            totalDia += factura.senia;
+            totalNF += factura.senia;
+
+            switch (factura.formaPago) {
+                case "efectivo":
+                    totalEfectivo += factura.senia;
+                    break;
+                case "debito":
+                    totalDebito += factura.senia;
+                    break;
+                case "credito":
+                    totalCredito += factura.senia;
+                    break;
+                case "transferencia":
+                    totalNB += factura.senia;
+                    break;
+                case "multiple":
+                    let pagoMultiple = JSON.parse(factura.observaciones);
+                    pagoMultiple = pagoMultiple.pagoMultiple;
+                    totalEfectivo += pagoMultiple.montoefectivo;
+                    totalDebito += pagoMultiple.montodebito;
+                    totalCredito += pagoMultiple.montocredito;
+                    totalNB += pagoMultiple.montovirtual;
+                    break;
+                default:
+                    break;
+            }
+
+            return;
+        }
         if(factura.tipo === "X"){
             totalDia += factura.total;
             totalNF += factura.total;
+            if(factura.senia > 0){
+                totalDia -= factura.senia;
+                totalNF -= factura.senia;
+            }
             contadorOperaciones++;
         };
         if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
             totalDia += factura.total;
             totalCAE += factura.total;
+            if(factura.senia > 0){
+                totalDia -= factura.senia;
+                totalCAE -= factura.senia;
+            }
             contadorOperaciones++;
         }
         // Restar Notas de credito con y sin CAE
         switch (factura.formaPago) {
             case "efectivo":
                 totalEfectivo += factura.total;
+                totalEfectivo -= factura.senia;
                 break;
             case "debito":
                 totalDebito += factura.total;
+                totalDebito -= factura.senia;
                 break;
             case "credito":
                 totalCredito += factura.total;
+                totalCredito -= factura.senia;
                 break;
             case "transferencia":
                 totalNB += factura.total;
+                totalNB -= factura.senia;
                 break;
             case "multiple":
-                // zazaraza
                 let pagoMultiple = JSON.parse(factura.observaciones);
                 pagoMultiple = pagoMultiple.pagoMultiple;
                 totalEfectivo += pagoMultiple.montoefectivo;

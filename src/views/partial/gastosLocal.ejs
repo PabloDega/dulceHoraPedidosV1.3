@@ -1,0 +1,49 @@
+<h2 id="InputRegistroGastos">Gastos del <input type="date" name="fechaRegGastos" id="fechaRegGastos" value="<%=fechaHyphen%>"></h2> 
+<div id="contRegistroGastos">
+
+    <%if(gastos.length > 0){%>
+    <table id="tablaGastosLocalRegistros">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Movimiento</th>
+                <th>Detalles</th>  
+                <th>Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%gastos.forEach(gasto => {
+            let fechaGasto = new Date(gasto.fecha);%>
+            <tr>
+                <td><%= fechaGasto.toLocaleDateString("es-AR", {timeZone: 'UTC'}) %></td>
+                <td><%= gasto.monto %></td>
+                <td><%= gasto.movimiento %></td>
+                <td><%= gasto.detalles %></td>
+                <td><%= gasto.usuario %></td>
+            </tr>
+        <%}); %>
+        </tbody>
+    </table>
+    <span>
+
+        <div id="resumenRegistroGastos">
+            <h3>Resumen</h3>
+            <span>Fecha: <%=fechaNormalizada%></span>
+            <hr>
+            <span>Total de operaciones: <%= resumenGastos.totalMovimientos %></span>
+            <hr>
+            <span>Gastos total: <%= resumenGastos.gastos %></span>
+            <hr>
+            <span>Retiros total: <%= resumenGastos.retiros %></span>
+        </div>
+        
+    </span>
+    
+    <%} else {%>
+        <span>No se encuentran registros para la fecha</span>
+    <%};%>
+
+</div>
+
+<script defer src="/script/registroGastos.js"></script>

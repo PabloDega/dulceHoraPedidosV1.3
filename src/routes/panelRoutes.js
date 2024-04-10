@@ -192,6 +192,8 @@ router.get("/facturacion/registros/senias", auth.authAdmin, panelControllers.fac
 
 router.get("/facturacion/registros/senias/actualizar", auth.authAdmin, panelControllers.facturacionSeniasActualizarEstado);
 
+router.get("/facturacion/registros/gastos", auth.authAdmin, panelControllers.gastosLocal);
+
 router.get("/facturacion/fabrica", auth.authSupervisor, panelControllers.facturacionFabrica);
 
 router.get("/facturacion/fabrica/botones", auth.authSupervisor, panelControllers.facturacionFabricaBotones);

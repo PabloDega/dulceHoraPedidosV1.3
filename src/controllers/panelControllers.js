@@ -10,6 +10,7 @@ const servicesReportes = require(__basedir + "/src/services/reportes");
 const servicesServicios = require(__basedir + "/src/services/servicios");
 const servicesFacturacion = require(__basedir + "/src/services/facturacion");
 const servicesAfip = require(__basedir + "/src/services/afip");
+const servicesGastos = require(__basedir + "/src/services/gastos")
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
@@ -18,7 +19,7 @@ const productosMiddleware = require(__basedir + "/src/middlewares/productos");
 const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
 const localMiddleware = require(__basedir + "/src/middlewares/local");
 const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
-
+const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
 
 const index = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal)
@@ -1385,12 +1386,26 @@ const facturacion = async(req, res) => {
   if(!serviciosLocal.facturacion){
     return res.redirect("/panel");
   }
+  let data = "";
+  if(req.query.id){
+    if(isNaN(parseInt(req.query.id))){
+      return res.redirect("/panel/facturacion");
+    } else {
+      let senia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
+      if(senia !== undefined){
+        data = senia;
+      } else {
+        return res.redirect("/panel/facturacion");
+      }
+    }
+  }
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
     categorias,
+    data,
     impuestos: local.impuestos,
     botonesfacturacion,
     usuario: req.session.userLog,
@@ -1569,23 +1584,20 @@ const facturacionRegistrosSenias = async (req, res) => {
 }
 
 const facturacionSeniasActualizarEstado = async (req, res) => {
-  if(isNaN(parseInt(req.query.id)) && (req.query.accion !== "registrar" || req.query.accion !== "facturar" || req.query.accion !== "cancelar")){
+  if(isNaN(parseInt(req.query.id)) && (req.query.accion !== "registrar" || req.query.accion !== "cancelar")){
     return res.redirect("/panel/facturacion/registros/senias");
   }
   const datosSenia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
+  if(datosSenia == undefined){
+    return res.redirect("/panel/facturacion/registros/senias");
+  }
   let observaciones = JSON.parse(datosSenia.observaciones);
   if(req.query.accion === "registrar"){
-    // grabar movimiento en NF;
-    observaciones.estadoSenia = "retirado";
-  } else if(req.query.accion === "facturar"){
-    // grabar movimiento con CAE (ver tipo fiscal del local);
     observaciones.estadoSenia = "retirado";
   } else if(req.query.accion === "cancelar"){
     observaciones.estadoSenia = "cancelado";
   }
-  console.log(observaciones)
   observaciones = JSON.stringify(observaciones)
-  // grabar nuevo estado en BBDD
   await servicesFacturacion.updateSenias(req.query.id, observaciones)
   res.redirect("/panel/facturacion/registros/senias");
 }
@@ -1657,6 +1669,32 @@ const facturacionFabricaBotonesEliminar = async (req, res) => {
 const facturacionCheckAfip = async (req, res) => {
   const estado = servicesAfip.checkDummy();
   res.render(__basedir + "/src/views/pages/facturacionCheckAfip", {
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const gastosLocal = async (req, res) => {
+  let fecha;
+  if (req.query.fecha && !isNaN(Number(req.query.fecha)) && req.query.fecha.length == 8) {
+    fecha = req.query.fecha;
+  } else {
+    fecha = await facturacionMiddleware.fechaHoy();
+  }
+  if (fecha === undefined) {
+    return res.redirect("/panel");
+  }
+  let fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha);
+  let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha);
+  const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fechaHyphen);
+  const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/gastosLocal", {
+    gastos,
+    resumenGastos,
+    fechaHyphen,
+    fechaNormalizada,
+    servicios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -1760,4 +1798,5 @@ module.exports = {
   facturacionFabricaBotonesUpdate,
   facturacionFabricaBotonesEliminar,
   facturacionCheckAfip,
+  gastosLocal,
 };

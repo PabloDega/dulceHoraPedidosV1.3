@@ -142,7 +142,7 @@ const getFacturaNF = async(id) => {
 const insertFacturaNF = async (local, datos, numeracion) => {
   try {
     let obs = {} 
-    if(datos.senia > 0){
+    if(datos.tipo == "S" && datos.senia > 0){
       obs.nombre = datos.nombreSenia,
       obs.estadoSenia = "pendiente";
     }
@@ -157,6 +157,17 @@ const insertFacturaNF = async (local, datos, numeracion) => {
     conectar.releaseConnection();
   }
 };
+
+const getFacturaCAE = async(id) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM registrosWSFE WHERE id = '${id}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
 
 const getFacturasCAExfecha = async(local, fecha) => {
   try {
@@ -202,4 +213,5 @@ module.exports = {
   updateSenias,
   getFacturasCAExfecha,
   insertFacturaConCAE,
+  getFacturaCAE,
 };
