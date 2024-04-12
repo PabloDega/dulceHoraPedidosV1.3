@@ -19,6 +19,11 @@ if (document.querySelector("#facturacionLocal") != null) {
     .querySelector("#facturacionLocal")
     .addEventListener("click", () => (location.href = "/panel/facturacion"));
 }
+if (document.querySelector("#facturacionLocalGastos") != null) {
+  document
+    .querySelector("#facturacionLocalGastos")
+    .addEventListener("click", () => (location.href = "/panel/facturacion/registros/gastos"));
+}
 if (document.querySelector("#local") != null) {
   document
     .querySelector("#local")

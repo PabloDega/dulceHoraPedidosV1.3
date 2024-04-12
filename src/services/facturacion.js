@@ -187,7 +187,7 @@ const insertFacturaConCAE = async (CAERaw, datos, body) => {
     obs.pagoMultiple = JSON.parse(datos.pagoMultiple);
   }
   try {
-    const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE, observaciones) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR}", "${datos.local}", "${CAE.CbteDesde}", "${body.fecha}", "${datos.tipo}", "${body.formaDePago}", "${body.datos}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}", '${JSON.stringify(obs)}')`);
+    const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE, senia,  observaciones) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR}", "${datos.local}", "${CAE.CbteDesde}", "${body.fecha}", "${datos.tipo}", "${body.formaDePago}", "${body.datos}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}", "${datos.senia}", '${JSON.stringify(obs)}')`);
     return  insert[0].insertId;
   } catch (error) {
     throw error;

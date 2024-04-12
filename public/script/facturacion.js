@@ -1,7 +1,7 @@
 let contador = 0;
 let numerador = 1;
 const itemsfacturacion = document.querySelector("#itemsfacturacion");
-document.querySelector("#fecha").valueAsDate = new Date();
+document.querySelector("#gastosFecha").valueAsDate = new Date();
 let formulario = document.querySelector("#nuevaVenta");
 
 let neto = 0;
@@ -330,7 +330,7 @@ async function vaciarFormualrio() {
   document.querySelector("#facturacionDetalles").style.display = "none";
   document.querySelector("#btnSenia").style.display = "none";
   formulario.reset();
-  document.querySelector("#fecha").valueAsDate = new Date();
+  document.querySelector("#gastosFecha").valueAsDate = new Date();
 
   document.querySelector("#formaDePago").value = "efectivo";
   document.querySelector("#pagoMultiple").value = "";
@@ -732,7 +732,7 @@ function eventos() {
 }
 eventos();
 
-if (window.data !== "") {
+if (window.data) {
   let itemsenia = `<span>
 <label>Seña</label>
 <div id="preloadSeniaMonto">0</div>
@@ -743,7 +743,6 @@ if (window.data !== "") {
 </span>`;
 
   let detalle = JSON.parse(data.detalle);
-  console.log(detalle);
   // verificar if detllae.length > 7 porque hay que agregar campos
   if (detalle.length > 7) {
     let camposExtra = detalle.length - 7;
@@ -771,4 +770,54 @@ if (window.data !== "") {
   document.querySelector("#preloadSeniaSaldo").innerHTML = "$" + (data.total - data.senia);
   document.querySelector("#seniaHiden").value = data.senia;
   eventoVuelto();
+}
+
+document.querySelector("#btnGastos").addEventListener("click", () => {
+  mostrarGastos();
+})
+
+document.querySelector("#cancelarGasto").addEventListener("click", () => {
+  cerrarGastos();
+})
+
+function mostrarGastos(){
+  document.querySelector("#contGastos").style.display = "flex"
+};
+
+function cerrarGastos(){
+  document.querySelector("#contGastos").style.display = "none"
+  document.querySelector("#gastosMonto").value = 0;
+  document.querySelector("#gastosDetalles").value = "";
+  document.querySelector("#gastosGasto").checked = true;
+  document.querySelector("#gastosRetiro").checked = false;
+  document.querySelector("#gastosFecha").valueAsDate = new Date();
+};
+
+
+document.querySelector("#enviarGasto").addEventListener("click", () => {
+  enviarGasto();
+});
+
+async function enviarGasto(){
+  let datos = {
+    movimiento: "gasto",
+  }
+  datos.monto = document.querySelector("#gastosMonto").value;
+  datos.detalles = document.querySelector("#gastosDetalles").value;
+  if(document.querySelector("#gastosRetiro").checked){
+    datos.movimiento = "retiro";
+  }
+  datos.fecha = document.querySelector("#gastosFecha").value;
+  const dataBody = new URLSearchParams(datos);
+  let resp = await fetch("/panel/facturacion/registros/gastos/nuevo", {
+    method: "POST",
+    body: dataBody,
+  });
+  resp = await resp.json();
+  if(resp.resultado){
+    mostrarInfo("Gasto registrado");
+  } else {
+    mostrarError(resp.error);
+  }
+  cerrarGastos()
 }

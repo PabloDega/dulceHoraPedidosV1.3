@@ -1386,11 +1386,12 @@ const facturacion = async(req, res) => {
   if(!serviciosLocal.facturacion){
     return res.redirect("/panel");
   }
-  let data = "";
+  let data = false;
   if(req.query.id){
     if(isNaN(parseInt(req.query.id))){
       return res.redirect("/panel/facturacion");
     } else {
+      console.log("mark 1");
       let senia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
       if(senia !== undefined){
         data = senia;
@@ -1417,11 +1418,13 @@ const facturacion = async(req, res) => {
 const facturacionPost = async(req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
+    console.log(errores)
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
     const productos = await servicesProductos.getProductosLocal();
     const categorias = await servicesProductos.getCategorias();
     const local = await servicesLocal.getLocal(req.session.userLocal);
     const serviciosLocal = JSON.parse(local.servicios);
+    const data = {};
     if(!serviciosLocal.facturacion){
       return res.redirect("/panel");
     }
@@ -1429,19 +1432,23 @@ const facturacionPost = async(req, res) => {
       errores: errores.array({ onlyFirstError: true }),
       productos,
       categorias,
+      data,
       impuestos: local.impuestos,
       botonesfacturacion,
       usuario: req.session.userLog,
       userRol: req.session.userRol,
       layout: __basedir + "/src/views/layouts/facturacion",
-    })
+    });
   }
+  
+  let fecha = await facturacionMiddleware.fechaHoy();
+  fecha = await facturacionMiddleware.fechaHyphen(fecha)
+  req.body.fecha = fecha;
   
   const local = await servicesLocal.getLocal(req.session.userLocal);
   if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
     numeracion = numeracion.length + 1;
-    console.log(req.body)
     let respQuery = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion);
     if(req.body.imprimir == "true" && req.body.tipo !== "S"){
       return res.send({error: "", resultado: true, imprimir: true, tipo: "x", numero: respQuery});
@@ -1700,6 +1707,16 @@ const gastosLocal = async (req, res) => {
   })
 }
 
+const gastosLocalInsert = async (req, res) => {
+  const datos = await gastosMiddleware.crearObjetoGastos(req.body, req.session.userLog, req.session.userLocal);
+  const resultado = await servicesGastos.insertGasto(datos);
+  if(resultado.affectedRows == 1){
+    return res.send({error: "", resultado: true, imprimir: false, tipo: "Gasto"});
+  } else {
+    return res.send({error: resultado.error, resultado: false, imprimir: false, tipo: "Gasto"});
+  }
+}
+
 
 module.exports = {
   index,
@@ -1799,4 +1816,5 @@ module.exports = {
   facturacionFabricaBotonesEliminar,
   facturacionCheckAfip,
   gastosLocal,
+  gastosLocalInsert,
 };

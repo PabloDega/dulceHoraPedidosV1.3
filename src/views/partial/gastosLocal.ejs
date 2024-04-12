@@ -1,7 +1,10 @@
 <h2 id="InputRegistroGastos">Gastos del <input type="date" name="fechaRegGastos" id="fechaRegGastos" value="<%=fechaHyphen%>"></h2> 
 <div id="contRegistroGastos">
-
-    <%if(gastos.length > 0){%>
+    <%function monetarizar(valor){
+        valor = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(valor);
+        return valor;
+    }
+    if(gastos.length > 0){%>
     <table id="tablaGastosLocalRegistros">
         <thead>
             <tr>
@@ -17,7 +20,7 @@
             let fechaGasto = new Date(gasto.fecha);%>
             <tr>
                 <td><%= fechaGasto.toLocaleDateString("es-AR", {timeZone: 'UTC'}) %></td>
-                <td><%= gasto.monto %></td>
+                <td class="importe"><%= monetarizar(gasto.monto) %></td>
                 <td><%= gasto.movimiento %></td>
                 <td><%= gasto.detalles %></td>
                 <td><%= gasto.usuario %></td>
@@ -33,9 +36,9 @@
             <hr>
             <span>Total de operaciones: <%= resumenGastos.totalMovimientos %></span>
             <hr>
-            <span>Gastos total: <%= resumenGastos.gastos %></span>
+            <span class="tablaCeldaNumero">Gastos total: <%= monetarizar(resumenGastos.gastos) %></span>
             <hr>
-            <span>Retiros total: <%= resumenGastos.retiros %></span>
+            <span class="tablaCeldaNumero">Retiros total: <%= monetarizar(resumenGastos.retiros) %></span>
         </div>
         
     </span>

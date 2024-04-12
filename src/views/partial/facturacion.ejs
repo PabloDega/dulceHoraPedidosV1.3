@@ -1,4 +1,4 @@
-<div id="errores"></div>
+<!-- <div id="errores"></div> -->
 <div class="factSubCont">
     <form action="" method="post" class="editor" id="nuevaVenta">
         <h1>Facturacion</h1>  
@@ -69,10 +69,10 @@
                     <input type="text" name="nombreSenia" id="nombresenia" placeholder="Nombre">
                 </span>
                 <hr>
-                <span style="display: none;">
+                <!-- <span style="display: none;">
                     <label for="fecha">Fecha</label>
                     <input type="date" name="fecha" id="fecha">
-                </span>
+                </span> -->
                 <span id="formasDePago">
                     <span>
                         <input type="checkbox" class="FDP" id="FDPefectivo" data-fdp="efectivo" checked>
@@ -140,7 +140,36 @@
     <div id="factBotonesRapidos">
         <!-- autofill javascript -->
     </div>
-
+    <div id="btnGastos"><img src="/im/backventas.svg" alt="" title="Retiros y gastos"></div>
+    <div id="contGastos">
+        <div class="editor">
+            <h1>Retiros y Gastos</h1>
+            <span>
+                <label for="fecha">Fecha</label>
+                <input type="date" name="gastosFecha" id="gastosFecha">
+            </span>
+            <span>
+                <label for="gastoMonto">Monto</label>
+                <input type="number" name="gastosMonto" id="gastosMonto" value="0">
+            </span>
+            <span>
+                <label>Movimiento: </label>
+                <input type="radio" name="gastosMovimiento" id="gastosGasto" value="gasto" checked>
+                <span>Gasto</span>
+                <input type="radio" name="gastosMovimiento" id="gastosRetiro" value="retiro">
+                <span>Retiro</span>
+            </span>
+            <span>
+                <label for="gastosDetalles">Detalles</label>
+                <input type="text" name="gastosDetalles" id="gastosDetalles">
+            </span>
+            <span>
+                <span class="btn btnRojo flexgrow" id="cancelarGasto">Cancelar</span>
+                <span class="btn btnVerde flexgrow" id="enviarGasto">Registrar</span>
+            </span>
+        </div>
+    </div>
+    
     <script>
         window.categorias = <%- JSON.stringify(categorias) %>
         window.productos = <%- JSON.stringify(productos) %>

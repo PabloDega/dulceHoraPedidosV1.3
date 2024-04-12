@@ -413,7 +413,7 @@ const validarBotonFacturacionChain = [
 
 const validarFacturacionChain = [
   body("fecha")
-    .notEmpty().withMessage("El campo 'fecha' es obligatorio")
+    .optional({ values: "falsy" })
     .trim()
     .escape()
     .isString().withMessage("Formato del campo 'fecha' incorrecto"),
@@ -500,7 +500,29 @@ const validarCategoriaReporteChain = [
     .isNumeric().withMessage("Formato del campo 'orden' incorrecto"),
 ]
 
+const validarGastosChain = [
+  body("fecha")
+    .notEmpty().withMessage("El campo 'fecha' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'fecha' incorrecto"),
+  body("movimiento")
+    .notEmpty().withMessage("El campo 'movimiento' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'movimiento' incorrecto"),
+  body("monto")
+    .notEmpty().withMessage("El campo 'monto' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'monto' incorrecto"),
+  body("detalles")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'detalles' incorrecto"),
 
+]
 
 
 module.exports = {
@@ -521,5 +543,6 @@ module.exports = {
   validarBotonFacturacionChain,
   validarFacturacionChain,
   validarCategoriaReporteChain,
+  validarGastosChain,
   dataValidator,
 };

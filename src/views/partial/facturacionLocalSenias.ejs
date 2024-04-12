@@ -1,3 +1,7 @@
+<%function monetarizar(valor){
+    valor = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(valor);
+    return valor;
+}%>
 <h2>Señas</h2>
 
 <table id="facturacionLocalSenias">
@@ -16,18 +20,29 @@
     <tbody>
         <%senias.forEach((seña) => {
             const observaciones = JSON.parse(seña.observaciones)
-            const totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.total);
-            const señaFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.senia);
+            // const totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.total);
+            // const señaFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(seña.senia);
             let resto = seña.total - seña.senia;
-            resto = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(resto);%>
+            // resto = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(resto);
+            let estilo = "seniaPendiente"
+            switch (observaciones.estadoSenia) {
+                case "retirado":
+                    estilo = "seniaRetirada"
+                    break;
+                case "cancelado":
+                    estilo = "seniaCancelada"
+                    break;
+                default:
+                    break;
+            }%>
             <tr>
                 <td><%=seña.numero%></td>
                 <td><%=seña.fecha%></td>
-                <td><%=totalFormateado%></td>
-                <td><%=señaFormateado%></td>
-                <td><%=resto%></td>
+                <td class="importe"><%= monetarizar(seña.total)%></td>
+                <td class="importe"><%=monetarizar(seña.senia)%></td>
+                <td class="importe"><%= monetarizar(resto)%></td>
                 <td><%=observaciones.nombre%></td>
-                <td><%=observaciones.estadoSenia%></td>
+                <td><span class="seniaAll <%= estilo %>"><%=observaciones.estadoSenia%></span></td>
                 <td>
                     <%if(observaciones.estadoSenia == "pendiente"){%>
                         <img src="/im/facturado.svg" alt="icono facturar" title="Facturar" data-id="<%=seña.id%>" data-accion="registrar" id="modificarSenia">

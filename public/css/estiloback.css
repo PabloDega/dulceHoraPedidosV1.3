@@ -1341,3 +1341,82 @@ footer img {
   display: flex;
   flex-direction: column;
 }
+#contGastos{
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+}
+#contGastos > div{
+  height: fit-content;
+}
+#btnGastos{
+  display: flex;
+  background-color: darkred;
+  width: 70px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  cursor: pointer;
+  padding: 1em;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+#btnGastos:hover{
+  background-color: green;
+}
+#btnGastos img{
+  width: 100%;
+  filter: invert(100);
+}
+.factAll{
+  background-color: black;
+  color: white;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.4em;
+  height: 1.4em;
+}
+.factX{
+  background-color: darkslategray;
+  color: white;
+}
+.factA{
+  background-color: darkblue;
+  color: white;
+}
+.factB{
+  background-color: darkgreen;
+  color: white;
+}
+.factC{
+  background-color: darkorange;
+  color: white;
+}
+.factS{
+  background-color: darkred;
+  color: white;
+}
+.seniaAll{
+  font-weight: 600;
+}
+.seniaPendiente{
+  color: red;
+}
+.seniaRetirada{
+  color: darkgreen;
+}
+.seniaCancelada{
+  color: gray;
+}
+.importe{
+  text-align: right;
+}

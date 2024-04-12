@@ -195,6 +195,7 @@ const crearReqAPIWSFE = async (body, local) => {
     datos.cuitR = body.cuit;
     datos.local = local.id;
     datos.pagoMultiple = body.pagoMultiple;
+    datos.senia = body.senia;
     return datos
 }
 

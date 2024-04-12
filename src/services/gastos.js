@@ -24,7 +24,8 @@ const getGastosFecha = async (local, fecha) => {
 
 const insertGasto = async (datos) => {
   try {
-    await conectar.query(`INSERT INTO gastos (fecha, local, usuario, movimiento, monto, detalles) VALUES ("${datos.fecha}", "${datos.local}", "${datos.usuario}", "${datos.movimiento}", "${datos.monto}", "${datos.detalles})`);
+    const resultado = await conectar.query(`INSERT INTO gastos (fecha, local, usuario, movimiento, monto, detalles) VALUES ("${datos.fecha}", "${datos.local}", "${datos.usuario}", "${datos.movimiento}", "${datos.monto}", "${datos.detalles}")`);
+    return resultado[0]
   } catch (error) {
     throw error;
   } finally {

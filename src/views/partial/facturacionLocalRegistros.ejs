@@ -1,12 +1,14 @@
 <h2 id="InputRegistroFacturacion">Facturacion del <input type="date" name="fechaRegFact" id="fechaRegFact" value="<%=fechaHyphen%>"></h2> 
 <div id="contRegistroFact">
-
-    <%if(facturas.length > 0){%>
+    <%  function monetarizar(valor){
+            valor = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(valor);
+            return valor;
+        }
+        if(facturas.length > 0){%>
     <table id="tablaFacturacionLocalRegistros">
         <thead>
             <tr>
                 <th>Fecha</th>
-                <!-- <th>Fecha de emisión</th> -->
                 <th>Tipo</th>
                 <th>Numero</th>
                 <th>Total</th>
@@ -15,17 +17,37 @@
         </thead>
         <tbody>
         <%facturas.forEach(factura => {
-            let fechaFacturacion = new Date(factura.fecha);%>
+            let fechaFacturacion = new Date(factura.fecha);
+            let estilo = "factX"
+            switch (factura.tipo) {
+                case 1:
+                    factura.tipo = "A";
+                    estilo = "factA";
+                    break;
+                case 6:
+                    factura.tipo = "B";
+                    estilo = "factB";
+                    break;
+                case 11:
+                    factura.tipo = "C";
+                    estilo = "factC";
+                    break;
+                case "S":
+                    estilo = "factS";
+                    break;
+                default:
+                    break;
+            }%>
             <tr>
                 <%= // fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%>
                 <td><%= factura.fechaevento.toLocaleString("es-AR") %></td>
-                <td><%= factura.tipo %></td>
+                <td><span class="factAll <%= estilo %>"><%= factura.tipo %></span></td>
                 <td><%= factura.numero %></td>
                 <%let total = factura.total - factura.senia;
                 if(factura.tipo === "S"){
                     total = factura.senia;
                 }%>
-                <td>$<%= total %></td>
+                <td class="importe"><%= monetarizar(total) %></td>
                 <td><%= factura.formaPago %></td>
             </tr>
         <%}); %>
