@@ -12,6 +12,7 @@ let iva21 = 0;
 let total = 0;
 let detalles = [];
 let FDP = {};
+let vuelto = 0;
 
 // Creacion de botones
 
@@ -94,6 +95,7 @@ function cargarItem(e) {
   if (producto.fraccionamiento === "kilo") {
     precio.value = "$" + producto.preciokilo;
     cantidad.setAttribute("step", "0.01");
+    cantidad.setAttribute("min", "0.01")
   } else {
     precio.value = "$" + producto.preciounidad;
     cantidad.removeAttribute("step");
@@ -266,7 +268,7 @@ function bloquearInput(e) {
 }
 
 function mostrarError(info) {
-  let mensaje = `<div class="mensajeErrorForm"><span>${info}</span></div>`;
+  let mensaje = `<div class="mensajeErrorForm"><span>${info}</span><span id="timeBar"></span></div>`;
   document.querySelector("#errores").innerHTML = mensaje;
   document
     .querySelector(".mensajeErrorForm")
@@ -274,11 +276,15 @@ function mostrarError(info) {
 }
 
 function mostrarInfo(info) {
-  let mensaje = `<div class="mensajeInfo"><span>${info}</span></div>`;
+  let mensaje = `<div class="mensajeInfo"><span>${info}</span><span id="timeBar"></span></div>`;
   document.querySelector("#errores").innerHTML = mensaje;
   document
     .querySelector(".mensajeInfo")
     .addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
+}
+
+function cerrarInfo(){
+
 }
 
 async function vaciarFormualrio() {
@@ -394,6 +400,7 @@ function cargarBotonRapido(e) {
     let total = cantidadPrevia + nuevaCantidad;
     document.querySelector(`#cant${itemCargado.dataset.item}`).value = total;
     codigo = itemCargado;
+    document.querySelector(`#cant${itemCargado.dataset.item}`).focus()
   } else {
     let idLibre = buscarInputVacio();
     if (idLibre === undefined) {
@@ -404,6 +411,7 @@ function cargarBotonRapido(e) {
     codigo = document.querySelector(`#cod${idLibre.dataset.item}`);
     codigo.value = e.currentTarget.dataset.codigo;
     document.querySelector(`#cant${idLibre.dataset.item}`).value = e.currentTarget.dataset.cantidad;
+    document.querySelector(`#cant${idLibre.dataset.item}`).focus()
   }
   let event = new Event("change");
   codigo.dispatchEvent(event);
@@ -427,11 +435,20 @@ async function enviarFactura(tipo) {
     }
   }
   document.querySelector("#cortinaLoad").style.display = "flex";
+  // verificar que haya items cargados
   if (buscarInputCargado() === undefined) {
     document.querySelector("#facturacionDetalles").style.display = "none";
     mostrarError("No hay items para facturar");
     document.querySelector("#cortinaLoad").style.display = "none";
     return;
+  }
+  // verificar monto del pago
+  if(document.querySelector("#formaDePago").value == "multiple"){
+    if(vuelto < 0){
+      mostrarError("El monto abonado no cubre el total de la factura");
+      document.querySelector("#cortinaLoad").style.display = "none";
+      return;
+      } 
   }
   // POST via fetch
   const dataBody = new URLSearchParams(new FormData(formulario));
@@ -440,7 +457,7 @@ async function enviarFactura(tipo) {
     body: dataBody,
   });
   resp = await resp.json();
-  console.log(resp);
+  // console.log(resp);
   if (resp.resultado) {
     // cambiar estado de seña
     if (window.data !== "") {
@@ -553,9 +570,10 @@ function calcularVuelto(e) {
     let txt = document.querySelector("#preloadSeniaMonto").innerHTML;
     senia = parseFloat(txt.slice(1, txt.length));
   }
-  let vuelto = parseFloat(e.target.value) - parseFloat(total) + senia;
+  vuelto = parseFloat(e.target.value) - parseFloat(total) + senia;
   document.querySelector("#vuelto").innerHTML = "$" + (vuelto || 0);
-  if (vuelto < 0) {
+  let FDPcargada = document.querySelector("#formaDePago").value;
+  if (vuelto < 0 && e.target.value > 0 && FDPcargada !== "multiple") {
     document.querySelector("#btnSenia").style.display = "flex";
   } else {
     document.querySelector("#btnSenia").style.display = "none";
@@ -599,7 +617,7 @@ document.querySelector("#resetFacturacionA").addEventListener("click", () => {
 
 // Crear forma de pago
 document.querySelectorAll(".FDP").forEach((boton) => {
-  boton.addEventListener("click", (e) => {
+  boton.addEventListener("click", async (e) => {
     const forma = e.target.dataset.fdp;
     FDP[forma] = !FDP[forma];
     let FDPArray = [];
@@ -613,13 +631,19 @@ document.querySelectorAll(".FDP").forEach((boton) => {
       vaciarMontosFDP();
       ocultarMontosInputFDP();
       eventoVuelto();
+      let click = new Event("click");
+      document.querySelector("#FDPefectivo").dispatchEvent(click);
+      document.querySelector("#FDPefectivo").checked = true;
     } else if (FDPArray.length > 1) {
+      pasarPagoAEfectivo();
       document.querySelector("#formaDePago").value = "multiple";
       cargarMontosFDP();
       mostrarMontosInputFDP();
+      cargarVuelto()
       eventoVuelto();
       document.querySelector("#pagoMultiple").value = JSON.stringify(FDP);
     } else {
+      await pasarPMaPago();
       document.querySelector("#formaDePago").value = FDPArray[0];
       vaciarMontosFDP();
       ocultarMontosInputFDP();
@@ -627,6 +651,32 @@ document.querySelectorAll(".FDP").forEach((boton) => {
     }
   });
 });
+
+function cargarVuelto(){
+  let total = 0;
+  for (item in FDP) {
+    if (FDP[item] === true) {  
+      total += FDP[`monto${item}`];
+    }
+  }
+  document.querySelector("#vueltoPago").value = total;
+}
+
+function pasarPagoAEfectivo(){
+  let monto = document.querySelector("#vueltoPago").value
+  let FDPsimple = document.querySelector("#formaDePago").value;
+  if(monto !== "" && monto > 0 && FDPsimple !== "multiple"){
+    document.querySelector(`#PM${FDPsimple}`).value = monto;
+  }
+}
+
+async function pasarPMaPago(){
+  for (item in FDP) {
+    if (FDP[item] === true) {
+      document.querySelector("#vueltoPago").value = FDP[`monto${item}`];
+    }
+  }
+}
 
 function crearFDP() {
   FDP = {};
@@ -653,7 +703,7 @@ function vaciarMontosFDP() {
   document.querySelector("#PMdebito").value = 0;
   document.querySelector("#PMcredito").value = 0;
   document.querySelector("#PMvirtual").value = 0;
-  document.querySelector("#vueltoPago").value = "";
+  // document.querySelector("#vueltoPago").value = "";
 }
 
 function cargarMontosFDP() {

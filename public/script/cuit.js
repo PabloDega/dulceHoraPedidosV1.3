@@ -30,7 +30,7 @@ document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNu
 
 
 function mostrarError(info){
-    let mensaje = `<div class="mensajeErrorForm"><span>${info}</span></div>`;
+    let mensaje = `<div class="mensajeErrorForm"><span>${info}</span><span id="timeBar"></span></div>`;
     document.querySelector("#errores").innerHTML = mensaje;
     document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
 }

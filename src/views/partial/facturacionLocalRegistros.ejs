@@ -48,7 +48,43 @@
                     total = factura.senia;
                 }%>
                 <td class="importe"><%= monetarizar(total) %></td>
-                <td><%= factura.formaPago %></td>
+                
+                <td class="factRegFDP">
+                    <%= factura.formaPago %>
+
+                    <%if(factura.formaPago === "multiple"){%>
+                        <span class="factRegFDPinfo factRegPM">&#128712;
+                            <span class="factRegObservaciones">
+                            <%let observaciones = JSON.parse(factura.observaciones);
+                            observaciones = observaciones.pagoMultiple
+                            for(dato in observaciones){
+                                if(observaciones[dato] == true){%>
+                                    <span>
+                                        <span><%= dato %>: </span>
+                                        <span><%= monetarizar(observaciones[`monto${dato}`]); %></span>
+                                    </span><hr>
+                                <%}
+                            }%>
+                            </span>
+                        </span>
+                    <%}%>
+
+                    <%if(factura.senia > 0 && factura.tipo !== "S"){%>
+                        <span class="factRegFDPinfo factRegSenia">&#128712;
+                            <span class="factRegObservaciones">
+                                <span>
+                                    <span>Total: </span>
+                                    <span><%= monetarizar(factura.total); %></span>
+                                </span><hr>
+                                <span>
+                                    <span>Senia: </span>
+                                    <span><%= monetarizar(factura.senia); %></span>
+                                </span>
+                            </span>
+                        </span>
+                    <%}%>
+
+                </td>
             </tr>
         <%}); %>
         </tbody>
