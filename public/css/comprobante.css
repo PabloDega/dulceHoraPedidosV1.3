@@ -1,26 +1,33 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+#factTickets{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 #comprobante {
   width: 58mm;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-  border: solid 2px black;
+  /* border: solid 2px black; */
   padding: 5mm;
+  background-color: white;
 }
 #comprobante img {
   width: 35mm;
 }
 #comprobante h1 {
-  font-size: 1.3em;
+  font-size: 1.2em;
   text-align: center;
 }
 #comprobante h2 {
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 #comprobante h3 {
   font-size: 1em;
@@ -58,8 +65,47 @@
     gap: 1em;
     width: fit-content;
 }
-@media print{
+#qrCAE{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1em;
+}
+@media print {
     #botonera{
-        display: none;
+        display: none !important;
+    }
+    #factTickets{
+      background-color: none;
+      width: fit-content;
+      height: fit-content;
+    }
+    #comprobante{
+      display: flex;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 0;
+    }
+    #comprobante table tbody tr{
+      border-bottom: 1px solid black;
+    }
+    #factCont{
+      display: none !important;
+    }
+    #factSubCont{
+      display: none !important;
+    }
+    header{
+      display: none !important;
+    }
+    #nuevaVenta{
+      display: none !important;
+    }
+    #factBotonesRapidos{
+      display: none !important;
+    }
+    .mensajeInfo{
+      display: none !important;
     }
 }

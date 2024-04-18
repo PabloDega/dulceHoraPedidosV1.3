@@ -1,4 +1,7 @@
 <!-- <div id="errores"></div> -->
+<div id="factMenu">
+    
+</div>
 <div class="factSubCont">
     <form action="" method="post" class="editor" id="nuevaVenta">
         <h1>Facturacion</h1>  
@@ -153,11 +156,11 @@
         <div class="editor">
             <h1>Retiros y Gastos</h1>
             <span>
-                <label for="fecha">Fecha</label>
+                <label for="gastosFecha">Fecha</label>
                 <input type="date" name="gastosFecha" id="gastosFecha">
             </span>
             <span>
-                <label for="gastoMonto">Monto</label>
+                <label for="gastosMonto">Monto</label>
                 <input type="number" name="gastosMonto" id="gastosMonto" value="0">
             </span>
             <span>
@@ -184,5 +187,6 @@
         window.botones = <%- JSON.stringify(botonesfacturacion) %>
         window.impuestos = <%- JSON.stringify(impuestos) %>
         window.data = <%- JSON.stringify(data) %>
+        window.local = <%- JSON.stringify(local) %>
     </script>
 </div>

@@ -443,7 +443,7 @@ async function enviarFactura(tipo) {
     return;
   }
   // verificar monto del pago
-  if(document.querySelector("#formaDePago").value == "multiple"){
+  if(tipo !== "S"){
     if(vuelto < 0){
       mostrarError("El monto abonado no cubre el total de la factura");
       document.querySelector("#cortinaLoad").style.display = "none";
@@ -457,27 +457,41 @@ async function enviarFactura(tipo) {
     body: dataBody,
   });
   resp = await resp.json();
-  // console.log(resp);
+  console.log(resp);
   if (resp.resultado) {
     // cambiar estado de seña
     if (window.data !== "") {
       if (window.data.tipo === "S") {
         await fetch(
-          `/panel/facturacion/registros/senias/actualizar?id=${window.data.id}&accion=registrar`,
-          {
-            method: "GET",
-          }
+          `/panel/facturacion/registros/senias/actualizar?id=${window.data.id}&accion=registrar`,{method: "GET",}
         );
       }
     }
     mostrarInfo("Operación registrada");
     vaciarFormualrio();
     if (resp.imprimir) {
-      console.log("imprime....");
+      let ticket;
+      if(resp.tipo === "x"){
+        ticket = await crearComprobanteComanda(resp.numero);
+      } else if(resp.tipo == "CAE"){
+        ticket = await crearComprobanteCAE(resp.numero);
+      } else if(resp.tipo === "s"){
+        ticket = await crearComprobanteSenia(resp.numero);
+      }
+      if(ticket.error){
+        mostrarError(ticket.error);
+        return
+      }
+      document.querySelector("#factTickets").innerHTML = ticket;
+      if(resp.tipo == "CAE"){
+        crearQR(QRstring);
+      }
+      setTimeout(() => {window.print()}, 500);
       // abrir popup con ticket
-      window.open(`/panel/facturacion/comprobante?id=${resp.numero}`);
+      // window.open(`/panel/facturacion/comprobante?id=${resp.numero}`);
     }
   } else {
+    console.log("ping error 1")
     mostrarError(resp.error);
   }
   document.querySelector("#cortinaLoad").style.display = "none";
@@ -564,6 +578,11 @@ document.querySelector("#vueltoPago").addEventListener("change", (e) => {
   return;
 });
 
+document.querySelector("#vueltoPago").addEventListener("keyup", (e) => {
+  calcularVuelto(e);
+  return;
+});
+
 function calcularVuelto(e) {
   let senia = 0;
   if (document.querySelector("#preloadSeniaMonto") != null) {
@@ -635,6 +654,7 @@ document.querySelectorAll(".FDP").forEach((boton) => {
       document.querySelector("#FDPefectivo").dispatchEvent(click);
       document.querySelector("#FDPefectivo").checked = true;
     } else if (FDPArray.length > 1) {
+      document.querySelector("#vueltoPago").readOnly = true;
       pasarPagoAEfectivo();
       document.querySelector("#formaDePago").value = "multiple";
       cargarMontosFDP();
@@ -647,6 +667,8 @@ document.querySelectorAll(".FDP").forEach((boton) => {
       document.querySelector("#formaDePago").value = FDPArray[0];
       vaciarMontosFDP();
       ocultarMontosInputFDP();
+      document.querySelector("#vueltoPago").value = "";
+      document.querySelector("#vueltoPago").readOnly = false;
       eventoVuelto();
     }
   });
@@ -731,7 +753,7 @@ function ocultarMontosInputFDP() {
 }
 
 document.querySelectorAll(".pagoMultiple").forEach((input) => {
-  input.addEventListener("change", (e) => {
+  input.addEventListener("keyup", (e) => {
     const forma = e.target.dataset.fdp;
     FDP[forma] = parseInt(e.target.value);
     document.querySelector("#pagoMultiple").value = JSON.stringify(FDP);
@@ -740,6 +762,7 @@ document.querySelectorAll(".pagoMultiple").forEach((input) => {
     eventoVuelto();
   });
 });
+
 
 function eventoVuelto() {
   let evento = new Event("change");

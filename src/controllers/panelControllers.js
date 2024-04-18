@@ -1391,7 +1391,6 @@ const facturacion = async(req, res) => {
     if(isNaN(parseInt(req.query.id))){
       return res.redirect("/panel/facturacion");
     } else {
-      console.log("mark 1");
       let senia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
       if(senia !== undefined){
         data = senia;
@@ -1407,6 +1406,7 @@ const facturacion = async(req, res) => {
     productos,
     categorias,
     data,
+    local,
     impuestos: local.impuestos,
     botonesfacturacion,
     usuario: req.session.userLog,
@@ -1459,69 +1459,62 @@ const facturacionPost = async(req, res) => {
   } else {
     let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local);
     // enviar req a AFIP
-    let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos))) 
+    let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos)));
+    let orden;
     if(CAE.error){
       console.log("Error detectado en CAE" + CAE.error);
       return res.send({error: CAE.error, resultado: false, imprimir: false, tipo: "CAE"});
     } else {
-      await servicesFacturacion.insertFacturaConCAE(CAE, datos, req.body);
+      orden = await servicesFacturacion.insertFacturaConCAE(CAE, datos, req.body);
     }
     if(req.body.imprimir == "false"){
-      return res.send({error: "", resultado: true, imprimir: false, tipo: "CAE"});
+      return res.send({error: "", resultado: true, imprimir: false, tipo: "CAE", numero: orden});
     } else {
-      return res.send({error: "", resultado: true, imprimir: true, tipo: "CAE"});
+      return res.send({error: "", resultado: true, imprimir: true, tipo: "CAE", numero: orden});
     }
   }
 }
 
 const facturacionComprobante = async (req, res) => {
   if (!req.query.id) {
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "Datos de consulta incorrectos"});
   } else if (isNaN(parseInt(req.query.id))) {
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "Datos de consulta incorrectos"});
   }
-  let factura = await servicesFacturacion.getFacturaNF(req.query.id);
+  let factura = await servicesFacturacion.getFacturaNF(req.query.id, req.session.userLocal);
   if (factura.length !== 1) {
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "Datos de consulta incorrectos"});
   }
   factura = factura[0];
-  const local = await servicesLocal.getLocal(factura.local);
-  const productos = await servicesProductos.getProductosLocal();
-  const fecha = await produccionMiddleware.fechaProduccionNormalizada(factura.fecha);
-  res.render(__basedir + "/src/views/pages/facturacionComprobante", {
-    factura,
-    local,
-    productos,
-    fecha,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-    layout: __basedir + "/src/views/layouts/comprobante",
-  });
+  return res.send(factura);
 };
 
 const facturacionComprobanteParcial = async (req, res) => {
   if (!req.query.id) {
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "Datos de consulta incorrectos"});
   } else if (isNaN(parseInt(req.query.id))) {
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "Datos de consulta incorrectos"});
   }
-  let factura = await servicesFacturacion.getFacturaNF(req.query.id);
+  let factura = await servicesFacturacion.getFacturaNF(req.query.id, req.session.userLocal);
   if (factura.length !== 1) {
-    return res.redirect("/panel/facturacion");
+    return res.send({error: "Datos de consulta incorrectos"});
   }
   factura = factura[0];
-  const local = await servicesLocal.getLocal(factura.local);
-  const productos = await servicesProductos.getProductosLocal();
-  const fecha = await produccionMiddleware.fechaProduccionNormalizada(factura.fecha);
-  res.render(__basedir + "/src/views/pages/facturacionComprobanteParcial", {
-    factura,
-    local,
-    productos,
-    fecha,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-    layout: __basedir + "/src/views/layouts/comprobante",
-  });
+  return res.send(factura);
+};
+
+const facturacionComprobanteFiscal = async (req, res) => {
+  if (!req.query.id) {
+    return res.send({error: "Datos de consulta incorrectos"});
+  } else if (isNaN(parseInt(req.query.id))) {
+    return res.send({error: "Datos de consulta incorrectos"});
+  }
+  let factura = await servicesFacturacion.getFacturaCAE(req.query.id, req.session.userLocal);
+  if (factura.length !== 1) {
+    return res.send({error: "Datos de consulta incorrectos"});
+  }
+  factura = factura[0];
+  return res.send(factura);
 };
 
 const facturacionFabrica = async (req, res) => {
@@ -1804,6 +1797,7 @@ module.exports = {
   facturacionPost,
   facturacionComprobante,
   facturacionComprobanteParcial,
+  facturacionComprobanteFiscal,
   facturacionFabrica,
   facturacionRegistros,
   facturacionRegistrosSenias,

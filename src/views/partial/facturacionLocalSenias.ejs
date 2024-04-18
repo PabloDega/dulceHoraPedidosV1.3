@@ -3,7 +3,10 @@
     return valor;
 }%>
 <h2>Señas</h2>
-
+<%console.log(senias)
+if(senias.length < 1){%>
+        <h1>No se encuentran señas en la base de datos</h1>
+<%return}%>
 <table id="facturacionLocalSenias">
     <thead>
         <tr>

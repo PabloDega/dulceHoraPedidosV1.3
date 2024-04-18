@@ -117,7 +117,7 @@ const getSenia = async(local, id) => {
     conectar.releaseConnection();
   }
 }
-
+// agregar local a updateSenias!!!
 const updateSenias = async (id, observaciones) => {
   try {
     await conectar.query(`UPDATE facturacionnf SET observaciones = '${observaciones}' WHERE id = "${id}"`);
@@ -128,9 +128,9 @@ const updateSenias = async (id, observaciones) => {
   }
 };
 
-const getFacturaNF = async(id) => {
+const getFacturaNF = async(id, local) => {
   try {
-    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE id = '${id}'`);
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE id = '${id}' AND local = '${local}'`);
     return facturas[0];
   } catch (error) {
     throw error;
@@ -157,10 +157,10 @@ const insertFacturaNF = async (local, datos, numeracion) => {
     conectar.releaseConnection();
   }
 };
-
-const getFacturaCAE = async(id) => {
+// agregar local para varificar la consulta
+const getFacturaCAE = async(id, local) => {
   try {
-    const facturas = await conectar.query(`SELECT * FROM registrosWSFE WHERE id = '${id}'`);
+    const facturas = await conectar.query(`SELECT * FROM registrosWSFE WHERE id = '${id}' AND local = '${local}'`);
     return facturas[0];
   } catch (error) {
     throw error;
@@ -187,7 +187,7 @@ const insertFacturaConCAE = async (CAERaw, datos, body) => {
     obs.pagoMultiple = JSON.parse(datos.pagoMultiple);
   }
   try {
-    const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE, senia,  observaciones) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR}", "${datos.local}", "${CAE.CbteDesde}", "${body.fecha}", "${datos.tipo}", "${body.formaDePago}", "${body.datos}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}", "${datos.senia}", '${JSON.stringify(obs)}')`);
+    const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE, senia,  observaciones) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR || 0}", "${datos.local}", "${CAE.CbteDesde}", "${body.fecha}", "${datos.tipo}", "${body.formaDePago}", "${body.datos}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}", "${datos.senia}", '${JSON.stringify(obs)}')`);
     return  insert[0].insertId;
   } catch (error) {
     throw error;

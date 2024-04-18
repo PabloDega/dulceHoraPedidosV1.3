@@ -1,0 +1,54 @@
+#factMenu{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+  #menu{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    background-color: white;
+    padding: 1em;
+    max-height: 100vh;
+    overflow: scroll;
+    position: relative;
+  }
+  .menuAgregar{
+    display: flex;
+    /* width: 25px; */
+    /* height: 25px; */
+    padding: 0.3em;
+    background-color: orangered;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    font-weight: 600;
+  }
+  .menuAgregar:hover{
+    background-color: darkred;
+  }
+  .botoneraFact{
+    display: flex;
+    gap: 0.5em;
+  }
+  #menuCerrar{
+    display: flex;
+    background-color: black;
+    color: white;
+    font-weight: 600;
+    padding: 1em;
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    cursor: pointer;
+  }

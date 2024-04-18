@@ -186,6 +186,8 @@ router.get("/facturacion/comprobante", auth.authAdmin, panelControllers.facturac
 
 router.get("/facturacion/comprobante/parcial", auth.authAdmin, panelControllers.facturacionComprobanteParcial);
 
+router.get("/facturacion/comprobante/fiscal", auth.authAdmin, panelControllers.facturacionComprobanteFiscal);
+
 router.get("/facturacion/registros", auth.authAdmin, panelControllers.facturacionRegistros);
 
 router.get("/facturacion/registros/senias", auth.authAdmin, panelControllers.facturacionRegistrosSenias);
