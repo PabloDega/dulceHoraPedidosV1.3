@@ -3,8 +3,7 @@
     return valor;
 }%>
 <h2>Señas</h2>
-<%console.log(senias)
-if(senias.length < 1){%>
+<%if(senias.length < 1){%>
         <h1>No se encuentran señas en la base de datos</h1>
 <%return}%>
 <table id="facturacionLocalSenias">
@@ -40,7 +39,7 @@ if(senias.length < 1){%>
             }%>
             <tr>
                 <td><%=seña.numero%></td>
-                <td><%=seña.fecha%></td>
+                <td><%=seña.fechaevento.toLocaleString("es-AR")%></td>
                 <td class="importe"><%= monetarizar(seña.total)%></td>
                 <td class="importe"><%=monetarizar(seña.senia)%></td>
                 <td class="importe"><%= monetarizar(resto)%></td>

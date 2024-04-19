@@ -1,10 +1,10 @@
-<div class="backMenu">
+<div class="backMenu noImprimir">
   <h2>Panel de Control<span id="backMenuShow">Menu</span></h2>
 </div>
 
 
 <% if(userRol == "supervisor" || userRol == "produccion"){%>
-  <div class="backMenu" id="supervisor">
+  <div class="backMenu noImprimir" id="supervisor">
     <h2>Administracion</h2>
     <div class="backCard <%= menu %>" id="usuarios">
       <img src="/im/backuser.svg" alt="icono usuarios" />
@@ -59,7 +59,7 @@
   <!-- </span> -->
 <% } %>
 <% if(userRol == "admin" ||userRol == "atencion"){ %>
-  <div class="backMenu" id="admin">
+  <div class="backMenu noImprimir" id="admin">
   <!-- <div class="backCard <%= //menu %>" id="stock" style="display: none;">
     <img src="/im/backprods.svg" alt="icono stock" />
     <h1>Stock</h1>

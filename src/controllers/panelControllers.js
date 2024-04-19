@@ -1416,9 +1416,9 @@ const facturacion = async(req, res) => {
 }
 
 const facturacionPost = async(req, res) => {
+  console.log(req.body)
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    console.log(errores)
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
     const productos = await servicesProductos.getProductosLocal();
     const categorias = await servicesProductos.getCategorias();
@@ -1561,11 +1561,16 @@ const facturacionRegistros = async (req, res) => {
   facturas.sort((a, b) => a.fechaevento - b.fechaevento);
   const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas)
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  const productos = await servicesProductos.getProductosLocal();
+
   res.render(__basedir + "/src/views/pages/facturacionLocalRegistros", {
     resumen,
     facturas,
     fechaNormalizada,
     fechaHyphen,
+    local,
+    productos,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     servicios,

@@ -2,10 +2,6 @@ const servicesFacturacion = require(__basedir + "/src/services/facturacion");
 
 const axios = require('axios');
 
-const imprimirTicket = async (idFactura) => {
-    console.log(factura)
-}
-
 const fechaHoy = async () => {
     let hoy = new Date();
     let anio = hoy.getFullYear();
@@ -206,9 +202,9 @@ const fetchAPIWSFE = async (data) => {
     try {
         const respuesta = await axios.post(URL, data);
         CAE = respuesta.data;
-        console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
+        // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
-        console.log("--> Error CAE: " + error)
+        // console.log("--> Error CAE: " + error)
         CAE = error;
     }
   return CAE;
@@ -219,7 +215,6 @@ const validarReq = async(body) => {
 }
 
 module.exports = {
-    imprimirTicket,
     fechaHoy,
     fechaHyphen,
     fechaNormalizada,

@@ -304,13 +304,39 @@ if (document.querySelector(".pedidosProdCard") != null) {
 
 // Toggle precio de docena en editar/nuevo producto
 function editProdtoggleUnidad(e) {
-  let precioDocenaInput = document.querySelector("#editProdPrecioDocena");
+  /* let precioDocenaInput = document.querySelector("#preciodocena");
   let precioDocena = document.querySelector("#precioDoc");
   if (e.target.value == "Docena") {
     precioDocenaInput.style.display = "block";
   } else {
     precioDocenaInput.style.display = "none";
     precioDocena.value = "0";
+  } */
+  console.log(e.target.value)
+  let precioUnidad = document.querySelector("#preciounidad");
+  let precioDocena = document.querySelector("#preciodocena");
+  let precioKilo = document.querySelector("#preciokilo");
+  if (e.target.value == "docena") {
+    precioDocena.readOnly = false;
+    precioKilo.readOnly = true;
+    precioKilo.value = 0;
+  } else if(e.target.value == "unidad"){
+    precioUnidad.readOnly = false;
+    precioKilo.readOnly = true;
+    precioKilo.value = 0;
+    precioDocena.readOnly = true;
+    precioDocena.value = 0;
+  } else if(e.target.value == "kilo"){
+    precioKilo.readOnly = false;
+    precioUnidad.readOnly = true;
+    precioUnidad.value = 0;
+    precioDocena.readOnly = true;
+    precioDocena.value = 0;
+  } else if(e.target.value == "kilo"){
+    precioUnidad.readOnly = false;
+    precioDocena.readOnly = false;
+    precioKilo.readOnly = false;
+
   }
 }
 
@@ -358,9 +384,7 @@ function confirmaEliminar(data) {
   document
     .querySelector("#btnEliminar")
     .addEventListener(
-      "click",
-      () => (location.href = `/panel/${data.tipo}/eliminar?id=${data.id || data.usuario}`)
-    );
+      "click", () => {location.href = `/panel/${data.tipo}/eliminar?id=${data.id || data.usuario}`});
   document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
 }
 

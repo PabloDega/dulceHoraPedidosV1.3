@@ -290,7 +290,7 @@ function cerrarInfo(){
 async function vaciarFormualrio() {
   if (window.data !== "") {
     if (window.data.tipo === "S") {
-      window.location.href = "/panel/facturacion";
+      window.location.href = "/panel/facturacion/registros";
       return;
     }
   }
@@ -457,7 +457,7 @@ async function enviarFactura(tipo) {
     body: dataBody,
   });
   resp = await resp.json();
-  console.log(resp);
+  // console.log(resp);
   if (resp.resultado) {
     // cambiar estado de seña
     if (window.data !== "") {
@@ -491,7 +491,7 @@ async function enviarFactura(tipo) {
       // window.open(`/panel/facturacion/comprobante?id=${resp.numero}`);
     }
   } else {
-    console.log("ping error 1")
+    // console.log("ping error 1")
     mostrarError(resp.error);
   }
   document.querySelector("#cortinaLoad").style.display = "none";

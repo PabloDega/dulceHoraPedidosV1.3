@@ -3,7 +3,7 @@ async function crearComprobanteSenia(id) {
   let factura = await fetch(`/panel/facturacion/comprobante/parcial?id=${id}`, { method: "GET" });
   factura = await factura.json();
   // capturar error
-  let detalle = factura.detalle;
+  let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
     let producto = window.productos.find((prod) => prod.codigo === item[3]);
@@ -44,7 +44,7 @@ async function crearComprobanteComanda(id) {
   let factura = await fetch(`/panel/facturacion/comprobante?id=${id}`, { method: "GET" });
   factura = await factura.json();
   // capturar error
-  let detalle = factura.detalle;
+  let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
     let producto = window.productos.find((prod) => prod.codigo === item[3]);
@@ -82,7 +82,6 @@ async function crearComprobanteCAE(id) {
   factura = await factura.json();
   // capturar error
   if (factura.error) {
-    console.log("ping");
     return factura.error;
   }
   // return
@@ -170,7 +169,6 @@ async function crearQRstring(datos) {
   let url = "https://www.afip.gob.ar/fe/qr/?p=";
   let datos64 = btoa(JSON.stringify(datos));
   datos64 = url + datos64;
-  console.log(datos64);
   return datos64;
 }
 

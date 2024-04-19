@@ -16,10 +16,9 @@
             </tr>
         </thead>
         <tbody>
-        <%gastos.forEach(gasto => {
-            let fechaGasto = new Date(gasto.fecha);%>
+        <%gastos.forEach(gasto => {%>
             <tr>
-                <td><%= fechaGasto.toLocaleDateString("es-AR", {timeZone: 'UTC'}) %></td>
+                <td><%= gasto.evento.toLocaleString("es-AR") %></td>
                 <td class="importe"><%= monetarizar(gasto.monto) %></td>
                 <td><%= gasto.movimiento %></td>
                 <td><%= gasto.detalles %></td>

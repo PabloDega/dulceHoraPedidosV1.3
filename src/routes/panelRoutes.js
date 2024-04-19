@@ -198,6 +198,8 @@ router.get("/facturacion/registros/gastos", auth.authAdmin, panelControllers.gas
 
 router.post("/facturacion/registros/gastos/nuevo", auth.authAdmin, validar.validarGastosChain, panelControllers.gastosLocalInsert);
 
+// router.get("/facturacion/registros/notadecredito", auth.authAdmin, panelControllers.facturacionNotaDeCredito);
+
 router.get("/facturacion/fabrica", auth.authSupervisor, panelControllers.facturacionFabrica);
 
 router.get("/facturacion/fabrica/botones", auth.authSupervisor, panelControllers.facturacionFabricaBotones);

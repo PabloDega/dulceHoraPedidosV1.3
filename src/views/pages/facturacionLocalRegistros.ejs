@@ -1,6 +1,19 @@
 <%- include("../partial/confirmarEliminar") %>
 <%- include("../partial/menu", {menu: "small"})%>
 <%- include("../partial/menuRegistrosFacturacion", {menu: "small"})%>
+<link rel="stylesheet" href="/css/comprobante.css" />
+
+<div id="errores"></div>
+<div id="factTickets"></div>
 <div id="backRender">
     <%- include("../partial/facturacionLocalRegistros", {}) %>
 </div>
+
+<script defer src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script defer src="/script/tickets.js"></script>
+<script defer src="/script/registroFacturacion.js"></script>
+
+<script>
+    window.local = <%- JSON.stringify(local) %>
+    window.productos = <%- JSON.stringify(productos) %>
+</script>

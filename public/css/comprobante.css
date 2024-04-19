@@ -108,4 +108,16 @@
     .mensajeInfo{
       display: none !important;
     }
+    #contRegistroFact{
+      display: none !important;
+    }
+    .noImprimir{
+      display: none !important;
+    }
+    footer{
+      display: none !important;
+    }
+}
+@page{
+  margin: 5mm;
 }

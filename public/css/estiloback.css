@@ -1361,6 +1361,9 @@ footer img {
 #tablaFacturacionLocalRegistros, #tablaGastosLocalRegistros{
   height: fit-content;
 }
+#tablaFacturacionLocalRegistros tr td{
+  height: 100%;
+}
 #facturacionLocalSenias tbody img{
   width: 25px;
   cursor: pointer;
@@ -1494,4 +1497,12 @@ footer img {
 }
 .factRegSenia{
   color: darkred;
+}
+.reimprimirTicket{
+  width: 25px;
+  cursor: pointer;
+}
+#total{
+  font-weight: 600;
+  font-size: 1.5em;
 }
