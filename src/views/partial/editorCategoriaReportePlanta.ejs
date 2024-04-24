@@ -12,14 +12,17 @@
     </span>
     <span>
         <label for="seccion">Sección</label>
-        <input type="number" name="seccion" id="seccion" min="0" value="<%= valoresForm.minimo %>">
+        <input type="number" name="seccion" id="seccion" min="0" value="<%= valoresForm.seccion %>">
     </span>
     <span>
         <label for="orden">Orden</label>
         <input type="number" name="orden" id="orden" min="0" value="<%= valoresForm.orden %>">
     </span>
     <span>
-        <input type="submit" value="Crear">
+        <input type="submit" value="Modificar">
     </span>
 </form>
-<script defer src="/script/nuevaCategoriaReportePlanta.js"></script>
+<script defer src="/script/editorCategoriaReportePlanta.js"></script>
+<script>
+    window.seleccionados = <%- JSON.stringify(valoresForm.productos) %>
+</script>

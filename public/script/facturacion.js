@@ -343,6 +343,7 @@ async function vaciarFormualrio() {
 
   document.querySelector("#preloadSenia").style.display = "none";
   document.querySelector("#preloadSenia").innerHTML = "";
+  document.querySelector("#seniaHiden").value = 0;
 
   window.location.URLSearchParams = "";
 
@@ -468,7 +469,7 @@ async function enviarFactura(tipo) {
       }
     }
     mostrarInfo("Operación registrada");
-    vaciarFormualrio();
+    
     if (resp.imprimir) {
       let ticket;
       if(resp.tipo === "x"){
@@ -489,6 +490,8 @@ async function enviarFactura(tipo) {
       setTimeout(() => {window.print()}, 500);
       // abrir popup con ticket
       // window.open(`/panel/facturacion/comprobante?id=${resp.numero}`);
+    } else {
+      vaciarFormualrio();
     }
   } else {
     // console.log("ping error 1")
@@ -498,6 +501,8 @@ async function enviarFactura(tipo) {
 
   // formulario.submit()
 }
+
+window.addEventListener("afterprint", vaciarFormualrio)
 
 function registrarSeña() {
   // cambiar tipo de factura a S, registrar NF
@@ -646,6 +651,7 @@ document.querySelectorAll(".FDP").forEach((boton) => {
       }
     }
     if (FDPArray.length == 0) {
+      document.querySelector("#vueltoPago").readOnly = false;
       document.querySelector("#formaDePago").value = "";
       vaciarMontosFDP();
       ocultarMontosInputFDP();

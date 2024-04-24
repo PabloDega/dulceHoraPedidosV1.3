@@ -168,7 +168,7 @@ const exportarExcelReportePlanta = async (req, res) => {
             secciones.add(categoria.seccion);
         })
         secciones = Array.from(secciones);
-        secciones.sort();
+        await secciones.sort();
         let iProductos = 1
         secciones.forEach((dato) => {
             ws.cell(iProductos, 1).date(new Date(fecha)).style(estiloNegro).style({font: {size: 16,}});
@@ -182,10 +182,10 @@ const exportarExcelReportePlanta = async (req, res) => {
             ordenado = Array.from(ordenado)
             ordenado.sort();
             ordenado.forEach((orden) => {
-                categoriasEnOrden = categoriaDeSeccion.filter((categoria) => categoria.orden === orden)
+                categoriasEnOrden = categoriaDeSeccion.filter((categoria) => categoria.orden == orden)
                 categoriasEnOrden.forEach((categoria) => {
                     // let productos = JSON.parse(categoria.productos);
-                    let codigos = categoria.productos;
+                    let codigos = JSON.parse(categoria.productos);
                     let pedido = [];
                     codigos.forEach((codigo) => {
                         let pedidoDelCodigo = productos.filter((prod) => prod.codigo == codigo);

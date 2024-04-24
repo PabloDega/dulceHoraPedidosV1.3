@@ -576,3 +576,8 @@ if (document.querySelector("#nuevoPedidoPersonalizado") != null) {
       document.querySelector("#cortinaLoad").style.display = "flex";
     });
 }
+if (document.querySelector("#reportePlantaCategoriasEliminar") != null) {
+  document
+    .querySelectorAll("#reportePlantaCategoriasEliminar")
+    .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
+}

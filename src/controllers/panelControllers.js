@@ -1220,6 +1220,14 @@ const reportePlanta = async(req, res) => {
   });
 }
 
+const reportePlantaCategoriasEliminar = async(req, res) => {
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/produccion/reportes/categorias")
+  }
+  await servicesReportes.deleteCategoriasReporte(req.query.id);
+  return res.redirect("/panel/produccion/reportes/categorias");
+}
+
 const reportePedidos = async(req, res) => {
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
@@ -1302,6 +1310,23 @@ const reportePlantaCategoriasNueva = async (req, res) => {
   });
 }
 
+const reportePlantaCategoriasEditar = async (req, res) => {
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/produccion/reportes/categorias/");
+  }
+  const categoria = await servicesReportes.getCategoriaReporte(parseInt(req.query.id));
+  if(categoria.length !== 1){
+    return res.redirect("/panel/produccion/reportes/categorias/");
+  }
+  const productosFabrica = await servicesProductosFabrica.getProductosFabricaActivos();
+  res.render(__basedir + "/src/views/pages/editorCategoriaReportePlanta", {
+    valoresForm: categoria[0],
+    productosFabrica,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+}
+
 const reportePlantaCategoriasInsert = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
@@ -1316,6 +1341,27 @@ const reportePlantaCategoriasInsert = async (req, res) => {
   };
 
   await servicesReportes.insertCategoriasReporte(req.body)
+  return res.redirect("/panel/produccion/reportes/categorias");
+}
+
+const reportePlantaCategoriasUpdate = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const productosFabrica = await servicesProductosFabrica.getProductosFabricaActivos();
+    return res.render(__basedir + "/src/views/pages/editorCategoriaReportePlanta", {
+      errores: errores.array({ onlyFirstError: true }),
+      valoresForm: req.body,
+      productosFabrica,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  };
+  
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/produccion/reportes/categorias/");
+  }
+  req.body.id = req.query.id
+  await servicesReportes.updateCategoriasReporte(req.body)
   return res.redirect("/panel/produccion/reportes/categorias");
 }
 
@@ -1353,7 +1399,7 @@ const servicioInsert = async (req, res) => {
 }
 
 const servicioEliminar = async (req, res) => {
-  if(!req.query.id){
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/servicios");
   }
   await servicesServicios.deleteServicio(req.query.id);
@@ -1578,9 +1624,21 @@ const facturacionRegistros = async (req, res) => {
 };
 
 const facturacionRegistrosSenias = async (req, res) => {
+  let dias = 15;
+  if(req.query.resultados){
+    if(!isNaN(parseInt(req.query.resultados))){
+      console.log("ping")
+      dias = parseInt(req.query.resultados);
+    }
+  } 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   let senias = await servicesFacturacion.getSenias(req.session.userLocal);
+  const fecha = await facturacionMiddleware.fechaHoy();
+  const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
+  console.log(fechaHyphen)
   res.render(__basedir + "/src/views/pages/facturacionLocalSenias", {
+    dias,
+    fechaHyphen,
     senias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1790,8 +1848,11 @@ module.exports = {
   reportesSelector,
   reportePlanta,
   reportePlantaCategorias,
+  reportePlantaCategoriasEliminar,
   reportePlantaCategoriasNueva,
+  reportePlantaCategoriasEditar,
   reportePlantaCategoriasInsert,
+  reportePlantaCategoriasUpdate,
   reportePedidos,
   reporteValorizado,
   servicios,

@@ -23,15 +23,18 @@
             <tr>
                 <td><%=categoria.categoria%></td>
                 <td class="nombresProductos">
-                <%productos.forEach((producto) => {%>
+                <%productos.forEach((producto) => {
+                    if(producto == undefined){return}   %>
                     <span class="nombreProducto"><%=producto.nombre%></span>
                 <%})%>
                 </td>
                 <td><%=categoria.seccion%></td>
                 <td><%=categoria.orden%></td>
                 <td class="backListaProdTablaBoton" id="reportePlantaCategoriasEditar" data-id="<%= categoria.id %>">editar</td>
-                <td class="backListaProdTablaBoton" id="reportePlantaCategoriasEliminar" data-id="<%= categoria.id %>" data-tipo="productos">eliminar</td>
+                <td class="backListaProdTablaBoton" id="reportePlantaCategoriasEliminar" data-id="<%= categoria.id %>" data-tipo="produccionreportescategorias">eliminar</td>
             </tr>
         <%})%>
     </tbody>
 </table>
+
+<script defer src="/script/reportePlantaCategorias.js"></script>

@@ -132,6 +132,12 @@ router.get("/produccion/reportes/categorias/nueva", auth.authSupervisor, panelCo
 
 router.post("/produccion/reportes/categorias/nueva", auth.authSupervisor, validar.validarCategoriaReporteChain, panelControllers.reportePlantaCategoriasInsert);
 
+router.get("/produccion/reportes/categorias/editar", auth.authSupervisor, panelControllers.reportePlantaCategoriasEditar);
+
+router.post("/produccion/reportes/categorias/editar", auth.authSupervisor, panelControllers.reportePlantaCategoriasUpdate);
+
+router.get("/produccionreportescategorias/eliminar", auth.authSupervisor, panelControllers.reportePlantaCategoriasEliminar);
+
 router.get("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoNuevo);
 
 router.post("/produccion/personalizado/nuevo", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionPersonalizadoCrear);
