@@ -195,6 +195,26 @@ const crearReqAPIWSFE = async (body, local) => {
     return datos
 }
 
+const crearReqAPIWSFEparaNC = async (datos, local, fechaCbte) => {
+    datos.cuit = local.cuit;
+    datos.punto = local.ptoventa;
+    datos.importe = datos.total;
+    datos.CbteAsoc = {}
+    datos.CbteAsoc.Tipo = datos.tipo;
+    datos.CbteAsoc.PtoVta = datos.ptoventa;
+    datos.CbteAsoc.Nro = datos.numero;
+    datos.CbteAsoc.Cuit = datos.cuit;
+    datos.CbteAsoc.CbteFch = fechaCbte;
+    datos.cuitR = datos.receptor;
+    delete datos.numero;
+    delete datos.CAE
+    datos.tipo = datos.tipo + 2;
+    datos.fecha = datos.fecha.replace(/-/g, "");
+    datos.CbteAsoc.CbteFch = datos.CbteAsoc.CbteFch.replace(/-/g, "");
+    datos.CbteAsoc = JSON.stringify(datos.CbteAsoc);
+    return datos
+}
+
 const fetchAPIWSFE = async (data) => {
   let CAE;
   data = new URLSearchParams(data);
@@ -202,9 +222,9 @@ const fetchAPIWSFE = async (data) => {
     try {
         const respuesta = await axios.post(URL, data);
         CAE = respuesta.data;
-        // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
+        console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
-        // console.log("--> Error CAE: " + error)
+        console.log("--> Error CAE: " + error)
         CAE = error;
     }
   return CAE;
@@ -222,6 +242,7 @@ module.exports = {
     crearResumenVistaLocal,
     checkDummy,
     crearReqAPIWSFE,
+    crearReqAPIWSFEparaNC,
     fetchAPIWSFE,
     validarReq,
 }

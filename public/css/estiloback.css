@@ -1498,6 +1498,9 @@ footer img {
 .factRegSenia{
   color: darkred;
 }
+.factRegNC{
+  color: orangered;
+}
 .reimprimirTicket{
   width: 25px;
   cursor: pointer;

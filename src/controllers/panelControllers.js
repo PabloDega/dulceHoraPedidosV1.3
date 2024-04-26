@@ -1492,7 +1492,8 @@ const facturacionPost = async(req, res) => {
   req.body.fecha = fecha;
   
   const local = await servicesLocal.getLocal(req.session.userLocal);
-  if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
+  // if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
+  if(req.body.tipo == "X" || req.body.tipo == "S"){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
     numeracion = numeracion.length + 1;
     let respQuery = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion);
@@ -1521,6 +1522,87 @@ const facturacionPost = async(req, res) => {
   }
 }
 
+const facturacionNC = async(req, res) => {
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.send({error: "ID de factura incorrecto", resultado: false});
+  }
+  if(!req.query.tipo || (req.query.tipo !== "X" && req.query.tipo !== "A" && req.query.tipo !== "B" && req.query.tipo !== "C")){
+    return res.send({error: "Tipo de factura invalido", resultado: false});
+  }
+  // verificar que la factura no tenga NC previa
+  let notasPrevias;
+  let factura;
+  if(req.query.tipo == "X"){
+    notasPrevias = await servicesFacturacion.getFacturasNF(req.session.userLocal, "NC");
+    factura = await servicesFacturacion.getFacturaNF(req.query.id, req.session.userLocal);
+    if(factura.length === 0){
+      return res.send({error: "Factura inexistente", resultado: false});
+    }
+  } else {
+    let tipo;
+    switch (req.query.tipo) {
+      case "A":
+        tipo = 3;
+        break;
+      case "B":
+        tipo = 8;
+        break;
+      case "C":
+        tipo = 13;
+        break;
+      default:
+        break;
+    }
+    notasPrevias = await servicesFacturacion.getFacturasCAE(req.session.userLocal, tipo);
+    factura = await servicesFacturacion.getFacturaCAE(req.query.id, req.session.userLocal);
+    if(factura.length === 0){
+      return res.send({error: "Factura inexistente", resultado: false});
+    }
+  }
+  let NCPrevia = notasPrevias.filter((nota) => JSON.parse(nota.observaciones).nc == factura[0].numero);
+  if(NCPrevia.length > 0){
+    return res.send({error: "Nota de crédito existente", info: NCPrevia[0].numero, resultado: false});
+  }
+  // return res.send({notasPrevias, factura})
+  // solicitar nc
+  // Get fecha
+  let fechaCbte = factura[0].fecha;
+  let fecha = await facturacionMiddleware.fechaHoy();
+  fecha = await facturacionMiddleware.fechaHyphen(fecha)
+  factura[0].fecha = fecha;
+  // Get local
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  // Desestructura
+  factura = factura[0]
+  factura.datos = factura.detalle;
+  factura.pagoMultiple = "";
+  factura.formaDePago = factura.formaPago
+  if(factura.tipo === "X"){
+    // Get numeracion
+    let numeracion = await servicesFacturacion.getFacturasNF(local.id, "NC");
+    numeracion = numeracion.length + 1;
+    // Agregar info de NC
+    factura.tipo = "NC";
+    // Registrar NC en facturacionNF
+    let respQuery = await servicesFacturacion.insertFacturaNF(local, factura, numeracion);
+    return res.send({error: false, info: respQuery, resultado: true});
+  } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
+    let datos = await facturacionMiddleware.crearReqAPIWSFEparaNC(factura, local, fechaCbte);
+    console.log(datos)
+    // enviar req a AFIP
+    let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos)));
+    console.log(CAE)
+    let orden;
+    if(CAE.error){
+      console.log("Error detectado en CAE" + CAE.error);
+      return res.send({error: CAE.error, resultado: false, imprimir: false, tipo: "CAE"});
+    } else {
+      orden = await servicesFacturacion.insertNCConCAE(CAE, datos, fecha);
+      return res.send({error: false, resultado: true, imprimir: false, tipo: "CAE", numero: orden});
+    }
+  }
+}
+  
 const facturacionComprobante = async (req, res) => {
   if (!req.query.id) {
     return res.send({error: "Datos de consulta incorrectos"});
@@ -1861,6 +1943,7 @@ module.exports = {
   servicioEliminar,
   facturacion,
   facturacionPost,
+  facturacionNC,
   facturacionComprobante,
   facturacionComprobanteParcial,
   facturacionComprobanteFiscal,

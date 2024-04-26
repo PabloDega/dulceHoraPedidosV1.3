@@ -25,13 +25,25 @@
                     factura.tipo = "A";
                     estilo = "factA";
                     break;
+                case 3:
+                    factura.tipo = "NC";
+                    estilo = "factNC";
+                    break;
                 case 6:
                     factura.tipo = "B";
                     estilo = "factB";
                     break;
+                case 8:
+                    factura.tipo = "NC";
+                    estilo = "factNC";
+                    break;
                 case 11:
                     factura.tipo = "C";
                     estilo = "factC";
+                    break;
+                case 13:
+                    factura.tipo = "NC";
+                    estilo = "factNC";
                     break;
                 case "S":
                     estilo = "factS";
@@ -85,6 +97,16 @@
                         </span>
                     <%}%>
 
+                    <%if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+                        let observaciones = JSON.parse(factura.observaciones);%>
+                        <span class="factRegFDPinfo factRegNC">&#128712;
+                            <span class="factRegObservaciones">
+                                    <span>
+                                        <span>Comprobante:<%= observaciones.nc %></span>
+                                    </span><hr>
+                            </span>
+                        </span>
+                    <%}%>
                 </td>
                 <td>
                     <img src="/im/backventas.svg" alt="imprimir ticket" title="Reimprimir" data-id="<%=factura.id%>" data-tipo="<%=factura.tipo%>" class="reimprimirTicket">

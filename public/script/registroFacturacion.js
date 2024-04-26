@@ -60,14 +60,19 @@ function confirmaNC(data) {
     <div class="btn btnRojo" id="btnEliminarCancelar">Cancelar</div>
   </div>
 </div>`;
-  document
-    .querySelector("#btnEliminar")
-    .addEventListener(
-      "click",
-      () => {
-        // location.href = `/panel/${data.tipo}/eliminar?id=${data.id || data.usuario}`
-        console.log("Crear NC")
-        cerrarPopEliminar();
+  document.querySelector("#btnEliminar").addEventListener("click", async (e) => {
+        document.querySelector("#cortinaLoad").style.display = "flex";
+        let respuesta = await fetch(`/panel/facturacion/nc?id=${data.id}&tipo=${data.tipo}`, { method: "GET" });
+        respuesta = await respuesta.json()
+        if(respuesta.error){
+          cerrarPopEliminar();
+          document.querySelector("#cortinaLoad").style.display = "none";
+          mostrarError(respuesta.error);
+          return
+        }
+        if(respuesta.resultado){
+          location.reload()
+        }
       }
     );
   document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);

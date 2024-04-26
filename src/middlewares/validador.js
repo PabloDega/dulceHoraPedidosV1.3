@@ -447,11 +447,21 @@ const validarFacturacionChain = [
     .trim()
     .escape()
     .isNumeric().withMessage("Formato del campo 'iva10' incorrecto"),
+  body("netoiva10")
+    .notEmpty().withMessage("El campo 'netoiva10' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'netoiva10' incorrecto"),
   body("iva21")
     .notEmpty().withMessage("El campo 'iva21' es obligatorio")
     .trim()
     .escape()
     .isNumeric().withMessage("Formato del campo 'iva21' incorrecto"),
+  body("netoiva21")
+    .notEmpty().withMessage("El campo 'netoiva21' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'netoiva21' incorrecto"),
   body("total")
     .notEmpty().withMessage("El campo 'total' es obligatorio")
     .trim()
@@ -475,6 +485,32 @@ const validarFacturacionChain = [
   body("pagoMultiple")
     .optional({ values: "falsy" })
     .isJSON().withMessage("Formato del campo 'Pago Multiple' incorrecto"),
+    // NC
+  body("NCtipo")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'NCtipo' incorrecto"),
+  body("NCptoVenta")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'NCptoVenta' incorrecto"),
+  body("NCnro")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'NCnro' incorrecto"),
+  body("NCcuit")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'NCcuit' incorrecto"),
+  body("NCfecha")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'NCfecha' incorrecto"),
 ]
 
 const validarCategoriaReporteChain = [
