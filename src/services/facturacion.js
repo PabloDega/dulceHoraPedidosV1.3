@@ -146,8 +146,9 @@ const insertFacturaNF = async (local, datos, numeracion) => {
       obs.nombre = datos.nombreSenia,
       obs.estadoSenia = "pendiente";
     }
-    if(datos.pagoMultiple !== ""){
-      obs.pagoMultiple = JSON.parse(datos.pagoMultiple);
+    if(datos.formaDePago === "multiple"){
+      let pagoMultiple = JSON.parse(datos.pagoMultiple)
+      obs.pagoMultiple = pagoMultiple;
     }
     // capturar NC
     if(datos.tipo == "NC"){
@@ -199,8 +200,9 @@ const getFacturasCAExfecha = async(local, fecha) => {
 const insertFacturaConCAE = async (CAERaw, datos, body) => {
   let CAE = CAERaw["respuesta"]["FECAESolicitarResult"]["FeDetResp"]["FECAEDetResponse"][0];
   let obs = {} 
-  if(datos.pagoMultiple !== ""){
-    obs.pagoMultiple = JSON.parse(datos.pagoMultiple);
+  if(datos.formaDePago === "multiple"){
+    let pagoMultiple = JSON.parse(datos.pagoMultiple)
+    obs.pagoMultiple = pagoMultiple;
   }
   try {
     const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE, senia,  observaciones) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR || 0}", "${datos.local}", "${CAE.CbteDesde}", "${body.fecha}", "${datos.tipo}", "${body.formaDePago}", "${body.datos}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}", "${datos.senia}", '${JSON.stringify(obs)}')`);
@@ -213,16 +215,21 @@ const insertFacturaConCAE = async (CAERaw, datos, body) => {
 };
 
 const insertNCConCAE = async (CAERaw, datos, fecha) => {
-  console.log(fecha)
-  console.log(datos.detalle)
+  // console.log(fecha)
+  // console.log(datos.detalle)
   let CAE = CAERaw["respuesta"]["FECAESolicitarResult"]["FeDetResp"]["FECAEDetResponse"][0];
   let obs = {} 
   // capturar NC
   if(datos.tipo == 3 || datos.tipo == 8 || datos.tipo == 13){
-    obs.nc = CAE.CbteDesde,
+    console.log(datos);
+    obs.nc = datos.numero;
     obs.idNc = datos.id;
   }
-  console.log(obs)
+  if(datos.formaDePago === "multiple"){
+    let pagoMultiple = JSON.parse(datos.pagoMultiple)
+    obs.pagoMultiple = pagoMultiple;
+  }
+  // console.log(obs)
   try {
     const insert = await conectar.query(`INSERT INTO registrosWSFE (cuitemisor, ptoventa, receptor, local, numero, fecha, tipo, formaPago, detalle, neto, baseiva10, iva10, baseiva21, iva21, total, CAE, senia,  observaciones) VALUES ("${datos.cuit}", "${datos.punto}", "${datos.cuitR || 0}", "${datos.local}", "${CAE.CbteDesde}", "${fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.detalle}", "${datos.neto}", "${datos.baseiva10}", "${datos.iva10}", "${datos.baseiva21}", "${datos.iva21}", "${datos.total}", "${CAE.CAE}", "${datos.senia}", '${JSON.stringify(obs)}')`);
     return  insert[0].insertId;

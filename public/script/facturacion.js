@@ -345,6 +345,8 @@ async function vaciarFormualrio() {
   document.querySelector("#preloadSenia").innerHTML = "";
   document.querySelector("#seniaHiden").value = 0;
 
+  document.querySelector("#vueltoPago").readOnly = false;
+
   window.location.URLSearchParams = "";
 
   impresionOff();

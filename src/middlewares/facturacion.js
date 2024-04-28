@@ -192,6 +192,7 @@ const crearReqAPIWSFE = async (body, local) => {
     datos.local = local.id;
     datos.pagoMultiple = body.pagoMultiple;
     datos.senia = body.senia;
+    datos.formaDePago = body.formaDePago
     return datos
 }
 
@@ -206,7 +207,6 @@ const crearReqAPIWSFEparaNC = async (datos, local, fechaCbte) => {
     datos.CbteAsoc.Cuit = datos.cuit;
     datos.CbteAsoc.CbteFch = fechaCbte;
     datos.cuitR = datos.receptor;
-    delete datos.numero;
     delete datos.CAE
     datos.tipo = datos.tipo + 2;
     datos.fecha = datos.fecha.replace(/-/g, "");
@@ -222,7 +222,7 @@ const fetchAPIWSFE = async (data) => {
     try {
         const respuesta = await axios.post(URL, data);
         CAE = respuesta.data;
-        console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
+        // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
         console.log("--> Error CAE: " + error)
         CAE = error;
@@ -233,6 +233,18 @@ const fetchAPIWSFE = async (data) => {
 const validarReq = async(body) => {
   
 }
+
+const ajustarObjParaNC = async (factura) => {
+  factura = factura[0];
+  factura.datos = factura.detalle;
+  factura.pagoMultiple = "";
+  factura.formaDePago = factura.formaPago;
+  let observaciones = JSON.parse(factura.observaciones);
+  if(factura.formaPago === "multiple"){
+      factura.pagoMultiple = JSON.stringify(observaciones.pagoMultiple);
+  }
+  return factura;
+};
 
 module.exports = {
     fechaHoy,
@@ -245,4 +257,5 @@ module.exports = {
     crearReqAPIWSFEparaNC,
     fetchAPIWSFE,
     validarReq,
+    ajustarObjParaNC,
 }

@@ -312,7 +312,7 @@ function editProdtoggleUnidad(e) {
     precioDocenaInput.style.display = "none";
     precioDocena.value = "0";
   } */
-  console.log(e.target.value)
+  // console.log(e.target.value)
   let precioUnidad = document.querySelector("#preciounidad");
   let precioDocena = document.querySelector("#preciodocena");
   let precioKilo = document.querySelector("#preciokilo");

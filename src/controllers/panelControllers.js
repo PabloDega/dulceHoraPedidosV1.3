@@ -1462,7 +1462,6 @@ const facturacion = async(req, res) => {
 }
 
 const facturacionPost = async(req, res) => {
-  console.log(req.body)
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
@@ -1573,10 +1572,7 @@ const facturacionNC = async(req, res) => {
   // Get local
   const local = await servicesLocal.getLocal(req.session.userLocal);
   // Desestructura
-  factura = factura[0]
-  factura.datos = factura.detalle;
-  factura.pagoMultiple = "";
-  factura.formaDePago = factura.formaPago
+  factura = await facturacionMiddleware.ajustarObjParaNC(factura)
   if(factura.tipo === "X"){
     // Get numeracion
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, "NC");
@@ -1588,10 +1584,10 @@ const facturacionNC = async(req, res) => {
     return res.send({error: false, info: respQuery, resultado: true});
   } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
     let datos = await facturacionMiddleware.crearReqAPIWSFEparaNC(factura, local, fechaCbte);
-    console.log(datos)
+    // console.log(datos)
     // enviar req a AFIP
     let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos)));
-    console.log(CAE)
+    // console.log(CAE)
     let orden;
     if(CAE.error){
       console.log("Error detectado en CAE" + CAE.error);
@@ -1709,7 +1705,7 @@ const facturacionRegistrosSenias = async (req, res) => {
   let dias = 15;
   if(req.query.resultados){
     if(!isNaN(parseInt(req.query.resultados))){
-      console.log("ping")
+      // console.log("ping")
       dias = parseInt(req.query.resultados);
     }
   } 
@@ -1717,7 +1713,7 @@ const facturacionRegistrosSenias = async (req, res) => {
   let senias = await servicesFacturacion.getSenias(req.session.userLocal);
   const fecha = await facturacionMiddleware.fechaHoy();
   const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
-  console.log(fechaHyphen)
+  // console.log(fechaHyphen)
   res.render(__basedir + "/src/views/pages/facturacionLocalSenias", {
     dias,
     fechaHyphen,

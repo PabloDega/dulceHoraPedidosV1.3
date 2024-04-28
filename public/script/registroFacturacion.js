@@ -45,7 +45,7 @@ document.querySelectorAll(".reimprimirTicket").forEach((boton) => {
 document.querySelectorAll(".btnNC").forEach((boton) => {
   boton.addEventListener("click", (e) => {
     confirmaNC(e.target.dataset);
-    console.log(e.target.dataset)
+    // console.log(e.target.dataset)
   })
 })
 
