@@ -8,7 +8,7 @@ async function reimprimirTicket(data) {
   let ticket;
   if (data.tipo === "X") {
     ticket = await crearComprobanteComanda(parseInt(data.id));
-  } else if (data.tipo == "A" || data.tipo == "B" || data.tipo == "C") {
+  } else if (data.tipo == "A" || data.tipo == "B" || data.tipo == "C" || data.tipo == 3 || data.tipo == 8 || data.tipo == 13) {
     ticket = await crearComprobanteCAE(data.id);
   } else if (data.tipo === "S") {
     ticket = await crearComprobanteSenia(data.id);
@@ -18,7 +18,7 @@ async function reimprimirTicket(data) {
     return;
   }
   document.querySelector("#factTickets").innerHTML = ticket;
-  if (data.tipo == "A" || data.tipo == "B" || data.tipo == "C") {
+  if (data.tipo == "A" || data.tipo == "B" || data.tipo == "C" || data.tipo == 3 || data.tipo == 8 || data.tipo == 13) {
     crearQR(QRstring);
   }
   setTimeout(() => {

@@ -1489,6 +1489,38 @@ const facturacionPost = async(req, res) => {
   let fecha = await facturacionMiddleware.fechaHoy();
   fecha = await facturacionMiddleware.fechaHyphen(fecha)
   req.body.fecha = fecha;
+  let pago = 0;
+  if(!isNaN(parseFloat(req.body.pago))){
+    pago = parseFloat(req.body.pago);
+  }
+  // Validar montos - apoyo front end
+  // verificar monto del pago
+  if(req.body.tipo !== "S"){
+    if(parseFloat(req.body.vuelto) < 0 && pago > 0){
+      return res.send({error: "El monto abonado no cubre el total de la factura BE", resultado: false, imprimir: false});
+      } 
+  }
+  // Si el pago es multiple el monto no puede generar vuelto
+  if(req.body.formaDePago === "multiple"){
+    if(parseFloat(req.body.vuelto) > 0){
+      return res.send({error: "El monto total abonado en pagos multiples no puede ser mayor al monto del ticket BE", resultado: false, imprimir: false});
+      } else if(parseFloat(req.body.vuelto) < 0){
+        return res.send({error: "El monto abonado no cubre el total de la factura BE", resultado: false, imprimir: false});
+      }
+  }
+  // verificar que solo "efectivo" en pago multiple exceda el valor de la operacion, y que no haya montos negativos
+  if(req.body.pagoMultiple !== ""){
+    let pagoMultiple = JSON.parse(req.body.pagoMultiple)
+    let total = parseFloat(req.body.total)
+    if(pagoMultiple.montocredito > total || pagoMultiple.montodebito > total || pagoMultiple.montovirtual > total){
+      return res.send({error: "El monto total abonado en pagos multiples no puede ser mayor al monto del ticket", resultado: false, imprimir: false});
+  
+    }
+    if(pagoMultiple.montoefectivo < 0 || pagoMultiple.montodebito < 0 || pagoMultiple.montocredito < 0 || pagoMultiple.montovirtual < 0){
+      return res.send({error: "El monto abonado no puede ser negativo", resultado: false, imprimir: false});
+    }
+  }
+
   
   const local = await servicesLocal.getLocal(req.session.userLocal);
   // if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){

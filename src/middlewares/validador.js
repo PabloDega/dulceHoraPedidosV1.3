@@ -511,6 +511,16 @@ const validarFacturacionChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo 'NCfecha' incorrecto"),
+  body("pago")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'pago' incorrecto"),
+  body("vuelto")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'vuelto' incorrecto"),
 ]
 
 const validarCategoriaReporteChain = [

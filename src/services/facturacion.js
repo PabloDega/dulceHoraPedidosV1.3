@@ -221,7 +221,6 @@ const insertNCConCAE = async (CAERaw, datos, fecha) => {
   let obs = {} 
   // capturar NC
   if(datos.tipo == 3 || datos.tipo == 8 || datos.tipo == 13){
-    console.log(datos);
     obs.nc = datos.numero;
     obs.idNc = datos.id;
   }

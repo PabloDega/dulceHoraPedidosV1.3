@@ -59,112 +59,162 @@ const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
     return factucionxLocal;
 }
 
-const crearResumenVistaLocal = async (facturas) => {
 
-    let totalDia = 0;
-    let totalNF = 0;
-    let totalCAE = 0;
-    let totalEfectivo = 0;
-    let totalDebito = 0;
-    let totalCredito = 0;
-    let totalNB = 0;
-    let contadorOperaciones = 0;
+
+const crearResumenVistaLocal = async (facturas) => {
+    let totales = {
+        totalDia: 0,
+        totalNF: 0,
+        totalCAE: 0,
+        totalEfectivo: 0,
+        totalDebito: 0,
+        totalCredito: 0,
+        totalNB: 0,
+        totalSeniado: 0,
+        contadorOperaciones: 0,
+    }
 
     facturas.forEach((factura) => {
-        if(factura.tipo === "S"){
-            totalDia += factura.senia;
-            totalNF += factura.senia;
-
-            switch (factura.formaPago) {
-                case "efectivo":
-                    totalEfectivo += factura.senia;
-                    break;
-                case "debito":
-                    totalDebito += factura.senia;
-                    break;
-                case "credito":
-                    totalCredito += factura.senia;
-                    break;
-                case "transferencia":
-                    totalNB += factura.senia;
-                    break;
-                case "multiple":
-                    let pagoMultiple = JSON.parse(factura.observaciones);
-                    pagoMultiple = pagoMultiple.pagoMultiple;
-                    totalEfectivo += pagoMultiple.montoefectivo;
-                    totalDebito += pagoMultiple.montodebito;
-                    totalCredito += pagoMultiple.montocredito;
-                    totalNB += pagoMultiple.montovirtual;
-                    break;
-                default:
-                    break;
-            }
-
-            return;
-        }
         if(factura.tipo === "X"){
-            totalDia += factura.total;
-            totalNF += factura.total;
-            if(factura.senia > 0){
-                totalDia -= factura.senia;
-                totalNF -= factura.senia;
+            totales.totalDia += factura.total;
+            totales.totalNF += factura.total;
+            totales.contadorOperaciones++;
+            totales = sumarFormaDePago(factura, totales);
+        } else if(factura.tipo === "NC"){
+            totales.totalDia -= factura.total;
+            totales.totalNF -= factura.total;
+            totales.contadorOperaciones++;
+            totales = restarFormaDePagoNC(factura, totales)
+        } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
+            totales.totalDia += factura.total;
+            totales.totalCAE += factura.total;
+            totales.contadorOperaciones++;
+            totales = sumarFormaDePago(factura, totales);
+        } else if(factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+            totales.totalDia -= factura.total;
+            totales.totalCAE -= factura.total;
+            totales.contadorOperaciones++;
+            totales = restarFormaDePagoNC(factura, totales);
+        } else if(factura.tipo === "S"){
+            let obs = JSON.parse(factura.observaciones);
+            if(obs.estadoSenia === "cancelado" || obs.estadoSenia === "retirado"){
+                return;
+            } else {
+                totales.totalDia += factura.senia;
+                // totalNF += factura.senia;
+                totales.totalSeniado += factura.senia;
+                totales = sumarFormaDePagoSenia(factura, totales);
             }
-            contadorOperaciones++;
-        };
-        if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
-            totalDia += factura.total;
-            totalCAE += factura.total;
-            if(factura.senia > 0){
-                totalDia -= factura.senia;
-                totalCAE -= factura.senia;
-            }
-            contadorOperaciones++;
-        }
-        // Restar Notas de credito con y sin CAE
-        switch (factura.formaPago) {
-            case "efectivo":
-                totalEfectivo += factura.total;
-                totalEfectivo -= factura.senia;
-                break;
-            case "debito":
-                totalDebito += factura.total;
-                totalDebito -= factura.senia;
-                break;
-            case "credito":
-                totalCredito += factura.total;
-                totalCredito -= factura.senia;
-                break;
-            case "transferencia":
-                totalNB += factura.total;
-                totalNB -= factura.senia;
-                break;
-            case "multiple":
-                let pagoMultiple = JSON.parse(factura.observaciones);
-                pagoMultiple = pagoMultiple.pagoMultiple;
-                totalEfectivo += pagoMultiple.montoefectivo;
-                totalDebito += pagoMultiple.montodebito;
-                totalCredito += pagoMultiple.montocredito;
-                totalNB += pagoMultiple.montovirtual;
-                break;
-            default:
-                break;
         }
     });
 
-    let promedio = totalDia / contadorOperaciones
+    let promedio = totales.totalDia / totales.contadorOperaciones
 
     let resumen = {
-        totalDia: monetarizar(totalDia),
-        totalNF: monetarizar(totalNF),
-        totalCAE: monetarizar(totalCAE),
-        totalEfectivo: monetarizar(totalEfectivo),
-        totalDebito: monetarizar(totalDebito),
-        totalCredito: monetarizar(totalCredito),
-        totalNB: monetarizar(totalNB),
-        contadorOperaciones,
+        totalDia: monetarizar(totales.totalDia),
+        totalNF: monetarizar(totales.totalNF),
+        totalCAE: monetarizar(totales.totalCAE),
+        totalEfectivo: monetarizar(totales.totalEfectivo),
+        totalDebito: monetarizar(totales.totalDebito),
+        totalCredito: monetarizar(totales.totalCredito),
+        totalNB: monetarizar(totales.totalNB),
+        totalSeniado: monetarizar(totales.totalSeniado),
+        contadorOperaciones: totales.contadorOperaciones,
         promedio: monetarizar(promedio),
     }
     return resumen;
+}
+
+function sumarFormaDePago(factura, totales){
+    switch (factura.formaPago) {
+        case "efectivo":
+            totales.totalEfectivo += factura.total;
+            // totalEfectivo -= factura.senia;
+            break;
+        case "debito":
+            totales.totalDebito += factura.total;
+            // totalDebito -= factura.senia;
+            break;
+        case "credito":
+            totales.totalCredito += factura.total;
+            // totalCredito -= factura.senia;
+            break;
+        case "transferencia":
+            totales.totalNB += factura.total;
+            // totalNB -= factura.senia;
+            break;
+        case "multiple":
+            let pagoMultiple = JSON.parse(factura.observaciones);
+            pagoMultiple = pagoMultiple.pagoMultiple;
+            totales.totalEfectivo += pagoMultiple.montoefectivo;
+            totales.totalDebito += pagoMultiple.montodebito;
+            totales.totalCredito += pagoMultiple.montocredito;
+            totales.totalNB += pagoMultiple.montovirtual;
+            break;
+        default:
+            break;
+    }
+    return totales;
+}
+
+function sumarFormaDePagoSenia(factura, totales){
+    switch (factura.formaPago) {
+        case "efectivo":
+            totales.totalEfectivo += factura.senia;
+            break;
+        case "debito":
+            totales.totalDebito += factura.senia;
+            break;
+        case "credito":
+            totales.totalCredito += factura.senia;
+            break;
+        case "transferencia":
+            totales.totalNB += factura.senia;
+            break;
+        case "multiple":
+            let pagoMultiple = JSON.parse(factura.observaciones);
+            pagoMultiple = pagoMultiple.pagoMultiple;
+            totales.totalEfectivo += pagoMultiple.montoefectivo;
+            totales.totalDebito += pagoMultiple.montodebito;
+            totales.totalCredito += pagoMultiple.montocredito;
+            totales.totalNB += pagoMultiple.montovirtual;
+            break;
+        default:
+            break;
+    }
+    return totales;
+}
+
+function restarFormaDePagoNC(factura, totales){
+    switch (factura.formaPago) {
+        case "efectivo":
+            totales.totalEfectivo -= factura.total;
+            // totalEfectivo -= factura.senia;
+            break;
+        case "debito":
+            totales.totalDebito -= factura.total;
+            // totalDebito -= factura.senia;
+            break;
+        case "credito":
+            totales.totalCredito -= factura.total;
+            // totalCredito -= factura.senia;
+            break;
+        case "transferencia":
+            totales.totalNB -= factura.total;
+            // totalNB -= factura.senia;
+            break;
+        case "multiple":
+            let pagoMultiple = JSON.parse(factura.observaciones);
+            pagoMultiple = pagoMultiple.pagoMultiple;
+            totales.totalEfectivo -= pagoMultiple.montoefectivo;
+            totales.totalDebito -= pagoMultiple.montodebito;
+            totales.totalCredito -= pagoMultiple.montocredito;
+            totales.totalNB -= pagoMultiple.montovirtual;
+            break;
+        default:
+            break;
+    }
+    return totales;
 }
 
 function monetarizar(valor){

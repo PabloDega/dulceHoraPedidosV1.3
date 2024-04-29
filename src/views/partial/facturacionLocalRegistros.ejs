@@ -12,41 +12,49 @@
                 <th>Tipo</th>
                 <th>Numero</th>
                 <th>Total</th>
-                <th>Medio de Pago</th>
+                <th>Pago</th>
+                <th>Detalles</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
         <%facturas.forEach(factura => {
             let fechaFacturacion = new Date(factura.fecha);
-            let estilo = "factX"
+            let estilo = "factX";
+            let nc = false;
             switch (factura.tipo) {
                 case 1:
                     factura.tipo = "A";
                     estilo = "factA";
                     break;
                 case 3:
-                    factura.tipo = "NC";
+                    // factura.tipo = "NC";
                     estilo = "factNC";
+                    nc = true;
                     break;
                 case 6:
                     factura.tipo = "B";
                     estilo = "factB";
                     break;
                 case 8:
-                    factura.tipo = "NC";
+                    // factura.tipo = "NC";
                     estilo = "factNC";
+                    nc = true;
                     break;
                 case 11:
                     factura.tipo = "C";
                     estilo = "factC";
                     break;
                 case 13:
-                    factura.tipo = "NC";
+                    // factura.tipo = "NC";
                     estilo = "factNC";
+                    nc = true;
                     break;
                 case "S":
                     estilo = "factS";
+                    break;
+                case "NC":
+                    nc = true;
                     break;
                 default:
                     break;
@@ -54,7 +62,11 @@
             <tr>
                 <%= // fechaFacturacion.toLocaleDateString("es-AR", {timeZone: 'UTC'})%>
                 <td><%= factura.fechaevento.toLocaleString("es-AR") %></td>
-                <td><span class="factAll <%= estilo %>"><%= factura.tipo %></span></td>
+                <% let tipo = factura.tipo;
+                if(nc){
+                    tipo = "NC";
+                } %>
+                <td><span class="factAll <%= estilo %>"><%= tipo %></span></td>
                 <td><%= factura.numero %></td>
                 <%let total = factura.total - factura.senia;
                 if(factura.tipo === "S"){
@@ -64,7 +76,8 @@
                 
                 <td class="factRegFDP">
                     <%= factura.formaPago %>
-
+                </td>
+                <td>
                     <%if(factura.formaPago === "multiple"){%>
                         <span class="factRegFDPinfo factRegPM">&#128712;
                             <span class="factRegObservaciones">
@@ -97,7 +110,19 @@
                         </span>
                     <%}%>
 
-                    <%if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+                    <%if(factura.tipo === "S"){
+                        let observaciones = JSON.parse(factura.observaciones);%>
+                        <span class="factRegFDPinfo factRegSenia">&#128712;
+                            <span class="factRegObservaciones">
+                                <span>
+                                    <span>Estado:</span>
+                                    <span><%= observaciones.estadoSenia %></span>
+                                </span>
+                            </span>
+                        </span>
+                    <%}%>
+
+                    <%if(nc){
                         let observaciones = JSON.parse(factura.observaciones);%>
                         <span class="factRegFDPinfo factRegNC">&#128712;
                             <span class="factRegObservaciones">
@@ -109,8 +134,10 @@
                     <%}%>
                 </td>
                 <td>
-                    <img src="/im/backventas.svg" alt="imprimir ticket" title="Reimprimir" data-id="<%=factura.id%>" data-tipo="<%=factura.tipo%>" class="reimprimirTicket">
-                    <%if(factura.tipo !== "S" && factura.tipo !== "NC"){%>
+                    <%if(factura.tipo !== "NC"){%>
+                        <img src="/im/backventas.svg" alt="imprimir ticket" title="Reimprimir" data-id="<%=factura.id%>" data-tipo="<%=factura.tipo%>" class="reimprimirTicket">
+                    <%};
+                    if(factura.tipo !== "S" && !nc){%>    
                         <span class="btn btnNC" data-id="<%=factura.id%>" data-tipo="<%=factura.tipo%>">NC</span>
                     <%}%>
                 </td>
@@ -124,7 +151,7 @@
             <h3>Resumen</h3>
             <span>Fecha: <%=fechaNormalizada%></span>
             <hr>
-            <span>Total de operaciones: <%=facturas.length%></span>
+            <span>Total de operaciones: <%=resumen.contadorOperaciones%></span>
             <hr>
             <span>Venta total: <%= resumen.totalDia %></span>
             <hr>
@@ -147,6 +174,8 @@
             <span>Total con CAE: <%=resumen.totalCAE%></span>
             <hr>
             <span>Total sin CAE: <%=resumen.totalNF%></span>
+            <hr>
+            <span>Total en señas: <%=resumen.totalSeniado%></span>
         </div>
 
     </span>

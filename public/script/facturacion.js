@@ -13,6 +13,7 @@ let total = 0;
 let detalles = [];
 let FDP = {};
 let vuelto = 0;
+let pago = 0;
 
 // Creacion de botones
 
@@ -31,28 +32,6 @@ function crearBotonesRapidos() {
 }
 
 crearBotonesRapidos();
-// CUIT
-
-/* function checkCuitInput(e){
-    if(e.keyCode === 8 || e.keyCode === 46){
-        return;
-    }
-    if(isNaN(parseInt(e.key))){
-        e.preventDefault();
-    }
-}
-
-function checkCuitNumero(e){
-    let caracteres = parseInt(e.target.value.length)
-    if(caracteres == 0){
-        return;
-    }
-    if(caracteres !== 11){
-        mostrarError(`Número de CUIT ${e.target.value} inválido`);
-        document.querySelector("#cuit").value = "";
-        // hacer foco en elemento cuit document.querySelector("#cuit")
-    }
-} */
 
 function itemsCreador(cantidad) {
   if (isNaN(cantidad)) {
@@ -287,7 +266,7 @@ function cerrarInfo(){
 
 }
 
-async function vaciarFormualrio() {
+async function vaciarFormulario() {
   if (window.data !== "") {
     if (window.data.tipo === "S") {
       window.location.href = "/panel/facturacion/registros";
@@ -326,6 +305,7 @@ async function vaciarFormualrio() {
   document.querySelector("#datosHide").value = "";
   document.querySelector("#cuit").value = "";
   document.querySelector("#tipo").value = "X";
+  document.querySelector("#vueltoHide").value = 0;
 
   neto = 0;
   iva10 = 0;
@@ -447,11 +427,34 @@ async function enviarFactura(tipo) {
   }
   // verificar monto del pago
   if(tipo !== "S"){
-    if(vuelto < 0){
+    if(vuelto < 0 && pago > 0){
       mostrarError("El monto abonado no cubre el total de la factura");
       document.querySelector("#cortinaLoad").style.display = "none";
       return;
       } 
+  }
+  // Si el pago es multiple el monto no puede generar vuelto
+  if(document.querySelector("#formaDePago").value === "multiple"){
+    if(vuelto > 0){
+      mostrarError("El monto total abonado en pagos multiples no puede ser mayor al monto del ticket");
+      document.querySelector("#cortinaLoad").style.display = "none";
+      return;
+    } else if(vuelto < 0){
+      mostrarError("El monto abonado no cubre el total de la factura");
+      document.querySelector("#cortinaLoad").style.display = "none";
+      return;
+    }
+  }
+  // verificar que solo "efectivo" en pago multiple exceda el valor de la operacion, y que no haya montos negativos
+  if(FDP.montocredito > total || FDP.montodebito > total || FDP.montovirtual > total){
+    mostrarError("El monto total abonado en pagos multiples no puede ser mayor al monto del ticket");
+    document.querySelector("#cortinaLoad").style.display = "none";
+    return;
+  }
+  if(FDP.montoefectivo < 0 || FDP.montodebito < 0 || FDP.montocredito < 0 || FDP.montovirtual < 0){
+    mostrarError("El monto abonado no puede ser negativo");
+    document.querySelector("#cortinaLoad").style.display = "none";
+    return;
   }
   // POST via fetch
   const dataBody = new URLSearchParams(new FormData(formulario));
@@ -493,7 +496,7 @@ async function enviarFactura(tipo) {
       // abrir popup con ticket
       // window.open(`/panel/facturacion/comprobante?id=${resp.numero}`);
     } else {
-      vaciarFormualrio();
+      vaciarFormulario();
     }
   } else {
     // console.log("ping error 1")
@@ -504,7 +507,7 @@ async function enviarFactura(tipo) {
   // formulario.submit()
 }
 
-window.addEventListener("afterprint", vaciarFormualrio)
+window.addEventListener("afterprint", vaciarFormulario)
 
 function registrarSeña() {
   // cambiar tipo de factura a S, registrar NF
@@ -516,7 +519,6 @@ function registrarSeña() {
   document.querySelector("#imprimir").value = "true";
   // enviar Formulario
   enviarFactura("S");
-  // formulario.submit()
 }
 
 // Botones
@@ -524,7 +526,7 @@ function registrarSeña() {
 /* document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
 document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)}); */
 document.querySelector("#limpiarFacturacion").addEventListener("click", () => {
-  vaciarFormualrio();
+  vaciarFormulario();
 });
 document.querySelector("#resetFacturacion").addEventListener("click", () => {
   cerrarFacturacionDetalles();
@@ -574,12 +576,7 @@ const impresionOff = () => {
   document.querySelector("#confirmarImpresion > span").innerHTML = "&#10006;";
   document.querySelector("#imprimir").value = "false";
 };
-/* document.querySelector("#tipo").addEventListener("change", (e) => {
-    // console.log(e.target.value)
-    if(e.target.value == "NC"){
-        document.querySelector("#ncSpan").style.display = "flex";
-    }
-}) */
+
 document.querySelector("#vueltoPago").addEventListener("change", (e) => {
   calcularVuelto(e);
   return;
@@ -592,19 +589,28 @@ document.querySelector("#vueltoPago").addEventListener("keyup", (e) => {
 
 function calcularVuelto(e) {
   let senia = 0;
+  let valorEvento = 0;
+  if(!isNaN(parseFloat(e.target.value))){
+    valorEvento = parseFloat(e.target.value);
+  }
   if (document.querySelector("#preloadSeniaMonto") != null) {
     let txt = document.querySelector("#preloadSeniaMonto").innerHTML;
     senia = parseFloat(txt.slice(1, txt.length));
   }
-  vuelto = parseFloat(e.target.value) - parseFloat(total) + senia;
+  vuelto = valorEvento - parseFloat(total) + senia;
+  pago = document.querySelector("#vueltoPago").value;
   document.querySelector("#vuelto").innerHTML = "$" + (vuelto || 0);
+  document.querySelector("#vueltoHide").value = vuelto || 0;
   let FDPcargada = document.querySelector("#formaDePago").value;
-  if (vuelto < 0 && e.target.value > 0 && FDPcargada !== "multiple") {
+  if (vuelto < 0 && valorEvento > 0 && FDPcargada !== "multiple") {
     document.querySelector("#btnSenia").style.display = "flex";
   } else {
     document.querySelector("#btnSenia").style.display = "none";
     document.querySelector("#nombresenia").value = "";
   }
+  
+  FDP.vueltoefectivo = vuelto;
+  FDP.totalpago = pago;
 }
 
 document.querySelector("#tomarSenia").addEventListener("click", () => {
@@ -719,6 +725,7 @@ function crearFDP() {
     montocredito: 0,
     virtual: false,
     montovirtual: 0,
+    vueltoefectivo: 0,
   };
 }
 
@@ -729,6 +736,8 @@ function vaciarMontosFDP() {
   FDP.montodebito = 0;
   FDP.montocredito = 0;
   FDP.montovirtual = 0;
+  FDP.vueltoefectivo = 0;
+  FDP.totalpago = 0;
   document.querySelector("#PMefectivo").value = 0;
   document.querySelector("#PMdebito").value = 0;
   document.querySelector("#PMcredito").value = 0;
@@ -741,6 +750,14 @@ function cargarMontosFDP() {
   FDP.montodebito = parseFloat(document.querySelector("#PMdebito").value);
   FDP.montocredito = parseFloat(document.querySelector("#PMcredito").value);
   FDP.montovirtual = parseFloat(document.querySelector("#PMvirtual").value);
+  FDP.vueltoefectivo = parseFloat(vuelto);
+  FDP.totalpago = parseFloat(pago);
+  // cargar con 0 campos vacios (NaN)
+  for(forma in FDP){
+    if(isNaN(FDP[forma])){
+      FDP[forma] = 0;
+    }
+  }
 }
 
 function mostrarMontosInputFDP() {
@@ -764,6 +781,7 @@ document.querySelectorAll(".pagoMultiple").forEach((input) => {
   input.addEventListener("keyup", (e) => {
     const forma = e.target.dataset.fdp;
     FDP[forma] = parseInt(e.target.value);
+    cargarMontosFDP();
     document.querySelector("#pagoMultiple").value = JSON.stringify(FDP);
     let total = sumarVueltoParciales();
     document.querySelector("#vueltoPago").value = total;

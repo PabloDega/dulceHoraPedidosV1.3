@@ -155,10 +155,6 @@ function validarCantidades(){
     return true;
 }
 
-function validarTotal(){
-    console.log()
-}
-
 
 pedidoProduccionCalcImportes();
 pedidoProduccionCalcTotal();

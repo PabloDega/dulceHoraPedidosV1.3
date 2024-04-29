@@ -103,7 +103,13 @@ async function crearComprobanteCAE(id) {
     case 11:
       tipo = "C";
       break;
+    case 3:
+      tipo = "NC";
+      break;
     case 8:
+      tipo = "NC";
+      break;
+    case 13:
       tipo = "NC";
       break;
     default:
@@ -124,7 +130,6 @@ async function crearComprobanteCAE(id) {
     datosParaQR.tipoDocRec = 80;
     datosParaQR.nroDocRec = factura.receptor;
   }
-  QRstring = await crearQRstring(datosParaQR);
 
   detalle.forEach((item) => {
     let producto = window.productos.find((prod) => prod.codigo === item[3]);
@@ -135,7 +140,7 @@ async function crearComprobanteCAE(id) {
             <td>$${item[1]}</td>
         </tr>`;
   });
-  let comprobanteCAE = `<div id="comprobante">
+ /*  let comprobanteCAE = `<div id="comprobante">
 <span style="display: flex; justify-content: center;">
     <img src="/im/logoDH.png" alt="">
 </span>
@@ -152,7 +157,25 @@ async function crearComprobanteCAE(id) {
 <span style="align-self: flex-end;">Total: $${factura.total}</span>
 <span style="text-align: center;"><h3>CAE: ${factura.CAE}</h3></span>
 <div id="qrCAE"></div>
+</div>`; */
+  let comprobanteCAE = `<div id="comprobante">
+<span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
+<span><h3>CUIT ${factura.cuitemisor}</h3></span>
+<span><h3>${fechaHora[0]} - ${fechaHora[1][0]}</h3></span>
+<span><h4>Fact. ${tipo} ${punto}-${numero}</h4></span>
+<span>Detalle:</span>
+<table>
+    <tbody>
+        ${textoDetalles}
+    </tbody>
+</table>
+<span style="align-self: flex-end;">Total: $${factura.total}</span>
+<span style="text-align: center;"><h3>CAE: ${factura.CAE}</h3></span>
+<div id="qrCAE"></div>
 </div>`;
+
+  QRstring = await crearQRstring(datosParaQR);
+
   return comprobanteCAE;
 }
 
@@ -177,7 +200,7 @@ function crearQR(string) {
     text: string,
     width: 1024,
     height: 1024,
-    correctLevel : QRCode.CorrectLevel.M,
+    correctLevel: QRCode.CorrectLevel.M,
   });
 }
 
