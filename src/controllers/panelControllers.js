@@ -329,6 +329,40 @@ const localEliminar = async (req, res) => {
   return res.redirect("/panel/local");
 };
 
+const localDatosFiscales = async (req, res) => {
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/local");
+  }
+  const local = await servicesLocal.getLocal(req.query.id);
+  if(local === undefined){
+    return res.redirect("/panel/local");
+  }
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.query.id);
+  res.render(__basedir + "/src/views/pages/editarLocalFiscal", {
+    local,
+    datosFiscales,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
+
+const localDatosFiscalesInsert = async (req, res) => {
+  /* if (!errores.isEmpty()) {
+    const local = await servicesLocal.getLocal(req.body.id);
+    const datosFiscales = await servicesLocal.getDatosFiscales(req.body.id);
+    return res.render(__basedir + "/src/views/pages/editarLocalFiscal", {
+      errores: errores.array({ onlyFirstError: true }),
+      local,
+      datosFiscales,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  } */
+  console.log(req.body)
+  await servicesLocal.insertDatosFiscales(req.body)
+  return res.redirect("/panel/local");
+};
+
 const fotos = async (req, res) => {
   res.render(__basedir + "/src/views/pages/fotos", {
     mostrar: "",
@@ -1905,6 +1939,8 @@ module.exports = {
   localNuevo,
   localInsert,
   localEliminar,
+  localDatosFiscales,
+  localDatosFiscalesInsert,
   precios,
   preciosUpdate,
   fotos,

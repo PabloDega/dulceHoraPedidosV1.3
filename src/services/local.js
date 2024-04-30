@@ -87,6 +87,32 @@ const updateStock = async(datos, local) => {
   }
 };
 
+const getDatosFiscales = async (id) => {
+  try {
+    const datos = await conectar.query(`SELECT * FROM localesinfofiscal WHERE local = "${ id }"`);
+    return datos[0][0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const insertDatosFiscales = async(datos) => {
+  try {
+    const registro = await conectar.query(`SELECT * FROM localesinfofiscal WHERE local = "${datos.local}"`);
+    if(registro[0][0] === undefined){
+      await conectar.query(`INSERT INTO localesinfofiscal (local, ptoventa, cuit, razonsocial, iibb, domiciliofiscal, inicioactividades, condicioniva) VALUES ("${datos.local}", "${datos.ptoventa}", "${datos.cuit}", "${datos.razonsocial}", "${datos.iibb}", "${datos.domiciliofiscal}", "${datos.inicioactividades}", "${datos.impuestos}")`);
+    } else {
+      await conectar.query(`UPDATE localesinfofiscal SET local = "${datos.local}", ptoventa = "${datos.ptoventa}", cuit = "${datos.cuit}", razonsocial = "${datos.razonsocial}", iibb = "${datos.iibb}", domiciliofiscal = "${datos.domiciliofiscal}", inicioactividades = "${datos.inicioactividades}", condicioniva = "${datos.impuestos}" WHERE local = "${datos.local}"`);
+    }
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 module.exports = {
   getLocales,
   getLocalesHistoricos,
@@ -96,4 +122,6 @@ module.exports = {
   updateLocal,
   deleteLocal,
   updateStock,
+  getDatosFiscales,
+  insertDatosFiscales,
 };

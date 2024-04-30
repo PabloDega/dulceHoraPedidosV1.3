@@ -567,7 +567,49 @@ const validarGastosChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo 'detalles' incorrecto"),
+];
 
+const validarDatosFiscalesChain = [
+  body("local")
+    .notEmpty().withMessage("El campo 'local' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'local' incorrecto"),
+  body("razonsocial")
+    .notEmpty().withMessage("El campo 'razonsocial' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'razonsocial' incorrecto"),
+  body("cuit")
+    .notEmpty().withMessage("El campo 'cuit' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'cuit' incorrecto"),
+  body("iibb")
+    .notEmpty().withMessage("El campo 'Ingresos Brutos' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'Ingresos Brutos' incorrecto"),
+  body("impuestos")
+    .notEmpty().withMessage("El campo 'impuestos' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'impuestos' incorrecto"),
+  body("ptoventa:")
+    .notEmpty().withMessage("El campo 'Punro de Venta' es obligatorio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Formato del campo 'Punro de Venta' incorrecto"),
+  body("domiciliofiscal")
+    .notEmpty().withMessage("El campo 'Domicilio Fiscal' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'Domicilio Fiscal' incorrecto"),
+  body("inicioactividades")
+    .notEmpty().withMessage("El campo 'Inicio de Actividades' es obligatorio")
+    .trim()
+    .escape()
+    .isDate().withMessage("Formato del campo 'Inicio de Actividades' incorrecto"),
 ]
 
 
@@ -590,5 +632,6 @@ module.exports = {
   validarFacturacionChain,
   validarCategoriaReporteChain,
   validarGastosChain,
+  validarDatosFiscalesChain,
   dataValidator,
 };

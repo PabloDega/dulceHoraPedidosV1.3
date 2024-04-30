@@ -128,6 +128,16 @@ if (document.querySelector("#backListaLocalEditar") != null) {
       )
     );
 }
+if (document.querySelector("#backListaLocalFiscal") != null) {
+  document
+    .querySelectorAll("#backListaLocalFiscal")
+    .forEach((boton) =>
+      boton.addEventListener(
+        "click",
+        (e) => (location.href = "/panel/local/fiscal?id=" + e.target.dataset.id)
+      )
+    );
+}
 if (document.querySelector("#backListaLocalEliminar") != null) {
   document
     .querySelectorAll("#backListaLocalEliminar")

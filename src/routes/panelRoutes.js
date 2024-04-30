@@ -54,6 +54,10 @@ router.post("/local/nuevo", auth.authSupervisor, validar.validarLocalesChain, pa
 
 router.get("/local/eliminar", auth.authSupervisor, panelControllers.localEliminar);
 
+router.get("/local/fiscal", auth.authSupervisor, panelControllers.localDatosFiscales);
+
+router.post("/local/fiscal", auth.authSupervisor, validar.validarDatosFiscalesChain, panelControllers.localDatosFiscalesInsert);
+
 router.get("/fotos", auth.authSupervisor, panelControllers.fotos);
 
 router.get("/fotos/productos", auth.authSupervisor, panelControllers.fotosProductos);

@@ -1,0 +1,67 @@
+<form action="" method="post" id="editorLocal" class="editor">
+    <%let valores = {
+        razonsocial: "",
+        cuit: "",
+        iibb: "",
+        condicioniva: "",
+        ptoventa: "",
+        domiciliofiscal: "",
+        inicioactividades: "",
+    }
+    if(datosFiscales !== undefined){
+        valores.razonsocial = datosFiscales.razonsocial;
+        valores.cuit = datosFiscales.cuit;
+        valores.iibb = datosFiscales.iibb;
+        valores.condicioniva = datosFiscales.condicioniva;
+        valores.ptoventa = datosFiscales.ptoventa;
+        valores.domiciliofiscal = datosFiscales.domiciliofiscal;
+        valores.inicioactividades = datosFiscales.inicioactividades;
+    }%>
+    <h1>Editar Datos Fiscales de Local</h1>
+    <span>
+        <label for="local">Local</label>
+        <input type="text" name="local" id="local" value="<%= local.id %>" readonly />
+    </span>
+    <span>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" value="<%= local.nombre %>" readonly/>
+    </span>
+    <span>
+        <label for="razonsocial">Razon Social</label>
+        <input type="text" name="razonsocial" id="razonsocial" value="<%= valores.razonsocial %>" />
+    </span>
+    <span>
+        <label for="cuit">CUIT</label>
+        <input type="text" name="cuit" id="cuit" value="<%= valores.cuit %>" />
+    </span>
+    <span>
+        <label for="iibb">Ingresos Brutos</label>
+        <input type="text" name="iibb" id="iibb" value="<%= valores.iibb %>" />
+    </span>
+    <span>
+        <label for="impuestos">Estado Impositivo</label>
+        <select name="impuestos" id="impuestos">
+            <option value="" <%if(valores.condicioniva == ""){%> selected <%}%> disabled>-Seleccione una opción-</option>
+            <option value="monotributista" <%if(valores.condicioniva == "monotributista"){%> selected <%}%>>Monotributista</option>
+            <option value="responsable" <%if(valores.condicioniva == "responsable"){%> selected <%}%>>Responsable Inscripto</option>
+        </select>
+    </span>
+    <span>
+        <label for="ptoventa">Punto de Venta</label>
+        <input type="text" name="ptoventa" id="ptoventa" value="<%= valores.ptoventa %>" />
+    </span>
+    <span>
+        <label for="domiciliofiscal">Domicilio Fiscal</label>
+        <input type="text" name="domiciliofiscal" id="domiciliofiscal" value="<%= valores.domiciliofiscal %>" />
+    </span>
+    <span>
+        <label for="inicioactividades">Inicio de Actividades</label>
+        <input type="date" name="inicioactividades" id="inicioactividades" value="<%= valores.inicioactividades %>" />
+    </span>
+    
+    <span>
+        <input type="submit" value="Modificar">
+    </span>
+</form>
+
+<script defer src="/script/cuit.js"></script>

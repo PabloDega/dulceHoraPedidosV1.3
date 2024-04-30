@@ -59,8 +59,6 @@ const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
     return factucionxLocal;
 }
 
-
-
 const crearResumenVistaLocal = async (facturas) => {
     let totales = {
         totalDia: 0,
@@ -139,7 +137,7 @@ function sumarFormaDePago(factura, totales){
             totales.totalCredito += factura.total;
             // totalCredito -= factura.senia;
             break;
-        case "transferencia":
+        case "virtual":
             totales.totalNB += factura.total;
             // totalNB -= factura.senia;
             break;
@@ -168,7 +166,7 @@ function sumarFormaDePagoSenia(factura, totales){
         case "credito":
             totales.totalCredito += factura.senia;
             break;
-        case "transferencia":
+        case "virtual":
             totales.totalNB += factura.senia;
             break;
         case "multiple":
@@ -199,7 +197,7 @@ function restarFormaDePagoNC(factura, totales){
             totales.totalCredito -= factura.total;
             // totalCredito -= factura.senia;
             break;
-        case "transferencia":
+        case "virtual":
             totales.totalNB -= factura.total;
             // totalNB -= factura.senia;
             break;
