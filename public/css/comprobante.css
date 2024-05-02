@@ -12,9 +12,9 @@
 }
 #comprobante {
   width: 58mm;
-  display: flex;
+  display: none;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 0.3em;
   /* border: solid 2px black; */
   padding: 5mm;
   background-color: white;
@@ -25,12 +25,13 @@
 #comprobante h1 {
   font-size: 1.2em;
   text-align: center;
+  margin: 0.5em 0;
 }
 #comprobante h2 {
-  font-size: 1.1em;
+  font-size: 1em;
 }
 #comprobante h3 {
-  font-size: 1em;
+  font-size: 0.8em;
 }
 #comprobante table {
   font-size: 0.8em;
@@ -87,8 +88,48 @@
       left: 0;
       padding: 0;
     }
-    #comprobante table tbody tr{
-      border-bottom: 1px solid black;
+    #comprobante.comprobanteCAE table{
+      /* border-collapse: collapse; */
+      position: relative;
+      table-layout: fixed;
+      max-width: 58mm;
+      width: 100%;
+      font-size: 0.55em;
+    }
+    .comprobanteCAE table thead{
+      overflow: hidden;
+      color: black;
+      font-weight: 600;
+      border-bottom: 2px solid black;
+    }
+    .comprobanteCAE table thead tr th{
+      padding: 0.5em 0;
+    }
+    .comprobanteCAE table tbody tr, #comprobante table tbody tr{
+      border-bottom: 1px solid gray;
+    }
+    .comprobanteCAE table tbody tr td{
+      overflow-x: visible;
+    }
+    .comprobanteCAE table tbody tr td:nth-child(1){
+      padding-top: 1em;
+      overflow-x: hidden;
+      /* white-space: nowrap; */
+      text-overflow: ellipsis;
+    }
+    .comprobanteCAE table tbody tr td:nth-child(2), .comprobanteCAE table thead tr th:nth-child(2){
+      text-align: center;
+      width: 3em;
+    }
+    .comprobanteCAE table tbody tr td:nth-child(3), .comprobanteCAE table thead tr th:nth-child(3){
+      text-align: center;
+      width: 3em;
+    }
+    .comprobanteCAE table tbody tr td:nth-child(4){
+      text-align: right;
+    }
+    .comprobanteCAE table tbody tr td:nth-child(5){
+      text-align: right;
     }
     #factCont{
       display: none !important;

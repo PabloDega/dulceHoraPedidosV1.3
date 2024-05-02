@@ -347,9 +347,10 @@ const localDatosFiscales = async (req, res) => {
 };
 
 const localDatosFiscalesInsert = async (req, res) => {
-  /* if (!errores.isEmpty()) {
-    const local = await servicesLocal.getLocal(req.body.id);
-    const datosFiscales = await servicesLocal.getDatosFiscales(req.body.id);
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const local = await servicesLocal.getLocal(req.body.local);
+    const datosFiscales = await servicesLocal.getDatosFiscales(req.body.local);
     return res.render(__basedir + "/src/views/pages/editarLocalFiscal", {
       errores: errores.array({ onlyFirstError: true }),
       local,
@@ -357,8 +358,7 @@ const localDatosFiscalesInsert = async (req, res) => {
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     });
-  } */
-  console.log(req.body)
+  }
   await servicesLocal.insertDatosFiscales(req.body)
   return res.redirect("/panel/local");
 };
@@ -1482,10 +1482,12 @@ const facturacion = async(req, res) => {
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
     categorias,
     data,
+    datosFiscales,
     local,
     impuestos: local.impuestos,
     botonesfacturacion,
@@ -1753,7 +1755,7 @@ const facturacionRegistros = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const productos = await servicesProductos.getProductosLocal();
-
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/facturacionLocalRegistros", {
     resumen,
     facturas,
@@ -1761,6 +1763,7 @@ const facturacionRegistros = async (req, res) => {
     fechaHyphen,
     local,
     productos,
+    datosFiscales,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     servicios,

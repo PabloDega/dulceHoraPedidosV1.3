@@ -1,8 +1,21 @@
+function monetarizar(valor) {
+  if (valor < 1) {
+    return "-";
+  }
+  valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+  return valor;
+}
+
 async function crearComprobanteSenia(id) {
   document.querySelector("#factTickets").style.display = "flex";
   let factura = await fetch(`/panel/facturacion/comprobante/parcial?id=${id}`, { method: "GET" });
   factura = await factura.json();
   // capturar error
+  let fecha = new Date(factura.fechaevento);
+  fecha = fecha.toLocaleDateString()
+  let fechaHora = factura.fechaevento.split("T");
+  fechaHora[1] = fechaHora[1].split(".");
+  let hora = fechaHora[1][0];
   let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
@@ -22,7 +35,7 @@ async function crearComprobanteSenia(id) {
 </span>
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
 <span><h1>-- SEÑA --</h1></span>
-<span><h3>${factura.fecha}</h3></span>
+<span><h3>${fecha} - ${hora}</h3></span>
 <span><h3>Seña Nº ${factura.numero}</h3></span>
 <span><h3>Nombre: ${observaciones.nombre}</h3></span>
 <span>Detalle:</span>
@@ -44,6 +57,11 @@ async function crearComprobanteComanda(id) {
   let factura = await fetch(`/panel/facturacion/comprobante?id=${id}`, { method: "GET" });
   factura = await factura.json();
   // capturar error
+  let fecha = new Date(factura.fechaevento);
+  fecha = fecha.toLocaleDateString()
+  let fechaHora = factura.fechaevento.split("T");
+  fechaHora[1] = fechaHora[1].split(".");
+  let hora = fechaHora[1][0];
   let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
@@ -60,7 +78,7 @@ async function crearComprobanteComanda(id) {
     <img src="/im/logoDH.png" alt="">
 </span>
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
-<span><h3>${factura.fecha}</h3></span>
+<span><h3>${fecha} - ${hora}</h3></span>
 <span><h3>Comanda Nº ${factura.numero}</h3></span>
 <span>Detalle:</span>
 <table>
@@ -77,6 +95,7 @@ async function crearComprobanteComanda(id) {
 let QRstring;
 
 async function crearComprobanteCAE(id) {
+  
   document.querySelector("#factTickets").style.display = "flex";
   let factura = await fetch(`/panel/facturacion/comprobante/fiscal?id=${id}`, { method: "GET" });
   factura = await factura.json();
@@ -85,13 +104,25 @@ async function crearComprobanteCAE(id) {
     return factura.error;
   }
   // return
+  console.log(factura)
   let detalle = factura.detalle;
   detalle = JSON.parse(detalle);
   let textoDetalles = "";
   let punto = factura.ptoventa.toString().padStart(3, "0");
   let numero = factura.numero.toString().padStart(7, "0");
+  let fecha = new Date(factura.fechaevento);
+  fecha = fecha.toLocaleDateString()
   let fechaHora = factura.fechaevento.split("T");
   fechaHora[1] = fechaHora[1].split(".");
+  let hora = fechaHora[1][0];
+  let destinatario = "Consumidor Final"
+  if(factura.tipo == 1){
+    destinatario = "Dest: " + factura.receptor;
+  };
+  let condicion = "Monotributista";
+  if(window.datosFiscales.condicioniva == "responsable"){
+    condicion = "Responsable Inscripto"
+  }
   let tipo;
   switch (factura.tipo) {
     case 1:
@@ -104,13 +135,13 @@ async function crearComprobanteCAE(id) {
       tipo = "C";
       break;
     case 3:
-      tipo = "NC";
+      tipo = "NC-A";
       break;
     case 8:
-      tipo = "NC";
+      tipo = "NC-B";
       break;
     case 13:
-      tipo = "NC";
+      tipo = "NC-C";
       break;
     default:
       break;
@@ -126,18 +157,20 @@ async function crearComprobanteCAE(id) {
     importe: factura.total,
     codAut: factura.CAE,
   };
-  if (factura.tipo == 1) {
+  if (factura.tipo == 1 || factura.tipo == 3) {
     datosParaQR.tipoDocRec = 80;
     datosParaQR.nroDocRec = factura.receptor;
   }
 
   detalle.forEach((item) => {
     let producto = window.productos.find((prod) => prod.codigo === item[3]);
+    let precioUnitario = parseFloat(item[1]) / parseFloat(item[4]);
     textoDetalles += `<tr>
-            <td>${item[0]}</td>
             <td>${producto.nombre}</td>
             <td>${item[4]}</td>
-            <td>$${item[1]}</td>
+            <td>${item[2]/10}%</td>
+            <td>${monetarizar(precioUnitario)}</td>
+            <td>${monetarizar(item[1])}</td>
         </tr>`;
   });
  /*  let comprobanteCAE = `<div id="comprobante">
@@ -158,18 +191,36 @@ async function crearComprobanteCAE(id) {
 <span style="text-align: center;"><h3>CAE: ${factura.CAE}</h3></span>
 <div id="qrCAE"></div>
 </div>`; */
-  let comprobanteCAE = `<div id="comprobante">
+  let comprobanteCAE = `<div id="comprobante" class="comprobanteCAE">
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
-<span><h3>CUIT ${factura.cuitemisor}</h3></span>
-<span><h3>${fechaHora[0]} - ${fechaHora[1][0]}</h3></span>
-<span><h4>Fact. ${tipo} ${punto}-${numero}</h4></span>
+<span><h3>${window.datosFiscales.razonsocial}</h3></span>
+<span><h3>CUIT ${window.datosFiscales.cuit}</h3></span>
+<span><h3>IB: ${window.datosFiscales.iibb}</h3></span>
+<span><h3>${window.datosFiscales.domiciliofiscal}</h3></span>
+<span><h3>Inicio Act.: ${window.datosFiscales.inicioactividades}</h3></span>
+<span><h3>${condicion}</h3></span>
+<span><h3>${destinatario}</h3></span>
+<hr>
+<span><h2>${fecha} - ${hora}</h2></span>
+<span><h2>Fact. ${tipo} ${punto}-${numero}</h2></span>
+<hr>
 <span>Detalle:</span>
 <table>
+    <thead>
+        <tr>
+          <th>Prod.</th>
+          <th>Cant.</th>
+          <th>IVA</th>
+          <th>Pecio</th>
+          <th>Total</th>
+        </tr>
+    </thead>
     <tbody>
         ${textoDetalles}
     </tbody>
 </table>
-<span style="align-self: flex-end;">Total: $${factura.total}</span>
+<span style="align-self: flex-end;"><b>Total: ${monetarizar(factura.total)}</b></span>
+<hr>
 <span style="text-align: center;"><h3>CAE: ${factura.CAE}</h3></span>
 <div id="qrCAE"></div>
 </div>`;

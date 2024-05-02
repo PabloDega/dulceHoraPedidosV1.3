@@ -595,7 +595,7 @@ const validarDatosFiscalesChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo 'impuestos' incorrecto"),
-  body("ptoventa:")
+  body("ptoventa")
     .notEmpty().withMessage("El campo 'Punro de Venta' es obligatorio")
     .trim()
     .escape()
