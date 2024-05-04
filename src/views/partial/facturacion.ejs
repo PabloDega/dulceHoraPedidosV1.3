@@ -139,11 +139,17 @@
             <input type="hidden" name="pagoMultiple" id="pagoMultiple">
             <input type="hidden" name="vuelto" id="vueltoHide" value="0">
         </span>
-    </form> 
-
-    <div id="factBotonesRapidos">
-        <!-- autofill javascript -->
-    </div>
+    </form>
+    
+    <span>
+        <div id="factBotonesRapidos">
+            <!-- autofill javascript -->
+        </div>
+        <div id="factBotonesPersonalizados">
+            <!-- autofill javascript -->
+        </div>
+    </span>
+    
     <div id="factBotoneraXtra">
         <div id="btnPrecios" class="factBotoneraBtn">
             <img src="/im/backventas.svg" alt="" title="Lista de productos">
@@ -190,5 +196,6 @@
         window.data = <%- JSON.stringify(data) %>
         window.local = <%- JSON.stringify(local) %>
         window.datosFiscales = <%- JSON.stringify(datosFiscales) %>
+        window.botonesPersonalizados = <%- JSON.stringify(botonesPersonalizados) %>
     </script>
 </div>

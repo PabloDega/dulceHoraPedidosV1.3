@@ -146,6 +146,9 @@
     #factBotonesRapidos{
       display: none !important;
     }
+    #factBotonesPersonalizados{
+      display: none !important;
+    }
     .mensajeInfo{
       display: none !important;
     }

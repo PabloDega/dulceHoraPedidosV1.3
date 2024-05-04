@@ -228,4 +228,10 @@ router.get("/facturacion/fabrica/botones/eliminar", auth.authSupervisor, panelCo
 
 // router.get("/facturacion/checkAFIP", auth.authAdmin, panelControllers.facturacionCheckAfip);
 
+router.get("/facturacion/local/productos/personalizados", auth.authAdmin, panelControllers.facturacionLocalProdPers);
+
+router.get("/facturacion/local/productos/personalizados/nuevo", auth.authAdmin, panelControllers.facturacionLocalProdPersNuevo);
+
+router.post("/facturacion/local/productos/personalizados/nuevo", auth.authAdmin, validar.validarProductoPersChain, panelControllers.facturacionLocalProdPersInsert);
+
 module.exports = router;

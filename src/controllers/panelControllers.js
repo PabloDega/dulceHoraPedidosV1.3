@@ -1480,6 +1480,7 @@ const facturacion = async(req, res) => {
     }
   }
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
+  const botonesPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal)
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
   const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
@@ -1491,6 +1492,7 @@ const facturacion = async(req, res) => {
     local,
     impuestos: local.impuestos,
     botonesfacturacion,
+    botonesPersonalizados,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     layout: __basedir + "/src/views/layouts/facturacion",
@@ -1920,6 +1922,50 @@ const gastosLocalInsert = async (req, res) => {
   }
 }
 
+const facturacionLocalProdPers = async (req, res) => {
+  const productosPers = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/facturacionLocalProdPers", {
+    productosPers,
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionLocalProdPersNuevo = async (req, res) => {
+  /* let productoPers;
+  if(req.query.id){
+    if(!isNaN(parseInt(req.query.id))){
+      productoPers = await servicesProductos.getProductoPersonalizados(req.query.id, req.session.userLocal);
+    }
+  } */
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/nuevoProductoPers", {
+    valores: {},
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionLocalProdPersInsert = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+    return res.render(__basedir + "/src/views/pages/nuevoProductoPers", {
+      errores: errores.array({ onlyFirstError: true }),
+      valores: req.body,
+      servicios,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+ 
+  await servicesProductos.insertProductosPersonalizados(req.body, req.session.userLocal);
+  return res.redirect("/panel/facturacion/local/productos/personalizados");
+}
+
 
 module.exports = {
   index,
@@ -2027,4 +2073,7 @@ module.exports = {
   facturacionCheckAfip,
   gastosLocal,
   gastosLocalInsert,
+  facturacionLocalProdPers,
+  facturacionLocalProdPersNuevo,
+  facturacionLocalProdPersInsert,
 };

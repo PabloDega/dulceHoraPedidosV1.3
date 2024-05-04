@@ -1,0 +1,35 @@
+<h2>Productos Personalizados <span class="btn btnHeader" id="agregarProdPers">agregar</span></h2>
+<%if(productosPers.length == 0){%>
+        <span>No se encuentran registros en la base de datos</span>
+<%} else {%>
+    <table>
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>IVA</th>
+                <th>Estado</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%productosPers.forEach((producto) => {%>
+                <tr>
+                    <td><%=producto.codigo%></td>
+                    <td><%=producto.nombre%></td>
+                    <td><%=producto.descripcion%></td>
+                    <td><%=producto.precio%></td>
+                    <td><%=producto.iva%></td>
+                    <td><%=producto.estado%></td>
+                    <td class="proPersABM" data-id="<%=producto.id%>" id="proPersEditar">Editar</td>
+                    <td class="proPersABM" data-id="<%=producto.id%>" id="proPersEliminar">Eliminar</td>
+                </tr>
+            <%})%>
+        </tbody>
+    </table>
+<%}%>
+
+<script defer src="/script/facturacionLocalProdPers.js"></script>

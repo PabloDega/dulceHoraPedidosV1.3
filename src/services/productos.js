@@ -142,6 +142,61 @@ const deleteProductoLocal = async (id) => {
   }
 };
 
+const getProductoPersonalizados = async (id, local) => {
+  try {
+    const rows = await conectar.query(`SELECT * FROM productospersonalizados WHERE id = "${id}" AND local = "${local}"`);
+    return rows[0][0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getProductosPersonalizadosxLocal = async (local) => {
+  try {
+    const rows = await conectar.query(`SELECT * FROM productospersonalizados WHERE local = "${local}"`);
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const insertProductosPersonalizados = async (datos, local) => {
+  try {
+    await conectar.query(`INSERT INTO productospersonalizados (codigo, local, nombre, descripcion, precio, iva) VALUES ("${datos.codigo}", "${local}", "${datos.nombre}", "${datos.descripcion}", "${datos.precio}", "${datos.iva}")`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const updateProductosPersonalizados = async (datos) => {
+  try {
+    const answer = await conectar.query(
+      `UPDATE productospersonalizados SET codigo = "${datos.codigo}", local = "${datos.local}", nombre = "${datos.nombre}", descripcion = "${datos.descripcion}", precio = "${datos.precio}", iva = "${datos.iva}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`
+    );
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const deleteProductosPersonalizados = async (id, local) => {
+  try {
+    // const answer = await conectar.query(`DELETE FROM productoslocal WHERE id = "${id}"`);
+    await conectar.query(`UPDATE productospersonalizados SET visible = 'false' WHERE id = '${id}' AND local = '${local}'`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 
 module.exports = {
   getCategorias,
@@ -157,4 +212,9 @@ module.exports = {
   insertProductoLocal,
   updateProductoLocal,
   deleteProductoLocal,
+  getProductoPersonalizados,
+  getProductosPersonalizadosxLocal,
+  insertProductosPersonalizados,
+  updateProductosPersonalizados,
+  deleteProductosPersonalizados,
 };

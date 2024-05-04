@@ -610,7 +610,37 @@ const validarDatosFiscalesChain = [
     .trim()
     .escape()
     .isDate().withMessage("Formato del campo 'Inicio de Actividades' incorrecto"),
-]
+];
+
+const validarProductoPersChain = [
+  body("codigo")
+    .trim()
+    .notEmpty().withMessage("Error en el codigo, por favor recargar fomulario")
+    .isNumeric().withMessage("Error en el codigo, por favor recargar fomulario"),
+  body("nombre")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'Nombre' es obligatorio")
+    .isString().withMessage("La categoría solo puede contener texto"),
+  body("descripcion")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape(),
+  body("precio")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El precio solo puede contener números"),
+  body("iva")
+    .trim()
+    .escape()
+    .isNumeric().withMessage("El IVA solo puede contener números"),
+  body("estado")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'estado' es obligatorio")
+    .isString().withMessage("El campo estado solo puede contener texto"),
+];
+
 
 
 module.exports = {
@@ -633,5 +663,6 @@ module.exports = {
   validarCategoriaReporteChain,
   validarGastosChain,
   validarDatosFiscalesChain,
+  validarProductoPersChain,
   dataValidator,
 };

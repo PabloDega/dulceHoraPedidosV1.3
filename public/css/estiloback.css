@@ -1512,3 +1512,35 @@ footer img {
 #verMasSenias{
   margin-top: 1em;
 }
+.btnHeader{
+  background-color: white;
+  color: red;
+  font-size: 0.6em;
+  margin-left: 1em;
+  border-radius: 0.5em 0.5em 0 0;
+}
+.proPersABM{
+  font-weight: 600;
+  cursor: pointer;
+}
+#factBotonesPersonalizados{
+  margin-top: 1em;
+  display: flex;
+  gap: 1em;
+}
+.factBotonPersRapido{
+  width: 150px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  color: black;
+  padding: 1em;
+}
+.factBotonPersRapido h1{
+  font-size: 1em;
+}
+.factBotonPersRapido h2{
+  font-size: 0.8em;
+  color: gray;
+}

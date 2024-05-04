@@ -18,6 +18,9 @@ let pago = 0;
 // Creacion de botones
 
 function crearBotonesRapidos() {
+  if(botones.length == 0){
+    return
+  }
   let contenedor = document.querySelector("#factBotonesRapidos");
   botones.forEach((boton) => {
     let prodInfo = productos.find((prod) => prod.codigo == boton.codigo);
@@ -32,6 +35,21 @@ function crearBotonesRapidos() {
 }
 
 crearBotonesRapidos();
+
+function crearBotonesPers() {
+  if(botonesPersonalizados.length == 0){
+    return
+  }
+  let contenedor = document.querySelector("#factBotonesPersonalizados");
+  botonesPersonalizados.forEach((boton) => {
+    contenedor.innerHTML += `<div class="factBotonPersRapido" data-codigo="${boton.codigo}" data-cantidad="${boton.cantidad}" style="order: ${boton.orden};">
+      <h1>${boton.nombre}</h1>
+      <h2>${boton.descripcion}</h2>
+    </div>`;
+  });
+}
+
+crearBotonesPers();
 
 function itemsCreador(cantidad) {
   if (isNaN(cantidad)) {
