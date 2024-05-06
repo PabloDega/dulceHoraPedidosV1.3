@@ -24,6 +24,11 @@ if (document.querySelector("#facturacionLocalGastos") != null) {
     .querySelector("#facturacionLocalGastos")
     .addEventListener("click", () => (location.href = "/panel/facturacion/registros/gastos"));
 }
+if (document.querySelector("#facturacionLocalCierreCaja") != null) {
+  document
+    .querySelector("#facturacionLocalCierreCaja")
+    .addEventListener("click", () => (location.href = "/panel/local/caja/cierre"));
+}
 if (document.querySelector("#facturacionLocalProdPropios") != null) {
   document
     .querySelector("#facturacionLocalProdPropios")

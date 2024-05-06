@@ -10,7 +10,8 @@ const servicesReportes = require(__basedir + "/src/services/reportes");
 const servicesServicios = require(__basedir + "/src/services/servicios");
 const servicesFacturacion = require(__basedir + "/src/services/facturacion");
 const servicesAfip = require(__basedir + "/src/services/afip");
-const servicesGastos = require(__basedir + "/src/services/gastos")
+const servicesGastos = require(__basedir + "/src/services/gastos");
+const servicesCaja = require(__basedir + "/src/services/caja");
 const { validationResult } = require("express-validator");
 const { hashearPassword } = require(__basedir + "/src/middlewares/hash");
 const actividadMiddleware = require(__basedir + "/src/middlewares/actividad");
@@ -1486,6 +1487,7 @@ const facturacion = async(req, res) => {
   const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
+    botonesPersonalizados,
     categorias,
     data,
     datosFiscales,
@@ -1756,8 +1758,10 @@ const facturacionRegistros = async (req, res) => {
   const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas)
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   const local = await servicesLocal.getLocal(req.session.userLocal);
-  const productos = await servicesProductos.getProductosLocal();
+  const productos = await servicesProductos.getProductosLocalTodos();
   const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
+  const botonesPersonalizados = await servicesProductos.getProductosPersonalizadosxLocalTodos(req.session.userLocal)
+
   res.render(__basedir + "/src/views/pages/facturacionLocalRegistros", {
     resumen,
     facturas,
@@ -1766,6 +1770,7 @@ const facturacionRegistros = async (req, res) => {
     local,
     productos,
     datosFiscales,
+    botonesPersonalizados,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     servicios,
@@ -1966,6 +1971,74 @@ const facturacionLocalProdPersInsert = async (req, res) => {
   return res.redirect("/panel/facturacion/local/productos/personalizados");
 }
 
+const facturacionLocalProdPersEditar = async (req, res) => {
+  let productoPers;
+  if(req.query.id){
+    if(!isNaN(parseInt(req.query.id))){
+      productoPers = await servicesProductos.getProductoPersonalizados(req.query.id, req.session.userLocal);
+    }
+    if(productoPers === undefined){
+      return res.redirect("/panel/facturacion/local/productos/personalizados");
+    }
+  }
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/editarProductoPers", {
+    valores: productoPers,
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
+const facturacionLocalProdPersUpdate = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+    return res.render(__basedir + "/src/views/pages/editarProductoPers", {
+      errores: errores.array({ onlyFirstError: true }),
+      valores: req.body,
+      servicios,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+ 
+  await servicesProductos.updateProductosPersonalizados(req.body, req.session.userLocal);
+  return res.redirect("/panel/facturacion/local/productos/personalizados");
+}
+
+const facturacionLocalProdPersEliminar = async (req, res) => {
+  if(req.query.id){
+    if(!isNaN(parseInt(req.query.id))){
+      let data = await servicesProductos.getProductoPersonalizados(req.query.id, req.session.userLocal);
+      if(data !== undefined){
+        await servicesProductos.deleteProductosPersonalizados(req.query.id, req.session.userLocal);
+      }
+    }
+  }
+  return res.redirect("/panel/facturacion/local/productos/personalizados");
+}
+
+const localCierreDeCaja = async (req, res) => {
+  const registros = await servicesCaja.getCierres(req.session.userLocal);
+  console.log(registros)
+  if(registros === undefined){
+    return res.redirect("/panel/facturacion/registros");
+  }
+  const gastos = await servicesGastos.getGastosId(req.session.userLocal, registros.ultimoIdGastos || 0);
+  const facturacionNF = await servicesFacturacion.getFacturasNFxId(req.session.userLocal, registros.ultimoIdFact || 0)
+  
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/cierreCaja", {
+    registros,
+    gastos,
+    servicios,
+    facturacionNF,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
+
 
 module.exports = {
   index,
@@ -2076,4 +2149,8 @@ module.exports = {
   facturacionLocalProdPers,
   facturacionLocalProdPersNuevo,
   facturacionLocalProdPersInsert,
+  facturacionLocalProdPersEditar,
+  facturacionLocalProdPersUpdate,
+  facturacionLocalProdPersEliminar,
+  localCierreDeCaja,
 };

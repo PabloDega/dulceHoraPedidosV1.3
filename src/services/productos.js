@@ -155,8 +155,19 @@ const getProductoPersonalizados = async (id, local) => {
 
 const getProductosPersonalizadosxLocal = async (local) => {
   try {
-    const rows = await conectar.query(`SELECT * FROM productospersonalizados WHERE local = "${local}"`);
-    return rows[0];
+    const productos = await conectar.query(`SELECT * FROM productospersonalizados WHERE local = "${local}" AND visible = 'true'`);
+    return productos[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getProductosPersonalizadosxLocalTodos = async (local) => {
+  try {
+    const productos = await conectar.query(`SELECT * FROM productospersonalizados WHERE local = "${local}"`);
+    return productos[0];
   } catch (error) {
     throw error;
   } finally {
@@ -174,11 +185,10 @@ const insertProductosPersonalizados = async (datos, local) => {
   }
 };
 
-const updateProductosPersonalizados = async (datos) => {
+const updateProductosPersonalizados = async (datos, local) => {
+  console.log(datos)
   try {
-    const answer = await conectar.query(
-      `UPDATE productospersonalizados SET codigo = "${datos.codigo}", local = "${datos.local}", nombre = "${datos.nombre}", descripcion = "${datos.descripcion}", precio = "${datos.precio}", iva = "${datos.iva}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`
-    );
+    await conectar.query(`UPDATE productospersonalizados SET codigo = "${datos.codigo}", local = "${local}", nombre = "${datos.nombre}", descripcion = "${datos.descripcion}", precio = "${datos.precio}", iva = "${datos.iva}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -214,6 +224,7 @@ module.exports = {
   deleteProductoLocal,
   getProductoPersonalizados,
   getProductosPersonalizadosxLocal,
+  getProductosPersonalizadosxLocalTodos,
   insertProductosPersonalizados,
   updateProductosPersonalizados,
   deleteProductosPersonalizados,

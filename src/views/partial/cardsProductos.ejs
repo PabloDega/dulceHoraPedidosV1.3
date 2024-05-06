@@ -1,7 +1,10 @@
 <div id="prodCards">
 <% data.forEach(dato => { 
+  if(!JSON.parse(dato.visible)){
+    return;
+  }
   let estado = "Inactivo"; 
-  if(dato.estado == "true"){estado = "Activo"}; 
+  if(JSON.parse(dato.estado)){estado = "Activo"}; 
   let ivaVer = parseFloat(dato.iva) / 10;
   %>
 

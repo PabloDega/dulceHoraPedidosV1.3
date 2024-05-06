@@ -19,7 +19,14 @@ async function crearComprobanteSenia(id) {
   let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
-    let producto = window.productos.find((prod) => prod.codigo === item[3]);
+    let producto;
+    if (item[3] >= 100) {
+      producto = window.productos.find((prod) => prod.id === item[5]);
+    } else {
+      producto = window.botonesPersonalizados.find((prod) => prod.id === item[5]);
+      producto.fraccionamiento = "unidad";
+      producto.preciounidad = producto.precio;
+    }
     textoDetalles += `<tr>
             <td>${item[0]}</td>
             <td>${producto.nombre}</td>
@@ -30,23 +37,20 @@ async function crearComprobanteSenia(id) {
   let resto = factura.total - factura.senia;
   let observaciones = JSON.parse(factura.observaciones);
   let comprobanteSenia = `<div id="comprobante">
-<span style="display: flex; justify-content: center;">
-    <img src="/im/logoDH.png" alt="">
-</span>
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
 <span><h1>-- SEÑA --</h1></span>
 <span><h3>${fecha} - ${hora}</h3></span>
 <span><h3>Seña Nº ${factura.numero}</h3></span>
 <span><h3>Nombre: ${observaciones.nombre}</h3></span>
 <span>Detalle:</span>
-<table>
+<table class="tablaComanda">
     <tbody>
         ${textoDetalles}
     </tbody>
 </table>
 <span style="align-self: flex-end;">Total: $${factura.total}</span>
 <span style="align-self: flex-end;">Seña: $${factura.senia}</span>
-<span style="align-self: flex-end;">Restante: $${resto}</span>
+<span style="align-self: flex-end;">Restante: $${resto}</span><br />
 <span style="text-align: center;"><h3><i>Ticket no válido como factura</i></h3></span>
 </div>`;
   return comprobanteSenia;
@@ -65,7 +69,15 @@ async function crearComprobanteComanda(id) {
   let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
-    let producto = window.productos.find((prod) => prod.codigo === item[3]);
+    let producto;
+    if (item[3] >= 100) {
+      producto = window.productos.find((prod) => prod.id === item[5]);
+    } else {
+      producto = window.botonesPersonalizados.find((prod) => prod.id === item[5]);
+      producto.fraccionamiento = "unidad";
+      producto.preciounidad = producto.precio;
+    }
+   
     textoDetalles += `<tr>
             <td>${item[0]}</td>
             <td>${producto.nombre}</td>
@@ -74,19 +86,16 @@ async function crearComprobanteComanda(id) {
         </tr>`;
   });
   let comprobanteComanda = `<div id="comprobante">
-<span style="display: flex; justify-content: center;">
-    <img src="/im/logoDH.png" alt="">
-</span>
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
 <span><h3>${fecha} - ${hora}</h3></span>
 <span><h3>Comanda Nº ${factura.numero}</h3></span>
 <span>Detalle:</span>
-<table>
+<table class="tablaComanda">
     <tbody>
         ${textoDetalles}
     </tbody>
 </table>
-<span style="align-self: flex-end;">Total: $${factura.total}</span>
+<span style="align-self: flex-end;">Total: $${factura.total}</span><br />
 <span style="text-align: center;"><h3><i>Ticket no válido como factura</i></h3></span>
 </div>`;
   return comprobanteComanda;
@@ -104,14 +113,13 @@ async function crearComprobanteCAE(id) {
     return factura.error;
   }
   // return
-  console.log(factura)
   let detalle = factura.detalle;
   detalle = JSON.parse(detalle);
   let textoDetalles = "";
   let punto = factura.ptoventa.toString().padStart(3, "0");
   let numero = factura.numero.toString().padStart(7, "0");
   let fecha = new Date(factura.fechaevento);
-  fecha = fecha.toLocaleDateString()
+  fecha = fecha.toLocaleDateString();
   let fechaHora = factura.fechaevento.split("T");
   fechaHora[1] = fechaHora[1].split(".");
   let hora = fechaHora[1][0];
@@ -163,15 +171,24 @@ async function crearComprobanteCAE(id) {
   }
 
   detalle.forEach((item) => {
-    let producto = window.productos.find((prod) => prod.codigo === item[3]);
+    let producto;
+    if (item[3] >= 100) {
+      producto = window.productos.find((prod) => prod.id === item[5]);
+    } else {
+      producto = window.botonesPersonalizados.find((prod) => prod.id === item[5]);
+      producto.fraccionamiento = "unidad";
+      producto.preciounidad = producto.precio;
+    }
     let precioUnitario = parseFloat(item[1]) / parseFloat(item[4]);
     textoDetalles += `<tr>
-            <td>${producto.nombre}</td>
-            <td>${item[4]}</td>
+            <td colspan="4"><b>${producto.nombre}</b></td>
+          </tr>
+          <tr class="tdBoderBottom">
+            <td>x${item[4]}</td>
             <td>${item[2]/10}%</td>
             <td>${monetarizar(precioUnitario)}</td>
             <td>${monetarizar(item[1])}</td>
-        </tr>`;
+          </tr>`;
   });
  /*  let comprobanteCAE = `<div id="comprobante">
 <span style="display: flex; justify-content: center;">
@@ -197,7 +214,7 @@ async function crearComprobanteCAE(id) {
 <span><h3>CUIT ${window.datosFiscales.cuit}</h3></span>
 <span><h3>IB: ${window.datosFiscales.iibb}</h3></span>
 <span><h3>${window.datosFiscales.domiciliofiscal}</h3></span>
-<span><h3>Inicio Act.: ${window.datosFiscales.inicioactividades}</h3></span>
+<span><h3>Inicio Act.: ${new Date(window.datosFiscales.inicioactividades).toLocaleDateString()}</h3></span>
 <span><h3>${condicion}</h3></span>
 <span><h3>${destinatario}</h3></span>
 <hr>
@@ -206,15 +223,6 @@ async function crearComprobanteCAE(id) {
 <hr>
 <span>Detalle:</span>
 <table>
-    <thead>
-        <tr>
-          <th>Prod.</th>
-          <th>Cant.</th>
-          <th>IVA</th>
-          <th>Pecio</th>
-          <th>Total</th>
-        </tr>
-    </thead>
     <tbody>
         ${textoDetalles}
     </tbody>

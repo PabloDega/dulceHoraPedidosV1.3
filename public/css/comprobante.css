@@ -74,7 +74,7 @@
 }
 @media print {
     #botonera{
-        display: none !important;
+      display: none !important;
     }
     #factTickets{
       background-color: none;
@@ -91,21 +91,21 @@
     #comprobante.comprobanteCAE table{
       /* border-collapse: collapse; */
       position: relative;
-      table-layout: fixed;
+      /* table-layout: fixed; */
       max-width: 58mm;
       width: 100%;
-      font-size: 0.55em;
+      font-size: 0.75em;
     }
-    .comprobanteCAE table thead{
+    /* .comprobanteCAE table thead{
       overflow: hidden;
       color: black;
       font-weight: 600;
       border-bottom: 2px solid black;
-    }
+    } 
     .comprobanteCAE table thead tr th{
       padding: 0.5em 0;
-    }
-    .comprobanteCAE table tbody tr, #comprobante table tbody tr{
+    }*/
+    .tdBoderBottom{
       border-bottom: 1px solid gray;
     }
     .comprobanteCAE table tbody tr td{
@@ -113,23 +113,25 @@
     }
     .comprobanteCAE table tbody tr td:nth-child(1){
       padding-top: 1em;
-      overflow-x: hidden;
+      /* overflow-x: hidden; */
       /* white-space: nowrap; */
-      text-overflow: ellipsis;
+      /* text-overflow: ellipsis; */
+      width: fit-content;
     }
     .comprobanteCAE table tbody tr td:nth-child(2), .comprobanteCAE table thead tr th:nth-child(2){
       text-align: center;
-      width: 3em;
+      width: fit-content;
     }
     .comprobanteCAE table tbody tr td:nth-child(3), .comprobanteCAE table thead tr th:nth-child(3){
       text-align: center;
-      width: 3em;
+      width: fit-content;
     }
     .comprobanteCAE table tbody tr td:nth-child(4){
       text-align: right;
+      width: fit-content;
     }
-    .comprobanteCAE table tbody tr td:nth-child(5){
-      text-align: right;
+    .tablaComanda tr{
+      border-bottom: 1px solid gray;
     }
     #factCont{
       display: none !important;

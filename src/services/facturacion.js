@@ -96,6 +96,17 @@ const getFacturasNFxfecha = async(local, fecha) => {
   }
 }
 
+const getFacturasNFxId = async(local, id) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND id > '${id}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 const getSenias = async(local) => {
   try {
     const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND tipo = 'S' ORDER BY id DESC`);
@@ -250,6 +261,7 @@ module.exports = {
   getFacturasNFTodas,
   getFacturaNF,
   getFacturasNFxfecha,
+  getFacturasNFxId,
   insertFacturaNF,
   getSenias,
   getSenia,

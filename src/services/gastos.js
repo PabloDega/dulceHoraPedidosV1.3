@@ -1,6 +1,6 @@
 const { conectar } = require(__basedir + "/src/config/dbConnection");
 
-const getGastos = async (local, fecha) => {
+const getGastos = async (local) => {
   try {
     const resultado = await conectar.query(`SELECT * FROM gastos WHERE local = '${local}'`);
     return resultado[0];
@@ -12,15 +12,26 @@ const getGastos = async (local, fecha) => {
 };
 
 const getGastosFecha = async (local, fecha) => {
-    try {
-      const resultado = await conectar.query(`SELECT * FROM gastos WHERE local = '${local}' AND fecha = '${fecha}'`);
-      return resultado[0];
-    } catch (error) {
-      throw error;
-    } finally {
-      conectar.releaseConnection();
-    }
-  };
+  try {
+    const resultado = await conectar.query(`SELECT * FROM gastos WHERE local = '${local}' AND fecha = '${fecha}'`);
+    return resultado[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getGastosId = async (local, idInicio) => {
+  try {
+    const resultado = await conectar.query(`SELECT * FROM gastos WHERE local = '${local}' AND id > '${idInicio}'`);
+    return resultado[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
 
 const insertGasto = async (datos) => {
   try {
@@ -37,4 +48,5 @@ module.exports = {
     getGastos,
     getGastosFecha,
     insertGasto,
+    getGastosId,
 }

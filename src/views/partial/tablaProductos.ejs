@@ -16,9 +16,12 @@
         </tr>
     </thead>
     <tbody>
-      <% data.forEach(dato => { 
+      <% data.forEach(dato => {
+        if(!JSON.parse(dato.visible)){
+          return;
+        }
         let estado = "inactivo"; 
-        if(dato.estado == "true"){
+        if(JSON.parse(dato.estado)){
           estado = "activo";
         };
         let ivaVer = parseFloat(dato.iva) / 10;

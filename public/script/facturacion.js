@@ -27,7 +27,7 @@ function crearBotonesRapidos() {
     if (prodInfo == undefined) {
       return;
     }
-    contenedor.innerHTML += `<div class="factBotonRapido" data-codigo="${prodInfo.codigo}" data-cantidad="${boton.cantidad}" style="order: ${boton.orden};">
+    contenedor.innerHTML += `<div class="factBotonRapido" data-id="${prodInfo.id}" data-codigo="${prodInfo.codigo}" data-cantidad="${boton.cantidad}" style="order: ${boton.orden};">
                 <img src="/${prodInfo.img}">
                 <span class="factBotonTxt"><h1>${prodInfo.nombre}</h1><h2>${boton.detalle}</h2></span>
                 </div>`;
@@ -42,7 +42,7 @@ function crearBotonesPers() {
   }
   let contenedor = document.querySelector("#factBotonesPersonalizados");
   botonesPersonalizados.forEach((boton) => {
-    contenedor.innerHTML += `<div class="factBotonPersRapido" data-codigo="${boton.codigo}" data-cantidad="${boton.cantidad}" style="order: ${boton.orden};">
+    contenedor.innerHTML += `<div class="factBotonPersRapido" data-id="${boton.id}"  data-codigo="${boton.codigo}" data-cantidad="1" style="order: ${boton.orden};">
       <h1>${boton.nombre}</h1>
       <h2>${boton.descripcion}</h2>
     </div>`;
@@ -75,11 +75,23 @@ function itemsCreador(cantidad) {
 itemsCreador(7);
 
 function cargarItem(e) {
-  let producto = productos.find((prod) => prod.codigo == e.target.value);
-  if (producto == undefined) {
-    mostrarError(`Item ${e.target.value} inexistente`);
-    vaciarItem(e);
-    return;
+  let producto;
+  if (e.target.value >= 100) {
+    producto = productos.find((prod) => prod.codigo == e.target.value);
+    if (producto == undefined) {
+      mostrarError(`Item ${e.target.value} inexistente`);
+      vaciarItem(e);
+      return;
+    }
+  } else {
+    producto = botonesPersonalizados.find((prod) => prod.codigo == e.target.value);
+    if (producto == undefined) {
+      mostrarError(`Item ${e.target.value} inexistente`);
+      vaciarItem(e);
+      return;
+    }
+    producto.fraccionamiento = "unidad";
+    producto.preciounidad = producto.precio;
   }
   let item = e.target.dataset.item;
   let nombre = document.querySelector(`#nom${item}`);
@@ -92,7 +104,7 @@ function cargarItem(e) {
   if (producto.fraccionamiento === "kilo") {
     precio.value = "$" + producto.preciokilo;
     cantidad.setAttribute("step", "0.01");
-    cantidad.setAttribute("min", "0.01")
+    cantidad.setAttribute("min", "0.01");
   } else {
     precio.value = "$" + producto.preciounidad;
     cantidad.removeAttribute("step");
@@ -125,10 +137,22 @@ function calcularItem(e) {
   }
 
   let codigo = document.querySelector(`#cod${item}`);
-  let producto = productos.find((prod) => prod.codigo == codigo.value);
-  if (producto === undefined) {
-    return;
+
+  let producto;
+  if (codigo.value >= 100) {
+    producto = productos.find((prod) => prod.codigo == codigo.value);
+    if (producto === undefined) {
+      return;
+    }
+  } else {
+    producto = botonesPersonalizados.find((prod) => prod.codigo == codigo.value);
+    if (producto === undefined) {
+      return;
+    }
+    producto.fraccionamiento = "unidad";
+    producto.preciounidad = producto.precio;
   }
+
   let cantidad = document.querySelector(`#cant${item}`);
   let subtotalVisible = document.querySelector(`#subVer${item}`);
 
@@ -169,6 +193,7 @@ function calcularItem(e) {
     producto.iva,
     producto.codigo,
     parseFloat(cantidad.value),
+    producto.id,
   ];
 
   calcularTotal(detalle);
@@ -411,8 +436,9 @@ function cargarBotonRapido(e) {
     }
     codigo = document.querySelector(`#cod${idLibre.dataset.item}`);
     codigo.value = e.currentTarget.dataset.codigo;
+    codigo.setAttribute("data-id", e.currentTarget.dataset.id)
     document.querySelector(`#cant${idLibre.dataset.item}`).value = e.currentTarget.dataset.cantidad;
-    document.querySelector(`#cant${idLibre.dataset.item}`).focus()
+    document.querySelector(`#cant${idLibre.dataset.item}`).focus();
   }
   let event = new Event("change");
   codigo.dispatchEvent(event);
@@ -554,6 +580,13 @@ document.querySelectorAll(".factBotonRapido").forEach((boton) => {
     cargarBotonRapido(e);
   });
 });
+if(document.querySelectorAll(".factBotonPersRapido") !== null){
+  document.querySelectorAll(".factBotonPersRapido").forEach((boton) => {
+    boton.addEventListener("click", (e) => {
+      cargarBotonRapido(e);
+    });
+  });
+}
 document.querySelector("#enviarFacturacion").addEventListener("click", () => {
   document.querySelector("#facturacionDetalles").style.display = "flex";
   document.querySelector("#vueltoPago").focus();

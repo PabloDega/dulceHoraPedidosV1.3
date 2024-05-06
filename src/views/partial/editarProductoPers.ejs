@@ -1,0 +1,46 @@
+<form action="" method="post" id="nuevovalores" class="editor">
+  <h1>Editar Producto Personalizado</h1>
+  <span>
+    <label for="codigo">Código</label>
+    <input type="number" min="0" max="99" name="codigo" id="codigo" value="<%= valores.codigo%>" />
+  </span>
+  <span>
+    <label for="nombre">Nombre</label>
+    <input type="text" name="nombre" id="nombre" value="<%= valores.nombre%>" />
+  </span>
+  <span>
+    <label for="descripcion">Descripcion</label>
+    <textarea name="descripcion" id="descripcion" rows="5"><%= valores.descripcion%></textarea>
+  </span>
+  <span>
+    <label for="precio">Precio</label>
+    <input type="number" min="0" name="precio" id="precio" value="<%= valores.precio%>" />
+  </span>
+  <span>
+    <label for="iva">IVA</label>
+    <%let iva105 = "";
+    let iva210 = "";
+    if(valores.iva){
+      if(valores.iva == 105){
+        iva105 = "selected";
+      } else if(valores.iva == 210){
+        iva210 = "selected";
+      }
+    }%>
+    <select name="iva" id="iva">
+      <option value="" disabled selected>- Seleccionar un item -</option>
+      <option value="105" <%=iva105%>>10,5%</option>
+      <option value="210" <%=iva210%>>21%</option>
+      </select>
+  </span>
+  <span>
+    <%let estado = "checked";
+    if(!JSON.parse(valores.estado)){estado = "";}%>
+    <label for="estado">Estado</label>
+    <input type="checkbox" name="estado" id="estado" value="true" <%= estado %>>
+  </span>
+<span>
+  <input type="hidden" name="id" value="<%= valores.id %>">
+  <input type="submit" value="Modificar">
+</span>
+</form>

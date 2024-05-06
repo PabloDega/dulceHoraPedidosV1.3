@@ -234,4 +234,12 @@ router.get("/facturacion/local/productos/personalizados/nuevo", auth.authAdmin, 
 
 router.post("/facturacion/local/productos/personalizados/nuevo", auth.authAdmin, validar.validarProductoPersChain, panelControllers.facturacionLocalProdPersInsert);
 
+router.get("/facturacion/local/productos/personalizados/editar", auth.authAdmin, panelControllers.facturacionLocalProdPersEditar);
+
+router.post("/facturacion/local/productos/personalizados/editar", auth.authAdmin, panelControllers.facturacionLocalProdPersUpdate);
+
+router.get("/facturacion/local/productos/personalizados/eliminar", auth.authAdmin, panelControllers.facturacionLocalProdPersEliminar);
+
+// router.get("/local/caja/cierre", auth.authAdmin, panelControllers.localCierreDeCaja);
+
 module.exports = router;
