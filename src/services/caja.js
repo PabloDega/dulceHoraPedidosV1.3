@@ -11,6 +11,29 @@ const getCierres = async (local) => {
   }
 };
 
+const getCierresxId = async (local, id) => {
+  try {
+    const rows = await conectar.query(`SELECT * FROM cierresdecaja WHERE local = ${local} AND id = ${id}`);
+    return rows[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const insertCaja = async (apertura, fecha, local, numeracion) => {
+  try {
+    await conectar.query(`INSERT INTO cierresdecaja (local, numero, fecha, inicio) VALUES ("${local}", "${numeracion}", "${fecha}", '${apertura}')`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getCierres,
+  getCierresxId,
+  insertCaja,
 };

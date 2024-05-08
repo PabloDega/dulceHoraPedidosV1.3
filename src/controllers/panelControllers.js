@@ -21,6 +21,8 @@ const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
 const localMiddleware = require(__basedir + "/src/middlewares/local");
 const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
 const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
+const cajaMiddleware = require(__basedir + "/src/middlewares/caja");
+
 
 const index = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal)
@@ -1527,7 +1529,7 @@ const facturacionPost = async(req, res) => {
   }
   
   let fecha = await facturacionMiddleware.fechaHoy();
-  fecha = await facturacionMiddleware.fechaHyphen(fecha)
+  fecha = await facturacionMiddleware.fechaHyphen(fecha);
   req.body.fecha = fecha;
   let pago = 0;
   if(!isNaN(parseFloat(req.body.pago))){
@@ -2021,24 +2023,100 @@ const facturacionLocalProdPersEliminar = async (req, res) => {
 
 const localCierreDeCaja = async (req, res) => {
   const registros = await servicesCaja.getCierres(req.session.userLocal);
-  console.log(registros)
-  if(registros === undefined){
-    return res.redirect("/panel/facturacion/registros");
-  }
-  const gastos = await servicesGastos.getGastosId(req.session.userLocal, registros.ultimoIdGastos || 0);
-  const facturacionNF = await servicesFacturacion.getFacturasNFxId(req.session.userLocal, registros.ultimoIdFact || 0)
-  
+
+  let errores = await cajaMiddleware.ceirreCajaErrores(req.query.errores);
+
+  let fecha = await facturacionMiddleware.fechaHoy();
+  fecha = await facturacionMiddleware.fechaHyphen(fecha);
+
+  const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
+  const facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fecha);
+  const facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
+  let facturas = facturasNF.concat(facturasCAE);
+  facturas.sort((a, b) => a.fechaevento - b.fechaevento);
+  // filtrar facturas si en el mismo dia hay otro cierre de caja
+  const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas)
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
   res.render(__basedir + "/src/views/pages/cierreCaja", {
     registros,
     gastos,
     servicios,
-    facturacionNF,
+    facturas,
+    resumen,
+    fecha,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+    errores,
+  })
+}
+
+const localCierreDeCajaApertura = async (req, res) => {
+  const registros = await servicesCaja.getCierres(req.session.userLocal);
+  if(registros.length > 0 && registros[registros.length - 1].cierre === null){
+    return res.redirect(`/panel/local/caja/cierre?errores=1`);
+  }
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/cierreCajaApertura", {
+    servicios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
 }
 
+const localCierreDeCajaAperturaInsert = async (req, res) => {
+  const registros = await servicesCaja.getCierres(req.session.userLocal);
+  let numeracion;
+  if(registros.length === 0){
+    numeracion = 1;
+  } else {
+    numeracion = parseInt(registros[(registros.length - 1)].numeracion) + 1;
+  }
+  console.log(numeracion)
+
+  let fecha = await facturacionMiddleware.fechaHoy();
+  fecha = await facturacionMiddleware.fechaHyphen(fecha);
+  let apertura = await cajaMiddleware.crearObjApertura(req.body, req.session.userLog);
+  apertura = JSON.stringify(apertura);
+  await servicesCaja.insertCaja(apertura, fecha, req.session.userLocal, numeracion)
+  return res.redirect("/panel/local/caja/cierre");
+}
+
+const localCierreDeCajaCerrar = async (req, res) => {
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect(`/panel/local/caja/cierre?errores=2`);
+    
+  }
+  const registro = await servicesCaja.getCierresxId(req.session.userLocal, req.query.id);
+  if(registro.length !== 1){
+    return res.redirect(`/panel/local/caja/cierre?errores=2`);
+  } else if(registro[0].cierre !== null){
+    return res.redirect(`/panel/local/caja/cierre?errores=3`);
+  }
+
+  let fecha = await facturacionMiddleware.fechaHoy();
+  fecha = await facturacionMiddleware.fechaHyphen(fecha);
+  // let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
+  let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fecha);
+  let facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
+  let facturas = facturasNF.concat(facturasCAE);
+  facturas.sort((a, b) => a.fechaevento - b.fechaevento);
+  const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas);
+  const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
+
+
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  res.render(__basedir + "/src/views/pages/cierreCajaCerrar", {
+    registro: registro[0],
+    servicios,
+    resumen,
+    facturas,
+    gastos,
+    fecha,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  })
+}
 
 module.exports = {
   index,
@@ -2153,4 +2231,7 @@ module.exports = {
   facturacionLocalProdPersUpdate,
   facturacionLocalProdPersEliminar,
   localCierreDeCaja,
+  localCierreDeCajaApertura,
+  localCierreDeCajaAperturaInsert,
+  localCierreDeCajaCerrar,
 };

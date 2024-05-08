@@ -240,6 +240,13 @@ router.post("/facturacion/local/productos/personalizados/editar", auth.authAdmin
 
 router.get("/facturacion/local/productos/personalizados/eliminar", auth.authAdmin, panelControllers.facturacionLocalProdPersEliminar);
 
-// router.get("/local/caja/cierre", auth.authAdmin, panelControllers.localCierreDeCaja);
+router.get("/local/caja/cierre", auth.authAdmin, panelControllers.localCierreDeCaja);
+
+router.get("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCierreDeCajaApertura);
+// validar!!! v
+router.post("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCierreDeCajaAperturaInsert);
+
+router.get("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCierreDeCajaCerrar);
+
 
 module.exports = router;
