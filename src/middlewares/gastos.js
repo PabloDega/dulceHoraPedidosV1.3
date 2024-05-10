@@ -1,6 +1,7 @@
 const crearResumenGastos = async (datos) => {
     let gastos = {
         gastos: 0,
+        alivios: 0,
         retiros: 0,
         totalMovimientos: 0,
     }
@@ -8,6 +9,9 @@ const crearResumenGastos = async (datos) => {
     datos.forEach((dato) => {
         if(dato.movimiento == "gasto"){
             gastos.gastos += dato.monto;
+            gastos.totalMovimientos ++;
+        } else if(dato.movimiento == "alivio"){
+            gastos.alivios += dato.monto;
             gastos.totalMovimientos ++;
         } else if(dato.movimiento == "retiro"){
             gastos.retiros += dato.monto;
@@ -29,11 +33,6 @@ const crearObjetoGastos = async (body, usuario, local) => {
     return gastos;
 
     
-}
-
-function monetarizar(valor){
-    valor = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(valor);
-    return valor;
 }
 
 module.exports = {

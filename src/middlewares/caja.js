@@ -27,7 +27,21 @@ const ceirreCajaErrores = async (error) => {
     return errores;
 }
 
+const calcularCierre = async (resumen, resumenGastos, registro) => {
+  const apertura = JSON.parse(registro.inicio);
+  console.log(apertura)
+  console.log(resumen)
+  console.log(resumenGastos)
+
+  let calculoCierre = {
+    efectivo: apertura.efectivo + resumen.totalEfectivo - resumenGastos.gastos - resumenGastos.alivios,
+    reservado: apertura.reservado + resumenGastos.alivios - resumenGastos.retiros,
+  }
+  return calculoCierre;
+}
+
 module.exports = {
     crearObjApertura,
     ceirreCajaErrores,
+    calcularCierre,    
 }

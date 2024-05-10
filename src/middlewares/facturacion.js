@@ -123,6 +123,38 @@ const crearResumenVistaLocal = async (facturas) => {
     return resumen;
 }
 
+const crearResumenCajaLocal = async (facturas) => {
+    // filtrar facturas si no es primer cierre
+
+    let totales = {
+        totalEfectivo: 0,
+        totalDebito: 0,
+        totalCredito: 0,
+        totalNB: 0,
+    }
+
+    facturas.forEach((factura) => {
+        if(factura.tipo === "X"){
+            totales = sumarFormaDePago(factura, totales);
+        } else if(factura.tipo === "NC"){
+            totales = restarFormaDePagoNC(factura, totales)
+        } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
+            totales = sumarFormaDePago(factura, totales);
+        } else if(factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+            totales = restarFormaDePagoNC(factura, totales);
+        } else if(factura.tipo === "S"){
+            let obs = JSON.parse(factura.observaciones);
+            if(obs.estadoSenia === "cancelado" || obs.estadoSenia === "retirado"){
+                return;
+            } else {
+                totales = sumarFormaDePagoSenia(factura, totales);
+            }
+        }
+    });
+
+    return totales;
+}
+
 function sumarFormaDePago(factura, totales){
     switch (factura.formaPago) {
         case "efectivo":
@@ -300,6 +332,7 @@ module.exports = {
     fechaNormalizada,
     calcularFacturacionxFechaxLocal,
     crearResumenVistaLocal,
+    crearResumenCajaLocal,
     checkDummy,
     crearReqAPIWSFE,
     crearReqAPIWSFEparaNC,

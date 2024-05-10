@@ -2101,10 +2101,10 @@ const localCierreDeCajaCerrar = async (req, res) => {
   let facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
   let facturas = facturasNF.concat(facturasCAE);
   facturas.sort((a, b) => a.fechaevento - b.fechaevento);
-  const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas);
+  const resumen = await facturacionMiddleware.crearResumenCajaLocal(facturas);
   const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
-
+  const calcularCierre = await cajaMiddleware.calcularCierre(resumen, resumenGastos, registro[0])
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/cierreCajaCerrar", {
@@ -2115,6 +2115,7 @@ const localCierreDeCajaCerrar = async (req, res) => {
     gastos,
     resumenGastos,
     fecha,
+    calcularCierre,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })

@@ -956,6 +956,8 @@ async function enviarGasto(){
   datos.detalles = document.querySelector("#gastosDetalles").value;
   if(document.querySelector("#gastosRetiro").checked){
     datos.movimiento = "retiro";
+  } else if(document.querySelector("#gastosAlivio").checked){
+    datos.movimiento = "alivio";
   }
   datos.fecha = document.querySelector("#gastosFecha").value;
   const dataBody = new URLSearchParams(datos);

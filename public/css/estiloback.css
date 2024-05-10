@@ -1561,3 +1561,26 @@ footer img {
   font-weight: 600;
   align-self: center;
 }
+form.editor#cierreCajaCierre{
+  max-width: fit-content;
+}
+form.editor#cierreCajaCierre table thead{
+  background-color: white;
+  color: black;
+  border-bottom: 2px black solid;
+}
+form.editor#cierreCajaCierre table tbody tr{
+  background-color: white;
+  border-bottom: 1px black solid;
+  transition: 0.3s;
+}
+form.editor#cierreCajaCierre table tbody tr:hover{
+  background-color: lightgray;
+  color: black;
+}
+form.editor#cierreCajaCierre table tbody tr #nombre{
+  width: 100%;
+}
+form.editor#cierreCajaCierre table tbody tr input{
+  width: 10em;
+}
