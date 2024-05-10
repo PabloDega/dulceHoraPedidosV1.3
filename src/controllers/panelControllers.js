@@ -2093,16 +2093,17 @@ const localCierreDeCajaCerrar = async (req, res) => {
   } else if(registro[0].cierre !== null){
     return res.redirect(`/panel/local/caja/cierre?errores=3`);
   }
-
-  let fecha = await facturacionMiddleware.fechaHoy();
-  fecha = await facturacionMiddleware.fechaHyphen(fecha);
-  // let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha)
+  // let fecha = await facturacionMiddleware.fechaHoy();
+  // fecha = await facturacionMiddleware.fechaHyphen(fecha);
+  // let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha);
+  let fecha = registro[0].fecha
   let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fecha);
   let facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
   let facturas = facturasNF.concat(facturasCAE);
   facturas.sort((a, b) => a.fechaevento - b.fechaevento);
   const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas);
   const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
+  const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
 
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
@@ -2112,6 +2113,7 @@ const localCierreDeCajaCerrar = async (req, res) => {
     resumen,
     facturas,
     gastos,
+    resumenGastos,
     fecha,
     usuario: req.session.userLog,
     userRol: req.session.userRol,

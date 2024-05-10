@@ -10,31 +10,12 @@ const apertura = JSON.parse(registro.inicio);
 const fechaApertura = new Date(apertura.fecha);
 %>
 
+<h2>Cerrar caja Nº<%=registro.numero%></h2>
 
 <div id="cierreCajaContenedor">
 
-  <!-- <div class="editor">
-    <h1>Apertura de Caja</h1>
-    <span>
-        <label for="hora">Hora</label>
-        <input type="text" id="hora" value="<%=fechaApertura.toLocaleTimeString()%>" readonly/>
-    </span>
-    <span>
-        <label for="efectivo">Efectivo en caja</label>
-        <input type="text" min="0" id="efectivo" value="<%=monetarizar(apertura.efectivo)%>" readonly/>
-    </span>
-    <span>
-        <label for="reservado">Efectivo reservado</label>
-        <input type="text" min="0" id="reservado" value="<%=monetarizar(apertura.reservado)%>" readonly/>
-    </span>
-    <span>
-        <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" value="<%=apertura.nombre%>" readonly/>
-    </span>
-  </div> -->
-
-  <div class="editor">
-    <h1>Apertura de Caja</h1>
+  <div id="resumenRegistroFact">
+    <h2>Apertura</h1>
     <span>
         Hora: <%=fechaApertura.toLocaleTimeString()%>
     </span><hr>
@@ -49,48 +30,55 @@ const fechaApertura = new Date(apertura.fecha);
     </span>
   </div>
 
-  <div class="editor">
-    <h1>Ingresos</h1>
-    <span>
-        Hora: <%=fechaApertura.toLocaleTimeString()%>
-    </span><hr>
-    <span>
-        Efectivo en caja: <%=monetarizar(apertura.efectivo)%>
-    </span><hr>
-    <span>
-        Efectivo reservado: <%=monetarizar(apertura.reservado)%>
-    </span><hr>
-    <span>
-        Nombre: <%=apertura.nombre%>
-    </span>
+  <div class="cierreCajaSigno">&plus;</div>
+
+  <div id="resumenRegistroFact">
+    <h2>Ingresos</h3>
+    <span>Efectivo: <%=resumen.totalEfectivo%></span>
+    <hr>
+    <span>Débito: <%=resumen.totalDebito%></span>
+    <hr>
+    <span>Crédito: <%=resumen.totalCredito%></span>
+    <hr>
+    <span>Tranf. NB: <%=resumen.totalNB%></span>
   </div>
 
-  <form action="" method="post" id="cierreCajaApertura" class="editor">
-      <h1>Cierre de Caja</h1>
-      <span>
-          <label for="efectivo">Efectivo en caja</label>
-          <input type="number" min="0" name="efectivo" id="efectivo" />
-      </span>
-      <span>
-          <label for="reservado">Efectivo reservado</label>
-          <input type="number" min="0" name="reservado" id="reservado" />
-      </span>
-      <span>
-          <label for="nombre">Nombre</label>
-          <input type="text" name="nombre" id="nombre" />
-      </span>
+  <div class="cierreCajaSigno">-</div>
 
-      <input type="submit" value="Abrir Caja">
-      </span>
-  </form>
-  
+  <div id="resumenRegistroFact">
+    <h2>Gastos y retiros</h3>
+    <span>Gastos: <%=monetarizar(resumenGastos.gastos)%></span>
+    <hr>
+    <span>retiros: <%=monetarizar(resumenGastos.retiros)%></span>
+  </div>
+ 
 </div>
+
+<form action="" method="post" id="cierreCajaApertura" class="editor">
+  <h1>Cierre de Caja</h1>
+  <span>
+      <label for="efectivo">Efectivo en caja</label>
+      <input type="number" min="0" name="efectivo" id="efectivo" />
+  </span>
+  <span>
+      <label for="reservado">Efectivo reservado</label>
+      <input type="number" min="0" name="reservado" id="reservado" />
+  </span>
+  <span>
+      <label for="nombre">Nombre</label>
+      <input type="text" name="nombre" id="nombre" />
+  </span>
+
+  <input type="submit" value="Abrir Caja">
+  </span>
+</form>
 
 <script defer src="/script/cerrarCaja.js"></script>
 
 <script>
   window.registro = <%- JSON.stringify(registro) %>
   window.gastos = <%- JSON.stringify(gastos) %>
+  window.resumenGastos = <%- JSON.stringify(resumenGastos) %>
   window.facturas = <%- JSON.stringify(facturas) %>
   window.resumen = <%- JSON.stringify(resumen) %>
   window.fecha = <%- JSON.stringify(fecha) %>

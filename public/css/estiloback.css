@@ -1547,4 +1547,17 @@ footer img {
 #cierreCajaContenedor{
   display: flex;
   gap: 1em;
+  font-size: 0.9em;
+  align-items: stretch;
+  align-content: center;
+  margin: 1em 0;
+}
+#cierreCajaContenedor #resumenRegistroFact{
+  height: auto;
+}
+.cierreCajaSigno{
+  font-size: 3em;
+  color: white;
+  font-weight: 600;
+  align-self: center;
 }
