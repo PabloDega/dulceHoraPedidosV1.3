@@ -1579,8 +1579,13 @@ form.editor#cierreCajaCierre table tbody tr:hover{
   color: black;
 }
 form.editor#cierreCajaCierre table tbody tr #nombre{
-  width: 100%;
+  /* width: 100%; */
+  text-align: left;
 }
 form.editor#cierreCajaCierre table tbody tr input{
   width: 10em;
+}
+#cierreCajaAperturaContenedor{
+  display: flex;
+  gap: 1em;
 }

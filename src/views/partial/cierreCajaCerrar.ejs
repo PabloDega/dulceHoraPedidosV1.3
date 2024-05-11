@@ -58,9 +58,9 @@ const fechaApertura = new Date(apertura.fecha);
 
   <div id="resumenRegistroFact">
     <h2>Cierre calculado</h2>
-    <span>Efectivo en caja: <b> <%=monetarizar(resumenGastos.gastos)%></b></span>
+    <span>Efectivo en caja: <b> <%=monetarizar(calcularCierre.efectivo)%></b></span>
     <hr>
-    <span>Efectivo reservado: <b> <%=monetarizar(resumenGastos.retiros)%></b></span>
+    <span>Efectivo reservado: <b> <%=monetarizar(calcularCierre.reservado)%></b></span>
   </div>
  
 </div>
@@ -81,13 +81,13 @@ const fechaApertura = new Date(apertura.fecha);
         <td>Efectivo en caja</td>
         <td><input type="number" min="0" name="efectivo" id="efectivo" /></td>
         <td><input type="text" id="efectivoCalculado" value="<%=monetarizar(calcularCierre.efectivo)%>" readonly></td>
-        <td><input type="text" id="efectivoDiferencia" readonly></td>
+        <td><input type="text" id="efectivoDiferencia" name="efectivoDiferencia" readonly></td>
       </tr>
       <tr>
         <td>Efectivo reservado</td>
         <td><input type="number" min="0" name="reservado" id="reservado" /></td>
         <td><input type="text" id="reservadoCalculado" value="<%=monetarizar(calcularCierre.reservado)%>" readonly></td>
-        <td><input type="text" id="reservadoDiferencia" readonly></td>
+        <td><input type="text" id="reservadoDiferencia" name="reservadoDiferencia" readonly></td>
       </tr>
       <tr>
         <td>Nombre</td>
@@ -95,6 +95,8 @@ const fechaApertura = new Date(apertura.fecha);
       </tr>
     </tbody>
   </table>
+
+  <input type="hidden" name="id" value=<%= registro.id %>>
 
   <input type="submit" value="Cerrar Caja" class="btn btnVerde">
   </span>

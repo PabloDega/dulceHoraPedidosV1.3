@@ -186,7 +186,6 @@ const insertProductosPersonalizados = async (datos, local) => {
 };
 
 const updateProductosPersonalizados = async (datos, local) => {
-  console.log(datos)
   try {
     await conectar.query(`UPDATE productospersonalizados SET codigo = "${datos.codigo}", local = "${local}", nombre = "${datos.nombre}", descripcion = "${datos.descripcion}", precio = "${datos.precio}", iva = "${datos.iva}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`);
   } catch (error) {

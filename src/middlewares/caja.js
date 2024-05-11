@@ -2,12 +2,28 @@ const crearObjApertura = async (datos, usuario) => {
     let fecha = new Date();
     let apertura = {
         fecha,
-        efectivo: parseInt(datos.efectivo),
-        reservado: parseInt(datos.reservado),
+        efectivo: parseFloat(datos.efectivo),
+        reservado: parseFloat(datos.reservado),
         nombre: datos.nombre,
         usuario,
     };
     return apertura;
+}
+
+const crearObjCierre = async (datos, usuario) => {
+  let reservadoDiferencia = datos.reservadoDiferencia.substring(1);
+  let efectivoDiferencia = datos.efectivoDiferencia.substring(1);
+  let fecha = new Date();
+  let ajuste = parseFloat(reservadoDiferencia) + parseFloat(efectivoDiferencia);
+  let apertura = {
+      fecha,
+      efectivo: parseFloat(datos.efectivo),
+      reservado: parseFloat(datos.reservado),
+      ajuste,
+      nombre: datos.nombre,
+      usuario,
+  };
+  return apertura;
 }
 
 const ceirreCajaErrores = async (error) => {
@@ -29,9 +45,6 @@ const ceirreCajaErrores = async (error) => {
 
 const calcularCierre = async (resumen, resumenGastos, registro) => {
   const apertura = JSON.parse(registro.inicio);
-  console.log(apertura)
-  console.log(resumen)
-  console.log(resumenGastos)
 
   let calculoCierre = {
     efectivo: apertura.efectivo + resumen.totalEfectivo - resumenGastos.gastos - resumenGastos.alivios,
@@ -42,6 +55,7 @@ const calcularCierre = async (resumen, resumenGastos, registro) => {
 
 module.exports = {
     crearObjApertura,
+    crearObjCierre,
     ceirreCajaErrores,
     calcularCierre,    
 }

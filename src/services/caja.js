@@ -32,8 +32,19 @@ const insertCaja = async (apertura, fecha, local, numeracion) => {
   }
 };
 
+const updateCierreCaja = async (cierre, id) => {
+  try {
+    await conectar.query(`UPDATE cierresdecaja SET cierre = '${cierre}' WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 module.exports = {
   getCierres,
   getCierresxId,
   insertCaja,
+  updateCierreCaja,
 };

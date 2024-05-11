@@ -2058,6 +2058,7 @@ const localCierreDeCajaApertura = async (req, res) => {
   }
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/cierreCajaApertura", {
+    registros,
     servicios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -2072,13 +2073,12 @@ const localCierreDeCajaAperturaInsert = async (req, res) => {
   } else {
     numeracion = parseInt(registros[(registros.length - 1)].numeracion) + 1;
   }
-  console.log(numeracion)
 
   let fecha = await facturacionMiddleware.fechaHoy();
   fecha = await facturacionMiddleware.fechaHyphen(fecha);
   let apertura = await cajaMiddleware.crearObjApertura(req.body, req.session.userLog);
   apertura = JSON.stringify(apertura);
-  await servicesCaja.insertCaja(apertura, fecha, req.session.userLocal, numeracion)
+  await servicesCaja.insertCaja(apertura, fecha, req.session.userLocal, numeracion);
   return res.redirect("/panel/local/caja/cierre");
 }
 
@@ -2096,7 +2096,7 @@ const localCierreDeCajaCerrar = async (req, res) => {
   // let fecha = await facturacionMiddleware.fechaHoy();
   // fecha = await facturacionMiddleware.fechaHyphen(fecha);
   // let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha);
-  let fecha = registro[0].fecha
+  let fecha = registro[0].fecha;
   let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fecha);
   let facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
   let facturas = facturasNF.concat(facturasCAE);
@@ -2104,7 +2104,7 @@ const localCierreDeCajaCerrar = async (req, res) => {
   const resumen = await facturacionMiddleware.crearResumenCajaLocal(facturas);
   const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
-  const calcularCierre = await cajaMiddleware.calcularCierre(resumen, resumenGastos, registro[0])
+  const calcularCierre = await cajaMiddleware.calcularCierre(resumen, resumenGastos, registro[0]);
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/cierreCajaCerrar", {
@@ -2119,6 +2119,13 @@ const localCierreDeCajaCerrar = async (req, res) => {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
+}
+
+const localCierreDeCajaCerrarInsert = async (req, res) => {
+  let cierre = await cajaMiddleware.crearObjCierre(req.body, req.session.userLog);
+  cierre = JSON.stringify(cierre);
+  await servicesCaja.updateCierreCaja(cierre, req.body.id);
+  return res.redirect(`/panel/local/caja/cierre`);
 }
 
 module.exports = {
@@ -2237,4 +2244,5 @@ module.exports = {
   localCierreDeCajaApertura,
   localCierreDeCajaAperturaInsert,
   localCierreDeCajaCerrar,
+  localCierreDeCajaCerrarInsert,
 };

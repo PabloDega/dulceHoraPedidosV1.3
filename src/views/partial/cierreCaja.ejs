@@ -1,7 +1,4 @@
 <%function monetarizar(valor){
-  if (valor < 1) {
-      return "-";
-  }
   valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
   return valor;
 }%>
@@ -74,6 +71,10 @@
                             <span>
                                 <span>Reservado: </span>
                                 <span><%= monetarizar(cierre.reservado) %></span>
+                            </span><hr>
+                            <span>
+                                <span>Ajuste: </span>
+                                <span><%= monetarizar(cierre.ajuste) %></span>
                             </span>
                         </span>
                     </span>

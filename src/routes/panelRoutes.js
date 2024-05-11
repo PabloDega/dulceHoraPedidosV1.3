@@ -247,6 +247,7 @@ router.get("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCie
 router.post("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCierreDeCajaAperturaInsert);
 
 router.get("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCierreDeCajaCerrar);
-
+// validar!!! v
+router.post("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCierreDeCajaCerrarInsert);
 
 module.exports = router;

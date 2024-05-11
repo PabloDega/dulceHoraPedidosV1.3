@@ -1,20 +1,48 @@
-<form action="" method="post" id="cierreCajaApertura" class="editor">
-    <h1>Apertura de Caja</h1>
-    <span>
-        <label for="efectivo">Efectivo en caja</label>
-        <input type="number" min="0" name="efectivo" id="efectivo" />
-    </span>
-    <span>
-        <label for="reservado">Efectivo reservado</label>
-        <input type="number" min="0" name="reservado" id="reservado" />
-    </span>
-    <span>
-        <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" id="nombre" />
-    </span>
+<%function monetarizar(valor){
+    valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+    return valor;
+  }%>
 
-    <input type="submit" value="Abrir Caja">
-    </span>
-</form>
+<div id="cierreCajaAperturaContenedor">
+    <%if(registros.length > 0){
+    function monetarizar(valor){
+        valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+        return valor;
+    }
+    let cierrePrevio = JSON.parse(registros[registros.length - 1].cierre);%>
+
+    <script>
+        window.cierrePrevio = <%- JSON.stringify(cierrePrevio) %>
+    </script>
+
+    <div id="resumenRegistroFact" style="width: fit-content;">
+        <h1>Cierre previo</h1>
+        <span>Efectivo: <%= monetarizar(cierrePrevio.efectivo) %></span>
+        <span>Reservado: <%= monetarizar(cierrePrevio.reservado) %></span>
+        <span>Nombre: <%= cierrePrevio.nombre %></span>
+        <span class="btn btnVerde" id="cierreCajaAperturaCargar">Cargar valores</span>
+    </div>
+
+    <%}%>
+    
+    <form action="" method="post" id="cierreCajaApertura" class="editor">
+        <h1>Apertura de Caja</h1>
+        <span>
+            <label for="efectivo">Efectivo en caja</label>
+            <input type="number" min="0" name="efectivo" id="efectivo" />
+        </span>
+        <span>
+            <label for="reservado">Efectivo reservado</label>
+            <input type="number" min="0" name="reservado" id="reservado" />
+        </span>
+        <span>
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="nombre" />
+        </span>
+    
+        <input type="submit" value="Abrir Caja">
+        </span>
+    </form>
+</div>
 
 <script defer src="/script/abrirCaja.js"></script>
