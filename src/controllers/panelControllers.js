@@ -2056,10 +2056,39 @@ const localCierreDeCajaApertura = async (req, res) => {
   if(registros.length > 0 && registros[registros.length - 1].cierre === null){
     return res.redirect(`/panel/local/caja/cierre?errores=1`);
   }
+
+  let facturas = [];
+  let gastos = [];
+  let calcularApertura = {
+    efectivo: 0,
+  }
+  let resumen;
+  let resumenGastos;
+
+  if(registros.length > 0){
+    fecha = registros[registros.length - 1].cierre;
+    fecha = JSON.parse(fecha);
+    fecha = fecha.fecha;
+  
+    let facturasNF = await servicesFacturacion.getFacturasNFxEvento(req.session.userLocal, fecha);
+    let facturasCAE = await servicesFacturacion.getFacturasCAExEvento(req.session.userLocal, fecha);
+    facturas = facturasNF.concat(facturasCAE);
+    facturas.sort((a, b) => a.fechaevento - b.fechaevento);
+    resumen = await facturacionMiddleware.crearResumenCajaLocal(facturas);
+    gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
+    resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
+    calcularApertura = await cajaMiddleware.calcularApertura(resumen, resumenGastos, registros[registros.length - 1]);
+  }
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
   res.render(__basedir + "/src/views/pages/cierreCajaApertura", {
     registros,
     servicios,
+    facturas,
+    resumen,
+    gastos,
+    resumenGastos,
+    calcularApertura,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -2071,7 +2100,7 @@ const localCierreDeCajaAperturaInsert = async (req, res) => {
   if(registros.length === 0){
     numeracion = 1;
   } else {
-    numeracion = parseInt(registros[(registros.length - 1)].numeracion) + 1;
+    numeracion = parseInt(registros[(registros.length - 1)].numero) + 1;
   }
 
   let fecha = await facturacionMiddleware.fechaHoy();

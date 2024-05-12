@@ -22,6 +22,17 @@ const getGastosFecha = async (local, fecha) => {
   }
 };
 
+const getGastosxEvento = async (local, fecha) => {
+  try {
+    const resultado = await conectar.query(`SELECT * FROM gastos WHERE local = '${local}' AND evento > '${fecha}'`);
+    return resultado[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
 const getGastosId = async (local, idInicio) => {
   try {
     const resultado = await conectar.query(`SELECT * FROM gastos WHERE local = '${local}' AND id > '${idInicio}'`);
@@ -47,6 +58,7 @@ const insertGasto = async (datos) => {
 module.exports = {
     getGastos,
     getGastosFecha,
+    getGastosxEvento,
     insertGasto,
     getGastosId,
 }

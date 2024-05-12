@@ -14,7 +14,7 @@ const fechaApertura = new Date(apertura.fecha);
 
 <div id="cierreCajaContenedor">
 
-  <div id="resumenRegistroFact">
+  <div class="resumenRegistroFact">
     <h2>Apertura</h2>
     <span>
         Hora: <%=fechaApertura.toLocaleTimeString()%>
@@ -32,7 +32,7 @@ const fechaApertura = new Date(apertura.fecha);
 
   <div class="cierreCajaSigno">&plus;</div>
 
-  <div id="resumenRegistroFact">
+  <div class="resumenRegistroFact">
     <h2>Ingresos</h2>
     <span>Efectivo: <%=monetarizar(resumen.totalEfectivo)%></span>
     <hr>
@@ -45,18 +45,16 @@ const fechaApertura = new Date(apertura.fecha);
 
   <div class="cierreCajaSigno">-</div>
 
-  <div id="resumenRegistroFact">
+  <div class="resumenRegistroFact">
     <h2>Gastos y retiros</h2>
     <span>Gastos: <%=monetarizar(resumenGastos.gastos)%></span>
-    <hr>
-    <span>Alivios: <%=monetarizar(resumenGastos.alivios)%></span>
     <hr>
     <span>Retiros: <%=monetarizar(resumenGastos.retiros)%></span>
   </div>
 
   <div class="cierreCajaSigno">=</div>
 
-  <div id="resumenRegistroFact">
+  <div class="resumenRegistroFact">
     <h2>Cierre calculado</h2>
     <span>Efectivo en caja: <b> <%=monetarizar(calcularCierre.efectivo)%></b></span>
     <hr>

@@ -1260,7 +1260,7 @@ footer img {
   display: flex;
   gap: 2em;
 }
-#resumenRegistroFact, #resumenRegistroGastos{
+.resumenRegistroFact, #resumenRegistroGastos{
   background-color: white;
   padding: 1em;
   display: flex;
@@ -1552,7 +1552,7 @@ footer img {
   align-content: center;
   margin: 1em 0;
 }
-#cierreCajaContenedor #resumenRegistroFact{
+#cierreCajaContenedor .resumenRegistroFact{
   height: auto;
 }
 .cierreCajaSigno{
@@ -1587,5 +1587,6 @@ form.editor#cierreCajaCierre table tbody tr input{
 }
 #cierreCajaAperturaContenedor{
   display: flex;
+  flex-direction: column;
   gap: 1em;
 }

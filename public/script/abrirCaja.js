@@ -1,4 +1,51 @@
-document.querySelector("#cierreCajaAperturaCargar").addEventListener("click", () => {
-    document.querySelector("#efectivo").value = window.cierrePrevio.efectivo;
-    document.querySelector("#reservado").value = window.cierrePrevio.reservado;
-})
+function monetarizar(valor){
+    valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+    return valor;
+  }
+
+if(document.querySelector("#cierreCajaAperturaCargar") !== null){
+    document.querySelector("#cierreCajaAperturaCargar").addEventListener("click", () => {
+        let cierrePrevio = JSON.parse(window.cierrePrevio)
+        document.querySelector("#efectivo").value = cierrePrevio.efectivo;
+        document.querySelector("#reservado").value = cierrePrevio.reservado;
+    });
+}
+
+if(window.movimientosPoesteriores){
+    calcularDiferencia();
+
+    document.querySelector("#efectivo").addEventListener("keyup", () => {
+        calcularDiferencia();
+    })
+    document.querySelector("#efectivo").addEventListener("change", () => {
+        calcularDiferencia();
+    })
+    document.querySelector("#reservado").addEventListener("keyup", () => {
+        calcularDiferencia();
+    })
+    document.querySelector("#reservado").addEventListener("change", () => {
+        calcularDiferencia();
+    })
+}
+
+function calcularDiferencia(){
+    let efectivoInput = parseFloat(document.querySelector("#efectivo").value);
+    let reservadoInput = parseFloat(document.querySelector("#reservado").value);
+    if(isNaN(efectivoInput)){
+        efectivoInput = 0;
+    }
+    if(isNaN(reservadoInput)){
+        reservadoInput = 0;
+    }
+    let calculo = efectivoInput + reservadoInput - calcularApertura;
+    let efectivoTotal = efectivoInput + reservadoInput;
+    cargarCalculo(calculo, efectivoTotal);
+}
+
+function cargarCalculo(calculo, efectivoTotal){
+    document.querySelector("#diferencia").innerHTML = monetarizar(calculo);
+    document.querySelector("#ingresado").innerHTML = monetarizar(efectivoTotal);
+    document.querySelector("#calculado").innerHTML = monetarizar(calcularApertura);
+    document.querySelector("#ajuste").value = calculo;
+}
+

@@ -4,6 +4,7 @@ const crearObjApertura = async (datos, usuario) => {
         fecha,
         efectivo: parseFloat(datos.efectivo),
         reservado: parseFloat(datos.reservado),
+        ajuste: parseFloat(datos.ajuste),
         nombre: datos.nombre,
         usuario,
     };
@@ -47,15 +48,24 @@ const calcularCierre = async (resumen, resumenGastos, registro) => {
   const apertura = JSON.parse(registro.inicio);
 
   let calculoCierre = {
-    efectivo: apertura.efectivo + resumen.totalEfectivo - resumenGastos.gastos - resumenGastos.alivios,
-    reservado: apertura.reservado + resumenGastos.alivios - resumenGastos.retiros,
+    efectivo: apertura.efectivo + apertura.reservado + resumen.totalEfectivo - resumenGastos.gastos - resumenGastos.retiros,
   }
   return calculoCierre;
+}
+
+const calcularApertura = async (resumen, resumenGastos, registro) => {
+  const cierre = JSON.parse(registro.cierre);
+
+  let calculoApertura = {
+    efectivo: cierre.efectivo + cierre.reservado + resumen.totalEfectivo - resumenGastos.gastos - resumenGastos.retiros,
+  }
+  return calculoApertura;
 }
 
 module.exports = {
     crearObjApertura,
     crearObjCierre,
     ceirreCajaErrores,
-    calcularCierre,    
+    calcularCierre,
+    calcularApertura,    
 }

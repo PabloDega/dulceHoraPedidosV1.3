@@ -1,48 +1,113 @@
 <%function monetarizar(valor){
     valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
     return valor;
-  }%>
+  }
+  
+  let movimientosPoesteriores = false;%>
 
 <div id="cierreCajaAperturaContenedor">
+    <div id="cierreCajaContenedor">
     <%if(registros.length > 0){
-    function monetarizar(valor){
-        valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
-        return valor;
-    }
-    let cierrePrevio = JSON.parse(registros[registros.length - 1].cierre);%>
+        let cierrePrevio = JSON.parse(registros[registros.length - 1].cierre);
+        movimientosPoesteriores = true;%>
 
-    <script>
-        window.cierrePrevio = <%- JSON.stringify(cierrePrevio) %>
-    </script>
+        <script>
+            window.cierrePrevio = <%- JSON.stringify(registros[registros.length - 1].cierre) %>
+        </script>
 
-    <div id="resumenRegistroFact" style="width: fit-content;">
-        <h1>Cierre previo</h1>
-        <span>Efectivo: <%= monetarizar(cierrePrevio.efectivo) %></span>
-        <span>Reservado: <%= monetarizar(cierrePrevio.reservado) %></span>
-        <span>Nombre: <%= cierrePrevio.nombre %></span>
-        <span class="btn btnVerde" id="cierreCajaAperturaCargar">Cargar valores</span>
-    </div>
+        <div class="resumenRegistroFact" style="width: fit-content;">
+            <h2>Cierre previo</h2>
+            <span>Efectivo: <%= monetarizar(cierrePrevio.efectivo) %></span>
+            <span>Reservado: <%= monetarizar(cierrePrevio.reservado) %></span>
+            <span>Nombre: <%= cierrePrevio.nombre %></span>
+        </div>
+    <%}
 
+    if(facturas.length > 0){
+        movimientosPoesteriores = true;%>
+        <div class="cierreCajaSigno">&plus;</div>
+
+        <div class="resumenRegistroFact" style="width: fit-content;">
+            <h2>Movimientos post cierre</h2>
+            <span>Efectivo: <%=monetarizar(resumen.totalEfectivo)%></span>
+            <hr>
+            <span>Débito: <%=monetarizar(resumen.totalDebito)%></span>
+            <hr>
+            <span>Crédito: <%=monetarizar(resumen.totalCredito)%></span>
+            <hr>
+            <span>Tranf. NB: <%=monetarizar(resumen.totalNB)%></span>
+        </div>
+    <%}
+    
+    if(gastos.length > 0){
+        movimientosPoesteriores = true;%>
+        <div class="cierreCajaSigno">-</div>
+
+        <div class="resumenRegistroFact" style="width: fit-content;">
+            <h2>Gastos y retiros post cierre</h2>
+            <span>Gastos: <%=monetarizar(resumenGastos.gastos)%></span>
+            <hr>
+            <span>Retiros: <%=monetarizar(resumenGastos.retiros)%></span>
+        </div>
+    <%}
+    
+    if(parseFloat(calcularApertura.efectivo) > 0){
+        movimientosPoesteriores = true;%>
+        <div class="cierreCajaSigno">=</div>
+
+        <div class="resumenRegistroFact" style="width: fit-content;">
+            <h2>Calculo de apertura</h2>
+            <span>Efectivo: <%=monetarizar(calcularApertura.efectivo)%></span>
+        </div>
     <%}%>
+    </div>
     
-    <form action="" method="post" id="cierreCajaApertura" class="editor">
-        <h1>Apertura de Caja</h1>
-        <span>
-            <label for="efectivo">Efectivo en caja</label>
-            <input type="number" min="0" name="efectivo" id="efectivo" />
-        </span>
-        <span>
-            <label for="reservado">Efectivo reservado</label>
-            <input type="number" min="0" name="reservado" id="reservado" />
-        </span>
-        <span>
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" id="nombre" />
-        </span>
-    
-        <input type="submit" value="Abrir Caja">
-        </span>
-    </form>
+    <div id="cierreCajaContenedor">
+
+        <%if(!movimientosPoesteriores && registros.length > 0){
+            let cierrePrevio = JSON.parse(registros[registros.length - 1].cierre);%>
+            <div class="resumenRegistroFact" style="width: fit-content;">
+                <h2>Cierre previo</h2>
+                <span>Efectivo: <%= monetarizar(cierrePrevio.efectivo) %></span>
+                <span>Reservado: <%= monetarizar(cierrePrevio.reservado) %></span>
+                <span>Nombre: <%= cierrePrevio.nombre %></span>
+                <span class="btn btnVerde" id="cierreCajaAperturaCargar">Cargar valores</span>
+            </div>
+        <%}%>
+
+        <form action="" method="post" id="cierreCajaApertura" class="editor">
+            <h1>Apertura de Caja</h1>
+            <span>
+                <label for="efectivo">Efectivo en caja</label>
+                <input type="number" min="0" name="efectivo" id="efectivo" />
+            </span>
+            <span>
+                <label for="reservado">Efectivo reservado</label>
+                <input type="number" min="0" name="reservado" id="reservado" />
+            </span>
+            <span>
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" id="nombre" />
+            </span>
+            <input type="hidden" name="ajuste" id="ajuste">
+            <input type="submit" value="Abrir Caja" class="btn btnVerde">
+            </span>
+        </form>
+        
+        <%if(movimientosPoesteriores){%>
+            <div class="resumenRegistroFact" style="width: fit-content;">
+                <h2>Diferencia</h2>
+                <span>Calculado: <span id="calculado"></span></span>
+                <span>Ingresado: <span id="ingresado"></span></span>
+                <span>Diferencia: <span id="diferencia"></span></span>
+            </div>
+        <%}%>
+    </div>
 </div>
 
 <script defer src="/script/abrirCaja.js"></script>
+
+<script>
+    window.movimientosPoesteriores = <%- JSON.stringify(movimientosPoesteriores) %>
+    window.calcularApertura = <%- JSON.stringify(calcularApertura.efectivo) %>
+</script>

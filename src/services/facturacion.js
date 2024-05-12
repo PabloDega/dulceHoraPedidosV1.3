@@ -96,9 +96,9 @@ const getFacturasNFxfecha = async(local, fecha) => {
   }
 }
 
-const getFacturasNFxId = async(local, id) => {
+const getFacturasNFxEvento = async(local, fecha) => {
   try {
-    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND id > '${id}'`);
+    const facturas = await conectar.query(`SELECT * FROM facturacionnf WHERE local = '${local}' AND fechaevento > '${fecha}'`);
     return facturas[0];
   } catch (error) {
     throw error;
@@ -208,6 +208,17 @@ const getFacturasCAExfecha = async(local, fecha) => {
   }
 }
 
+const getFacturasCAExEvento = async(local, fecha) => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM registrosWSFE WHERE local = '${local}' AND fechaevento > '${fecha}'`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 const insertFacturaConCAE = async (CAERaw, datos, body) => {
   let CAE = CAERaw["respuesta"]["FECAESolicitarResult"]["FeDetResp"]["FECAEDetResponse"][0];
   let obs = {} 
@@ -261,14 +272,15 @@ module.exports = {
   getFacturasNFTodas,
   getFacturaNF,
   getFacturasNFxfecha,
-  getFacturasNFxId,
+  getFacturasNFxEvento,
   insertFacturaNF,
   getSenias,
   getSenia,
   updateSenias,
-  getFacturasCAExfecha,
-  insertFacturaConCAE,
-  insertNCConCAE,
   getFacturasCAE,
   getFacturaCAE,
+  getFacturasCAExfecha,
+  getFacturasCAExEvento,
+  insertFacturaConCAE,
+  insertNCConCAE,
 };
