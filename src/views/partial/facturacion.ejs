@@ -27,29 +27,31 @@
             <div class="btn btnGris btnSmall agregarItems" data-cantidad="1">+1</div>
             <div class="btn btnGris btnSmall agregarItems" data-cantidad="5">+5</div>
         </span>
-        <span>
-            <table id="totalFacturacion">
-                <thead>
-                    <tr>
-                        <th>Neto</th>
-                        <th>IVA 10,5%</th>
-                        <th>IVA 21%</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td id="neto" class="tablaCeldaNumero"></td>
-                        <td id="iva10" class="tablaCeldaNumero"></td>
-                        <td id="iva21" class="tablaCeldaNumero"></td>
-                        <td id="total" class="tablaCeldaNumero"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </span>
-        <span>
-            <span class="btn btnNaranja flexgrow" id="limpiarFacturacion">Limpiar</span>
-            <span class="btn btnVerde flexgrow" id="enviarFacturacion">Registrar</span>
+        <span class="resumenFacturacion">
+            <span>
+                <table id="totalFacturacion">
+                    <thead>
+                        <tr>
+                            <th>Neto</th>
+                            <th>IVA 10,5%</th>
+                            <th>IVA 21%</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="neto" class="tablaCeldaNumero"></td>
+                            <td id="iva10" class="tablaCeldaNumero"></td>
+                            <td id="iva21" class="tablaCeldaNumero"></td>
+                            <td id="total" class="tablaCeldaNumero"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </span>
+            <span>
+                <span class="btn btnNaranja flexgrow" id="limpiarFacturacion">Limpiar</span>
+                <span class="btn btnVerde flexgrow" id="enviarFacturacion">Registrar</span>
+            </span>
         </span>
 
         <div id="facturacionDetalles" style="display: none;">

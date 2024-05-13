@@ -971,3 +971,17 @@ async function enviarGasto(){
   }
   cerrarGastos()
 }
+
+window.addEventListener("resize", () => {
+  let scrollActivo = window.innerWidth > document.documentElement.clientWidth;
+  if(scrollActivo){
+    document.querySelector(".resumenFacturacion").classList.add("resumenFacturacionScroll");
+    document.querySelector("#factBotoneraXtra").classList.add("factBotoneraXtraScroll");
+    document.querySelector("#backRender").classList.add("factBackRenderScroll");
+
+  } else {
+    document.querySelector(".resumenFacturacion").classList.remove("resumenFacturacionScroll");
+    document.querySelector("#factBotoneraXtra").classList.remove("factBotoneraXtraScroll");
+    document.querySelector("#backRender").classList.remove("factBackRenderScroll");
+  }
+})
