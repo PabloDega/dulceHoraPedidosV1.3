@@ -2023,28 +2023,12 @@ const facturacionLocalProdPersEliminar = async (req, res) => {
 
 const localCierreDeCaja = async (req, res) => {
   const registros = await servicesCaja.getCierres(req.session.userLocal);
-
   let errores = await cajaMiddleware.ceirreCajaErrores(req.query.errores);
-
-  let fecha = await facturacionMiddleware.fechaHoy();
-  fecha = await facturacionMiddleware.fechaHyphen(fecha);
-
-  const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
-  const facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fecha);
-  const facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
-  let facturas = facturasNF.concat(facturasCAE);
-  facturas.sort((a, b) => a.fechaevento - b.fechaevento);
-  // filtrar facturas si en el mismo dia hay otro cierre de caja
-  const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas)
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
 
   res.render(__basedir + "/src/views/pages/cierreCaja", {
     registros,
-    gastos,
     servicios,
-    facturas,
-    resumen,
-    fecha,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     errores,
@@ -2095,6 +2079,21 @@ const localCierreDeCajaApertura = async (req, res) => {
 }
 
 const localCierreDeCajaAperturaInsert = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const registros = await servicesCaja.getCierres(req.session.userLocal);
+    const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
+    return res.render(__basedir + "/src/views/pages/cierreCaja", {
+      errores: errores.array({ onlyFirstError: true }),
+      registros,
+      servicios,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  }
+
+
   const registros = await servicesCaja.getCierres(req.session.userLocal);
   let numeracion;
   if(registros.length === 0){
@@ -2102,12 +2101,13 @@ const localCierreDeCajaAperturaInsert = async (req, res) => {
   } else {
     numeracion = parseInt(registros[(registros.length - 1)].numero) + 1;
   }
-
+  
   let fecha = await facturacionMiddleware.fechaHoy();
   fecha = await facturacionMiddleware.fechaHyphen(fecha);
   let apertura = await cajaMiddleware.crearObjApertura(req.body, req.session.userLog);
   apertura = JSON.stringify(apertura);
   await servicesCaja.insertCaja(apertura, fecha, req.session.userLocal, numeracion);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Apertura de caja", `Id de caja: ${numeracion}`);
   return res.redirect("/panel/local/caja/cierre");
 }
 
@@ -2122,16 +2122,17 @@ const localCierreDeCajaCerrar = async (req, res) => {
   } else if(registro[0].cierre !== null){
     return res.redirect(`/panel/local/caja/cierre?errores=3`);
   }
-  // let fecha = await facturacionMiddleware.fechaHoy();
-  // fecha = await facturacionMiddleware.fechaHyphen(fecha);
-  // let fechaNormalizada = await facturacionMiddleware.fechaNormalizada(fecha);
-  let fecha = registro[0].fecha;
-  let facturasNF = await servicesFacturacion.getFacturasNFxfecha(req.session.userLocal, fecha);
-  let facturasCAE = await servicesFacturacion.getFacturasCAExfecha(req.session.userLocal, fecha);
+
+  let fecha = registro[0].inicio;
+  fecha = JSON.parse(fecha);
+  fecha = fecha.fecha;
+
+  let facturasNF = await servicesFacturacion.getFacturasNFxEvento(req.session.userLocal, fecha);
+  let facturasCAE = await servicesFacturacion.getFacturasCAExEvento(req.session.userLocal, fecha);
   let facturas = facturasNF.concat(facturasCAE);
   facturas.sort((a, b) => a.fechaevento - b.fechaevento);
   const resumen = await facturacionMiddleware.crearResumenCajaLocal(facturas);
-  const gastos = await servicesGastos.getGastosFecha(req.session.userLocal, fecha);
+  const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
   const calcularCierre = await cajaMiddleware.calcularCierre(resumen, resumenGastos, registro[0]);
 
@@ -2151,9 +2152,25 @@ const localCierreDeCajaCerrar = async (req, res) => {
 }
 
 const localCierreDeCajaCerrarInsert = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    const registros = await servicesCaja.getCierres(req.session.userLocal);
+    const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
+    return res.render(__basedir + "/src/views/pages/cierreCaja", {
+      errores: errores.array({ onlyFirstError: true }),
+      registros,
+      servicios,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    })
+  }
+
   let cierre = await cajaMiddleware.crearObjCierre(req.body, req.session.userLog);
   cierre = JSON.stringify(cierre);
   await servicesCaja.updateCierreCaja(cierre, req.body.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Cierre de caja", `Id de caja: ${req.body.id}`);
+
   return res.redirect(`/panel/local/caja/cierre`);
 }
 

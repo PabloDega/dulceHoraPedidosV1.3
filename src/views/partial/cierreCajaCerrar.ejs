@@ -57,48 +57,41 @@ const fechaApertura = new Date(apertura.fecha);
   <div class="resumenRegistroFact">
     <h2>Cierre calculado</h2>
     <span>Efectivo en caja: <b> <%=monetarizar(calcularCierre.efectivo)%></b></span>
-    <hr>
-    <span>Efectivo reservado: <b> <%=monetarizar(calcularCierre.reservado)%></b></span>
   </div>
  
 </div>
 
-<form action="" method="post" id="cierreCajaCierre" class="editor">
-  <h1>Cierre de Caja</h1>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th>Contabilizado</th>
-        <th>Calculado</th>
-        <th>Diferencia</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Efectivo en caja</td>
-        <td><input type="number" min="0" name="efectivo" id="efectivo" /></td>
-        <td><input type="text" id="efectivoCalculado" value="<%=monetarizar(calcularCierre.efectivo)%>" readonly></td>
-        <td><input type="text" id="efectivoDiferencia" name="efectivoDiferencia" readonly></td>
-      </tr>
-      <tr>
-        <td>Efectivo reservado</td>
-        <td><input type="number" min="0" name="reservado" id="reservado" /></td>
-        <td><input type="text" id="reservadoCalculado" value="<%=monetarizar(calcularCierre.reservado)%>" readonly></td>
-        <td><input type="text" id="reservadoDiferencia" name="reservadoDiferencia" readonly></td>
-      </tr>
-      <tr>
-        <td>Nombre</td>
-        <td colspan="3"><input type="text" name="nombre" id="nombre" /></td>
-      </tr>
-    </tbody>
-  </table>
+<div id="cierreCajaContenedor">
 
-  <input type="hidden" name="id" value=<%= registro.id %>>
+  <form action="" method="post" id="cierreCajaCerrar" class="editor">
+    <h1>Cierre de Caja</h1>
+    <span>
+        <label for="efectivo">Efectivo en caja</label>
+        <input type="number" min="0" name="efectivo" id="efectivo" />
+    </span>
+    <span>
+        <label for="reservado">Efectivo reservado</label>
+        <input type="number" min="0" name="reservado" id="reservado" />
+    </span>
+    <span>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" />
+    </span>
+    <input type="hidden" name="ajuste" id="ajuste">
+    <input type="hidden" name="id" value=<%= registro.id %>>
+    <input type="submit" value="Cerrar Caja" class="btn btnVerde">
+    </span>
+  </form>
 
-  <input type="submit" value="Cerrar Caja" class="btn btnVerde">
-  </span>
-</form>
+
+  <div class="resumenRegistroFact" style="width: fit-content;">
+      <h2>Diferencia</h2>
+      <span>Calculado: <span id="calculado"></span></span>
+      <span>Ingresado: <span id="ingresado"></span></span>
+      <span>Diferencia: <span id="diferencia"></span></span>
+  </div>
+</div>
+
 
 <script defer src="/script/cerrarCaja.js"></script>
 

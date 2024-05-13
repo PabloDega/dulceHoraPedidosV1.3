@@ -12,15 +12,12 @@ const crearObjApertura = async (datos, usuario) => {
 }
 
 const crearObjCierre = async (datos, usuario) => {
-  let reservadoDiferencia = datos.reservadoDiferencia.substring(1);
-  let efectivoDiferencia = datos.efectivoDiferencia.substring(1);
   let fecha = new Date();
-  let ajuste = parseFloat(reservadoDiferencia) + parseFloat(efectivoDiferencia);
   let apertura = {
       fecha,
       efectivo: parseFloat(datos.efectivo),
       reservado: parseFloat(datos.reservado),
-      ajuste,
+      ajuste: parseFloat(datos.ajuste),
       nombre: datos.nombre,
       usuario,
   };

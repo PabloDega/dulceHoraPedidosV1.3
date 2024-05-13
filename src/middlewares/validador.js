@@ -641,7 +641,33 @@ const validarProductoPersChain = [
     .isString().withMessage("El campo estado solo puede contener texto"),
 ];
 
-
+const validarCajaChain = [
+  body("efectivo")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'efectivo' es obligatorio")
+    .isNumeric().withMessage("El campo 'efectivo' solo puede contener numeros"),
+  body("reservado")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'reservado' es obligatorio")
+    .isNumeric().withMessage("El campo 'reservado' solo puede contener numeros"),
+  body("nombre")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("El campo 'nombre' es obligatorio")
+    .isString().withMessage("El campo 'nombre' solo puede contener numeros"),
+  body("ajuste")
+    .trim()
+    .escape()
+    .notEmpty().withMessage("Error el el formulario, por favor recargue la página")
+    .isNumeric().withMessage("Error el el formulario, por favor recargue la página"),
+  body("id")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isNumeric().withMessage("Error el el formulario, por favor recargue la página"),
+];
 
 module.exports = {
   validarInput,
@@ -664,5 +690,6 @@ module.exports = {
   validarGastosChain,
   validarDatosFiscalesChain,
   validarProductoPersChain,
+  validarCajaChain,
   dataValidator,
 };

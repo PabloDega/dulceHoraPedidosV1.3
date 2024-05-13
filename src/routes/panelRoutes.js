@@ -243,11 +243,11 @@ router.get("/facturacion/local/productos/personalizados/eliminar", auth.authAdmi
 router.get("/local/caja/cierre", auth.authAdmin, panelControllers.localCierreDeCaja);
 
 router.get("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCierreDeCajaApertura);
-// validar!!! v
-router.post("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCierreDeCajaAperturaInsert);
+
+router.post("/local/caja/cierre/abrir", auth.authAdmin, validar.validarCajaChain, panelControllers.localCierreDeCajaAperturaInsert);
 
 router.get("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCierreDeCajaCerrar);
-// validar!!! v
-router.post("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCierreDeCajaCerrarInsert);
+
+router.post("/local/caja/cierre/cerrar", auth.authAdmin, validar.validarCajaChain, panelControllers.localCierreDeCajaCerrarInsert);
 
 module.exports = router;
