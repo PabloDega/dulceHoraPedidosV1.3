@@ -551,7 +551,7 @@ async function enviarFactura(tipo) {
   // formulario.submit()
 }
 
-window.addEventListener("afterprint", vaciarFormulario)
+window.addEventListener("afterprint", vaciarFormulario);
 
 function registrarSeña() {
   // cambiar tipo de factura a S, registrar NF
@@ -973,6 +973,14 @@ async function enviarGasto(){
 }
 
 window.addEventListener("resize", () => {
+  redimensionar();
+});
+window.addEventListener("load", () => {
+  redimensionar();
+  vaciarFormulario();
+});
+
+function redimensionar(){
   let scrollActivo = window.innerWidth > document.documentElement.clientWidth;
   if(scrollActivo){
     document.querySelector(".resumenFacturacion").classList.add("resumenFacturacionScroll");
@@ -984,4 +992,4 @@ window.addEventListener("resize", () => {
     document.querySelector("#factBotoneraXtra").classList.remove("factBotoneraXtraScroll");
     document.querySelector("#backRender").classList.remove("factBackRenderScroll");
   }
-})
+}

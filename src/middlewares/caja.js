@@ -1,5 +1,10 @@
 const crearObjApertura = async (datos, usuario) => {
     let fecha = new Date();
+    fecha.setHours(fecha.getHours() - 3);
+
+    // ajuste para BBD testing TestAdjust
+    fecha.setHours(fecha.getHours() +5);
+    
     let apertura = {
         fecha,
         efectivo: parseFloat(datos.efectivo),
@@ -13,6 +18,11 @@ const crearObjApertura = async (datos, usuario) => {
 
 const crearObjCierre = async (datos, usuario) => {
   let fecha = new Date();
+  fecha.setHours(fecha.getHours() - 3);
+
+  // ajuste para BBD testing TestAdjust
+  fecha.setHours(fecha.getHours() +5);
+
   let apertura = {
       fecha,
       efectivo: parseFloat(datos.efectivo),

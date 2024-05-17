@@ -10,19 +10,21 @@ function checkCuitInput(e){
 function checkCuitNumero(e){
     let caracteres = parseInt(e.target.value.length)
     if(caracteres == 0){
-        return;
+        return false;
     }
     if(caracteres !== 11){
         mostrarError(`Número de CUIT ${e.target.value} inválido`);
         document.querySelector("#cuit").value = "";
         // hacer foco en elemento cuit document.querySelector("#cuit")
-        return;
+        return false;
     }
     if(document.querySelector("#registrarFacturacionA") != null){
         const boton = document.querySelector("#registrarFacturacionA")
         boton.classList.remove("btnGris");
         boton.classList.add("btnAzul");
+        return true;
     }
+    return false;
 }
 
 document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});

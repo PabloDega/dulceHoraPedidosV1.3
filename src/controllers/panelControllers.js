@@ -1241,7 +1241,7 @@ const reportePlanta = async(req, res) => {
     return res.redirect("/panel/produccion/reportes");
   }
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
   const data = await reportesMiddleware.reportePlanta(productos, pedidos, req.query.sector);
   const productosDelPedido = await reportesMiddleware.productosDelPedido(productos, data);
   const categoriasReportePlanta = await servicesReportes.getCategoriasReporte();
@@ -1280,7 +1280,7 @@ const reportePedidos = async(req, res) => {
   const pedidos = await servicesReportes.getReportes(fecha);
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos(); 
   res.render(__basedir + "/src/views/pages/reportePedidos", {
     sector: req.query.sector,
     fecha,

@@ -425,7 +425,7 @@ footer img {
   flex-direction: column;
   padding: 1em;
   gap: 1em;
-  z-index: 10;
+  z-index: 40;
 }
 .mensajeErrorForm, .mensajeInfo{
   position: fixed;

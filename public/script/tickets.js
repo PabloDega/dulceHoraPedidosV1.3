@@ -96,6 +96,7 @@ async function crearComprobanteComanda(id) {
     </tbody>
 </table>
 <span style="align-self: flex-end;">Total: $${factura.total}</span><br />
+<span style="text-align: center;"><h2><b>Gracias por su compra!</b></h2></span>
 <span style="text-align: center;"><h3><i>Ticket no válido como factura</i></h3></span>
 </div>`;
   return comprobanteComanda;
@@ -123,7 +124,7 @@ async function crearComprobanteCAE(id) {
   let fechaHora = factura.fechaevento.split("T");
   fechaHora[1] = fechaHora[1].split(".");
   let hora = fechaHora[1][0];
-  let destinatario = "Consumidor Final"
+  let destinatario = "A Consumidor Final"
   if(factura.tipo == 1){
     destinatario = "Dest: " + factura.receptor;
   };
