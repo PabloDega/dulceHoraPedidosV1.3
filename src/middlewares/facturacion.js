@@ -310,9 +310,18 @@ const fetchAPIWSFE = async (data) => {
   return CAE;
 }; 
 
-const validarReq = async(body) => {
-  
-}
+const checkServerWSFE = async () => {
+    let estado;
+    const URL = `http://localhost:4004/wsfe/check/api`;
+    try {
+        estado = await axios.post(URL);
+        // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
+    } catch (error) {
+        console.log("--> Error CAE: " + error);
+        return { error: false, msg: "" };
+    }
+    return estado;
+};
 
 const ajustarObjParaNC = async (factura) => {
   factura = factura[0];
@@ -336,7 +345,7 @@ module.exports = {
     checkDummy,
     crearReqAPIWSFE,
     crearReqAPIWSFEparaNC,
+    checkServerWSFE,
     fetchAPIWSFE,
-    validarReq,
     ajustarObjParaNC,
 }

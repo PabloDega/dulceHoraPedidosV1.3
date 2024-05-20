@@ -69,10 +69,23 @@ const calcularApertura = async (resumen, resumenGastos, registro) => {
   return calculoApertura;
 }
 
+const estadoDeCaja = async (caja) => {
+  if(caja.length == 0){
+    return {error: true, errorCode: "caja1"};
+  }
+  let ultimaCaja = caja[0];
+  if(ultimaCaja.cierre === null){
+    return {error: false};
+  } else {
+    return {error: true, errorCode: "caja1"};
+  }
+}
+
 module.exports = {
     crearObjApertura,
     crearObjCierre,
     ceirreCajaErrores,
     calcularCierre,
-    calcularApertura,    
+    calcularApertura,
+    estadoDeCaja,
 }

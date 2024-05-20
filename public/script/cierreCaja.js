@@ -30,3 +30,15 @@ if(document.querySelector(".cierreCajaCerrar") !== null){
         })
     })
 }
+
+if(document.querySelector("#verMasSenias") !== null){
+  document.querySelector("#verMasSenias").addEventListener("click", () => {
+      let params = new URLSearchParams(document.location.search);
+      let resultados = params.get("resultados")
+      if(resultados === null){
+          resultados = 7
+      }
+      resultados = parseInt(resultados) + 7;
+      window.location.href = `/panel/local/caja/cierre?resultados=${resultados}`
+  })
+}

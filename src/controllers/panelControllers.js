@@ -1469,6 +1469,12 @@ const facturacion = async(req, res) => {
   if(!serviciosLocal.facturacion){
     return res.redirect("/panel");
   }
+  // Verificar que esté la caja abierta para facturar
+  const registrosDeCaja = await servicesCaja.getCierres(req.session.userLocal);
+  const estadoDeCaja = await cajaMiddleware.estadoDeCaja(registrosDeCaja);
+  if(estadoDeCaja.error){
+    return res.redirect(`/panel?error=${estadoDeCaja.errorCode}`);
+  }
   let data = false;
   if(req.query.id){
     if(isNaN(parseInt(req.query.id))){
@@ -1526,6 +1532,18 @@ const facturacionPost = async(req, res) => {
       userRol: req.session.userRol,
       layout: __basedir + "/src/views/layouts/facturacion",
     });
+  }
+  
+  // verificar estado de caja previo registro
+  const registrosDeCaja = await servicesCaja.getCierres(req.session.userLocal);
+  const estadoDeCaja = await cajaMiddleware.estadoDeCaja(registrosDeCaja);
+  if(estadoDeCaja.error){
+    return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false});
+  }
+  // verifica estado del servidor
+  const estadoDeServidor = await facturacionMiddleware.checkServerWSFE();
+  if(estadoDeServidor.data.error){
+    return res.send({error: estadoDeServidor.data.msg, resultado: false, imprimir: false});
   }
   
   let fecha = await facturacionMiddleware.fechaHoy();
@@ -1602,6 +1620,19 @@ const facturacionNC = async(req, res) => {
   if(!req.query.tipo || (req.query.tipo !== "X" && req.query.tipo !== "A" && req.query.tipo !== "B" && req.query.tipo !== "C")){
     return res.send({error: "Tipo de factura invalido", resultado: false});
   }
+
+  // verificar estado de caja previo registro
+  const registrosDeCaja = await servicesCaja.getCierres(req.session.userLocal);
+  const estadoDeCaja = await cajaMiddleware.estadoDeCaja(registrosDeCaja);
+  if(estadoDeCaja.error){
+    return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false});
+  }
+  // verifica estado del servidor
+  const estadoDeServidor = await facturacionMiddleware.checkServerWSFE();
+  if(estadoDeServidor.data.error){
+    return res.send({error: estadoDeServidor.data.msg, resultado: false, imprimir: false});
+  }
+  
   // verificar que la factura no tenga NC previa
   let notasPrevias;
   let factura;
@@ -1790,7 +1821,7 @@ const facturacionRegistrosSenias = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   let senias = await servicesFacturacion.getSenias(req.session.userLocal);
   const fecha = await facturacionMiddleware.fechaHoy();
-  const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha)
+  const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha);
   // console.log(fechaHyphen)
   res.render(__basedir + "/src/views/pages/facturacionLocalSenias", {
     dias,
@@ -1920,6 +1951,13 @@ const gastosLocal = async (req, res) => {
 }
 
 const gastosLocalInsert = async (req, res) => {
+  // verificar estado de caja previo registro
+  const registrosDeCaja = await servicesCaja.getCierres(req.session.userLocal);
+  const estadoDeCaja = await cajaMiddleware.estadoDeCaja(registrosDeCaja);
+  if(estadoDeCaja.error){
+    return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false, tipo: "Gasto"});
+  }
+  
   const datos = await gastosMiddleware.crearObjetoGastos(req.body, req.session.userLog, req.session.userLocal);
   const resultado = await servicesGastos.insertGasto(datos);
   if(resultado.affectedRows == 1){
@@ -2022,11 +2060,23 @@ const facturacionLocalProdPersEliminar = async (req, res) => {
 }
 
 const localCierreDeCaja = async (req, res) => {
+
+  let dias = 7;
+  if(req.query.resultados){
+    if(!isNaN(parseInt(req.query.resultados))){
+      dias = parseInt(req.query.resultados);
+    }
+  }
+
+  const fecha = await facturacionMiddleware.fechaHoy();
+  const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha);
   const registros = await servicesCaja.getCierres(req.session.userLocal);
   let errores = await cajaMiddleware.ceirreCajaErrores(req.query.errores);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
 
   res.render(__basedir + "/src/views/pages/cierreCaja", {
+    dias,
+    fechaHyphen,
     registros,
     servicios,
     usuario: req.session.userLog,
@@ -2037,7 +2087,7 @@ const localCierreDeCaja = async (req, res) => {
 
 const localCierreDeCajaApertura = async (req, res) => {
   const registros = await servicesCaja.getCierres(req.session.userLocal);
-  if(registros.length > 0 && registros[registros.length - 1].cierre === null){
+  if(registros.length > 0 && registros[0].cierre === null){
     return res.redirect(`/panel/local/caja/cierre?errores=1`);
   }
 
@@ -2050,7 +2100,7 @@ const localCierreDeCajaApertura = async (req, res) => {
   let resumenGastos;
 
   if(registros.length > 0){
-    fecha = registros[registros.length - 1].cierre;
+    fecha = registros[0].cierre;
     fecha = JSON.parse(fecha);
     fecha = fecha.fecha;
   
@@ -2061,7 +2111,7 @@ const localCierreDeCajaApertura = async (req, res) => {
     resumen = await facturacionMiddleware.crearResumenCajaLocal(facturas);
     gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
     resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
-    calcularApertura = await cajaMiddleware.calcularApertura(resumen, resumenGastos, registros[registros.length - 1]);
+    calcularApertura = await cajaMiddleware.calcularApertura(resumen, resumenGastos, registros[0]);
   }
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
 
@@ -2099,7 +2149,7 @@ const localCierreDeCajaAperturaInsert = async (req, res) => {
   if(registros.length === 0){
     numeracion = 1;
   } else {
-    numeracion = parseInt(registros[(registros.length - 1)].numero) + 1;
+    numeracion = parseInt(registros[0].numero) + 1;
   }
   
   let fecha = await facturacionMiddleware.fechaHoy();
@@ -2172,6 +2222,12 @@ const localCierreDeCajaCerrarInsert = async (req, res) => {
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Cierre de caja", `Id de caja: ${req.body.id}`);
 
   return res.redirect(`/panel/local/caja/cierre`);
+}
+
+const localCierreDeCajaApi = async (req, res) => {
+  const registros = await servicesCaja.getCierres(req.session.userLocal);
+  const estadoDeCaja = await cajaMiddleware.estadoDeCaja(registros);
+  return res.send(JSON.stringify(estadoDeCaja));
 }
 
 module.exports = {
@@ -2291,4 +2347,5 @@ module.exports = {
   localCierreDeCajaAperturaInsert,
   localCierreDeCajaCerrar,
   localCierreDeCajaCerrarInsert,
+  localCierreDeCajaApi,
 };

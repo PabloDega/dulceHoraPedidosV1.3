@@ -250,4 +250,7 @@ router.get("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCi
 
 router.post("/local/caja/cierre/cerrar", auth.authAdmin, validar.validarCajaChain, panelControllers.localCierreDeCajaCerrarInsert);
 
+router.post("/local/caja/api", auth.authAdmin, panelControllers.localCierreDeCajaApi);
+
+
 module.exports = router;

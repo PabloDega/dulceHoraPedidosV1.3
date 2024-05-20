@@ -445,6 +445,18 @@ function cargarBotonRapido(e) {
 }
 
 async function enviarFactura(tipo) {
+  // verificar estado de caja previo registro
+  let estadoCaja = await fetch("/panel/local/caja/api", {
+    method: "POST",
+    body: {},
+  });
+  estadoCaja = await estadoCaja.json();
+  if(estadoCaja.error){
+    mostrarError("Caja cerrada, abra un nueva caja para operar");
+    document.querySelector("#cortinaLoad").style.display = "none";
+    return;
+  }
+
   if (tipo === "CAE") {
     if (window.impuestos === "responsable") {
       document.querySelector("#tipo").value = "6";
@@ -949,6 +961,17 @@ document.querySelector("#enviarGasto").addEventListener("click", () => {
 });
 
 async function enviarGasto(){
+  // verificar estado de caja previo registro
+  let estadoCaja = await fetch("/panel/local/caja/api", {
+    method: "POST",
+    body: {},
+  });
+  estadoCaja = await estadoCaja.json();
+  if(estadoCaja.error){
+    mostrarError("Caja cerrada");
+    return cerrarGastos();
+  }
+
   let datos = {
     movimiento: "gasto",
   }
@@ -969,7 +992,7 @@ async function enviarGasto(){
   } else {
     mostrarError(resp.error);
   }
-  cerrarGastos()
+  cerrarGastos();
 }
 
 window.addEventListener("resize", () => {

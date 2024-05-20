@@ -37,7 +37,6 @@ function mostrarError(info) {
 document.querySelectorAll(".reimprimirTicket").forEach((boton) => {
     boton.addEventListener("click", (e) => {
         data = e.target.dataset;
-        
         reimprimirTicket(data);
     })
 })

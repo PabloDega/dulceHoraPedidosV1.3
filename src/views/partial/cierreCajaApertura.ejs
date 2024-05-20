@@ -8,11 +8,11 @@
 <div id="cierreCajaAperturaContenedor">
     <div id="cierreCajaContenedor">
     <%if(registros.length > 0){
-        let cierrePrevio = JSON.parse(registros[registros.length - 1].cierre);
+        let cierrePrevio = JSON.parse(registros[0].cierre);
         movimientosPoesteriores = true;%>
 
         <script>
-            window.cierrePrevio = <%- JSON.stringify(registros[registros.length - 1].cierre) %>
+            window.cierrePrevio = <%- JSON.stringify(registros[0].cierre) %>
         </script>
 
         <div class="resumenRegistroFact" style="width: fit-content;">
@@ -65,7 +65,7 @@
     <div id="cierreCajaContenedor">
 
         <%if(!movimientosPoesteriores && registros.length > 0){
-            let cierrePrevio = JSON.parse(registros[registros.length - 1].cierre);%>
+            let cierrePrevio = JSON.parse(registros[0].cierre);%>
             <div class="resumenRegistroFact" style="width: fit-content;">
                 <h2>Cierre previo</h2>
                 <span>Efectivo: <%= monetarizar(cierrePrevio.efectivo) %></span>

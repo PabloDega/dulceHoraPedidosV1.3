@@ -85,8 +85,22 @@ async function crearComprobanteComanda(id) {
             <td>$${item[1]}</td>
         </tr>`;
   });
+
+  let condicion = "Monotributista";
+  if(window.datosFiscales.condicioniva == "responsable"){
+    condicion = "Responsable Inscripto"
+  }
+
   let comprobanteComanda = `<div id="comprobante">
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
+
+<span><h3>${window.datosFiscales.razonsocial}</h3></span>
+<span><h3>CUIT ${window.datosFiscales.cuit}</h3></span>
+<span><h3>IB: ${window.datosFiscales.iibb}</h3></span>
+<span><h3>${window.datosFiscales.domiciliofiscal}</h3></span>
+<span><h3>Inicio Act.: ${new Date(window.datosFiscales.inicioactividades).toLocaleDateString()}</h3></span>
+<span><h3>${condicion}</h3></span>
+
 <span><h3>${fecha} - ${hora}</h3></span>
 <span><h3>Comanda Nº ${factura.numero}</h3></span>
 <span>Detalle:</span>
@@ -135,13 +149,13 @@ async function crearComprobanteCAE(id) {
   let tipo;
   switch (factura.tipo) {
     case 1:
-      tipo = "A";
+      tipo = "Fact. A";
       break;
     case 6:
-      tipo = "B";
+      tipo = "Fact. B";
       break;
     case 11:
-      tipo = "C";
+      tipo = "Fact. C";
       break;
     case 3:
       tipo = "NC-A";
@@ -209,7 +223,7 @@ async function crearComprobanteCAE(id) {
 <span style="text-align: center;"><h3>CAE: ${factura.CAE}</h3></span>
 <div id="qrCAE"></div>
 </div>`; */
-  let comprobanteCAE = `<div id="comprobante" class="comprobanteCAE">
+let comprobanteCAE = `<div id="comprobante" class="comprobanteCAE">
 <span><h1>"Dulce Hora ${window.local.nombre}"</h1></span>
 <span><h3>${window.datosFiscales.razonsocial}</h3></span>
 <span><h3>CUIT ${window.datosFiscales.cuit}</h3></span>
@@ -220,7 +234,7 @@ async function crearComprobanteCAE(id) {
 <span><h3>${destinatario}</h3></span>
 <hr>
 <span><h2>${fecha} - ${hora}</h2></span>
-<span><h2>Fact. ${tipo} ${punto}-${numero}</h2></span>
+<span><h2>${tipo} ${punto}-${numero}</h2></span>
 <hr>
 <span>Detalle:</span>
 <table>
@@ -232,6 +246,7 @@ async function crearComprobanteCAE(id) {
 <hr>
 <span style="text-align: center;"><h3>CAE: ${factura.CAE}</h3></span>
 <div id="qrCAE"></div>
+<span style="text-align: center;"><h2><b>Gracias por su compra!</b></h2></span>
 </div>`;
 
   QRstring = await crearQRstring(datosParaQR);
