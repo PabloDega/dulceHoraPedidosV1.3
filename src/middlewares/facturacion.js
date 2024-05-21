@@ -272,7 +272,8 @@ const crearReqAPIWSFE = async (body, local) => {
     datos.local = local.id;
     datos.pagoMultiple = body.pagoMultiple;
     datos.senia = body.senia;
-    datos.formaDePago = body.formaDePago
+    datos.formaDePago = body.formaDePago;
+    datos.testing = local.testing;
     return datos
 }
 
@@ -292,33 +293,38 @@ const crearReqAPIWSFEparaNC = async (datos, local, fechaCbte) => {
     datos.fecha = datos.fecha.replace(/-/g, "");
     datos.CbteAsoc.CbteFch = datos.CbteAsoc.CbteFch.replace(/-/g, "");
     datos.CbteAsoc = JSON.stringify(datos.CbteAsoc);
+    datos.testing = local.testing;
     return datos
 }
 
 const fetchAPIWSFE = async (data) => {
-  let CAE;
-  data = new URLSearchParams(data);
-  const URL = `http://localhost:4004/wsfe/solicitarCAE/api`;
+    let CAE;
+    data = new URLSearchParams(data);
+    const URL = `http://localhost:4004/wsfe/solicitarCAE/api`;
     try {
         const respuesta = await axios.post(URL, data);
         CAE = respuesta.data;
         // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
-        console.log("--> Error CAE: " + error)
+        console.log("--> Error CAE: " + error);
         CAE = error;
     }
-  return CAE;
+    return CAE;
 }; 
 
-const checkServerWSFE = async () => {
+const checkServerWSFE = async (testing) => {
     let estado;
+    let data = {
+        testing,
+    }
+    data = new URLSearchParams(data);
     const URL = `http://localhost:4004/wsfe/check/api`;
     try {
-        estado = await axios.post(URL);
+        estado = await axios.post(URL, data);
         // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
         console.log("--> Error CAE: " + error);
-        return { error: false, msg: "" };
+        return { error: false, msg: "error al consultar servidor" };
     }
     return estado;
 };

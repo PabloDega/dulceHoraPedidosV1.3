@@ -1540,10 +1540,14 @@ const facturacionPost = async(req, res) => {
   if(estadoDeCaja.error){
     return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false});
   }
-  // verifica estado del servidor
-  const estadoDeServidor = await facturacionMiddleware.checkServerWSFE();
-  if(estadoDeServidor.data.error){
-    return res.send({error: estadoDeServidor.data.msg, resultado: false, imprimir: false});
+
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  // verifica estado del servidor si es Fact con CAE
+  if(req.body.tipo !== "X" && req.body.tipo !== "S"){
+    const estadoDeServidor = await facturacionMiddleware.checkServerWSFE(local.testing);
+    if(estadoDeServidor.data.error == true){
+      return res.send({error: estadoDeServidor.data.msg, resultado: false, imprimir: false});
+    }
   }
   
   let fecha = await facturacionMiddleware.fechaHoy();
@@ -1581,8 +1585,6 @@ const facturacionPost = async(req, res) => {
     }
   }
 
-  
-  const local = await servicesLocal.getLocal(req.session.userLocal);
   // if(req.body.tipo == "X" || req.body.tipo == "S"  || (req.body.tipo == "NC" && req.body.nc == "X")){
   if(req.body.tipo == "X" || req.body.tipo == "S"){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
@@ -1627,10 +1629,14 @@ const facturacionNC = async(req, res) => {
   if(estadoDeCaja.error){
     return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false});
   }
-  // verifica estado del servidor
-  const estadoDeServidor = await facturacionMiddleware.checkServerWSFE();
-  if(estadoDeServidor.data.error){
-    return res.send({error: estadoDeServidor.data.msg, resultado: false, imprimir: false});
+  // Get local
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  // verifica estado del servidor si es Fact con CAE
+  if(req.body.tipo !== "X"){
+    const estadoDeServidor = await facturacionMiddleware.checkServerWSFE(local.testing);
+    if(estadoDeServidor.data.error == true){
+      return res.send({error: estadoDeServidor.data.msg, resultado: false, imprimir: false});
+    }
   }
   
   // verificar que la factura no tenga NC previa
@@ -1674,8 +1680,6 @@ const facturacionNC = async(req, res) => {
   let fecha = await facturacionMiddleware.fechaHoy();
   fecha = await facturacionMiddleware.fechaHyphen(fecha)
   factura[0].fecha = fecha;
-  // Get local
-  const local = await servicesLocal.getLocal(req.session.userLocal);
   // Desestructura
   factura = await facturacionMiddleware.ajustarObjParaNC(factura)
   if(factura.tipo === "X"){
