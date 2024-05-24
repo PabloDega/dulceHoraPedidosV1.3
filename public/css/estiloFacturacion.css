@@ -1,0 +1,14 @@
+@media (max-width: 800px) {
+    .factCont #backRender .factSubCont{
+        flex-direction: column-reverse;
+    }
+    #backRender .editor .resumenFacturacionScroll{
+        justify-content: flex-start;
+    }
+    #backRender .editor .resumenFacturacionScroll span:nth-child(1){
+        min-width: 60%;
+    }
+    .factBotoneraBtn img{
+        width: 30px;
+    }
+}

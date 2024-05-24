@@ -1115,44 +1115,13 @@ footer img {
   width: fit-content;
 }
 
-
-/* Media Style */
-
-@media (max-width: 800px) {
-
-}
-
-@media (max-width: 576px) {
-  #loginForm {
-    margin: 0 2em;
-  }
-  header > span{
-    flex-direction: column;
-  }
-  header >span span{
-    text-align: center;
-  }
-  header > span img {
-    width: 120px;
-  }
-  header > span #userIcon {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  .produccionCont{
-    flex-direction: column-reverse;
-  }
-  .pedidoEstado{
-    flex-direction: column;
-  }
-}
 .factCont .factSubCont{
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
   gap: 1em;
   width: 100%;
+  align-items: flex-start;
 }
 .factCont #backRender{
   max-width: inherit;
@@ -1181,7 +1150,7 @@ footer img {
   display: flex;
   position: relative;
   overflow: hidden;
-  height: 90px;
+  height: 75px;
   width: 150px;
   cursor: pointer;
   border-radius: 15px 0 0 0;
@@ -1625,7 +1594,38 @@ form.editor#cierreCajaCierre table tbody tr input{
   right: 1em;
   z-index: 30;
 }
-
 #backRender.factBackRenderScroll{
   margin-bottom: 150px;
+}
+
+/* Media Style */
+
+@media (max-width: 800px) {
+
+}
+
+@media (max-width: 576px) {
+  #loginForm {
+    margin: 0 2em;
+  }
+  header > span{
+    flex-direction: column;
+  }
+  header >span span{
+    text-align: center;
+  }
+  header > span img {
+    width: 120px;
+  }
+  header > span #userIcon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  .produccionCont{
+    flex-direction: column-reverse;
+  }
+  .pedidoEstado{
+    flex-direction: column;
+  }
 }

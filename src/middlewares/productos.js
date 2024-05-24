@@ -33,6 +33,32 @@ const rellenarEspacioVacios = (precios) => {
     return precios;
 }
 
+const verificarCodigoDuplicado = async (codigo, productos) => {
+    let resultado = {
+        error: false,
+        msg: "",
+    };
+    if(isNaN(parseInt(codigo))){
+        resultado.error = true;
+        resultado.msg = "Formato de codigo incorrecto";
+        return resultado;
+    }
+    codigo = parseInt(codigo);
+    if(codigo < 1 || codigo > 99){
+        resultado.error = true;
+        resultado.msg = "El codigo de producto debe estar entre 1 y 99";
+        return resultado;
+    }
+    const busqueda = productos.find((prod) => prod.codigo == codigo)
+    if(busqueda !== undefined){
+        resultado.error = true;
+        resultado.msg = "El codigo ingresado se encuentra en uso";
+        return resultado;
+    }
+    return resultado;
+}
+
 module.exports = {
     crearObjetoUpdatePrecios,
+    verificarCodigoDuplicado,
 }

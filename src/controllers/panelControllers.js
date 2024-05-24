@@ -1999,18 +1999,22 @@ const facturacionLocalProdPersNuevo = async (req, res) => {
 }
 
 const facturacionLocalProdPersInsert = async (req, res) => {
-  const errores = validationResult(req);
+  let errores = validationResult(req);
+  const productosPers = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
+  let checkCodigo = await productosMiddleware.verificarCodigoDuplicado(req.body.codigo, productosPers);
+  if(checkCodigo.error){errores.errors.push(checkCodigo)}
   if (!errores.isEmpty()) {
     const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
     return res.render(__basedir + "/src/views/pages/nuevoProductoPers", {
       errores: errores.array({ onlyFirstError: true }),
+      error: checkCodigo.msg,
       valores: req.body,
       servicios,
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     });
   }
- 
+  
   await servicesProductos.insertProductosPersonalizados(req.body, req.session.userLocal);
   return res.redirect("/panel/facturacion/local/productos/personalizados");
 }
