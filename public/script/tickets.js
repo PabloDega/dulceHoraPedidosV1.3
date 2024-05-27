@@ -265,7 +265,7 @@ async function crearQRstring(datos) {
   datos.ver = 1;
   datos = JSON.stringify(datos);
   let url = "https://www.afip.gob.ar/fe/qr/?p=";
-  let datos64 = btoa(JSON.stringify(datos));
+  let datos64 = btoa(datos);
   datos64 = url + datos64;
   return datos64;
 }

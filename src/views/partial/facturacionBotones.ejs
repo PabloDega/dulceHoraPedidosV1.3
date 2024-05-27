@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th>Codigo</th>
+            <th>Producto</th>
             <th>Detalle</th>
             <th>Cantidad</th>
             <th>Orden</th>
@@ -18,6 +19,7 @@
             let info = productos.find((prod) => prod.codigo === boton.codigo)%>
             <tr>
                 <td><%= boton.codigo %></td>
+                <td><%= info.nombre %></td>
                 <td><%= boton.detalle %></td>
                 <td><%= boton.cantidad %></td>
                 <td><%= boton.orden %></td>

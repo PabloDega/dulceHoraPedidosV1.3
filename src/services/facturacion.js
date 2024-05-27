@@ -150,7 +150,7 @@ const getFacturaNF = async(id, local) => {
   }
 }
 
-const insertFacturaNF = async (local, datos, numeracion) => {
+const insertFacturaNF = async (local, datos, numeracion, datosFiscales) => {
   try {
     let obs = {} 
     if(datos.tipo == "S" && datos.senia > 0){
@@ -166,7 +166,7 @@ const insertFacturaNF = async (local, datos, numeracion) => {
       obs.nc = datos.numero,
       obs.idNc = datos.id;
     }
-    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total, senia, observaciones) VALUES ("${local.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}", "${datos.senia}", '${JSON.stringify(obs)}')`);
+    const insert = await conectar.query(`INSERT INTO facturacionnf (cuitemisor, local, numero, fecha, tipo, formaPago, detalle, neto, iva10, iva21, total, senia, observaciones) VALUES ("${datosFiscales.cuit}", "${local.id}", "${numeracion}", "${datos.fecha}", "${datos.tipo}", "${datos.formaDePago}", "${datos.datos}", "${datos.neto}", "${datos.iva10}", "${datos.iva21}", "${datos.total}", "${datos.senia}", '${JSON.stringify(obs)}')`);
     return  insert[0].insertId;
   } catch (error) {
     throw error;

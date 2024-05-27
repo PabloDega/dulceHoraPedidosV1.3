@@ -1500,7 +1500,7 @@ const facturacion = async(req, res) => {
     data,
     datosFiscales,
     local,
-    impuestos: local.impuestos,
+    impuestos: datosFiscales.condicioniva,
     botonesfacturacion,
     botonesPersonalizados,
     usuario: req.session.userLog,
@@ -1515,7 +1515,10 @@ const facturacionPost = async(req, res) => {
     const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
     const productos = await servicesProductos.getProductosLocal();
     const categorias = await servicesProductos.getCategorias();
-    const local = await servicesLocal.getLocal(req.session.userLocal);
+    // modlocal - pasar a datos fiscales, solo para res en error de validacion
+    // const local = await servicesLocal.getLocal(req.session.userLocal);
+    const local = await servicesLocal.getDatosFiscales(req.session.userLocal);
+    const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
     const serviciosLocal = JSON.parse(local.servicios);
     const data = {};
     if(!serviciosLocal.facturacion){
@@ -1526,7 +1529,7 @@ const facturacionPost = async(req, res) => {
       productos,
       categorias,
       data,
-      impuestos: local.impuestos,
+      impuestos: datosFiscales.condicioniva,
       botonesfacturacion,
       usuario: req.session.userLog,
       userRol: req.session.userRol,
@@ -1540,8 +1543,9 @@ const facturacionPost = async(req, res) => {
   if(estadoDeCaja.error){
     return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false});
   }
-
+  // modlocal
   const local = await servicesLocal.getLocal(req.session.userLocal);
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
   // verifica estado del servidor si es Fact con CAE
   if(req.body.tipo !== "X" && req.body.tipo !== "S"){
     const estadoDeServidor = await facturacionMiddleware.checkServerWSFE(local.testing);
@@ -1589,7 +1593,8 @@ const facturacionPost = async(req, res) => {
   if(req.body.tipo == "X" || req.body.tipo == "S"){
     let numeracion = await servicesFacturacion.getFacturasNF(local.id, req.body.tipo);
     numeracion = numeracion.length + 1;
-    let respQuery = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion);
+    // modlocal - solicita CUIT el servicio
+    let respQuery = await servicesFacturacion.insertFacturaNF(local, req.body, numeracion, datosFiscales);
     if(req.body.imprimir == "true" && req.body.tipo !== "S"){
       return res.send({error: "", resultado: true, imprimir: true, tipo: "x", numero: respQuery});
     } else if(req.body.tipo == "S"){
@@ -1597,7 +1602,8 @@ const facturacionPost = async(req, res) => {
     }
     return res.send({error: "", resultado: true, imprimir: false, tipo: "x", numero: respQuery});
   } else {
-    let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local);
+    // modlocal - solicita CUIT y ptoventa el servicio
+    let datos = await facturacionMiddleware.crearReqAPIWSFE(req.body, local, datosFiscales);
     // enviar req a AFIP
     let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos)));
     let orden;
@@ -1630,7 +1636,10 @@ const facturacionNC = async(req, res) => {
     return res.send({error: "Caja cerrada, abra un nueva caja para operar", resultado: false, imprimir: false});
   }
   // Get local
+  // modlocal
   const local = await servicesLocal.getLocal(req.session.userLocal);
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
+
   // verifica estado del servidor si es Fact con CAE
   if(req.body.tipo !== "X"){
     const estadoDeServidor = await facturacionMiddleware.checkServerWSFE(local.testing);
@@ -1689,10 +1698,12 @@ const facturacionNC = async(req, res) => {
     // Agregar info de NC
     factura.tipo = "NC";
     // Registrar NC en facturacionNF
-    let respQuery = await servicesFacturacion.insertFacturaNF(local, factura, numeracion);
+    // modlocal - solicita CUIT el servicio
+    let respQuery = await servicesFacturacion.insertFacturaNF(local, factura, numeracion, datosFiscales);
     return res.send({error: false, info: respQuery, resultado: true});
   } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
-    let datos = await facturacionMiddleware.crearReqAPIWSFEparaNC(factura, local, fechaCbte);
+    // modlocal - solicita CUIT y ptoventa el middleware
+    let datos = await facturacionMiddleware.crearReqAPIWSFEparaNC(factura, local, fechaCbte, datosFiscales);
     // console.log(datos)
     // enviar req a AFIP
     let CAE = await new Promise((res) => res(facturacionMiddleware.fetchAPIWSFE(datos)));
@@ -2238,6 +2249,12 @@ const localCierreDeCajaApi = async (req, res) => {
   return res.send(JSON.stringify(estadoDeCaja));
 }
 
+const facturacionConsultaPadron = async (req, res) => {
+  if(isNaN(parseInt(req.body.idPersona)) || req.body.idPersona.toString().length !== 11){
+    return res.send({error: true, msg: "Formato de CUIT incorrecto"})
+  }
+}
+
 module.exports = {
   index,
   productosCard,
@@ -2327,6 +2344,7 @@ module.exports = {
   servicioEliminar,
   facturacion,
   facturacionPost,
+  facturacionConsultaPadron,
   facturacionNC,
   facturacionComprobante,
   facturacionComprobanteParcial,

@@ -256,10 +256,10 @@ const checkDummy = async () => {
     
 }
 
-const crearReqAPIWSFE = async (body, local) => {
+const crearReqAPIWSFE = async (body, local, datosFiscales) => {
     let datos = {};
-    datos.cuit = local.cuit;
-    datos.punto = local.ptoventa;
+    datos.cuit = datosFiscales.cuit;
+    datos.punto = datosFiscales.ptoventa;
     datos.tipo = body.tipo;
     datos.importe = body.total;
     datos.neto = body.neto;
@@ -277,9 +277,9 @@ const crearReqAPIWSFE = async (body, local) => {
     return datos
 }
 
-const crearReqAPIWSFEparaNC = async (datos, local, fechaCbte) => {
-    datos.cuit = local.cuit;
-    datos.punto = local.ptoventa;
+const crearReqAPIWSFEparaNC = async (datos, local, fechaCbte, datosFiscales) => {
+    datos.cuit = datosFiscales.cuit;
+    datos.punto = datosFiscales.ptoventa;
     datos.importe = datos.total;
     datos.CbteAsoc = {}
     datos.CbteAsoc.Tipo = datos.tipo;

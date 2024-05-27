@@ -192,6 +192,8 @@ router.get("/facturacion", auth.authAdmin, panelControllers.facturacion);
 
 router.post("/facturacion", auth.authAdmin, validar.validarFacturacionChain, panelControllers.facturacionPost);
 
+router.post("/facturacion/padron/api", auth.authAdmin, panelControllers.facturacionConsultaPadron);
+
 router.get("/facturacion/nc", auth.authAdmin, panelControllers.facturacionNC);
 
 router.get("/facturacion/comprobante", auth.authAdmin, panelControllers.facturacionComprobante);

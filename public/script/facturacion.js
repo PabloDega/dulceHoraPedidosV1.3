@@ -1016,3 +1016,17 @@ function redimensionar(){
     document.querySelector("#backRender").classList.remove("factBackRenderScroll");
   }
 }
+
+async function consultarPadron(e){
+  console.log(e.target.value);
+  let estadoServer = await fetch("/facturacion/padron/api", {
+    method: "POST",
+    body: {
+      idPersona: e.target.value,
+    },
+  });
+  estadoServer = await estadoServer.json();
+  if(estadoServer.error){
+    return mostrarError(estadoServer.msg);
+  }
+}

@@ -1498,6 +1498,7 @@ footer img {
   margin-top: 1em;
   display: flex;
   gap: 1em;
+  flex-wrap: wrap;
 }
 .factBotonPersRapido{
   width: 150px;

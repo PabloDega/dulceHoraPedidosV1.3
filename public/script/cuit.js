@@ -28,7 +28,12 @@ function checkCuitNumero(e){
 }
 
 document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
-document.querySelector("#cuit").addEventListener("focusout", (e) => {checkCuitNumero(e)});
+document.querySelector("#cuit").addEventListener("focusout", (e) => {
+    let check = checkCuitNumero(e);
+    if(check){
+        consultarPadron(e);
+    }
+});
 
 
 function mostrarError(info){
