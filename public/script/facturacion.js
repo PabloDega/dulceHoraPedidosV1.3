@@ -102,12 +102,13 @@ function cargarItem(e) {
   nombre.innerHTML = producto.nombre;
   medida.innerHTML = producto.fraccionamiento;
   if (producto.fraccionamiento === "kilo") {
+    medida.innerHTML = "gramos";
     precio.value = "$" + producto.preciokilo;
-    cantidad.setAttribute("step", "0.01");
-    cantidad.setAttribute("min", "0.01");
+    // cantidad.setAttribute("step", "1");
+    // cantidad.setAttribute("min", "1");
   } else {
     precio.value = "$" + producto.preciounidad;
-    cantidad.removeAttribute("step");
+    // cantidad.removeAttribute("step");
   }
 
   if (producto.fraccionamiento !== "manual") {
@@ -160,7 +161,7 @@ function calcularItem(e) {
   if (producto.fraccionamiento === "unidad") {
     calculo = producto.preciounidad * cantidad.value;
   } else if (producto.fraccionamiento === "kilo") {
-    calculo = producto.preciokilo * cantidad.value;
+    calculo = producto.preciokilo * cantidad.value / 1000;
   } else if (producto.fraccionamiento === "docena") {
     let medida = document.querySelector(`#med${item}`);
     if (cantidad.value < 12) {

@@ -23,7 +23,7 @@ function factMostrarMenu() {
           botones = `<span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="1">+1</span><span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="6">+6</span><span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="12">+12</span>`;
         }
         if (item.fraccionamiento == "kilo") {
-          botones = `<span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="0.25">+0.25</span><span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="0.5">+0.5</span><span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="1">+1</span>`;
+          botones = `<span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="250">+0.25</span><span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="500">+0.5</span><span class="menuAgregar factBotonRapidoMenu" data-codigo="${item.codigo}" data-cantidad="1000">+1</span>`;
         }
         if (item.estado == "true") {
           items += `<tr>

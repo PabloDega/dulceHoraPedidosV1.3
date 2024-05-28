@@ -11,7 +11,7 @@
   z-index: 90;
 }
 #comprobante {
-  width: 58mm;
+  max-width: 48mm;
   display: none;
   flex-direction: column;
   gap: 0.3em;
@@ -92,7 +92,7 @@
       /* border-collapse: collapse; */
       position: relative;
       /* table-layout: fixed; */
-      max-width: 58mm;
+      max-width: 48mm;
       width: 100%;
       font-size: 0.75em;
     }
