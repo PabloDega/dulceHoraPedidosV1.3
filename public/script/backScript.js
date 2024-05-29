@@ -2,7 +2,7 @@
 if (document.querySelector("#productos") != null) {
   document
     .querySelector("#productos")
-    .addEventListener("click", () => (location.href = "/panel/productos/card"));
+    .addEventListener("click", () => (location.href = "/panel/productos/tabla"));
 }
 if (document.querySelector("#precios") != null) {
   document

@@ -77,12 +77,22 @@ async function crearComprobanteComanda(id) {
       producto.fraccionamiento = "unidad";
       producto.preciounidad = producto.precio;
     }
-   
-    textoDetalles += `<tr>
+    let precioUnitario = parseFloat(item[1]) / parseFloat(item[4]);
+   /*  textoDetalles += `<tr>
             <td>${item[0]}</td>
             <td>${producto.nombre}</td>
             <td>${item[4]}</td>
             <td>$${item[1]}</td>
+        </tr>`; */
+
+    textoDetalles += `<tr>
+        <td colspan="4"><b>${producto.nombre}</b></td>
+        </tr>
+        <tr class="tdBoderBottom">
+          <td>x${item[4]}</td>
+          <td>${item[2]/10}%</td>
+          <td>${monetarizar(precioUnitario)}</td>
+          <td>${monetarizar(item[1])}</td>
         </tr>`;
   });
 
@@ -100,7 +110,7 @@ async function crearComprobanteComanda(id) {
 <span><h3>${window.datosFiscales.domiciliofiscal}</h3></span>
 <span><h3>Inicio Act.: ${new Date(window.datosFiscales.inicioactividades).toLocaleDateString()}</h3></span>
 <span><h3>${condicion}</h3></span>
-
+<hr>
 <span><h3>${fecha} - ${hora}</h3></span>
 <span><h3>Comanda Nº ${factura.numero}</h3></span>
 <span>Detalle:</span>

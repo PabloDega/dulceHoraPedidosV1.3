@@ -28,10 +28,10 @@ function checkCuitNumero(e){
 }
 
 document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
-document.querySelector("#cuit").addEventListener("focusout", (e) => {
+document.querySelector("#cuit").addEventListener("focusout", async (e) => {
     let check = checkCuitNumero(e);
     if(check){
-        consultarPadron(e);
+        await consultarPadron(e);
     }
 });
 

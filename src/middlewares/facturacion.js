@@ -323,6 +323,23 @@ const checkServerWSFE = async (testing) => {
         estado = await axios.post(URL, data);
         // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
+        console.log("--> Error Consulta Estado de Servidor Padron: " + error);
+        return { error: false, msg: "error al consultar estado de servidor" };
+    }
+    return estado;
+};
+
+const checkServerPadron = async (testing) => {
+    let estado;
+    let data = {
+        testing,
+    }
+    data = new URLSearchParams(data);
+    const URL = `http://localhost:4004/padron/check/api`;
+    try {
+        estado = await axios.post(URL, data);
+        // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
+    } catch (error) {
         console.log("--> Error CAE: " + error);
         return { error: false, msg: "error al consultar servidor" };
     }
@@ -354,4 +371,5 @@ module.exports = {
     checkServerWSFE,
     fetchAPIWSFE,
     ajustarObjParaNC,
+    checkServerPadron,
 }

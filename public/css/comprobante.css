@@ -130,9 +130,9 @@
       text-align: right;
       width: fit-content;
     }
-    .tablaComanda tr{
+    /* .tablaComanda tr{
       border-bottom: 1px solid gray;
-    }
+    } */
     #factCont{
       display: none !important;
     }

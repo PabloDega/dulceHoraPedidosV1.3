@@ -84,7 +84,7 @@ const productosUpdate = async (req, res) => {
   }
   await servicesProductos.updateProductoLocal(req.body);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de Producto", `Id de pord: ${req.body.id}`)
-  return res.redirect("/panel/productos/card");
+  return res.redirect("/panel/productos/tabla");
 };
 
 const productosNuevo = async (req, res) => {
@@ -114,7 +114,7 @@ const productosInsert = async (req, res) => {
   }
   await servicesProductos.insertProductoLocal(req.body);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de Producto", `Id de pord: ${req.body.id}`)
-  return res.redirect("/panel/productos/card");
+  return res.redirect("/panel/productos/tabla");
 };
 
 const productosEliminar = async (req, res) => {
@@ -124,7 +124,7 @@ const productosEliminar = async (req, res) => {
   // manejar error
   await servicesProductos.deleteProductoLocal(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de Producto", `Id de pord: ${req.query.id}`);
-  return res.redirect("/panel/productos/card");
+  return res.redirect("/panel/productos/tabla");
 };
 
 const categoriasTabla = async (req, res) => {
@@ -2253,6 +2253,9 @@ const facturacionConsultaPadron = async (req, res) => {
   if(isNaN(parseInt(req.body.idPersona)) || req.body.idPersona.toString().length !== 11){
     return res.send({error: true, msg: "Formato de CUIT incorrecto"})
   }
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  const estadoDeServidor = await facturacionMiddleware.checkServerPadron(local.testing, req.body.idPersona);
+  return res.send({data: estadoDeServidor.data})
 }
 
 module.exports = {
