@@ -338,12 +338,28 @@ const checkServerPadron = async (testing) => {
     const URL = `http://localhost:4004/padron/check/api`;
     try {
         estado = await axios.post(URL, data);
-        // console.log("--> Respuesta CAE: " + JSON.stringify(respuesta.data));
     } catch (error) {
         console.log("--> Error CAE: " + error);
         return { error: false, msg: "error al consultar servidor" };
     }
     return estado;
+};
+
+const consultarPadron = async (testing, idPersona) => {
+    let infoPersona;
+    let data = {
+        testing,
+        idPersona,
+    }
+    data = new URLSearchParams(data);
+    const URL = `http://localhost:4004/padron/consultarPadron/api`;
+    try {
+        infoPersona = await axios.post(URL, data);
+    } catch (error) {
+        console.log("--> Error CAE: " + error);
+        return { error: false, msg: "error al consultar el padron" };
+    }
+    return infoPersona;
 };
 
 const ajustarObjParaNC = async (factura) => {
@@ -372,4 +388,5 @@ module.exports = {
     fetchAPIWSFE,
     ajustarObjParaNC,
     checkServerPadron,
+    consultarPadron,
 }

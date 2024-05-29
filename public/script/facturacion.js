@@ -1026,8 +1026,7 @@ async function consultarPadron(e){
     body: dataBody,
   });
   estadoServer = await estadoServer.json();
-  console.log(estadoServer)
-  if(estadoServer.error){
-    return mostrarError(estadoServer.msg);
+  if(estadoServer.data.error){
+    return mostrarError(estadoServer.data.msg);
   }
 }

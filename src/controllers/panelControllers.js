@@ -2253,9 +2253,16 @@ const facturacionConsultaPadron = async (req, res) => {
   if(isNaN(parseInt(req.body.idPersona)) || req.body.idPersona.toString().length !== 11){
     return res.send({error: true, msg: "Formato de CUIT incorrecto"})
   }
+  // consultar estado del servidor
   const local = await servicesLocal.getLocal(req.session.userLocal);
-  const estadoDeServidor = await facturacionMiddleware.checkServerPadron(local.testing, req.body.idPersona);
-  return res.send({data: estadoDeServidor.data})
+  const estadoDeServidor = await facturacionMiddleware.checkServerPadron(local.testing);
+  if(estadoDeServidor.data.error){
+    return res.send({data: estadoDeServidor.data});
+  }
+  // consultar padron
+  const infoPersona = await facturacionMiddleware.consultarPadron(local.testing, req.body.idPersona);
+  console.log(infoPersona.data)
+  return res.send({data: infoPersona.data})
 }
 
 module.exports = {
