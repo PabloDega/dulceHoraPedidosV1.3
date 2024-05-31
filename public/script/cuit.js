@@ -8,32 +8,29 @@ function checkCuitInput(e){
 }
 
 function checkCuitNumero(e){
-    let caracteres = parseInt(e.target.value.length)
+    let caracteres = parseInt(e.target.value.length);
     if(caracteres == 0){
-        return false;
+        desactivarFactA();
+        return;
     }
     if(caracteres !== 11){
         mostrarError(`Número de CUIT ${e.target.value} inválido`);
         document.querySelector("#cuit").value = "";
-        // hacer foco en elemento cuit document.querySelector("#cuit")
-        return false;
+        desactivarFactA();
+        // hacer foco en elemento cuit document.querySelector("#cuit");
+        return;
     }
-    if(document.querySelector("#registrarFacturacionA") != null){
-        const boton = document.querySelector("#registrarFacturacionA")
-        boton.classList.remove("btnGris");
-        boton.classList.add("btnAzul");
-        return true;
-    }
-    return false;
+}
+
+function desactivarFactA(){
+    const boton = document.querySelector("#registrarFacturacionA")
+    boton.classList.add("btnGris");
+    boton.classList.remove("btnAzul");
+    document.querySelector("#cuitNombre").value = "";
 }
 
 document.querySelector("#cuit").addEventListener("keydown", (e) => {checkCuitInput(e)});
-document.querySelector("#cuit").addEventListener("focusout", async (e) => {
-    let check = checkCuitNumero(e);
-    if(check){
-        await consultarPadron(e);
-    }
-});
+document.querySelector("#cuit").addEventListener("focusout", async (e) => {checkCuitNumero(e);});
 
 
 function mostrarError(info){

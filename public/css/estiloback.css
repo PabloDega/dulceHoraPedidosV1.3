@@ -1328,6 +1328,13 @@ footer img {
   flex-direction: column;
   gap: 1em;
 }
+#inputCuit #cuit{
+  width: 8em;
+  flex-grow: 0;
+}
+#cuitNombre{
+  word-wrap: break-all;
+}
 #tablaFacturacionLocalRegistros, #tablaGastosLocalRegistros{
   height: fit-content;
 }

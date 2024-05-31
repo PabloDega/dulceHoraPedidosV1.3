@@ -1018,16 +1018,29 @@ function redimensionar(){
   }
 }
 
-async function consultarPadron(e){
-  let data = {idPersona: e.target.value};
+async function consultarPadron(){
+  // let data = {idPersona: e.target.value};
+  let data = {idPersona: document.querySelector("#cuit").value}
   const dataBody = new URLSearchParams(data);
   let consultaPadron = await fetch("/panel/facturacion/padron/api", {
     method: "POST",
     body: dataBody,
-  });
+  })
   consultaPadron = await consultaPadron.json();
-  console.log(consultaPadron);
-  if(consultaPadron.error){
-    return mostrarError(consultaPadron.msg);
+  console.log(consultaPadron)
+  if(consultaPadron.data.error){
+    const boton = document.querySelector("#registrarFacturacionA")
+    boton.classList.add("btnGris");
+    boton.classList.remove("btnAzul");
+    document.querySelector("#cuitNombre").value = "";
+    return mostrarError(consultaPadron.data.msg);
+  } else {
+    const boton = document.querySelector("#registrarFacturacionA")
+    boton.classList.remove("btnGris");
+    boton.classList.add("btnAzul");
+    let nombre = consultaPadron.data.datosGenerales.apellido + ", " + consultaPadron.data.datosGenerales.nombre;
+    document.querySelector("#cuitNombre").value = nombre;
   }
 }
+
+document.querySelector("#consultarPadron").addEventListener("click", () => {consultarPadron();})

@@ -2265,7 +2265,6 @@ const facturacionConsultaPadron = async (req, res) => {
   // consultar padron
   const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
   const infoPersona = await facturacionMiddleware.consultarPadron(local.testing, req.body.idPersona, datosFiscales.cuit);
-  console.log(infoPersona.data)
   return res.send({data: infoPersona.data})
 }
 

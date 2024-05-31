@@ -362,8 +362,6 @@ const consultarPadron = async (testing, idPersona, cuit) => {
         console.log("--> Error CAE: " + error);
         return { error: false, msg: "error al consultar el padron" };
     }
-    console.log("info persona middleware 364")
-    console.log(infoPersona.data)
     return infoPersona;
 };
 
