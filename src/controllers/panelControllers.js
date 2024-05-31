@@ -1931,13 +1931,13 @@ const facturacionFabricaBotonesEliminar = async (req, res) => {
   return res.redirect("/panel/facturacion/fabrica/botones");
 }
 
-const facturacionCheckAfip = async (req, res) => {
+/* const facturacionCheckAfip = async (req, res) => {
   const estado = servicesAfip.checkDummy();
   res.render(__basedir + "/src/views/pages/facturacionCheckAfip", {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
-}
+} */
 
 const gastosLocal = async (req, res) => {
   let fecha;
@@ -2256,11 +2256,15 @@ const facturacionConsultaPadron = async (req, res) => {
   // consultar estado del servidor
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const estadoDeServidor = await facturacionMiddleware.checkServerPadron(local.testing);
+  console.log("estadoDeServidor panelControllers 2258");
+  console.log(estadoDeServidor.data)
   if(estadoDeServidor.data.error){
+    console.log("ping 1")
     return res.send({data: estadoDeServidor.data});
   }
   // consultar padron
-  const infoPersona = await facturacionMiddleware.consultarPadron(local.testing, req.body.idPersona);
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
+  const infoPersona = await facturacionMiddleware.consultarPadron(local.testing, req.body.idPersona, datosFiscales.cuit);
   console.log(infoPersona.data)
   return res.send({data: infoPersona.data})
 }
@@ -2369,7 +2373,7 @@ module.exports = {
   facturacionFabricaBotonesEditar,
   facturacionFabricaBotonesUpdate,
   facturacionFabricaBotonesEliminar,
-  facturacionCheckAfip,
+  // facturacionCheckAfip,
   gastosLocal,
   gastosLocalInsert,
   facturacionLocalProdPers,

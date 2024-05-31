@@ -1021,12 +1021,13 @@ function redimensionar(){
 async function consultarPadron(e){
   let data = {idPersona: e.target.value};
   const dataBody = new URLSearchParams(data);
-  let estadoServer = await fetch("/panel/facturacion/padron/api", {
+  let consultaPadron = await fetch("/panel/facturacion/padron/api", {
     method: "POST",
     body: dataBody,
   });
-  estadoServer = await estadoServer.json();
-  if(estadoServer.data.error){
-    return mostrarError(estadoServer.data.msg);
+  consultaPadron = await consultaPadron.json();
+  console.log(consultaPadron);
+  if(consultaPadron.error){
+    return mostrarError(consultaPadron.msg);
   }
 }

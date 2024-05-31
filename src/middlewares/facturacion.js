@@ -345,12 +345,15 @@ const checkServerPadron = async (testing) => {
     return estado;
 };
 
-const consultarPadron = async (testing, idPersona) => {
+const consultarPadron = async (testing, idPersona, cuit) => {
+    console.log("Consultando padron.....")
     let infoPersona;
     let data = {
         testing,
         idPersona,
+        cuit,
     }
+    console.log(data)
     data = new URLSearchParams(data);
     const URL = `http://localhost:4004/padron/consultarPadron/api`;
     try {
@@ -359,6 +362,8 @@ const consultarPadron = async (testing, idPersona) => {
         console.log("--> Error CAE: " + error);
         return { error: false, msg: "error al consultar el padron" };
     }
+    console.log("info persona middleware 364")
+    console.log(infoPersona.data)
     return infoPersona;
 };
 
