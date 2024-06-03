@@ -2251,15 +2251,12 @@ const localCierreDeCajaApi = async (req, res) => {
 
 const facturacionConsultaPadron = async (req, res) => {
   if(isNaN(parseInt(req.body.idPersona)) || req.body.idPersona.toString().length !== 11){
-    return res.send({error: true, msg: "Formato de CUIT incorrecto"})
+    return res.send({data: {error: true, msg: "Formato de CUIT incorrecto"}})
   }
   // consultar estado del servidor
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const estadoDeServidor = await facturacionMiddleware.checkServerPadron(local.testing);
-  console.log("estadoDeServidor panelControllers 2258");
-  console.log(estadoDeServidor.data)
   if(estadoDeServidor.data.error){
-    console.log("ping 1")
     return res.send({data: estadoDeServidor.data});
   }
   // consultar padron

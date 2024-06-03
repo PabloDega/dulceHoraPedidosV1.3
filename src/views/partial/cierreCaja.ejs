@@ -66,8 +66,8 @@ let facturasocultas = false;%>
                     <span class="btn btnVerde cierreCajaCerrar" data-id="<%=registro.id%>">Cerrar</span>
                   <%} else {
                     const fechaCierre = new Date(cierre.fecha);
-                    // ajuste para BBD testing TestAdjust
-                    fechaCierre.setHours(fechaCierre.getHours() - 5);
+                    // ajuste para BBD testing 
+                    // fechaCierre.setHours(fechaCierre.getHours() - 5);
                     %>
 
                     <span class="cierreCajaInfo">info

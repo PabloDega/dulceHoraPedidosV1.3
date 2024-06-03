@@ -346,14 +346,12 @@ const checkServerPadron = async (testing) => {
 };
 
 const consultarPadron = async (testing, idPersona, cuit) => {
-    console.log("Consultando padron.....")
     let infoPersona;
     let data = {
         testing,
         idPersona,
         cuit,
     }
-    console.log(data)
     data = new URLSearchParams(data);
     const URL = `http://localhost:4004/padron/consultarPadron/api`;
     try {
