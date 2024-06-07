@@ -1,7 +1,7 @@
 function monetarizar(valor){
     valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
     return valor;
-  }
+}
 
 if(document.querySelector("#cierreCajaAperturaCargar") !== null){
     document.querySelector("#cierreCajaAperturaCargar").addEventListener("click", () => {

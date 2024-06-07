@@ -106,6 +106,8 @@ router.get("/produccion/fabrica", auth.authSupervisor, panelControllers.pedidoPr
 
 router.post("/produccion/fabrica", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionAgregarMensajeFabrica);
 
+router.get("/produccion/fabrica/tabla", auth.authSupervisor, panelControllers.pedidoProduccionFabricaTabla);
+
 router.post("/produccion/fabrica/updateEstado", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionUpdateEstado);
 
 router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionEditar);
@@ -253,6 +255,9 @@ router.get("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCi
 router.post("/local/caja/cierre/cerrar", auth.authAdmin, validar.validarCajaChain, panelControllers.localCierreDeCajaCerrarInsert);
 
 router.post("/local/caja/api", auth.authAdmin, panelControllers.localCierreDeCajaApi);
+
+router.get("/local/caja/reporte", auth.authAdmin, panelControllers.localCierreDeCajaReporte);
+
 
 
 module.exports = router;

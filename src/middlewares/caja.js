@@ -48,6 +48,10 @@ const ceirreCajaErrores = async (error) => {
       let error = {msg: "La caja solicitada ya se encuentra cerrada"}
       errores.push(error);
     }
+    if(error == 4){
+      let error = {msg: "Debe cerrar la caja solicitada para emitir un reporte"}
+      errores.push(error);
+    }
     return errores;
 }
 
@@ -81,6 +85,31 @@ const estadoDeCaja = async (caja) => {
   }
 }
 
+const crearReporteCaja = async (facturas, resumenGeneral, resumenGastos) => {
+  let detalleVentasCaja = [];
+  // [item, id, cantidad, total]
+  facturas.forEach((fact) => {
+    let detalles = JSON.parse(fact.detalle);
+    detalles.forEach((detalle) => {
+      // buscar pro en array
+      let ubicacion = detalleVentasCaja.findIndex((dato) => dato[0] == detalle[3]);
+      if(ubicacion < 0){
+        // insertar prod en array
+        let prod = [detalle[3], detalle[5], detalle[4], detalle[1]]
+        detalleVentasCaja.push(prod);
+      } else {
+        // sumar prod al del array
+        detalleVentasCaja[ubicacion][2] += detalle[4];
+        detalleVentasCaja[ubicacion][3] += detalle[1];
+      }
+    })
+  })
+  resumenGeneral.gastos = resumenGastos.gastos;
+  resumenGeneral.retiros = resumenGastos.retiros;
+  resumenGeneral.detalleVentasCaja = detalleVentasCaja;
+  return resumenGeneral;
+}
+
 module.exports = {
     crearObjApertura,
     crearObjCierre,
@@ -88,4 +117,5 @@ module.exports = {
     calcularCierre,
     calcularApertura,
     estadoDeCaja,
+    crearReporteCaja,
 }

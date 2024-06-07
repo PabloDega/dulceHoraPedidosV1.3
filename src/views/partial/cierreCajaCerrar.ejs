@@ -17,6 +17,9 @@ const fechaApertura = new Date(apertura.fecha);
   <div class="resumenRegistroFact">
     <h2>Apertura</h2>
     <span>
+      Fecha: <%=fechaApertura.toLocaleDateString()%>
+    </span><hr>
+    <span>
         Hora: <%=fechaApertura.toLocaleTimeString()%>
     </span><hr>
     <span>
@@ -41,6 +44,18 @@ const fechaApertura = new Date(apertura.fecha);
     <span>Crédito: <%=monetarizar(resumen.totalCredito)%></span>
     <hr>
     <span>Tranf. NB: <%=monetarizar(resumen.totalNB)%></span>
+    <hr>
+    <span style="position: relative;">
+      Operaciones: <%=resumenGeneral.contadorOperaciones%> <span class="factRegFDPinfo" id="cierreCajaDetalles">&#128712;
+        <div class="cierreCajaDetallesOperaciones">
+          <span>CAE: <%=resumenGeneral.contadorCAE%></span>
+          <hr>
+          <span>Comandas: <%=resumenGeneral.contadorComanda%></span>
+        </div>
+    </span>
+      
+    </span>
+    
   </div>
 
   <div class="cierreCajaSigno">-</div>
@@ -101,6 +116,7 @@ const fechaApertura = new Date(apertura.fecha);
   window.resumenGastos = <%- JSON.stringify(resumenGastos) %>
   window.facturas = <%- JSON.stringify(facturas) %>
   window.resumen = <%- JSON.stringify(resumen) %>
+  window.resumenGeneral = <%- JSON.stringify(resumenGeneral) %>
   window.fecha = <%- JSON.stringify(fecha) %>
   window.calcularCierre = <%- JSON.stringify(calcularCierre) %>
 

@@ -42,3 +42,8 @@ if(document.querySelector("#verMasSenias") !== null){
       window.location.href = `/panel/local/caja/cierre?resultados=${resultados}`
   })
 }
+
+if(contador == 0){
+  dias = dias + 7;
+  window.location.href = `/panel/local/caja/cierre?resultados=${dias}`;
+}

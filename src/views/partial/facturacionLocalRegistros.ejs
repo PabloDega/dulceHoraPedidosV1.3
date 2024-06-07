@@ -153,29 +153,29 @@
             <hr>
             <span>Total de operaciones: <%=resumen.contadorOperaciones%></span>
             <hr>
-            <span>Venta total: <%= resumen.totalDia %></span>
+            <span>Venta total: <%= monetarizar(resumen.totalDia) %></span>
             <hr>
-            <span>Ticket promedio: <%=resumen.promedio%></span>
+            <span>Ticket promedio: <%=monetarizar(resumen.promedio)%></span>
         </div>
         <br>
         <div class="resumenRegistroFact">
             <h3>Distribución</h3>
-            <span>Efectivo: <%=resumen.totalEfectivo%></span>
+            <span>Efectivo: <%=monetarizar(resumen.totalEfectivo)%></span>
             <hr>
-            <span>Débito: <%=resumen.totalDebito%></span>
+            <span>Débito: <%=monetarizar(resumen.totalDebito)%></span>
             <hr>
-            <span>Crédito: <%=resumen.totalCredito%></span>
+            <span>Crédito: <%=monetarizar(resumen.totalCredito)%></span>
             <hr>
-            <span>Tranf. NB: <%=resumen.totalNB%></span>
+            <span>Tranf. NB: <%=monetarizar(resumen.totalNB)%></span>
         </div>
         <br>
         <div class="resumenRegistroFact">
             <h3>Registro</h3>
-            <span>Total con CAE: <%=resumen.totalCAE%></span>
+            <span>Total con CAE: <%=monetarizar(resumen.totalCAE)%></span>
             <hr>
-            <span>Total sin CAE: <%=resumen.totalNF%></span>
+            <span>Total sin CAE: <%=monetarizar(resumen.totalNF)%></span>
             <hr>
-            <span>Total en señas: <%=resumen.totalSeniado%></span>
+            <span>Total en señas: <%=monetarizar(resumen.totalSeniado)%></span>
         </div>
 
     </span>

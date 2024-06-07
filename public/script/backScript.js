@@ -459,9 +459,10 @@ if (document.querySelector("#pedidoProdNuevo") != null) {
 
 if (document.querySelector("#verPedidosProduccion") != null) {
   document.querySelector("#verPedidosProduccion").addEventListener("click", () => {
-    document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
+    /* document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
       card.style.display = "flex";
-    })
+    }) */
+    window.location.href = "/panel/produccion/fabrica/tabla"
   });
 }
 

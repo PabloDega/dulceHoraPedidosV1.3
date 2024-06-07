@@ -69,29 +69,30 @@ const crearResumenVistaLocal = async (facturas) => {
         totalCredito: 0,
         totalNB: 0,
         totalSeniado: 0,
-        contadorOperaciones: 0,
+        contadorCAE: 0,
+        contadorComanda: 0,
     }
 
     facturas.forEach((factura) => {
         if(factura.tipo === "X"){
             totales.totalDia += factura.total;
             totales.totalNF += factura.total;
-            totales.contadorOperaciones++;
+            totales.contadorComanda++;
             totales = sumarFormaDePago(factura, totales);
         } else if(factura.tipo === "NC"){
             totales.totalDia -= factura.total;
             totales.totalNF -= factura.total;
-            totales.contadorOperaciones++;
+            totales.contadorComanda--;
             totales = restarFormaDePagoNC(factura, totales)
         } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
             totales.totalDia += factura.total;
             totales.totalCAE += factura.total;
-            totales.contadorOperaciones++;
+            totales.contadorCAE++;
             totales = sumarFormaDePago(factura, totales);
         } else if(factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
             totales.totalDia -= factura.total;
             totales.totalCAE -= factura.total;
-            totales.contadorOperaciones++;
+            totales.contadorCAE--;
             totales = restarFormaDePagoNC(factura, totales);
         } else if(factura.tipo === "S"){
             let obs = JSON.parse(factura.observaciones);
@@ -102,23 +103,27 @@ const crearResumenVistaLocal = async (facturas) => {
                 // totalNF += factura.senia;
                 totales.totalSeniado += factura.senia;
                 totales = sumarFormaDePagoSenia(factura, totales);
+                totales.contadorComanda++;
             }
         }
     });
 
-    let promedio = totales.totalDia / totales.contadorOperaciones
-
+    let contadorOperaciones = totales.contadorCAE + totales.contadorComanda;
+    let promedio = totales.totalDia / contadorOperaciones;
+    
     let resumen = {
-        totalDia: monetarizar(totales.totalDia),
-        totalNF: monetarizar(totales.totalNF),
-        totalCAE: monetarizar(totales.totalCAE),
-        totalEfectivo: monetarizar(totales.totalEfectivo),
-        totalDebito: monetarizar(totales.totalDebito),
-        totalCredito: monetarizar(totales.totalCredito),
-        totalNB: monetarizar(totales.totalNB),
-        totalSeniado: monetarizar(totales.totalSeniado),
-        contadorOperaciones: totales.contadorOperaciones,
-        promedio: monetarizar(promedio),
+        totalDia: totales.totalDia,
+        totalNF: totales.totalNF,
+        totalCAE: totales.totalCAE,
+        totalEfectivo: totales.totalEfectivo,
+        totalDebito: totales.totalDebito,
+        totalCredito: totales.totalCredito,
+        totalNB: totales.totalNB,
+        totalSeniado: totales.totalSeniado,
+        contadorOperaciones: contadorOperaciones,
+        promedio: promedio,
+        contadorCAE: totales.contadorCAE,
+        contadorComanda: totales.contadorComanda,
     }
     return resumen;
 }
@@ -137,7 +142,7 @@ const crearResumenCajaLocal = async (facturas) => {
         if(factura.tipo === "X"){
             totales = sumarFormaDePago(factura, totales);
         } else if(factura.tipo === "NC"){
-            totales = restarFormaDePagoNC(factura, totales)
+            totales = restarFormaDePagoNC(factura, totales);
         } else if(factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
             totales = sumarFormaDePago(factura, totales);
         } else if(factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
