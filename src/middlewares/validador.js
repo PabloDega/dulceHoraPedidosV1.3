@@ -655,7 +655,7 @@ const validarCajaChain = [
     .trim()
     .escape()
     .notEmpty().withMessage("El campo 'nombre' es obligatorio")
-    .isString().withMessage("El campo 'nombre' solo puede contener numeros"),
+    .isString().withMessage("Error de formato en el campo 'nombre'"),
   body("ajuste")
     .trim()
     .escape()
@@ -666,6 +666,12 @@ const validarCajaChain = [
     .trim()
     .escape()
     .isNumeric().withMessage("Error el el formulario, por favor recargue la página"),
+  body("reporte")
+    .optional({ values: "falsy" })
+    .trim()
+    // .escape()
+    .notEmpty().withMessage("El campo 'reporte' es obligatorio")
+    .isString().withMessage("Error de formato en el campo 'reporte'"),
 ];
 
 module.exports = {

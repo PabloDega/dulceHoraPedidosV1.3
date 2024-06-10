@@ -34,22 +34,25 @@ const fechaNormalizada = async (fecha) => {
 }
 
 const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
-    const facturas = await servicesFacturacion.getFacturasNFTodas();
+    const facturasNF = await servicesFacturacion.getFacturasNFTodasxFecha(fecha);
+    const facturasCAE = await servicesFacturacion.getFacturasCAETodasxFecha(fecha);
+    const facturas = facturasNF.concat(facturasCAE);
     let factucionxLocal = [];
     locales.forEach((local) => {
         let datos = {};
         datos.local = local.nombre;
         datos.localId = local.id;
         let facturasLocal = facturas.filter((factura) => factura.local == local.id);
-        facturasLocal = facturasLocal.filter((factura) => factura.fecha == fecha);
+        // facturasLocal = facturasLocal.filter((factura) => factura.fecha == fecha);
         let total = 0;
         let operaciones = 0;
         facturasLocal.forEach((factura) => {
-            if(factura.tipo == "X"){
+            if(factura.tipo === "X" || factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
                 total += factura.total;
                 operaciones++;
-            } else if(factura.tipo == "NC"){
+            } else if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
                 total -= factura.total;
+                operaciones--;
             }
         });
         datos.total = total;

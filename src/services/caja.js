@@ -32,9 +32,9 @@ const insertCaja = async (apertura, fecha, local, numeracion) => {
   }
 };
 
-const updateCierreCaja = async (cierre, id) => {
+const updateCierreCaja = async (cierre, id, reporte) => {
   try {
-    await conectar.query(`UPDATE cierresdecaja SET cierre = '${cierre}' WHERE id = "${id}"`);
+    await conectar.query(`UPDATE cierresdecaja SET cierre = '${cierre}', reporte = '${reporte}' WHERE id = "${id}"`);
   } catch (error) {
     throw error;
   } finally {

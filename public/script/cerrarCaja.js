@@ -68,3 +68,4 @@ function mostrarError(info){
     document.querySelector("#errores").innerHTML = mensaje;
     document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
 }
+document.querySelector("#reporte").value = JSON.stringify(window.reporte);

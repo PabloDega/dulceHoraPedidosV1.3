@@ -33,7 +33,7 @@ const rellenarEspacioVacios = (precios) => {
     return precios;
 }
 
-const verificarCodigoDuplicado = async (codigo, productos) => {
+const buscarDuplicadosProdPersonalizados = async (codigo, productos) => {
     let resultado = {
         error: false,
         msg: "",
@@ -58,7 +58,59 @@ const verificarCodigoDuplicado = async (codigo, productos) => {
     return resultado;
 }
 
+const buscarDuplicadosProdLocal = async (productos, codigo) => {
+    let respuesta = {
+        error: false,
+        msg: "",
+    }
+    if(isNaN(parseInt(codigo))){
+        respuesta.error = true;
+        respuesta.msg = "Formato de codigo incorrecto";
+        return respuesta;
+    }
+    codigo = parseInt(codigo);
+    if(codigo < 100 || codigo > 999){
+        respuesta.error = true;
+        respuesta.msg = "El codigo de producto debe estar entre 100 y 999";
+        return respuesta;
+    }
+    let busqueda = productos.find((prod) => prod.codigo == codigo);
+    if(busqueda !== undefined){
+        respuesta.error = true;
+        respuesta.msg = `El codigo de producto ${codigo} esta actualmente en uso`;
+        return respuesta;
+    }
+    return respuesta;
+}
+
+const buscarDuplicadosProdFabrica = async (productos, codigo) => {
+    let respuesta = {
+        error: false,
+        msg: "",
+    }
+    if(isNaN(parseInt(codigo))){
+        respuesta.error = true;
+        respuesta.msg = "Formato de codigo incorrecto";
+        return respuesta;
+    }
+    codigo = parseInt(codigo);
+/*     if(codigo < 100 || codigo > 999){
+        respuesta.error = true;
+        respuesta.msg = "El codigo de producto debe estar entre 100 y 999";
+        return respuesta;
+    } */
+    let busqueda = productos.find((prod) => prod.codigo == codigo);
+    if(busqueda !== undefined){
+        respuesta.error = true;
+        respuesta.msg = `El codigo de producto ${codigo} esta actualmente en uso`;
+        return respuesta;
+    }
+    return respuesta;
+}
+
 module.exports = {
     crearObjetoUpdatePrecios,
-    verificarCodigoDuplicado,
+    buscarDuplicadosProdPersonalizados,
+    buscarDuplicadosProdLocal,
+    buscarDuplicadosProdFabrica,
 }

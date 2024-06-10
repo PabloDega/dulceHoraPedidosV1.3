@@ -92,8 +92,9 @@ const fechaApertura = new Date(apertura.fecha);
         <label for="nombre">Nombre</label>
         <input type="text" name="nombre" id="nombre" />
     </span>
-    <input type="hidden" name="ajuste" id="ajuste">
-    <input type="hidden" name="id" value=<%= registro.id %>>
+    <input type="hidden" name="ajuste" id="ajuste" readonly>
+    <input type="hidden" name="reporte" id="reporte" readonly>
+    <input type="hidden" name="id" value=<%= registro.id %> readonly>
     <input type="submit" value="Cerrar Caja" class="btn btnVerde">
     </span>
   </form>
@@ -119,5 +120,5 @@ const fechaApertura = new Date(apertura.fecha);
   window.resumenGeneral = <%- JSON.stringify(resumenGeneral) %>
   window.fecha = <%- JSON.stringify(fecha) %>
   window.calcularCierre = <%- JSON.stringify(calcularCierre) %>
-
+  window.reporte = <%- JSON.stringify(reporte) %>
 </script>

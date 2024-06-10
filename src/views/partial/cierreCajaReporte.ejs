@@ -1,0 +1,99 @@
+<%function monetarizar(valor){
+    if (valor < 1) {
+        return "-";
+    }
+    valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+    return valor;
+  }
+
+let apertura = JSON.parse(registro.inicio);
+let cierre = JSON.parse(registro.cierre);
+let reporte = JSON.parse(registro.reporte)
+%>
+
+
+<div id="cierreCajaReporteContenedor">
+<div>
+    <h1>Reporte de caja Nº<%=registro.numero%></h1>
+    <div>
+        <span>Fecha de Apertura:</span>
+        <span><%= new Date(apertura.fecha).toLocaleString() %></span>
+    </div>
+    <div>
+        <span>Fecha de Cierre:</span>
+        <span><%= new Date(cierre.fecha).toLocaleString() %></span>
+    </div>
+    <hr>
+    <h2>Información General</h2>
+    <div>
+        <span>Razon Social:</span>
+        <span><%=local.nombre%></span>
+    </div>
+    <div>
+        <span>Efectivo en apertura:</span>
+        <span><%=monetarizar(apertura.efectivo + apertura.reservado)%></span>
+    </div>
+    <div>
+        <span>Efectivo en Cierre:</span>
+        <span><%=monetarizar(cierre.efectivo + cierre.reservado)%></span>
+    </div>
+    <div>
+        <span>Diferencia:</span>
+        <span><%=monetarizar(apertura.efectivo + apertura.reservado)%></span>
+    </div>
+    <hr>
+    <h2>Detalles</h2>
+    <div>
+        <span>Cantidad de Comandas:</span>
+        <span><%=reporte.contadorComanda%></span>
+    </div>
+    <div>
+        <span>Monto Total Comandas:</span>
+        <span><%=monetarizar(reporte.totalNF)%></span>
+    </div>
+    <div>
+        <span>Cantidad de Tickets:</span>
+        <span><%=reporte.contadorCAE%></span>
+    </div>
+    <div>
+        <span>Monto Total Tickets:</span>
+        <span><%=monetarizar(reporte.totalCAE)%></span>
+    </div>
+    <div>
+        <span>Cantidad Total:</span>
+        <span><b><%=reporte.contadorComanda + reporte.contadorCAE%></b></span>
+    </div>
+    <div>
+        <span>Monto Total:</span>
+        <span><b><%=monetarizar(reporte.totalNF + reporte.totalCAE)%></b></span>
+    </div>
+    <hr>
+    <h2>Medios de Pago</h2>
+    <div>
+        <span>Efectivo:</span>
+        <span><%=monetarizar(reporte.totalEfectivo)%></span>
+    </div>
+    <div>
+        <span>Débito:</span>
+        <span><%=monetarizar(reporte.totalDebito)%></span>
+    </div>
+    <div>
+        <span>Crédito:</span>
+        <span><%=monetarizar(reporte.totalCredito)%></span>
+    </div>
+    <div>
+        <span>Virtual:</span>
+        <span><%=monetarizar(reporte.totalNB)%></span>
+    </div>    
+</div>
+<div>
+    <h1>Detalle de productos vendidos</h1>
+</div>
+</div>
+
+<script>
+    window.registro = <%- JSON.stringify(registro) %>
+    window.gastos = <%- JSON.stringify(gastos) %>
+    window.resumenGastos = <%- JSON.stringify(resumenGastos) %>
+    window.fecha = <%- JSON.stringify(fecha) %>
+  </script>

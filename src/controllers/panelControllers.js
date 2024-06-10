@@ -25,7 +25,7 @@ const cajaMiddleware = require(__basedir + "/src/middlewares/caja");
 
 
 const index = async (req, res) => {
-  const servicios = await localMiddleware.filtarServicios(req.session.userLocal)
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/panel", {
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -71,7 +71,19 @@ const productosEditar = async (req, res) => {
 };
 
 const productosUpdate = async (req, res) => {
+  // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
+  // si no se modifico el codigo evitar verificacion
+  let codigoOriginal = await servicesProductos.getProductoLocal(req.body.id);
+  let buscarDuplicados = {error: false}
+  if(codigoOriginal.codigo != req.body.codigo){
+    let productos = await servicesProductos.getProductosLocal();
+    buscarDuplicados = await productosMiddleware.buscarDuplicadosProdLocal(productos, req.body.codigo);
+  }
   const errores = validationResult(req);
+  if(buscarDuplicados.error){
+    errores.errors.push(buscarDuplicados)
+  }
+  
   if (!errores.isEmpty()) {
     let dataCategorias = await servicesProductos.getCategorias();
     return res.render(__basedir + "/src/views/pages/editarProducto", {
@@ -100,7 +112,13 @@ const productosNuevo = async (req, res) => {
 };
 
 const productosInsert = async (req, res) => {
+  // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
+  let productos = await servicesProductos.getProductosLocal();
+  let buscarDuplicados = await productosMiddleware.buscarDuplicadosProdLocal(productos, req.body.codigo);
   const errores = validationResult(req);
+  if(buscarDuplicados.error){
+    errores.errors.push(buscarDuplicados)
+  }
   if (!errores.isEmpty()) {
     let dataCategorias = await servicesProductos.getCategorias();
     return res.render(__basedir + "/src/views/pages/nuevoProducto", {
@@ -1031,7 +1049,14 @@ const productosFabricaNuevo = async(req, res) => {
 }
 
 const productosFabricaInsert = async(req, res) => {
+  // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
+  let productos = await servicesProductosFabrica.getProductosFabrica();
+  let buscarDuplicados = await productosMiddleware.buscarDuplicadosProdFabrica(productos, req.body.codigo);
   const errores = validationResult(req);
+  if(buscarDuplicados.error){
+    errores.errors.push(buscarDuplicados)
+  }
+
   if (!errores.isEmpty()) {
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     const sectores = await servicesProductosFabrica.getSectoresFabrica();
@@ -1070,7 +1095,18 @@ const productosFabricaEditar = async(req, res) => {
 }
 
 const productosFabricaUpdate = async(req, res) => {
+  // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
+  let codigoOriginal = await servicesProductos.getProductoFabrica(req.body.id);
+  let buscarDuplicados = {error: false}
+  if(codigoOriginal.codigo != req.body.codigo){
+    let productos = await servicesProductosFabrica.getProductosFabrica();
+    buscarDuplicados = await productosMiddleware.buscarDuplicadosProdFabrica(productos, req.body.codigo);
+  }
   const errores = validationResult(req);
+  if(buscarDuplicados.error){
+    errores.errors.push(buscarDuplicados)
+  }
+
   if (!errores.isEmpty()) {
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     const sectores = await servicesProductosFabrica.getSectoresFabrica();
@@ -2024,7 +2060,7 @@ const facturacionLocalProdPersNuevo = async (req, res) => {
 const facturacionLocalProdPersInsert = async (req, res) => {
   let errores = validationResult(req);
   const productosPers = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
-  let checkCodigo = await productosMiddleware.verificarCodigoDuplicado(req.body.codigo, productosPers);
+  let checkCodigo = await productosMiddleware.buscarDuplicadosProdPersonalizados(req.body.codigo, productosPers);
   if(checkCodigo.error){errores.errors.push(checkCodigo)}
   if (!errores.isEmpty()) {
     const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
@@ -2164,11 +2200,15 @@ const localCierreDeCajaAperturaInsert = async (req, res) => {
   if (!errores.isEmpty()) {
     const registros = await servicesCaja.getCierres(req.session.userLocal);
     const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+    const fecha = await facturacionMiddleware.fechaHoy();
+    const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha);
 
     return res.render(__basedir + "/src/views/pages/cierreCaja", {
       errores: errores.array({ onlyFirstError: true }),
       registros,
       servicios,
+      dias: 7,
+      fechaHyphen,
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     })
@@ -2218,8 +2258,6 @@ const localCierreDeCajaCerrar = async (req, res) => {
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
   const calcularCierre = await cajaMiddleware.calcularCierre(resumen, resumenGastos, registro[0]);
   const reporte = await cajaMiddleware.crearReporteCaja(facturas, resumenGeneral, resumenGastos);
-  console.log(reporte)
-
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/cierreCajaCerrar", {
     registro: registro[0],
@@ -2230,6 +2268,7 @@ const localCierreDeCajaCerrar = async (req, res) => {
     gastos,
     resumenGastos,
     fecha,
+    reporte,
     calcularCierre,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -2241,19 +2280,23 @@ const localCierreDeCajaCerrarInsert = async (req, res) => {
   if (!errores.isEmpty()) {
     const registros = await servicesCaja.getCierres(req.session.userLocal);
     const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
-
+    const fecha = await facturacionMiddleware.fechaHoy();
+    const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha);
+    
     return res.render(__basedir + "/src/views/pages/cierreCaja", {
       errores: errores.array({ onlyFirstError: true }),
       registros,
       servicios,
+      dias: 7,
+      fechaHyphen,
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     })
   }
-  
+
   let cierre = await cajaMiddleware.crearObjCierre(req.body, req.session.userLog);
   cierre = JSON.stringify(cierre);
-  await servicesCaja.updateCierreCaja(cierre, req.body.id);
+  await servicesCaja.updateCierreCaja(cierre, req.body.id, req.body.reporte);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Cierre de caja", `Id de caja: ${req.body.id}`);
   // grabar reporte de caja
 
@@ -2283,28 +2326,18 @@ const localCierreDeCajaReporte = async (req, res) => {
   let fecha = registro[0].inicio;
   fecha = JSON.parse(fecha);
   fecha = fecha.fecha;
-
-  let facturasNF = await servicesFacturacion.getFacturasNFxEvento(req.session.userLocal, fecha);
-  let facturasCAE = await servicesFacturacion.getFacturasCAExEvento(req.session.userLocal, fecha);
-  let facturas = facturasNF.concat(facturasCAE);
-  facturas.sort((a, b) => a.fechaevento - b.fechaevento);
-  const resumen = await facturacionMiddleware.crearResumenCajaLocal(facturas);
-  const resumenGeneral = await facturacionMiddleware.crearResumenVistaLocal(facturas);
+  const local = await servicesLocal.getLocal(req.session.userLocal);
   const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
-  const calcularCierre = await cajaMiddleware.calcularCierre(resumen, resumenGastos, registro[0]);
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
-  res.render(__basedir + "/src/views/pages/cierreCajaCerrar", {
+  res.render(__basedir + "/src/views/pages/cierreCajaReporte", {
     registro: registro[0],
     servicios,
-    resumen,
-    resumenGeneral,
-    facturas,
+    local,
     gastos,
     resumenGastos,
     fecha,
-    calcularCierre,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
