@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const mainControllers = require("../controllers/mainControllers");
+// const mainControllers = require("../controllers/mainControllers");
 const limiter = require("../middlewares/limiter");
 
-router.get("/datos", limiter.limiterAPI, mainControllers.jsonProductos);
+// router.get("/datos", limiter.limiterAPI, mainControllers.jsonProductos);
 
 // router.get("/", limiter.limiterGeneral, mainControllers.indexSelect);
 
@@ -12,7 +12,7 @@ router.get("/", limiter.limiterGeneral, (req, res) => {res.render(__basedir + "/
 
 // router.post("/", limiter.limiterGeneral, mainControllers.index);
 
-router.get("/volver", limiter.limiterGeneral, mainControllers.volerIndexSelect);
+/* router.get("/volver", limiter.limiterGeneral, mainControllers.volerIndexSelect);
 
 router.get("/pedidos", limiter.limiterGeneral, mainControllers.index);
 
@@ -28,6 +28,6 @@ router.get("/pedido", limiter.limiterGeneral, mainControllers.verPedido);
 
 router.get("/pedido/cancelar", limiter.limiterGeneral, mainControllers.cancelarPedido);
 
-router.get("/gracias", limiter.limiterGeneral, mainControllers.gracias);
+router.get("/gracias", limiter.limiterGeneral, mainControllers.gracias); */
 
 module.exports = router;

@@ -8,7 +8,7 @@
 
 let apertura = JSON.parse(registro.inicio);
 let cierre = JSON.parse(registro.cierre);
-let reporte = JSON.parse(registro.reporte)
+let reporte = JSON.parse(registro.reporte);
 %>
 
 
@@ -35,11 +35,11 @@ let reporte = JSON.parse(registro.reporte)
     </div>
     <div>
         <span>Efectivo en Cierre:</span>
-        <span><%=monetarizar(cierre.efectivo + cierre.reservado)%></span>
+        <span><%=monetarizar((cierre.efectivo + cierre.reservado))%></span>
     </div>
     <div>
         <span>Diferencia:</span>
-        <span><%=monetarizar(apertura.efectivo + apertura.reservado)%></span>
+        <span><%=monetarizar(((cierre.efectivo + cierre.reservado)) - (apertura.efectivo + apertura.reservado))%></span>
     </div>
     <hr>
     <h2>Detalles</h2>
@@ -84,10 +84,52 @@ let reporte = JSON.parse(registro.reporte)
     <div>
         <span>Virtual:</span>
         <span><%=monetarizar(reporte.totalNB)%></span>
-    </div>    
+    </div>
+    <hr>
+    <h1>Gastos y Retiros</h1>
+    <div>
+        <span>Gastos:</span>
+        <span><%= monetarizar(resumenGastos.gastos) %></span>
+    </div>
+    <div>
+        <span>Retiros:</span>
+        <span><%= monetarizar(resumenGastos.retiros) %></span>
+    </div>
 </div>
 <div>
     <h1>Detalle de productos vendidos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Cantidad</th>
+                <th>Frac.</th>
+                <th>Producto</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%reporte.detalleVentasCaja.forEach((item) => {
+                let producto = productos.find((prod) => prod.id == item[1]);
+                let fraccionamiento = "Unidad";
+                if(producto.fraccionamiento == "kilo"){
+                    fraccionamiento = "kilo";
+                    item[2] = item[2]/1000
+                }%>
+                <tr>
+                    <td class="tablaCeldaNumero"><%=item[2]%></td>
+                    <td><%=fraccionamiento%></td>
+                    <td><%=producto.nombre%></td>
+                    <td class="importe"><%=monetarizar(item[3])%></td>
+                </tr>
+            <%})%>
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="importe"><b>Total</b></td>
+                <td class="importe"><b><%=monetarizar(reporte.totalNF + reporte.totalCAE)%></b></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 </div>
 
@@ -96,4 +138,5 @@ let reporte = JSON.parse(registro.reporte)
     window.gastos = <%- JSON.stringify(gastos) %>
     window.resumenGastos = <%- JSON.stringify(resumenGastos) %>
     window.fecha = <%- JSON.stringify(fecha) %>
+    window.productos = <%- JSON.stringify(productos) %>
   </script>

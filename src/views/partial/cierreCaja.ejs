@@ -7,7 +7,8 @@ let contador = 0;%>
 
 <h2>Cierre de Caja <span class="btn btnHeader" id="abrirCaja">Abrir</span></h2>
 
-<%if(registros.length == 0){%>
+<%if(registros.length == 0){
+    contador++;%>
     <span>No se encuentran registros en la base de datos</span>
 <%} else {%>
     <table>

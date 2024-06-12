@@ -47,3 +47,15 @@ if(contador == 0){
   dias = dias + 7;
   window.location.href = `/panel/local/caja/cierre?resultados=${dias}`;
 }
+
+if(document.querySelector(".cierreCajaReporte") !== null){
+  document.querySelectorAll(".cierreCajaReporte").forEach((boton) => {
+    boton.addEventListener("click", (e) => {
+      let id = e.target.dataset.id;
+      if(isNaN(parseInt(id))){
+        return window.location.href = `/panel/local/caja/cierre?errores=2`
+      }
+      window.location.href = `/panel/local/caja/reporte?id=${id}`
+    })
+  })
+}

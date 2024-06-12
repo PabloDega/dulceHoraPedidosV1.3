@@ -22,11 +22,14 @@ const localMiddleware = require(__basedir + "/src/middlewares/local");
 const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
 const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
 const cajaMiddleware = require(__basedir + "/src/middlewares/caja");
+const erroresMiddleware = require(__basedir + "/src/middlewares/errores")
 
 
 const index = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
   res.render(__basedir + "/src/views/pages/panel", {
+    errores,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     servicios,
@@ -1536,11 +1539,17 @@ const facturacion = async(req, res) => {
       }
     }
   }
+  // checkear datos fiscales para habilitar facturacion
+  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
+  if(datosFiscales == undefined){
+    return res.redirect("/panel?error=datosFiscales1")
+  }
+
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
   const botonesPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal)
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
-  const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
+
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
     botonesPersonalizados,
@@ -2329,10 +2338,12 @@ const localCierreDeCajaReporte = async (req, res) => {
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
+  const productos = await servicesProductos.getProductosLocalTodos();
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/cierreCajaReporte", {
     registro: registro[0],
+    productos,
     servicios,
     local,
     gastos,

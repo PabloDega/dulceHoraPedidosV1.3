@@ -595,10 +595,10 @@ const validarDatosFiscalesChain = [
     .escape()
     .isString().withMessage("Formato del campo 'impuestos' incorrecto"),
   body("ptoventa")
-    .notEmpty().withMessage("El campo 'Punro de Venta' es obligatorio")
+    .notEmpty().withMessage("El campo 'Punto de Venta' es obligatorio")
     .trim()
     .escape()
-    .isNumeric().withMessage("Formato del campo 'Punro de Venta' incorrecto"),
+    .isNumeric().withMessage("Formato del campo 'Punto de Venta' incorrecto"),
   body("domiciliofiscal")
     .notEmpty().withMessage("El campo 'Domicilio Fiscal' es obligatorio")
     .trim()
