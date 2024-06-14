@@ -735,7 +735,7 @@ const stockForm = async(req, res) => {
   });
 }
 
-const stockUpdate = async (req, res) => {
+/* const stockUpdate = async (req, res) => {
   let datos = req.body.stock;
   // validacion
   if(!Array.isArray(req.body.stock)){
@@ -747,9 +747,9 @@ const stockUpdate = async (req, res) => {
   })
   let local = req.session.userLocal;
   await servicesLocal.updateStock(datos, local);
-/*   await actividadMiddleware.actividadUser(req.session.userLog, local, 0, "Stock", datos.toString());
- */  return res.redirect("/panel/stock")
-};
+  await actividadMiddleware.actividadUser(req.session.userLog, local, 0, "Stock", datos.toString());
+  return res.redirect("/panel/stock")
+}; */
 
 const pedidoProduccionLocal = async(req, res) => {
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
@@ -1008,7 +1008,7 @@ const pedidoProduccionUpdate = async(req, res) => {
       }
     }
   }
-
+  // ticket 004
   // manejo de error temporal
   if(isNaN(parseInt(req.body.pedidoProduccionImporteTotal))){
     return res.redirect("/panel/produccion/local?id=" + req.body.pedidoProduccionLocalId);
@@ -2464,7 +2464,7 @@ module.exports = {
   actividadToda,
   actividadTodaFiltro,
   stockForm,
-  stockUpdate,
+  // stockUpdate,
   pedidoProduccionLocal,
   pedidoProduccionLocalTabla,
   pedidoProduccionFabrica,
