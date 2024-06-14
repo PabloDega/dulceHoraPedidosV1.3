@@ -462,7 +462,8 @@ if (document.querySelector("#verPedidosProduccion") != null) {
     /* document.querySelectorAll(".pedidoProdentregado").forEach((card) => {
       card.style.display = "flex";
     }) */
-    window.location.href = "/panel/produccion/fabrica/tabla"
+
+    window.location.href = `/panel/produccion/${window.lector}/tabla`;
   });
 }
 

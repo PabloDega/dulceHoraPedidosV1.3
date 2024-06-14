@@ -8,7 +8,6 @@
             <th>Numero</th>
             <th>Fecha Pedido</th>
             <th>Fecha Entrega</th>
-            <th>Local</th>
             <th>Monto</th>
             <th>Estado</th>
             <th>Mensajes</th>
@@ -18,7 +17,6 @@
     <tbody>
         <%produccion = produccion.reverse();
         produccion.forEach((pedido) => {
-            let local = locales.find(local => local.id == pedido.local);
             let estiloEstado = "txtVerde"
             if(pedido.estado == "aceptado"){
                 estiloEstado = "txtAzul";
@@ -32,11 +30,10 @@
                 <td><%=pedido.id%></td>
                 <td><%=pedido.fecha.toLocaleDateString()%></td>
                 <td><%=pedido.fechaentrega%></td>
-                <td><%=local.nombre%></td>
                 <td><%=monetarizar(pedido.total)%></td>
                 <td class="<%=estiloEstado%>"><%=pedido.estado%></td>
-                <td><%if(pedido.mensajes.length > 0 && pedido.buzon == "mensajeLocal"){%><img src="/im/mensaje.svg" alt="inbox"><%}%></td>
-                <td><span class="btn btnVerde btnAbrirPedido" data-id="<%=pedido.id%>" data-lector="fabrica">abrir</span></td>
+                <td><%if(pedido.mensajes.length > 0 && pedido.buzon == "mensajeFabrica"){%><img src="/im/mensaje.svg" alt="inbox"><%}%></td>
+                <td><span class="btn btnVerde btnAbrirPedido" data-id="<%=pedido.id%>" data-lector="local">abrir</span></td>
             </tr>
         <%})%>
     </tbody>

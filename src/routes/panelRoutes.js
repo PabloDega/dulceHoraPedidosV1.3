@@ -82,9 +82,9 @@ router.post("/usuarios/editar", auth.authSupervisor, validar.validarUsuariosUpda
 
 router.get("/usuarios/eliminar", auth.authSupervisor, panelControllers.usuariosEliminar);
 
-router.get("/pedidos", panelControllers.pedidos);
+// router.get("/pedidos", panelControllers.pedidos);
 
-router.post("/pedidos", validar.validarPedidoEstadoChain, panelControllers.pedidosEstado);
+// router.post("/pedidos", validar.validarPedidoEstadoChain, panelControllers.pedidosEstado);
 
 // router.get("/actividad", panelControllers.actividad);
 
@@ -98,6 +98,8 @@ router.post("/produccion/local", auth.authAdmin, validar.validarStringsChain, pa
 
 router.post("/produccion/local/updateEstado", auth.authAdmin, validar.validarStringsChain, panelControllers.pedidoProduccionUpdateEstado);
 
+router.get("/produccion/local/tabla", auth.authAdmin, panelControllers.pedidoProduccionLocalTabla);
+
 router.get("/produccion/nueva", auth.authAdmin, panelControllers.pedidoProduccionNuevo);
 
 router.post("/produccion/nueva", auth.authAdmin, panelControllers.pedidoProduccionInsert);
@@ -110,9 +112,9 @@ router.get("/produccion/fabrica/tabla", auth.authSupervisor, panelControllers.pe
 
 router.post("/produccion/fabrica/updateEstado", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionUpdateEstado);
 
-router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionEditar);
+router.get("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionEditar);
 
-router.post("/produccion/editar", auth.authAdmin, validar.validarProduccionUpdateChain, panelControllers.pedidoProduccionUpdate);
+router.post("/produccion/editar", auth.authSupervisor, validar.validarProduccionUpdateChain, panelControllers.pedidoProduccionUpdate);
 
 router.post("/produccion/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
 

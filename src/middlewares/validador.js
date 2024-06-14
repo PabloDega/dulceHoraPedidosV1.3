@@ -340,7 +340,7 @@ const validarStringsChain = [
     .escape()
     .isString(),
   body("minimos")
-    .notEmpty().withMessage("Todos los campos son obligatorios")
+    .optional({ values: "falsy" })
     .trim()
     .escape()
     .isString(),

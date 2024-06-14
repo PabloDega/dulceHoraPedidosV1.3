@@ -57,12 +57,13 @@ const productosTabla = async (req, res) => {
 };
 
 const productosEditar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/productos/tabla");
+  // ticket 001
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/productos/tabla?error=query1");
   }
   let data = await servicesProductos.getProductoLocal(req.query.id);
   if(data === undefined){
-    return res.redirect("/panel/productos/tabla");
+    return res.redirect("/panel/productos/tabla?error=query2");
   }
   let dataCategorias = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/editarProducto", {
@@ -139,10 +140,10 @@ const productosInsert = async (req, res) => {
 };
 
 const productosEliminar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/productos/tabla");
+  // ticket 001/2
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/productos/tabla?error=query1");
   }
-  // manejar error
   await servicesProductos.deleteProductoLocal(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de Producto", `Id de pord: ${req.query.id}`);
   return res.redirect("/panel/productos/tabla");
@@ -185,13 +186,13 @@ const categoriasInsert = async (req, res) => {
 };
 
 const categoriasEditar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/categorias");
+  // ticket 001/3
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/categorias?error=query1");
   }
-  let id = req.query.id;
-  let data = await servicesProductos.getCategoria(id);
+  let data = await servicesProductos.getCategoria(req.query.id);
   if(data === undefined){
-    return res.redirect("/panel/categorias");
+    return res.redirect("/panel/categorias?error=query2");
   }
   res.render(__basedir + "/src/views/pages/editarCategoria", {
     data,
@@ -216,10 +217,10 @@ const categoriasUpdate = async (req, res) => {
 };
 
 const categoriasEliminar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/categorias");
+  // ticket 001/4
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/categorias?error=query1");
   }
-  // manejar error
   await servicesProductos.deleteCategoria(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de categoria", `Id de cat: ${req.query.id}`);
 
@@ -265,12 +266,13 @@ const local = async (req, res) => {
 };
 
 const localEditar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/local");
+  // ticket 001/5
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/local?error=query1");
   }
   let data = await servicesLocal.getLocal(req.query.id);
   if(data === undefined){
-    return res.redirect("/panel/local");
+    return res.redirect("/panel/local?error=query2");
   }
   const servicios = await servicesServicios.getServicios();
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega2(data.entrega);
@@ -344,22 +346,23 @@ const localInsert = async (req, res) => {
 };
 
 const localEliminar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/local");
+  // ticket 001/6
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/local?error=query1");
   }
-  //manejar error
   await servicesLocal.deleteLocal(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de local", `Id de local: ${req.query.id}`);
   return res.redirect("/panel/local");
 };
 
 const localDatosFiscales = async (req, res) => {
+  // ticket 001/7
   if(!req.query.id || isNaN(parseInt(req.query.id))){
-    return res.redirect("/panel/local");
+    return res.redirect("/panel/local?error=query1");
   }
   const local = await servicesLocal.getLocal(req.query.id);
   if(local === undefined){
-    return res.redirect("/panel/local");
+    return res.redirect("/panel/local?error=query2");
   }
   const datosFiscales = await servicesLocal.getDatosFiscales(req.query.id);
   res.render(__basedir + "/src/views/pages/editarLocalFiscal", {
@@ -562,13 +565,13 @@ const usuariosInsert = async (req, res) => {
 };
 
 const usuariosEditar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/usuarios");
+  // ticket 001/8
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/usuarios?error=query1");
   }
-  let usuario = req.query.id;
-  let data = await servicesUsuarios.getUsuario(usuario);
+  let data = await servicesUsuarios.getUsuario(req.query.id);
   if(data === undefined){
-    return res.redirect("/panel/usuarios");
+    return res.redirect("/panel/usuarios?error=query2");
   }
   res.render(__basedir + "/src/views/pages/editarUsuario", {
     data,
@@ -583,27 +586,27 @@ const usuariosUpdate = async (req, res) => {
 };
 
 const usuariosEliminar = async (req, res) => {
+  // ticket 001/9
   if(!req.query.id){
-    return res.redirect("/panel/usuarios");
+    return res.redirect("/panel/usuarios?error=query1");
   }
-  // manejar error
   await servicesUsuarios.deleteUsuario(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de usuario", `Usuario eliminado: ${req.query.id}`);
 
   return res.redirect("/panel/usuarios");
 };
 
-const pedidos = async (req, res) => {
+/* const pedidos = async (req, res) => {
   let dataPedido;
   let dataMensajes;
   let idLocal = req.session.userLocal;
-  if(req.query.id){
+  if(req.query.id && !isNaN(parseInt(req.query.id))){
+    // ticket 003
     const dataPedidoCheck = await servicesPedidos.getPedido(req.query.id);
     if(dataPedidoCheck.local === idLocal){
       dataPedido = dataPedidoCheck;
       dataMensajes = await servicesChat.getMensajes(req.query.id);
-/*       await actividadMiddleware.actividadUser(req.session.userLog, idLocal, req.query.id, "Lectura", "");
- */
+      // await actividadMiddleware.actividadUser(req.session.userLog, idLocal, req.query.id, "Lectura", "");
     }
   }
   let dataPedidos = await servicesPedidos.getPedidos(idLocal);
@@ -619,13 +622,13 @@ const pedidos = async (req, res) => {
     userRol: req.session.userRol,
     local,
   });
-};
+}; */
 
-const pedidosEstado = async (req, res) => {
+/* const pedidosEstado = async (req, res) => {
   await servicesPedidos.updateEstadoPedidos(req.body.id, req.body.estado);
-/*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, req.body.id, "Estado", req.body.estado);
- */  return res.redirect("/panel/pedidos");
-};
+  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, req.body.id, "Estado", req.body.estado);
+ return res.redirect("/panel/pedidos");
+}; */
 
 const actividad = async(req, res) => {
   let page;
@@ -753,7 +756,14 @@ const pedidoProduccionLocal = async(req, res) => {
   let categoriasHistoricas = [];
   let dataPedido;
   if(req.query.id){
+    // ticket 001/10
+    if(isNaN(parseInt(req.query.id))){
+      return res.redirect("/panel/produccion/Local?error=query1")
+    }
     const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
+    if(dataPedidoCheck.local == "x"){
+      return res.redirect("/panel/produccion/Local?error=query1")
+    }
     if(dataPedidoCheck.local == req.session.userLocal){
       if(dataPedidoCheck.buzon == "mensajeFabrica"){
         await servicesProduccion.mensajeProduccionLeido(req.query.id)
@@ -793,6 +803,18 @@ const pedidoProduccionAgregarMensajeLocal = async(req, res) => {
   await servicesProduccion.agregarMensajeProduccion(req.body.pedidoProdNum, mensajes, req.body.emisorMensaje)
   return res.redirect(req.originalUrl);
 }
+
+const pedidoProduccionLocalTabla = async(req, res) => {
+  const produccion = await servicesProduccion.getProduccionLocal(req.session.userLocal);
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
+  res.render(__basedir + "/src/views/pages/tablaProduccionLocal", {
+    produccion,
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
 
 const pedidoProduccionFabrica = async(req, res) => {
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
@@ -945,17 +967,18 @@ const pedidoProduccionUpdateEstado = async(req, res) => {
 }
 
 const pedidoProduccionEditar = async(req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel");
+  // ticket 001/11
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/produccion/fabrica?error=query1");
   }
-  let productos = await servicesProductosFabrica.getProductosFabricaActivos();
   let pedido = await servicesProduccion.getProduccionPedido(req.query.id);
   if(pedido === undefined){
-    return res.redirect("/panel");
+    return res.redirect("/panel/produccion/fabrica?error=query2");
   }
   if(req.session.userRol == "admin" && pedido.estado !== "personalizado"){
-    return res.redirect("/panel");
+    return res.redirect("/panel/produccion/fabrica?error=produccion1");
   }
+  let productos = await servicesProductosFabrica.getProductosFabricaActivos();
   let locales = await servicesLocal.getLocalesHistoricos();
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
@@ -1015,14 +1038,15 @@ const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
 }
 
 const pedidoProduccionPersonalizadoCrear = async (req, res) => {
+  // ticket 001/27
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    return res.redirect("/panel/produccion/personalizado/nuevo")
+    return res.redirect("/panel/produccion/personalizado/nuevo?error=validacion1")
   }
   let data = {};
   data.fecha = await produccionMiddleware.fechaProduccionNormalizada(req.body.fecha);
   data.local = req.body.local;
-  data.minimos = req.body.minimos;
+  data.minimos = req.body.minimos || "false";
   let proxId = await servicesProductos.lastId("produccion");
   await servicesProduccion.insertPedidoProduccionPersonalizado(data);
   await servicesActividad.insertActividad(req.session.userLocal, proxId, req.session.userLog, "Alta de pedido personalizado", "");
@@ -1079,15 +1103,16 @@ const productosFabricaInsert = async(req, res) => {
 }
 
 const productosFabricaEditar = async(req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/productosFabrica");
+  // ticket 001/12
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/productosFabrica?error=query1");
+  }
+  let productoFabrica = await servicesProductosFabrica.getProductoFabrica(req.query.id);
+  if(productoFabrica == undefined){
+    return res.redirect("/panel/productosFabrica?error=query2");
   }
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const sectores = await servicesProductosFabrica.getSectoresFabrica();
-  let productoFabrica = await servicesProductosFabrica.getProductoFabrica(req.query.id);
-  if(productoFabrica == undefined){
-    return res.redirect("/panel/productosFabrica");
-  }
   res.render(__basedir + "/src/views/pages/editarProductoFabrica", {
     valoresForm: productoFabrica,
     categorias,
@@ -1098,8 +1123,15 @@ const productosFabricaEditar = async(req, res) => {
 }
 
 const productosFabricaUpdate = async(req, res) => {
+  // ticket 001/13
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/productosFabrica?error=query1")
+  }
   // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
-  let codigoOriginal = await servicesProductos.getProductoFabrica(req.body.id);
+  let codigoOriginal = await servicesProductosFabrica.getProductoFabrica(req.query.id);
+  if(codigoOriginal === undefined){
+    return res.redirect("/panel/productosFabrica?error=query1")
+  }
   let buscarDuplicados = {error: false}
   if(codigoOriginal.codigo != req.body.codigo){
     let productos = await servicesProductosFabrica.getProductosFabrica();
@@ -1122,18 +1154,16 @@ const productosFabricaUpdate = async(req, res) => {
       userRol: req.session.userRol,
     });
   }
-  if(!req.query.id){
-    return res.redirect("/panel/productosFabrica")
-  }
+
   await servicesProductosFabrica.updateProductoFabrica(req.body, req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de producto fabrica", `Id de prod: ${req.query.id}`);
-
   return res.redirect("/panel/productosFabrica");
 }
 
 const productosFabricaEliminar = async(req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/productosFabrica")
+  // ticket 001/14
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/productosFabrica?error=query1")
   }
   await servicesProductosFabrica.deleteProductoFabrica(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de producto fabrica", `Id de prod: ${req.query.id}`);
@@ -1174,12 +1204,13 @@ const categoriasFabricaInsert = async(req, res) => {
 }
 
 const categoriasFabricaEditar = async(req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/categoriasFabrica")
+  // ticket 001/15
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/categoriasFabrica?error=query1")
   }
   let categoriaFabrica = await servicesProductosFabrica.getCategoriaFabrica(req.query.id);
   if(categoriaFabrica === undefined){
-    return res.redirect("/panel/categoriasFabrica")
+    return res.redirect("/panel/categoriasFabrica?error=query2")
   }
   res.render(__basedir + "/src/views/pages/editarCategoriaFabrica", {
     valoresForm: categoriaFabrica,
@@ -1191,12 +1222,13 @@ const categoriasFabricaEditar = async(req, res) => {
 const categoriasFabricaUpdate = async(req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
+    // ticket 001/16
     if(!req.query.id){
-      return res.redirect("/panel/categoriasFabrica")
+      return res.redirect("/panel/categoriasFabrica?error=query1")
     }
     let categoriaFabrica = await servicesProductosFabrica.getCategoriaFabrica(req.query.id);
     if(categoriaFabrica === undefined){
-      return res.redirect("/panel/categoriasFabrica")
+      return res.redirect("/panel/categoriasFabrica?error=query2")
     }
     return res.render(__basedir + "/src/views/pages/editarCategoriaFabrica", {
       errores: errores.array({ onlyFirstError: true }),
@@ -1205,8 +1237,9 @@ const categoriasFabricaUpdate = async(req, res) => {
       userRol: req.session.userRol,
     })
   }
-  if(!req.query.id){
-    return res.redirect("/panel/categoriasFabrica")
+  // ticket 001/17
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/categoriasFabrica?error=query1")
   }
   await servicesProductosFabrica.updateCategoriaFabrica(req.body, req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de categoria fabrica", `Id de cat: ${req.query.id}`);
@@ -1214,8 +1247,9 @@ const categoriasFabricaUpdate = async(req, res) => {
 }
 
 const categoriasFabricaEliminar = async(req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/categoriasFabrica")
+  // ticket 001/18
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/categoriasFabrica?error=query1")
   }
   await servicesProductosFabrica.deleteCategoriaFabrica(req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de categoria fabrica", `Id de cat: ${req.query.id}`);
@@ -1232,12 +1266,13 @@ const fotosProductosFabrica = async(req, res) => {
 }
 
 const nuevaFotoProductoFabrica = async(req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/productosFabrica/fotos");
+  // ticket 001/19
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/productosFabrica/fotos?error=query1");
   }
   const data = await servicesProductosFabrica.getProductoFabrica(req.query.id);
   if(data === undefined){
-    return res.redirect("/panel/productosFabrica/fotos");
+    return res.redirect("/panel/productosFabrica/fotos?error=query2");
   }
   res.render(__basedir + "/src/views/pages/nuevaFotoProductoFabrica", {
     data,
@@ -1276,20 +1311,21 @@ const reportesSelector = async(req, res) => {
 }
 
 const reportePlanta = async(req, res) => {
+  // ticket 001/20
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=query2");
   }
   //verificar validez del sector
   const sectores = await servicesProductosFabrica.getSectoresFabrica();
   if(sectores.find((dato) => dato.sector == req.query.sector) === undefined){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=query2");
   }
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   // Verifica si la fecha contiene pedidos
   if(pedidos.length == 0){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=reporte1");
   }
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
@@ -1309,26 +1345,32 @@ const reportePlanta = async(req, res) => {
 }
 
 const reportePlantaCategoriasEliminar = async(req, res) => {
+  // ticket 001/21
   if(!req.query.id || isNaN(parseInt(req.query.id))){
-    return res.redirect("/panel/produccion/reportes/categorias")
+    return res.redirect("/panel/produccion/reportes/categorias?error=query1")
   }
   await servicesReportes.deleteCategoriasReporte(req.query.id);
   return res.redirect("/panel/produccion/reportes/categorias");
 }
 
 const reportePedidos = async(req, res) => {
+  // ticket 001/22
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=query1");
   }
   //verificar validez del sector
   const sectores = await servicesProductosFabrica.getSectoresFabrica();
   if(sectores.find((dato) => dato.sector == req.query.sector) === undefined){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=query2");
   }
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
-  const locales = await servicesLocal.getLocalesHistoricos();
   const pedidos = await servicesReportes.getReportes(fecha);
+  // Verifica si la fecha contiene pedidos
+  if(pedidos.length == 0){
+    return res.redirect("/panel/produccion/reportes?error=reporte1");
+  }
+  const locales = await servicesLocal.getLocalesHistoricos();
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos(); 
@@ -1345,18 +1387,23 @@ const reportePedidos = async(req, res) => {
 }
 
 const reporteValorizado = async(req, res) => {
+  // ticket 001/23
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=query1");
   }
   //verificar validez del sector
   const sectores = await servicesProductosFabrica.getSectoresFabrica();
   if(sectores.find((dato) => dato.sector == req.query.sector) === undefined){
-    return res.redirect("/panel/produccion/reportes");
+    return res.redirect("/panel/produccion/reportes?error=query2");
   }
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
-  const locales = await servicesLocal.getLocalesHistoricos();
   const pedidos = await servicesReportes.getReportes(fecha);
+  // Verifica si la fecha contiene pedidos
+  if(pedidos.length == 0){
+    return res.redirect("/panel/produccion/reportes?error=reporte1");
+  }
+  const locales = await servicesLocal.getLocalesHistoricos();
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
   const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
   // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
@@ -1487,8 +1534,9 @@ const servicioInsert = async (req, res) => {
 }
 
 const servicioEliminar = async (req, res) => {
+  // ticket 001/24
   if(!req.query.id || isNaN(parseInt(req.query.id))){
-    return res.redirect("/panel/servicios");
+    return res.redirect("/panel/servicios?error=query1");
   }
   await servicesServicios.deleteServicio(req.query.id);
   return res.redirect("/panel/servicios");
@@ -1517,8 +1565,9 @@ const facturacion = async(req, res) => {
   }
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const serviciosLocal = JSON.parse(local.servicios);
+  // ticket 001/25
   if(!serviciosLocal.facturacion){
-    return res.redirect("/panel");
+    return res.redirect("/panel?error=acceso1");
   }
   // Verificar que esté la caja abierta para facturar
   const registrosDeCaja = await servicesCaja.getCierres(req.session.userLocal);
@@ -1526,17 +1575,17 @@ const facturacion = async(req, res) => {
   if(estadoDeCaja.error){
     return res.redirect(`/panel?error=${estadoDeCaja.errorCode}`);
   }
+
   let data = false;
   if(req.query.id){
     if(isNaN(parseInt(req.query.id))){
-      return res.redirect("/panel/facturacion");
+      return res.redirect("/panel/facturacion?error=query1");
+    }
+    let senia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
+    if(senia !== undefined){
+      data = senia;
     } else {
-      let senia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
-      if(senia !== undefined){
-        data = senia;
-      } else {
-        return res.redirect("/panel/facturacion");
-      }
+      return res.redirect("/panel/facturacion?error=query2");
     }
   }
   // checkear datos fiscales para habilitar facturacion
@@ -1906,12 +1955,13 @@ const facturacionRegistrosSenias = async (req, res) => {
 }
 
 const facturacionSeniasActualizarEstado = async (req, res) => {
+  // ticket 001/26
   if(isNaN(parseInt(req.query.id)) && (req.query.accion !== "registrar" || req.query.accion !== "cancelar")){
-    return res.redirect("/panel/facturacion/registros/senias");
+    return res.redirect("/panel/facturacion/registros/senias?error=query1");
   }
   const datosSenia = await servicesFacturacion.getSenia(req.session.userLocal, req.query.id);
   if(datosSenia == undefined){
-    return res.redirect("/panel/facturacion/registros/senias");
+    return res.redirect("/panel/facturacion/registros/senias?error=query2");
   }
   let observaciones = JSON.parse(datosSenia.observaciones);
   if(req.query.accion === "registrar"){
@@ -1954,12 +2004,13 @@ const facturacionFabricaBotonesInsert = async(req, res) => {
 }
 
 const facturacionFabricaBotonesEditar = async (req, res) => {
-  if(!req.query.id){
-    return res.redirect("/panel/facturacion/fabrica/botones");
+  // ticket 001/27
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/facturacion/fabrica/botones?error=query1");
   }
   let data = await servicesFacturacion.getBotonFacturacion(req.query.id);
   if(data === undefined){
-    return res.redirect("/panel/facturacion/fabrica/botones");
+    return res.redirect("/panel/facturacion/fabrica/botones?error=query2");
   }
   const productos = await servicesProductos.getProductosLocal();
   res.render(__basedir + "/src/views/pages/editarBotonFacturacion", {
@@ -2244,7 +2295,6 @@ const localCierreDeCajaAperturaInsert = async (req, res) => {
 const localCierreDeCajaCerrar = async (req, res) => {
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect(`/panel/local/caja/cierre?errores=2`);
-    
   }
   const registro = await servicesCaja.getCierresxId(req.session.userLocal, req.query.id);
   if(registro.length !== 1){
@@ -2408,14 +2458,15 @@ module.exports = {
   usuariosEditar,
   usuariosUpdate,
   usuariosEliminar,
-  pedidos,
-  pedidosEstado,
+  // pedidos,
+  // pedidosEstado,
   actividad,
   actividadToda,
   actividadTodaFiltro,
   stockForm,
   stockUpdate,
   pedidoProduccionLocal,
+  pedidoProduccionLocalTabla,
   pedidoProduccionFabrica,
   pedidoProduccionFabricaTabla,
   pedidoProduccionAgregarMensajeLocal,

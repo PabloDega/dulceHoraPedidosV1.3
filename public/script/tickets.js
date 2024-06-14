@@ -6,16 +6,28 @@ function monetarizar(valor) {
   return valor;
 }
 
+async function crearHora(fecha){
+  let hora = dobleDigito(fecha.getHours());
+  let minutos = dobleDigito(fecha.getMinutes());
+  let segundos = dobleDigito(fecha.getSeconds());
+  let dato = hora + ":" + minutos + ":" + segundos
+  return dato;
+}
+const dobleDigito = (numero) => {
+  if(numero < 10){
+      numero = "0" + numero.toString();
+  }
+  return numero;
+}
+
 async function crearComprobanteSenia(id) {
   document.querySelector("#factTickets").style.display = "flex";
   let factura = await fetch(`/panel/facturacion/comprobante/parcial?id=${id}`, { method: "GET" });
   factura = await factura.json();
   // capturar error
   let fecha = new Date(factura.fechaevento);
-  fecha = fecha.toLocaleDateString()
-  let fechaHora = factura.fechaevento.split("T");
-  fechaHora[1] = fechaHora[1].split(".");
-  let hora = fechaHora[1][0];
+  let hora = await crearHora(fecha);
+  fecha = fecha.toLocaleDateString();
   let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
@@ -62,10 +74,8 @@ async function crearComprobanteComanda(id) {
   factura = await factura.json();
   // capturar error
   let fecha = new Date(factura.fechaevento);
-  fecha = fecha.toLocaleDateString()
-  let fechaHora = factura.fechaevento.split("T");
-  fechaHora[1] = fechaHora[1].split(".");
-  let hora = fechaHora[1][0];
+  let hora = await crearHora(fecha);
+  fecha = fecha.toLocaleDateString();
   let detalle = JSON.parse(factura.detalle);
   let textoDetalles = "";
   detalle.forEach((item) => {
@@ -144,10 +154,9 @@ async function crearComprobanteCAE(id) {
   let punto = factura.ptoventa.toString().padStart(3, "0");
   let numero = factura.numero.toString().padStart(7, "0");
   let fecha = new Date(factura.fechaevento);
+  let hora = await crearHora(fecha);
   fecha = fecha.toLocaleDateString();
   let fechaHora = factura.fechaevento.split("T");
-  fechaHora[1] = fechaHora[1].split(".");
-  let hora = fechaHora[1][0];
   let destinatario = "A Consumidor Final"
   if(factura.tipo == 1){
     destinatario = "Dest: " + factura.receptor;
