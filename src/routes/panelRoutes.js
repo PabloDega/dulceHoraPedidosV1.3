@@ -112,9 +112,9 @@ router.get("/produccion/fabrica/tabla", auth.authSupervisor, panelControllers.pe
 
 router.post("/produccion/fabrica/updateEstado", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionUpdateEstado);
 
-router.get("/produccion/editar", auth.authSupervisor, panelControllers.pedidoProduccionEditar);
+router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionEditar);
 
-router.post("/produccion/editar", auth.authSupervisor, validar.validarProduccionUpdateChain, panelControllers.pedidoProduccionUpdate);
+router.post("/produccion/editar", auth.authAdmin, validar.validarProduccionUpdateChain, panelControllers.pedidoProduccionUpdate);
 
 router.post("/produccion/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
 

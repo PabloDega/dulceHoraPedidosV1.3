@@ -3,7 +3,7 @@ const crearObjApertura = async (datos, usuario) => {
     fecha.setHours(fecha.getHours() - 3);
 
     // ajuste para BBD testing TestAdjust
-    fecha.setHours(fecha.getHours() +5);
+    // fecha.setHours(fecha.getHours() +5);
     
     let apertura = {
         fecha,
@@ -21,7 +21,7 @@ const crearObjCierre = async (datos, usuario) => {
   fecha.setHours(fecha.getHours() - 3);
 
   // ajuste para BBD testing TestAdjust
-  fecha.setHours(fecha.getHours() +5);
+  // fecha.setHours(fecha.getHours() +5);
 
   let apertura = {
       fecha,
