@@ -204,7 +204,12 @@ const validarUsuariosChain = [
   body("local")
     .trim()
     .escape()
-    .isString().withMessage("Error en el campo 'Local', por favor recargar la página"),
+    .isNumeric().withMessage("Error en el campo 'Local', por favor recargar la página"),
+  body("ubicacionUser")
+    .notEmpty().withMessage("El campo 'ubicacion' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Error en el campo 'ubicacion', por favor recargar la página"),
   body("rolUser")
     .notEmpty().withMessage("El campo 'Rol' es obligatorio")
     .trim()
@@ -213,6 +218,16 @@ const validarUsuariosChain = [
 ];
 
 const validarUsuariosUpdateChain = [
+  body("id")
+    .notEmpty().withMessage("El campo 'ID' es obligatorio")
+    .trim()
+    .escape()
+    .isString().withMessage("Formato del campo 'ID' incorrecto"),
+  body("password")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .isStrongPassword({minSymbols: 0, minUppercase: 0, minLength: 6, minLowercase: 1, minNumbers: 1}).withMessage("La contraseña debe tener un mínimo de 6 caracteres, y por lo menos 1 número"),
   body("rolUser")
     .notEmpty().withMessage("El campo 'Rol' es obligatorio")
     .trim()

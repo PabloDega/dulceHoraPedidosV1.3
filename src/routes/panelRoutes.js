@@ -82,6 +82,11 @@ router.post("/usuarios/editar", auth.authSupervisor, validar.validarUsuariosUpda
 
 router.get("/usuarios/eliminar", auth.authSupervisor, panelControllers.usuariosEliminar);
 
+router.get("/usuarios/local", auth.authAdmin, panelControllers.usuariosLocal);
+
+router.get("/usuarios/local/nuevo", auth.authAdmin, panelControllers.usuariosLocalNuevo);
+
+
 // router.get("/pedidos", panelControllers.pedidos);
 
 // router.post("/pedidos", validar.validarPedidoEstadoChain, panelControllers.pedidosEstado);

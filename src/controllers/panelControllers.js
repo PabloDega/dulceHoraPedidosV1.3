@@ -527,9 +527,9 @@ const fotosNuevaSubida = async (req, res) => {
 };
 
 const usuarios = async (req, res) => {
-  let data = await servicesUsuarios.getUsuarios();
+  let usuarios = await servicesUsuarios.getUsuarios();
   res.render(__basedir + "/src/views/pages/usuarios", {
-    data,
+    usuarios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -547,6 +547,15 @@ const usuariosNuevo = async (req, res) => {
 
 const usuariosInsert = async (req, res) => {
   const errores = validationResult(req);
+  // Capturar error si ubicacion fabrica y local !0
+  if(req.body.ubicacionUser == "local" && req.body.local == 0){
+    let respuesta = {
+      error: true,
+      msg: "Debe seleccionar un local para el usuario",
+    }
+    errores.errors.push(respuesta);
+  }
+  
   if (!errores.isEmpty()) {
     let locales = await servicesLocal.getLocales();
     return res.render(__basedir + "/src/views/pages/nuevoUsuario", {
@@ -573,7 +582,9 @@ const usuariosEditar = async (req, res) => {
   if(data === undefined){
     return res.redirect("/panel/usuarios?error=query2");
   }
+  let locales = await servicesLocal.getLocales();
   res.render(__basedir + "/src/views/pages/editarUsuario", {
+    locales,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -581,7 +592,40 @@ const usuariosEditar = async (req, res) => {
 };
 
 const usuariosUpdate = async (req, res) => {
+  const errores = validationResult(req);
+
+  if(req.body.password !== ""){
+    if(req.body.password !== req.body.passwordrep){
+      let respuesta = {
+        error: true,
+        msg: "Las contraseñas no coinciden",
+      }
+      errores.errors.push(respuesta);
+    } else {
+      req.body.passHash = await hashearPassword(req.body.password);
+    }
+  }
+
+  if (!errores.isEmpty()) {
+    // ticket 001/8
+    if(!req.query.id || isNaN(parseInt(req.query.id))){
+      return res.redirect("/panel/usuarios?error=query1");
+    }
+    let data = await servicesUsuarios.getUsuario(req.query.id);
+    if(data === undefined){
+      return res.redirect("/panel/usuarios?error=query2");
+    }
+    let locales = await servicesLocal.getLocales();
+    res.render(__basedir + "/src/views/pages/editarUsuario", {
+      locales,
+      data,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+
   await servicesUsuarios.updateUsuario(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de usuario", `Usuario modificado: ${req.body.usuario}`);
   return res.redirect("/panel/usuarios");
 };
 
@@ -594,6 +638,28 @@ const usuariosEliminar = async (req, res) => {
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de usuario", `Usuario eliminado: ${req.query.id}`);
 
   return res.redirect("/panel/usuarios");
+};
+
+const usuariosLocal = async (req, res) => {
+  const usuarios = await servicesUsuarios.getUsuariosLocal(req.session.userLocal);
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
+  res.render(__basedir + "/src/views/pages/usuarios", {
+    usuarios,
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
+
+const usuariosLocalNuevo = async (req, res) => {
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
+  res.render(__basedir + "/src/views/pages/nuevoUsuarioLocal", {
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
 };
 
 /* const pedidos = async (req, res) => {
@@ -2458,6 +2524,8 @@ module.exports = {
   usuariosEditar,
   usuariosUpdate,
   usuariosEliminar,
+  usuariosLocal,
+  usuariosLocalNuevo,
   // pedidos,
   // pedidosEstado,
   actividad,

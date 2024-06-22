@@ -1,24 +1,4 @@
 // Eventos menu
-if (document.querySelector("#productos") != null) {
-  document
-    .querySelector("#productos")
-    .addEventListener("click", () => (location.href = "/panel/productos/tabla"));
-}
-if (document.querySelector("#precios") != null) {
-  document
-    .querySelector("#precios")
-    .addEventListener("click", () => (location.href = "/panel/precios"));
-}
-if (document.querySelector("#facturacion") != null) {
-  document
-    .querySelector("#facturacion")
-    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica"));
-}
-if (document.querySelector("#facturacionLocal") != null) {
-  document
-    .querySelector("#facturacionLocal")
-    .addEventListener("click", () => (location.href = "/panel/facturacion"));
-}
 if (document.querySelector("#facturacionLocalGastos") != null) {
   document
     .querySelector("#facturacionLocalGastos")
@@ -33,26 +13,6 @@ if (document.querySelector("#facturacionLocalProdPropios") != null) {
   document
     .querySelector("#facturacionLocalProdPropios")
     .addEventListener("click", () => (location.href = "/panel/facturacion/local/productos/personalizados"));
-}
-if (document.querySelector("#local") != null) {
-  document
-    .querySelector("#local")
-    .addEventListener("click", () => (location.href = "/panel/local"));
-}
-if (document.querySelector("#fotos") != null) {
-  document
-    .querySelector("#fotos")
-    .addEventListener("click", () => (location.href = "/panel/fotos"));
-}
-if (document.querySelector("#usuarios") != null) {
-  document
-    .querySelector("#usuarios")
-    .addEventListener("click", () => (location.href = "/panel/usuarios"));
-}
-if (document.querySelector("#actividadToda") != null) {
-  document
-    .querySelector("#actividadToda")
-    .addEventListener("click", () => (location.href = "/panel/actividadToda"));
 }
 if (document.querySelector("#pedidos") != null) {
   document
@@ -69,29 +29,8 @@ if (document.querySelector("#actividad") != null) {
     .querySelector("#actividad")
     .addEventListener("click", () => (location.href = "/panel/actividad"));
 }
-if (document.querySelector("#produccionLocal") != null) {
-  document
-    .querySelector("#produccionLocal")
-    .addEventListener("click", () => (location.href = "/panel/produccion/local"));
-}
-if (document.querySelector("#produccionFabrica") != null) {
-  document
-    .querySelector("#produccionFabrica")
-    .addEventListener("click", () => (location.href = "/panel/produccion/fabrica"));
-}
-if (document.querySelector("#fotosFabrica") != null) {
-  document.querySelector("#fotosFabrica").addEventListener("click", () => (location.href = "/panel/productosFabrica/fotos"));
-}
-if (document.querySelector("#reportesFabrica") != null) {
-  document.querySelector("#reportesFabrica").addEventListener("click", () => (location.href = "/panel/produccion/reportes"));
-}
-if (document.querySelector("#productosFabrica") != null) {
-  document.querySelectorAll("#productosFabrica").forEach((boton) => {
-    boton.addEventListener("click", () => (location.href = "/panel/productosFabrica"));
-  })
-}
-if (document.querySelector("#preciosFabrica") != null) {
-  document.querySelector("#preciosFabrica").addEventListener("click", () => (location.href = "/panel/productosFabrica/precios"));
+if (document.querySelector("#verProductosFabrica") != null) {
+  document.querySelector("#verProductosFabrica").addEventListener("click", () => (location.href = "/panel/productosFabrica"));
 }
 if (document.querySelector("#verCategoriaFabrica") != null) {
   document
@@ -152,31 +91,6 @@ if (document.querySelector("#backListaLocalEliminar") != null) {
   document
     .querySelectorAll("#backListaLocalEliminar")
     .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
-}
-if (document.querySelector("#backListaUsuarioEditar") != null) {
-  document
-    .querySelectorAll("#backListaUsuarioEditar")
-    .forEach((boton) =>
-      boton.addEventListener(
-        "click",
-        (e) => (location.href = "/panel/usuarios/editar?id=" + e.target.dataset.id)
-      )
-    );
-}
-if (document.querySelector("#backListaUsuarioEliminar") != null) {
-  document
-    .querySelectorAll("#backListaUsuarioEliminar")
-    .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
-}
-if (document.querySelector("#nuevoUsuario") != null) {
-  document
-    .querySelector("#nuevoUsuario")
-    .addEventListener("click", () => (location.href = "/panel/usuarios/nuevo"));
-}
-if (document.querySelector("#verUsuario") != null) {
-  document
-    .querySelector("#verUsuario")
-    .addEventListener("click", () => (location.href = "/panel/usuarios"));
 }
 if (document.querySelector("#nuevoLocal") != null) {
   document
@@ -321,7 +235,6 @@ if (document.querySelector(".pedidosProdCard") != null) {
     })
   );
 }
-
 // Toggle precio de docena en editar/nuevo producto
 function editProdtoggleUnidad(e) {
   /* let precioDocenaInput = document.querySelector("#preciodocena");
@@ -359,7 +272,6 @@ function editProdtoggleUnidad(e) {
 
   }
 }
-
 function editProdListaVariedad() {
   let lista = document.querySelector("#variedades");
   const span = document.createElement("span");
@@ -369,12 +281,10 @@ function editProdListaVariedad() {
   lista.appendChild(span);
   editProdEventsListener();
 }
-
 // Funcion eliminar variedad en editar/nuevo producto
 function editProdEliminarVariedad(e) {
   document.querySelector("#variedad" + e.target.dataset.id).remove();
 }
-
 // funcion eventos editar/nuevo producto
 function editProdEventsListener() {
   if (document.querySelector("#editProdNuevaVariedad") != null) {
@@ -389,7 +299,6 @@ function editProdEventsListener() {
   }
 }
 editProdEventsListener();
-
 // confirmar elimincacion
 function confirmaEliminar(data) {
   let popScreen = document.querySelector("#popScreen");
@@ -422,17 +331,17 @@ if (document.querySelector(".fila") != null) {
   );
 }
 // Activar y desactivar select de local en usuarios
-if (document.querySelector("#rolUser") != null) {
-  document.querySelector("#rolUser").addEventListener("change", (e) => {
-    if(e.target.value == "produccion"){
-      document.querySelector("#localUser").disabled = true;
-      document.querySelector("#localUserProduccion").disabled = false;
-    } else {
-      document.querySelector("#localUser").disabled = false;
-      document.querySelector("#localUserProduccion").disabled = true;
-    }
-  })
-}
+  /* if (document.querySelector("#rolUser") != null) {
+    document.querySelector("#rolUser").addEventListener("change", (e) => {
+      if(e.target.value == "produccion"){
+        document.querySelector("#localUser").disabled = true;
+        document.querySelector("#localUserProduccion").disabled = false;
+      } else {
+        document.querySelector("#localUser").disabled = false;
+        document.querySelector("#localUserProduccion").disabled = true;
+      }
+    })
+  } */
 
 // ocultar menu en modo supervisor, excepto en panel home
 let vistaMenu = "flex";
@@ -568,13 +477,6 @@ if (document.querySelector("#factFabBotonesNuevo") != null) {
     .querySelector("#factFabBotonesNuevo")
     .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica/botones/nuevo"));
 }
-
-if (document.querySelector("#facturacionRegistros") != null) {
-  document
-    .querySelector("#facturacionRegistros")
-    .addEventListener("click", () => (location.href = "/panel/facturacion/registros"));
-}
-
 if (document.querySelector("#chatProduccionSend") != null) {
   document
     .querySelector("#chatProduccionSend").addEventListener("submit", () => {
@@ -599,7 +501,6 @@ if (document.querySelector("#nuevoPedidoPersonalizado") != null) {
     });
 }
 if (document.querySelector("#reportePlantaCategoriasEliminar") != null) {
-  document
-    .querySelectorAll("#reportePlantaCategoriasEliminar")
+  document.querySelectorAll("#reportePlantaCategoriasEliminar")
     .forEach((boton) => boton.addEventListener("click", (e) => confirmaEliminar(e.target.dataset)));
 }

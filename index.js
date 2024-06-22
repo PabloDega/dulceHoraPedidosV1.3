@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 // CHAT SERVER
 
 // const actividad = require(__basedir + "/src/middlewares/actividad");
-const chatUsuarios = require("./src/services/chat");
+/* const chatUsuarios = require("./src/services/chat");
 const validar = require("./src/middlewares/validador");
 const io = require("socket.io")(server);
 
@@ -127,7 +127,7 @@ io.on("connection", (socket) => {
     io.emit("localOnline", { local: local.id });
   })
 
-});
+}); */
 
 //-----------------------------
 // Server
@@ -137,4 +137,4 @@ server.listen(PORT, () => {
   console.log("Servidor activo en http://localhost:" + PORT);
 });
 
-module.exports = { io };
+//module.exports = { io };

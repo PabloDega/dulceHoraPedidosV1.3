@@ -1,9 +1,17 @@
+<%let idVer = "verUsuarioLocal";
+let idNuevo = "nuevoUsuarioLocal";
+if(userRol == "supervisor" || userRol == "produccion"){
+    idVer = "verUsuario";
+    idNuevo = "nuevoUsuario";
+}%>
 <div class="backMenu" class="backSubMenu">
     <h2>Usuarios</h2>
-    <div class="backCard <%= menu %>" id="verUsuario">
-        <h1>Ver Usuario</h1>
+    <div class="backCard <%= menu %>" id="<%=idVer%>">
+        <h1>Ver Usuarios</h1>
     </div>
-    <div class="backCard <%= menu %>" id="nuevoUsuario">
+    <div class="backCard <%= menu %>" id="<%=idNuevo%>">
         <h1>Nuevo Usuario</h1>
     </div>
 </div>
+
+<script defer src="/script/menuUsuarios.js"></script>

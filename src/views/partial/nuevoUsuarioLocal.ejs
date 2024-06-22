@@ -1,0 +1,28 @@
+<form action="" method="post" class="editor" id="usuarioForm">
+  <h1>Nuevo Usuario</h1>
+  <span>
+    <label for="usuario">Usuario</label>
+    <input type="text" name="usuario" id="usuario" value="" />
+  </span>
+  <span>
+      <label for="password">Contraseña</label>
+      <input type="password" name="password" id="password" placeholder="contraseña" autocomplete="new-password"><br>
+  </span>
+  <span>
+    <label for="password">Repetir Contraseña</label>
+    <input type="password" name="passwordrep" id="passwordrep" placeholder="repetir contraseña" autocomplete="off"><br>
+  </span>
+  <span id="refPassword">La contraseña debe tener un mínimo de 6 caracteres y contener por lo menos 1 número</span>
+  <span>
+    <label for="rolUser">Rol</label>
+    <select name="rolUser" id="rolUser">
+        <option value="" selected disabled>-Seleccione un Rol-</option>
+        <option value="admin">Administración</option>
+        <option value="atencion">Atención</option>
+    </select>
+  </span>
+  <span>
+    <input type="submit" value="Crear" />
+  </span>
+</form>
+<script defer src="/script/nuevoUsuarioLocal.js"></script>

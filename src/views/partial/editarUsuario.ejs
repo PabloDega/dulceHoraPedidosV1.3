@@ -1,40 +1,70 @@
-<form action="" method="post" class="editor" id="nuevoUsuario">
+<form action="" method="post" class="editor" id="usuarioForm">
     <h1>Editar Usuario</h1>
     <span>
       <label for="usuario">Usuario</label>
-      <input type="text" name="usuario" id="usuario" value="<%= data.usuario %>" readonly />
+      <input type="text" id="usuario" value="<%= data.usuario %>" readonly disabled />
     </span>
     <span>
-      <label for="local">Local</label>
-      <input type="text" name="local" id="local" value="<%= data.local %>" readonly />
+      <label for="password">Nueva Contraseña</label>
+      <input type="password" name="password" id="password" placeholder="contraseña" autocomplete="new-password"><br>
+    </span>
+    <span>
+      <label for="password">Repetir Nueva Contraseña</label>
+      <input type="password" name="passwordrep" id="passwordrep" placeholder="repetir contraseña" autocomplete="off"><br>
+    </span>
+    <span id="refPassword">La contraseña debe tener un mínimo de 6 caracteres y contener por lo menos 1 número</span>
+    <span>
+      <%let ubicacion = "Fábrica";
+      if(data.rol == "admin" || data.rol == "atencion"){
+        ubicacion = "Local";
+      }%>
+      <label for="ubicacionUser">Ubicación</label>
+      <input type="text" value="<%= ubicacion %>" readonly disabled>
     </span>
     <span>
       <% let selectedNone = "";
         let selectedAdmin = "";
         let selectedAtencion = "";
+        let selectedProd = "";
+        let selectedSuper = "";
         switch (data.rol) {
-          case "":
-            selectedNone = "selected";
-            break;
           case "admin":
             selectedAdmin = "selected";
             break;
           case "atencion":
             selectedAtencion = "selected";
             break;
+          case "produccion":
+            selectedProd = "selected";
+            break;
+          case "supervisor":
+            selectedSuper = "selected";
+            break;
           default:
             break;
         } %>
       <label for="rolUser">Rol</label>
           <select name="rolUser" id="rolUser">
-              <option value="" <%= selectedNone %>>-Seleccione un Rol-</option>
+              <%if(ubicacion == "Local"){%>
               <option value="admin" <%= selectedAdmin %>>Administración</option>
               <option value="atencion" <%= selectedAtencion %>>Atención</option>
+              <%} else {%>
+              <option value="produccion" <%= selectedProd %>>Producción</option>
+              <option value="supervisor" <%= selectedSuper %>>Supervisión</option>
+              <%}%>
           </select>
       </label>
     </span>
+    <%if(data.rol == "admin" || data.rol == "atencion"){
+      let local = locales.find(loc => loc.id == data.local)%>
+    <span>
+      <label for="local">Local</label>
+      <input type="text" name="local" id="local" value="<%= local.nombre %>" readonly disabled/>
+    </span>
+    <%}%>
     <span>
       <input type="submit" value="Modificar" />
     </span>
+    <input type="hidden" name="id" value="<%=data.id%>">
   </form>
-  
+  <script src="/script/passwords.js"></script>

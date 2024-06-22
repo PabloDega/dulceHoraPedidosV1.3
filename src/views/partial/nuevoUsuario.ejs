@@ -1,56 +1,41 @@
-<form action="" method="post" class="editor" id="nuevoUsuario">
+<form action="" method="post" class="editor" id="usuarioForm">
   <h1>Nuevo Usuario</h1>
   <span>
     <label for="usuario">Usuario</label>
-    <input type="text" name="usuario" id="usuario" value="<%= valoresForm.usuario %>" />
+    <input type="text" name="usuario" id="usuario" value="" />
   </span>
   <span>
     <label for="passUser">Contraseña</label>
     <input type="password" name="passUser" id="passUser" />
   </span>
   <span>
-    <% let selectedNone = "";
-      let selectedAdmin = "";
-      let selectedAtencion = "";
-      let selectedProduccion = "";
-      switch (valoresForm.rolUser) {
-        case "":
-          selectedNone = "selected";
-          break;
-        case "admin":
-          selectedAdmin = "selected";
-          break;
-        case "atencion":
-          selectedAtencion = "selected";
-          break;
-        case "produccion":
-          selectedProduccion = "selected";
-          break;
-        default:
-          break;
-      } %>
-    <label for="rolUser">Rol</label>
-        <select name="rolUser" id="rolUser">
-            <option value="" <%= selectedNone %>>-Seleccione un Rol-</option>
-            <option value="admin" <%= selectedAdmin %>>Administración</option>
-            <option value="atencion" <%= selectedAtencion %>>Atención</option>
-            <option value="produccion" <%= selectedProduccion %>>Producción</option>
-        </select>
-    </label>
+    <label for="ubicacionUser">Ubicación</label>
+    <select name="ubicacionUser" id="ubicacionUser">
+      <option value="" disabled selected>-Seleccionar-</option>
+      <option value="fabrica">Fábrica</option>
+      <option value="local">Local</option>
+    </select>  
   </span>
   <span>
-    <label for="loca">Local</label>
+    <label for="rolUser">Rol</label>
+    <select name="rolUser" id="rolUser" disabled>
+        <option value="" selected disabled>-Seleccione un Rol-</option>
+    </select>
+  </span>
+  <span style="display: none;" id="localUserSelect">
+    <label for="local">Local</label>
     <select name="local" id="localUser">
-        <option value="" selected>-Seleccione un local-</option>
+        <option value="0" selected>-Seleccione un local-</option>
         <% locales.forEach((local) => {%>
-        <option value="<%=local.id%>" <% if(valoresForm.local == local.nombre){%> <%= "selected" %> <%}%>><%=local.nombre%></option>
+          <option value="<%=local.id%>"><%=local.nombre%></option>
         <% }) %>
     </select>
   </span>
-  <span>
+  <!-- <span>
     <input type="text" name="local" id="localUserProduccion" disabled value="0" style="display: none;">
-  </span>
+  </span> -->
   <span>
     <input type="submit" value="Crear" />
   </span>
 </form>
+<script src="/script/nuevoUsuario.js"></script>

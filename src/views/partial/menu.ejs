@@ -27,7 +27,7 @@
       <img src="/im/backventas.svg" alt="icono productos" />
       <h1>Facturacion</h1>
     </div>
-    <div class="backCard <%= menu %>" id="local">
+    <div class="backCard <%= menu %>" id="locales">
       <img src="/im/backlocal.svg" alt="icono local" />
       <h1>Locales</h1>
     </div>
@@ -58,7 +58,7 @@
     </div>
   <!-- </span> -->
 <% } %>
-<% if(userRol == "admin" ||userRol == "atencion"){ %>
+<% if(userRol == "admin" || userRol == "atencion"){ %>
   <div class="backMenu noImprimir" id="admin">
   <!-- <div class="backCard <%= //menu %>" id="stock" style="display: none;">
     <img src="/im/backprods.svg" alt="icono stock" />
@@ -89,9 +89,11 @@
         if(!servicios.facturacion && !servicios.pedidos){%>
           <b>Usted no posee servicios activos, por favor comunicarse con administración</b>
         <%};%>
-  <!-- <div class="backCard <%= //menu %>" id="actividad" style="display: none;">
-    <img src="/im/backactividad.svg" alt="icono actividad" />
-    <h1>Actividad</h1>
-  </div> -->
+        <div class="backCard <%= menu %>" id="usuariosLocal">
+          <img src="/im/backuser.svg" alt="icono usuarios" />
+          <h1>Usuarios</h1>
+        </div>
 <% } %>
 </div>
+
+<script defer src="/script/menu.js"></script>

@@ -1705,3 +1705,9 @@ form.editor#cierreCajaCierre table tbody tr input{
 #cierreCajaReporteContenedor > div  h2{
   font-size: 1.2em;
 }
+#backRender #refPassword{
+  display: none;
+  font-size: 0.8em;
+  border-left: 4px solid red;
+  padding-left: 0.5em;
+}

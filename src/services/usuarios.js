@@ -11,9 +11,9 @@ const getUsuarios = async() => {
   }
 };
 
-const getUsuario = async(usuario) => {
+const getUsuario = async(id) => {
   try {
-    const rows  = await conectar.query('SELECT * FROM usuarios WHERE ?', { usuario });
+    const rows  = await conectar.query('SELECT * FROM usuarios WHERE ?', { id });
     return rows[0][0];
   } catch (error) {
     throw error;
@@ -24,7 +24,7 @@ const getUsuario = async(usuario) => {
 
 const insertUsuario = async(datos) => {
   try {
-    const answer = await conectar.query(`INSERT INTO usuarios (usuario, pass, rol, local) VALUES ("${datos.usuario}", "${datos.passHash}", "${datos.rolUser}", "${datos.local}")`);
+    await conectar.query(`INSERT INTO usuarios (usuario, pass, rol, local) VALUES ("${datos.usuario}", "${datos.passHash}", "${datos.rolUser}", "${datos.local}")`);
   } catch (error) {
     throw error;
   } finally {
@@ -34,7 +34,11 @@ const insertUsuario = async(datos) => {
 
 const updateUsuario = async(datos) => {
   try {
-    const answer = await conectar.query(`UPDATE usuarios SET rol = "${datos.rolUser}", local = "${datos.local}" WHERE usuario = "${datos.usuario}"`);
+    if(datos.passHash){
+      await conectar.query(`UPDATE usuarios SET rol = "${datos.rolUser}", pass = "${datos.passHash}" WHERE id = "${datos.id}"`);
+    } else {
+      await conectar.query(`UPDATE usuarios SET rol = "${datos.rolUser}" WHERE id = "${datos.id}"`);
+    }
   } catch (error) {
     throw error;
   } finally {
@@ -42,9 +46,20 @@ const updateUsuario = async(datos) => {
   }
 };
 
-const deleteUsuario = async(usuario) => {
+const deleteUsuario = async(id) => {
   try {
-    const answer = await conectar.query(`DELETE FROM usuarios WHERE usuario = "${usuario}"`);
+    await conectar.query(`DELETE FROM usuarios WHERE id = "${id}"`);
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+};
+
+const getUsuariosLocal = async(local) => {
+  try {
+    const usuarios  = await conectar.query(`SELECT * FROM usuarios WHERE local = "${local}"`);
+    return usuarios[0];
   } catch (error) {
     throw error;
   } finally {
@@ -59,4 +74,5 @@ module.exports = {
   insertUsuario,
   updateUsuario,
   deleteUsuario,
+  getUsuariosLocal,
 }
