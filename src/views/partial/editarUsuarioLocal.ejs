@@ -14,19 +14,8 @@
     </span>
     <span id="refPassword">La contraseña debe tener un mínimo de 6 caracteres y contener por lo menos 1 número</span>
     <span>
-      <%let ubicacion = "Fábrica";
-      if(data.rol == "admin" || data.rol == "atencion"){
-        ubicacion = "Local";
-      }%>
-      <label for="ubicacionUser" class="off">Ubicación</label>
-      <input type="text" value="<%= ubicacion %>" readonly disabled>
-    </span>
-    <span>
-      <% let selectedNone = "";
-        let selectedAdmin = "";
+      <%let selectedAdmin = "";
         let selectedAtencion = "";
-        let selectedProd = "";
-        let selectedSuper = "";
         switch (data.rol) {
           case "admin":
             selectedAdmin = "selected";
@@ -34,37 +23,20 @@
           case "atencion":
             selectedAtencion = "selected";
             break;
-          case "produccion":
-            selectedProd = "selected";
-            break;
-          case "supervisor":
-            selectedSuper = "selected";
-            break;
           default:
             break;
         } %>
       <label for="rolUser">Rol</label>
           <select name="rolUser" id="rolUser">
-              <%if(ubicacion == "Local"){%>
               <option value="admin" <%= selectedAdmin %>>Administración</option>
               <option value="atencion" <%= selectedAtencion %>>Atención</option>
-              <%} else {%>
-              <option value="produccion" <%= selectedProd %>>Producción</option>
-              <option value="supervisor" <%= selectedSuper %>>Supervisión</option>
-              <%}%>
           </select>
       </label>
     </span>
-    <%if(data.rol == "admin" || data.rol == "atencion"){
-      let local = locales.find(loc => loc.id == data.local)%>
-    <span>
-      <label for="local" class="off">Local</label>
-      <input type="text" name="local" id="local" value="<%= local.nombre %>" readonly disabled/>
-    </span>
-    <%}%>
     <span>
       <input type="submit" value="Modificar" />
     </span>
-    <input type="hidden" name="id" value="<%=data.id%>">
+    <input type="hidden" name="id" value="<%= data.id %>">
+    <input type="hidden" name="local" value="<%= data.local %>">
   </form>
   <script src="/script/passwords.js"></script>

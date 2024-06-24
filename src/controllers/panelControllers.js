@@ -555,6 +555,18 @@ const usuariosInsert = async (req, res) => {
     }
     errores.errors.push(respuesta);
   }
+
+  if(req.body.password !== ""){
+    if(req.body.password !== req.body.passwordrep){
+      let respuesta = {
+        error: true,
+        msg: "Las contraseñas no coinciden",
+      }
+      errores.errors.push(respuesta);
+    } else {
+      req.body.passHash = await hashearPassword(req.body.password);
+    }
+  }
   
   if (!errores.isEmpty()) {
     let locales = await servicesLocal.getLocales();
@@ -566,9 +578,7 @@ const usuariosInsert = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  let datos = req.body;
-  datos.passHash = await hashearPassword(datos.passUser);
-  await servicesUsuarios.insertUsuario(datos);
+  await servicesUsuarios.insertUsuario(req.body);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de usuario", `Usuario creado: ${req.body.usuario}`);
   return res.redirect("/panel/usuarios");
 };
@@ -617,6 +627,7 @@ const usuariosUpdate = async (req, res) => {
     }
     let locales = await servicesLocal.getLocales();
     res.render(__basedir + "/src/views/pages/editarUsuario", {
+      errores: errores.array({ onlyFirstError: true }),
       locales,
       data,
       usuario: req.session.userLog,
@@ -644,7 +655,7 @@ const usuariosLocal = async (req, res) => {
   const usuarios = await servicesUsuarios.getUsuariosLocal(req.session.userLocal);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
 
-  res.render(__basedir + "/src/views/pages/usuarios", {
+  res.render(__basedir + "/src/views/pages/usuariosLocal", {
     usuarios,
     servicios,
     usuario: req.session.userLog,
@@ -659,7 +670,136 @@ const usuariosLocalNuevo = async (req, res) => {
     servicios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
+    userLocal: req.session.userLocal,
   });
+};
+
+const usuariosLocalInsert = async (req, res) => {
+  req.body.local = req.session.userLocal;
+  const errores = validationResult(req);
+
+  if(req.body.rolUser !== ""){
+    if(req.body.rolUser !== "atencion" && req.body.rolUser !== "admin"){
+      let respuesta = {
+        error: true,
+        msg: "Rol de usuario incompatible",
+      }
+      errores.errors.push(respuesta);
+    }
+  }
+
+  if(req.body.password !== ""){
+    if(req.body.password !== req.body.passwordrep){
+      let respuesta = {
+        error: true,
+        msg: "Las contraseñas no coinciden",
+      }
+      errores.errors.push(respuesta);
+    } else {
+      req.body.passHash = await hashearPassword(req.body.password);
+    }
+  }
+  
+  if (!errores.isEmpty()) {
+    const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+    return res.render(__basedir + "/src/views/pages/nuevoUsuarioLocal", {
+      servicios,
+      errores: errores.array({ onlyFirstError: true }),
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+      userLocal: req.session.userLocal,
+    });
+  }
+
+  await servicesUsuarios.insertUsuario(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de usuario", `Usuario creado: ${req.body.usuario}`);
+  return res.redirect("/panel/usuarios/local");
+};
+
+const usuariosLocalEliminar = async (req, res) => {
+  // ticket 001/28
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/usuarios/local?error=query1");
+  }
+  let usuario = await servicesUsuarios.getUsuario(req.query.id);
+  if(usuario === undefined){
+    return res.redirect("/panel/usuarios/local?error=query2");
+     // check usuario para verificar si corresponde al local
+  } else if(usuario.local !== req.session.userLocal){
+    return res.redirect("/panel/usuarios/local?error=query2");
+  }
+ 
+  await servicesUsuarios.deleteUsuario(req.query.id);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Baja de usuario", `Usuario eliminado: ${usuario.usuario}`);
+  return res.redirect("/panel/usuarios/local");
+};
+
+const usuariosLocalEditar = async (req, res) => {
+  // ticket 001/8
+  if(!req.query.id || isNaN(parseInt(req.query.id))){
+    return res.redirect("/panel/usuarios/local?error=query1");
+  }
+  let usuario = await servicesUsuarios.getUsuario(req.query.id);
+  if(usuario === undefined){
+    return res.redirect("/panel/usuarios/local?error=query2");
+  // check usuario para verificar si corresponde al local
+  } else if(usuario.local !== req.session.userLocal){
+    return res.redirect("/panel/usuarios/local?error=query2");
+  }
+  const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+
+  res.render(__basedir + "/src/views/pages/editarUsuarioLocal", {
+    data: usuario,
+    servicios,
+    usuario: req.session.userLog,
+    userRol: req.session.userRol,
+  });
+};
+
+const usuariosLocalUpdate = async (req, res) => {
+
+  let usuario = await servicesUsuarios.getUsuario(req.body.id);
+  if(usuario === undefined){
+    return res.redirect("/panel/usuarios/local?error=query2");
+  } else if(usuario.local !== req.session.userLocal){
+    return res.redirect("/panel/usuarios/local?error=query2");
+  }
+
+  const errores = validationResult(req);
+
+  if(req.body.password !== ""){
+    if(req.body.password !== req.body.passwordrep){
+      let respuesta = {
+        error: true,
+        msg: "Las contraseñas no coinciden",
+      }
+      errores.errors.push(respuesta);
+    } else {
+      req.body.passHash = await hashearPassword(req.body.password);
+    }
+  }
+
+  if (!errores.isEmpty()) {
+    if(!req.query.id || isNaN(parseInt(req.query.id))){
+      return res.redirect("/panel/usuarios/local?error=query1");
+    }
+    let usuario = await servicesUsuarios.getUsuario(req.query.id);
+    if(usuario === undefined){
+      return res.redirect("/panel/usuarios/local?error=query2");
+    } else if(usuario.local !== req.session.userLocal){
+      return res.redirect("/panel/usuarios/local?error=query2");
+    }
+    res.render(__basedir + "/src/views/pages/editarUsuarioLocal", {
+      errores: errores.array({ onlyFirstError: true }),
+      data: usuario,
+      usuario: req.session.userLog,
+      userRol: req.session.userRol,
+    });
+  }
+
+  await servicesUsuarios.updateUsuario(req.body);
+  await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de usuario", `Usuario modificado: ${req.body.usuario}`);
+  return res.redirect("/panel/usuarios/local");
 };
 
 /* const pedidos = async (req, res) => {
@@ -2526,6 +2666,10 @@ module.exports = {
   usuariosEliminar,
   usuariosLocal,
   usuariosLocalNuevo,
+  usuariosLocalInsert,
+  usuariosLocalEliminar,
+  usuariosLocalEditar,
+  usuariosLocalUpdate,
   // pedidos,
   // pedidosEstado,
   actividad,

@@ -196,7 +196,7 @@ const validarUsuariosChain = [
           throw new Error("Nombre de usuario en uso");
         }
     }),
-  body("passUser")
+  body("password")
     .notEmpty().withMessage("El campo 'Contraseña' es obligatorio")
     .trim()
     .escape()
@@ -205,11 +205,6 @@ const validarUsuariosChain = [
     .trim()
     .escape()
     .isNumeric().withMessage("Error en el campo 'Local', por favor recargar la página"),
-  body("ubicacionUser")
-    .notEmpty().withMessage("El campo 'ubicacion' es obligatorio")
-    .trim()
-    .escape()
-    .isString().withMessage("Error en el campo 'ubicacion', por favor recargar la página"),
   body("rolUser")
     .notEmpty().withMessage("El campo 'Rol' es obligatorio")
     .trim()
