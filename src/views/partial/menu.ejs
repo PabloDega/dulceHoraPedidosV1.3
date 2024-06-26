@@ -5,15 +5,18 @@
 
 <% if(userRol == "supervisor" || userRol == "produccion"){%>
   <div class="backMenu noImprimir" id="supervisor">
-    <h2>Administracion</h2>
-    <div class="backCard <%= menu %>" id="usuarios">
-      <img src="/im/backuser.svg" alt="icono usuarios" />
-      <h1>Usuarios</h1>
-    </div>
-    <div class="backCard <%= menu %>" id="actividadToda">
-      <img src="/im/backactividad.svg" alt="icono actividad" />
-      <h1>Actividad</h1>
-    </div>
+    <% if(userRol == "supervisor"){%>
+      <h2>Administracion</h2>
+      <div class="backCard <%= menu %>" id="usuarios">
+        <img src="/im/backuser.svg" alt="icono usuarios" />
+        <h1>Usuarios</h1>
+      </div>
+      
+        <div class="backCard <%= menu %>" id="actividadToda">
+        <img src="/im/backactividad.svg" alt="icono actividad" />
+        <h1>Actividad</h1>
+      </div>
+    <%}%>
     <h2>Locales</h2>
     <div class="backCard <%= menu %>" id="productos">
       <img src="/im/backprods.svg" alt="icono productos" />
@@ -23,10 +26,12 @@
       <img src="/im/backprecios.svg" alt="icono precios" />
       <h1>Precios</h1>
     </div>
-    <div class="backCard <%= menu %>" id="facturacion">
-      <img src="/im/backventas.svg" alt="icono productos" />
-      <h1>Facturacion</h1>
-    </div>
+    <% if(userRol == "supervisor"){%>
+      <div class="backCard <%= menu %>" id="facturacion">
+        <img src="/im/backventas.svg" alt="icono productos" />
+        <h1>Facturacion</h1>
+      </div>
+    <%}%>
     <div class="backCard <%= menu %>" id="locales">
       <img src="/im/backlocal.svg" alt="icono local" />
       <h1>Locales</h1>
@@ -70,30 +75,45 @@
   </div> -->
 <% } %>
 <% if(userRol == "admin"){
-      if(servicios.pedidos){%>
-        <div class="backCard <%= menu %>" id="produccionLocal">
-          <img src="/im/backproduccion.svg" alt="icono produccion" />
-          <h1>Pedidos Produccion</h1>
-        </div>
-        <%};
-      if(servicios.facturacion){%>
-        <div class="backCard <%= menu %>" id="facturacionLocal" >
-          <img src="/im/backventas.svg" alt="icono facturacion" />
-          <h1>Facturacion</h1>
-        </div>
-        <div class="backCard <%= menu %>" id="facturacionRegistros" >
-          <img src="/im/backreporte.svg" alt="icono registros" />
-          <h1>Administrar</h1>
-        </div>
-        <%};
-        if(!servicios.facturacion && !servicios.pedidos){%>
-          <b>Usted no posee servicios activos, por favor comunicarse con administración</b>
-        <%};%>
-        <div class="backCard <%= menu %>" id="usuariosLocal">
-          <img src="/im/backuser.svg" alt="icono usuarios" />
-          <h1>Usuarios</h1>
-        </div>
-<% } %>
+    if(servicios.pedidos){%>
+      <div class="backCard <%= menu %>" id="produccionLocal">
+        <img src="/im/backproduccion.svg" alt="icono produccion" />
+        <h1>Pedidos Produccion</h1>
+      </div>
+    <%};
+    if(servicios.facturacion){%>
+      <div class="backCard <%= menu %>" id="facturacionLocal" >
+        <img src="/im/backventas.svg" alt="icono facturacion" />
+        <h1>Facturacion</h1>
+      </div>
+      <div class="backCard <%= menu %>" id="facturacionRegistros" >
+        <img src="/im/backreporte.svg" alt="icono registros" />
+        <h1>Administrar</h1>
+      </div>
+    <%};
+    if(!servicios.facturacion && !servicios.pedidos){%>
+      <b>Usted no posee servicios activos, por favor comunicarse con administración</b>
+    <%};%>
+    <div class="backCard <%= menu %>" id="usuariosLocal">
+      <img src="/im/backuser.svg" alt="icono usuarios" />
+      <h1>Usuarios</h1>
+    </div>
+<%}%>
+<% if(userRol == "atencion"){
+  if(servicios.facturacion){%>
+    <div class="backCard <%= menu %>" id="facturacionLocal" >
+      <img src="/im/backventas.svg" alt="icono facturacion" />
+      <h1>Facturacion</h1>
+    </div>
+    <div class="backCard <%= menu %>" id="facturacionRegistros" >
+      <img src="/im/backreporte.svg" alt="icono registros" />
+      <h1>Administrar</h1>
+    </div>
+  <%};
+  if(!servicios.facturacion && !servicios.pedidos){%>
+    <b>Usted no posee servicios activos, por favor comunicarse con administración</b>
+  <%}
+  }%>
 </div>
 
 <script defer src="/script/menu.js"></script>

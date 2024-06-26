@@ -109,12 +109,22 @@ let reporte = JSON.parse(registro.reporte);
         </thead>
         <tbody>
             <%reporte.detalleVentasCaja.forEach((item) => {
-                let producto = productos.find((prod) => prod.id == item[1]);
                 let fraccionamiento = "Unidad";
-                if(producto.fraccionamiento == "kilo"){
-                    fraccionamiento = "kilo";
-                    item[2] = item[2]/1000
-                }%>
+                let producto;
+                if(item[0] > 99){
+                    producto = productos.find((prod) => prod.id == item[1]);
+                    if(producto.fraccionamiento == "kilo"){
+                        fraccionamiento = "kilo";
+                        item[2] = item[2]/1000
+                    }
+                } else if(item[0] < 100){
+                    producto = productosPersonalizados.find((prod) => prod.id == item[1]);
+                }
+                if(producto === undefined){
+                    console.log(`Error al buscar producto en Reporte de Caja para codigo ${item[0]} / usuario: ${usuario}`)
+                    return;
+                }
+                %>
                 <tr>
                     <td class="tablaCeldaNumero"><%=item[2]%></td>
                     <td><%=fraccionamiento%></td>

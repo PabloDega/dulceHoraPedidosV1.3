@@ -8,67 +8,67 @@ const auth = require("../middlewares/auth")
 
 router.get("/", panelControllers.index);
 
-router.get("/productos/card", auth.authSupervisor, panelControllers.productosCard);
+router.get("/productos/card", auth.authProduccion, panelControllers.productosCard);
 
-router.get("/productos/tabla", auth.authSupervisor, panelControllers.productosTabla);
+router.get("/productos/tabla", auth.authProduccion, panelControllers.productosTabla);
 
-router.get("/productos/editar", auth.authSupervisor, panelControllers.productosEditar);
+router.get("/productos/editar", auth.authProduccion, panelControllers.productosEditar);
 
-router.post("/productos/editar", auth.authSupervisor, validar.validarProductoChain, panelControllers.productosUpdate);
+router.post("/productos/editar", auth.authProduccion, validar.validarProductoChain, panelControllers.productosUpdate);
 
-router.get("/productos/nuevo", auth.authSupervisor, panelControllers.productosNuevo);
+router.get("/productos/nuevo", auth.authProduccion, panelControllers.productosNuevo);
 
-router.post("/productos/nuevo", auth.authSupervisor, validar.validarProductoChain, panelControllers.productosInsert);
+router.post("/productos/nuevo", auth.authProduccion, validar.validarProductoChain, panelControllers.productosInsert);
 
-router.get("/productos/eliminar", auth.authSupervisor, panelControllers.productosEliminar);
+router.get("/productos/eliminar", auth.authProduccion, panelControllers.productosEliminar);
 
 // router.get("/stock", panelControllers.stockForm);
 
 // router.post("/stock", panelControllers.stockUpdate);
 
-router.get("/categorias", auth.authSupervisor, panelControllers.categoriasTabla);
+router.get("/categorias", auth.authProduccion, panelControllers.categoriasTabla);
 
-router.get("/categorias/editar", auth.authSupervisor, panelControllers.categoriasEditar);
+router.get("/categorias/editar", auth.authProduccion, panelControllers.categoriasEditar);
 
-router.post("/categorias/editar", auth.authSupervisor, validar.validarNuevaCategoriaChain, panelControllers.categoriasUpdate);
+router.post("/categorias/editar", auth.authProduccion, validar.validarNuevaCategoriaChain, panelControllers.categoriasUpdate);
 
-router.get("/categorias/nueva", auth.authSupervisor, panelControllers.categoriasNueva);
+router.get("/categorias/nueva", auth.authProduccion, panelControllers.categoriasNueva);
 
-router.post("/categorias/nueva", auth.authSupervisor, validar.validarNuevaCategoriaChain, panelControllers.categoriasInsert);
+router.post("/categorias/nueva", auth.authProduccion, validar.validarNuevaCategoriaChain, panelControllers.categoriasInsert);
 
-router.get("/categorias/eliminar", auth.authSupervisor, panelControllers.categoriasEliminar);
+router.get("/categorias/eliminar", auth.authProduccion, panelControllers.categoriasEliminar);
 
-router.get("/precios", auth.authSupervisor, panelControllers.precios);
+router.get("/precios", auth.authProduccion, panelControllers.precios);
 
-router.post("/precios", auth.authSupervisor, validar.validarPreciosChain, panelControllers.preciosUpdate);
+router.post("/precios", auth.authProduccion, validar.validarPreciosChain, panelControllers.preciosUpdate);
 
-router.get("/local", auth.authSupervisor, panelControllers.local);
+router.get("/local", auth.authProduccion, panelControllers.local);
 
-router.get("/local/editar", auth.authSupervisor, panelControllers.localEditar);
+router.get("/local/editar", auth.authProduccion, panelControllers.localEditar);
 
-router.post("/local/editar", auth.authSupervisor, validar.validarLocalesChain, panelControllers.localUpdate);
+router.post("/local/editar", auth.authProduccion, validar.validarLocalesChain, panelControllers.localUpdate);
 
-router.get("/local/nuevo", auth.authSupervisor, panelControllers.localNuevo);
+router.get("/local/nuevo", auth.authProduccion, panelControllers.localNuevo);
 
-router.post("/local/nuevo", auth.authSupervisor, validar.validarLocalesChain, panelControllers.localInsert);
+router.post("/local/nuevo", auth.authProduccion, validar.validarLocalesChain, panelControllers.localInsert);
 
-router.get("/local/eliminar", auth.authSupervisor, panelControllers.localEliminar);
+router.get("/local/eliminar", auth.authProduccion, panelControllers.localEliminar);
 
-router.get("/local/fiscal", auth.authSupervisor, panelControllers.localDatosFiscales);
+router.get("/local/fiscal", auth.authProduccion, panelControllers.localDatosFiscales);
 
-router.post("/local/fiscal", auth.authSupervisor, validar.validarDatosFiscalesChain, panelControllers.localDatosFiscalesInsert);
+router.post("/local/fiscal", auth.authProduccion, validar.validarDatosFiscalesChain, panelControllers.localDatosFiscalesInsert);
 
-router.get("/fotos", auth.authSupervisor, panelControllers.fotos);
+router.get("/fotos", auth.authProduccion, panelControllers.fotos);
 
-router.get("/fotos/productos", auth.authSupervisor, panelControllers.fotosProductos);
+router.get("/fotos/productos", auth.authProduccion, panelControllers.fotosProductos);
 
-router.get("/fotos/locales", auth.authSupervisor, panelControllers.fotosLocales);
+router.get("/fotos/locales", auth.authProduccion, panelControllers.fotosLocales);
 
-router.get("/fotos/categorias", auth.authSupervisor, panelControllers.fotosCategorias);
+router.get("/fotos/categorias", auth.authProduccion, panelControllers.fotosCategorias);
 
-router.get("/fotos/nueva", auth.authSupervisor, panelControllers.fotosNueva);
+router.get("/fotos/nueva", auth.authProduccion, panelControllers.fotosNueva);
 
-router.post("/fotos/nueva", auth.authSupervisor, fileUpload.subirArchivo.single("foto"), panelControllers.fotosNuevaSubida);
+router.post("/fotos/nueva", auth.authProduccion, fileUpload.subirArchivo.single("foto"), panelControllers.fotosNuevaSubida);
 
 router.get("/usuarios", auth.authSupervisor, panelControllers.usuarios);
 
@@ -94,8 +94,6 @@ router.get("/usuarios/local/editar", auth.authAdmin, panelControllers.usuariosLo
 
 router.post("/usuarios/local/editar", auth.authAdmin, validar.validarUsuariosUpdateChain, panelControllers.usuariosLocalUpdate);
 
-
-
 // router.get("/pedidos", panelControllers.pedidos);
 
 // router.post("/pedidos", validar.validarPedidoEstadoChain, panelControllers.pedidosEstado);
@@ -118,13 +116,13 @@ router.get("/produccion/nueva", auth.authAdmin, panelControllers.pedidoProduccio
 
 router.post("/produccion/nueva", auth.authAdmin, panelControllers.pedidoProduccionInsert);
 
-router.get("/produccion/fabrica", auth.authSupervisor, panelControllers.pedidoProduccionFabrica);
+router.get("/produccion/fabrica", auth.authProduccion, panelControllers.pedidoProduccionFabrica);
 
-router.post("/produccion/fabrica", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionAgregarMensajeFabrica);
+router.post("/produccion/fabrica", auth.authProduccion, validar.validarStringsChain, panelControllers.pedidoProduccionAgregarMensajeFabrica);
 
-router.get("/produccion/fabrica/tabla", auth.authSupervisor, panelControllers.pedidoProduccionFabricaTabla);
+router.get("/produccion/fabrica/tabla", auth.authProduccion, panelControllers.pedidoProduccionFabricaTabla);
 
-router.post("/produccion/fabrica/updateEstado", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionUpdateEstado);
+router.post("/produccion/fabrica/updateEstado", auth.authProduccion, validar.validarStringsChain, panelControllers.pedidoProduccionUpdateEstado);
 
 router.get("/produccion/editar", auth.authAdmin, panelControllers.pedidoProduccionEditar);
 
@@ -132,71 +130,71 @@ router.post("/produccion/editar", auth.authAdmin, validar.validarProduccionUpdat
 
 router.post("/produccion/exportar/excel", auth.authAdmin, excelControllers.exportarExcelProduccion);
 
-router.get("/produccion/reportes", auth.authSupervisor, panelControllers.reportes);
+router.get("/produccion/reportes", auth.authProduccion, panelControllers.reportes);
 
-router.post("/produccion/reportes", auth.authSupervisor, validar.validarStringsChain, panelControllers.reportesSelector);
+router.post("/produccion/reportes", auth.authProduccion, validar.validarStringsChain, panelControllers.reportesSelector);
 
-router.get("/produccion/reportes/planta", auth.authSupervisor, panelControllers.reportePlanta);
+router.get("/produccion/reportes/planta", auth.authProduccion, panelControllers.reportePlanta);
 
 router.post("/produccion/reporte/planta/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReportePlanta);
 
-router.get("/produccion/reportes/pedidos", auth.authSupervisor, panelControllers.reportePedidos);
+router.get("/produccion/reportes/pedidos", auth.authProduccion, panelControllers.reportePedidos);
 
 router.post("/produccion/reporte/pedidos/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReportePedidos);
 
-router.get("/produccion/reportes/valorizado", auth.authSupervisor, panelControllers.reporteValorizado);
+router.get("/produccion/reportes/valorizado", auth.authProduccion, panelControllers.reporteValorizado);
 
 router.post("/produccion/reporte/valorizado/exportar/excel", auth.authAdmin, excelControllers.exportarExcelReporteValorizado);
 
-router.get("/produccion/reportes/categorias", auth.authSupervisor, panelControllers.reportePlantaCategorias);
+router.get("/produccion/reportes/categorias", auth.authProduccion, panelControllers.reportePlantaCategorias);
 
-router.get("/produccion/reportes/categorias/nueva", auth.authSupervisor, panelControllers.reportePlantaCategoriasNueva);
+router.get("/produccion/reportes/categorias/nueva", auth.authProduccion, panelControllers.reportePlantaCategoriasNueva);
 
-router.post("/produccion/reportes/categorias/nueva", auth.authSupervisor, validar.validarCategoriaReporteChain, panelControllers.reportePlantaCategoriasInsert);
+router.post("/produccion/reportes/categorias/nueva", auth.authProduccion, validar.validarCategoriaReporteChain, panelControllers.reportePlantaCategoriasInsert);
 
-router.get("/produccion/reportes/categorias/editar", auth.authSupervisor, panelControllers.reportePlantaCategoriasEditar);
+router.get("/produccion/reportes/categorias/editar", auth.authProduccion, panelControllers.reportePlantaCategoriasEditar);
 
-router.post("/produccion/reportes/categorias/editar", auth.authSupervisor, panelControllers.reportePlantaCategoriasUpdate);
+router.post("/produccion/reportes/categorias/editar", auth.authProduccion, panelControllers.reportePlantaCategoriasUpdate);
 
-router.get("/produccionreportescategorias/eliminar", auth.authSupervisor, panelControllers.reportePlantaCategoriasEliminar);
+router.get("/produccionreportescategorias/eliminar", auth.authProduccion, panelControllers.reportePlantaCategoriasEliminar);
 
-router.get("/produccion/personalizado/nuevo", auth.authSupervisor, panelControllers.pedidoProduccionPersonalizadoNuevo);
+router.get("/produccion/personalizado/nuevo", auth.authProduccion, panelControllers.pedidoProduccionPersonalizadoNuevo);
 
-router.post("/produccion/personalizado/nuevo", auth.authSupervisor, validar.validarStringsChain, panelControllers.pedidoProduccionPersonalizadoCrear);
+router.post("/produccion/personalizado/nuevo", auth.authProduccion, validar.validarStringsChain, panelControllers.pedidoProduccionPersonalizadoCrear);
 
-router.get("/productosFabrica", auth.authSupervisor, panelControllers.productosFabrica);
+router.get("/productosFabrica", auth.authProduccion, panelControllers.productosFabrica);
 
-router.get("/productosFabrica/nuevo", auth.authSupervisor, panelControllers.productosFabricaNuevo);
+router.get("/productosFabrica/nuevo", auth.authProduccion, panelControllers.productosFabricaNuevo);
 
-router.post("/productosFabrica/nuevo", auth.authSupervisor, validar.validarProductoFabricaChain, panelControllers.productosFabricaInsert);
+router.post("/productosFabrica/nuevo", auth.authProduccion, validar.validarProductoFabricaChain, panelControllers.productosFabricaInsert);
 
-router.get("/productosFabrica/editar", auth.authSupervisor, panelControllers.productosFabricaEditar);
+router.get("/productosFabrica/editar", auth.authProduccion, panelControllers.productosFabricaEditar);
 
-router.post("/productosFabrica/editar", auth.authSupervisor, validar.validarProductoFabricaChain, panelControllers.productosFabricaUpdate);
+router.post("/productosFabrica/editar", auth.authProduccion, validar.validarProductoFabricaChain, panelControllers.productosFabricaUpdate);
 
-router.get("/productosFabrica/eliminar", auth.authSupervisor, panelControllers.productosFabricaEliminar);
+router.get("/productosFabrica/eliminar", auth.authProduccion, panelControllers.productosFabricaEliminar);
 
-router.get("/categoriasFabrica", auth.authSupervisor, panelControllers.categoriasFabrica);
+router.get("/categoriasFabrica", auth.authProduccion, panelControllers.categoriasFabrica);
 
-router.get("/categoriasFabrica/nueva", auth.authSupervisor, panelControllers.categoriasFabricaNueva);
+router.get("/categoriasFabrica/nueva", auth.authProduccion, panelControllers.categoriasFabricaNueva);
 
-router.post("/categoriasFabrica/nueva", auth.authSupervisor, validar.validarCategoriaFabricaChain, panelControllers.categoriasFabricaInsert);
+router.post("/categoriasFabrica/nueva", auth.authProduccion, validar.validarCategoriaFabricaChain, panelControllers.categoriasFabricaInsert);
 
-router.get("/categoriasFabrica/editar", auth.authSupervisor, panelControllers.categoriasFabricaEditar);
+router.get("/categoriasFabrica/editar", auth.authProduccion, panelControllers.categoriasFabricaEditar);
 
-router.post("/categoriasFabrica/editar", auth.authSupervisor, validar.validarCategoriaFabricaChain, panelControllers.categoriasFabricaUpdate);
+router.post("/categoriasFabrica/editar", auth.authProduccion, validar.validarCategoriaFabricaChain, panelControllers.categoriasFabricaUpdate);
 
-router.get("/categoriasFabrica/eliminar", auth.authSupervisor, panelControllers.categoriasFabricaEliminar);
+router.get("/categoriasFabrica/eliminar", auth.authProduccion, panelControllers.categoriasFabricaEliminar);
 
-router.get("/productosFabrica/fotos", auth.authSupervisor, panelControllers.fotosProductosFabrica);
+router.get("/productosFabrica/fotos", auth.authProduccion, panelControllers.fotosProductosFabrica);
 
-router.get("/productosFabrica/fotos/nueva", auth.authSupervisor, panelControllers.nuevaFotoProductoFabrica);
+router.get("/productosFabrica/fotos/nueva", auth.authProduccion, panelControllers.nuevaFotoProductoFabrica);
 
-router.post("/productosFabrica/fotos/nueva", auth.authSupervisor, fileUpload.subirArchivo.single("foto"), panelControllers.uploadNuevaFotoProductoFabrica);
+router.post("/productosFabrica/fotos/nueva", auth.authProduccion, fileUpload.subirArchivo.single("foto"), panelControllers.uploadNuevaFotoProductoFabrica);
 
-router.get("/productosFabrica/precios", auth.authSupervisor, panelControllers.preciosProductosFabrica);
+router.get("/productosFabrica/precios", auth.authProduccion, panelControllers.preciosProductosFabrica);
 
-router.post("/productosFabrica/precios", auth.authSupervisor, validar.validarPreciosChain, panelControllers.preciosProductosFabricaUpdate);
+router.post("/productosFabrica/precios", auth.authProduccion, validar.validarPreciosChain, panelControllers.preciosProductosFabricaUpdate);
 
 router.get("/servicios", auth.authSupervisor, panelControllers.servicios);
 
@@ -206,29 +204,29 @@ router.post("/servicios/nuevo", auth.authSupervisor, validar.validarStringsChain
 
 router.get("/servicios/eliminar", auth.authSupervisor, panelControllers.servicioEliminar);
 
-router.get("/facturacion", auth.authAdmin, panelControllers.facturacion);
+router.get("/facturacion", auth.authAtencion, panelControllers.facturacion);
 
-router.post("/facturacion", auth.authAdmin, validar.validarFacturacionChain, panelControllers.facturacionPost);
+router.post("/facturacion", auth.authAtencion, validar.validarFacturacionChain, panelControllers.facturacionPost);
 
-router.post("/facturacion/padron/api", auth.authAdmin, panelControllers.facturacionConsultaPadron);
+router.post("/facturacion/padron/api", auth.authAtencion, panelControllers.facturacionConsultaPadron);
 
-router.get("/facturacion/nc", auth.authAdmin, panelControllers.facturacionNC);
+router.get("/facturacion/nc", auth.authAtencion, panelControllers.facturacionNC);
 
-router.get("/facturacion/comprobante", auth.authAdmin, panelControllers.facturacionComprobante);
+router.get("/facturacion/comprobante", auth.authAtencion, panelControllers.facturacionComprobante);
 
-router.get("/facturacion/comprobante/parcial", auth.authAdmin, panelControllers.facturacionComprobanteParcial);
+router.get("/facturacion/comprobante/parcial", auth.authAtencion, panelControllers.facturacionComprobanteParcial);
 
-router.get("/facturacion/comprobante/fiscal", auth.authAdmin, panelControllers.facturacionComprobanteFiscal);
+router.get("/facturacion/comprobante/fiscal", auth.authAtencion, panelControllers.facturacionComprobanteFiscal);
 
-router.get("/facturacion/registros", auth.authAdmin, panelControllers.facturacionRegistros);
+router.get("/facturacion/registros", auth.authAtencion, panelControllers.facturacionRegistros);
 
-router.get("/facturacion/registros/senias", auth.authAdmin, panelControllers.facturacionRegistrosSenias);
+router.get("/facturacion/registros/senias", auth.authAtencion, panelControllers.facturacionRegistrosSenias);
 
-router.get("/facturacion/registros/senias/actualizar", auth.authAdmin, panelControllers.facturacionSeniasActualizarEstado);
+router.get("/facturacion/registros/senias/actualizar", auth.authAtencion, panelControllers.facturacionSeniasActualizarEstado);
 
 router.get("/facturacion/registros/gastos", auth.authAdmin, panelControllers.gastosLocal);
 
-router.post("/facturacion/registros/gastos/nuevo", auth.authAdmin, validar.validarGastosChain, panelControllers.gastosLocalInsert);
+router.post("/facturacion/registros/gastos/nuevo", auth.authAtencion, validar.validarGastosChain, panelControllers.gastosLocalInsert);
 
 // router.get("/facturacion/registros/notadecredito", auth.authAdmin, panelControllers.facturacionNotaDeCredito);
 
@@ -260,19 +258,19 @@ router.post("/facturacion/local/productos/personalizados/editar", auth.authAdmin
 
 router.get("/facturacion/local/productos/personalizados/eliminar", auth.authAdmin, panelControllers.facturacionLocalProdPersEliminar);
 
-router.get("/local/caja/cierre", auth.authAdmin, panelControllers.localCierreDeCaja);
+router.get("/local/caja/cierre", auth.authAtencion, panelControllers.localCierreDeCaja);
 
-router.get("/local/caja/cierre/abrir", auth.authAdmin, panelControllers.localCierreDeCajaApertura);
+router.get("/local/caja/cierre/abrir", auth.authAtencion, panelControllers.localCierreDeCajaApertura);
 
-router.post("/local/caja/cierre/abrir", auth.authAdmin, validar.validarCajaChain, panelControllers.localCierreDeCajaAperturaInsert);
+router.post("/local/caja/cierre/abrir", auth.authAtencion, validar.validarCajaChain, panelControllers.localCierreDeCajaAperturaInsert);
 
-router.get("/local/caja/cierre/cerrar", auth.authAdmin, panelControllers.localCierreDeCajaCerrar);
+router.get("/local/caja/cierre/cerrar", auth.authAtencion, panelControllers.localCierreDeCajaCerrar);
 
-router.post("/local/caja/cierre/cerrar", auth.authAdmin, validar.validarCajaChain, panelControllers.localCierreDeCajaCerrarInsert);
+router.post("/local/caja/cierre/cerrar", auth.authAtencion, validar.validarCajaChain, panelControllers.localCierreDeCajaCerrarInsert);
 
-router.post("/local/caja/api", auth.authAdmin, panelControllers.localCierreDeCajaApi);
+router.post("/local/caja/api", auth.authAtencion, panelControllers.localCierreDeCajaApi);
 
-router.get("/local/caja/reporte", auth.authAdmin, panelControllers.localCierreDeCajaReporte);
+router.get("/local/caja/reporte", auth.authAtencion, panelControllers.localCierreDeCajaReporte);
 
 
 

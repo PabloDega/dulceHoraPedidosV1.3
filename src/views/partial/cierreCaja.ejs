@@ -18,7 +18,9 @@ let contador = 0;%>
                 <th>Fecha</th>
                 <th>Apertura</th>
                 <th>Cierre</th>
+                <%if(userRol === "admin"){%>
                 <th>Reporte</th>
+                <%}%>
             </tr>
         </thead>
         <tbody>
@@ -104,11 +106,14 @@ let contador = 0;%>
                     </span>
                   <%}%>  
                 </td>
+            <%if(userRol === "admin"){%>
                 <td>
                     <%if(registro.reporte !== null){%>
-                        <span data-id="<%=registro.id%>" class="btn btnNaranja cierreCajaReporte">&#128196; Reporte</span>
+                    <span data-id="<%=registro.id%>" class="btn btnNaranja cierreCajaReporteOff" style="opacity: 0.5;">&#128196; Reporte</span>
                     <%}%>
                 </td>
+            <%}%>
+                
             </tr>
             <%})%>
         </tbody>

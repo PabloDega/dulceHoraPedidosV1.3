@@ -1,4 +1,6 @@
-<h2 id="InputRegistroFacturacion" class="noImprimir">Facturacion del <input type="date" name="fechaRegFact" id="fechaRegFact" value="<%=fechaHyphen%>"></h2> 
+<%if(userRol === "admin"){%>
+    <h2 id="InputRegistroFacturacion" class="noImprimir">Facturacion del <input type="date" name="fechaRegFact" id="fechaRegFact" value="<%=fechaHyphen%>"></h2> 
+<%}%>
 <div id="contRegistroFact">
     <%  function monetarizar(valor){
             valor = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(valor);

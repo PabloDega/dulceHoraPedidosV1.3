@@ -2,14 +2,14 @@ const servicesProductos = require(__basedir + "/src/services/productos");
 const servicesProductosFabrica = require(__basedir + "/src/services/productosFabrica");
 const servicesLocal = require(__basedir + "/src/services/local");
 const servicesUsuarios = require(__basedir + "/src/services/usuarios");
-const servicesPedidos = require(__basedir + "/src/services/pedidos");
-const servicesChat = require(__basedir + "/src/services/chat");
+// const servicesPedidos = require(__basedir + "/src/services/pedidos");
+// const servicesChat = require(__basedir + "/src/services/chat");
 const servicesActividad = require(__basedir + "/src/services/actividad");
 const servicesProduccion = require(__basedir + "/src/services/produccion");
 const servicesReportes = require(__basedir + "/src/services/reportes");
 const servicesServicios = require(__basedir + "/src/services/servicios");
 const servicesFacturacion = require(__basedir + "/src/services/facturacion");
-const servicesAfip = require(__basedir + "/src/services/afip");
+// const servicesAfip = require(__basedir + "/src/services/afip");
 const servicesGastos = require(__basedir + "/src/services/gastos");
 const servicesCaja = require(__basedir + "/src/services/caja");
 const { validationResult } = require("express-validator");
@@ -2595,11 +2595,14 @@ const localCierreDeCajaReporte = async (req, res) => {
   const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
   const productos = await servicesProductos.getProductosLocalTodos();
+  const productosPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
+  // Agregar consulta de  productos personalizados y filtraros en la vista del reporte por el numero de codigo (>100)
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/cierreCajaReporte", {
     registro: registro[0],
     productos,
+    productosPersonalizados,
     servicios,
     local,
     gastos,

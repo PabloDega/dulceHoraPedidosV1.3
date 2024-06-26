@@ -445,6 +445,8 @@ function cargarBotonRapido(e) {
   codigo.dispatchEvent(event);
 }
 
+let ultimoClick = 0;
+
 async function enviarFactura(tipo) {
   // verificar estado de caja previo registro
   let estadoCaja = await fetch("/panel/local/caja/api", {
@@ -457,6 +459,13 @@ async function enviarFactura(tipo) {
     document.querySelector("#cortinaLoad").style.display = "none";
     return;
   }
+
+  // Generar delay de MS para evitar doble click
+  if(ultimoClick > Date.now() - 4000){
+    console.log("Doble emision frenada")
+    return;
+  }
+  ultimoClick = Date.now();
 
   if (tipo === "CAE") {
     if (window.impuestos === "responsable") {
