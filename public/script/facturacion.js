@@ -462,7 +462,6 @@ async function enviarFactura(tipo) {
 
   // Generar delay de MS para evitar doble click
   if(ultimoClick > Date.now() - 4000){
-    console.log("Doble emision frenada")
     return;
   }
   ultimoClick = Date.now();
