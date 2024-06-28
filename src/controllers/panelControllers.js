@@ -1888,15 +1888,15 @@ const facturacionPost = async(req, res) => {
   // verificar monto del pago
   if(req.body.tipo !== "S"){
     if(parseFloat(req.body.vuelto) < 0 && pago > 0){
-      return res.send({error: "El monto abonado no cubre el total de la factura BE", resultado: false, imprimir: false});
+      return res.send({error: "El monto abonado no cubre el total de la factura", resultado: false, imprimir: false});
       } 
   }
   // Si el pago es multiple el monto no puede generar vuelto
   if(req.body.formaDePago === "multiple"){
     if(parseFloat(req.body.vuelto) > 0){
-      return res.send({error: "El monto total abonado en pagos multiples no puede ser mayor al monto del ticket BE", resultado: false, imprimir: false});
+      return res.send({error: "El monto total abonado en pagos multiples no puede ser mayor al monto del ticket", resultado: false, imprimir: false});
       } else if(parseFloat(req.body.vuelto) < 0){
-        return res.send({error: "El monto abonado no cubre el total de la factura BE", resultado: false, imprimir: false});
+        return res.send({error: "El monto abonado no cubre el total de la factura", resultado: false, imprimir: false});
       }
   }
   // verificar que solo "efectivo" en pago multiple exceda el valor de la operacion, y que no haya montos negativos
