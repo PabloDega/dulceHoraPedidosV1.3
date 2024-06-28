@@ -77,9 +77,9 @@ router.get("/usuarios/nuevo", auth.authSupervisor, panelControllers.usuariosNuev
 router.post("/usuarios/nuevo", auth.authSupervisor, validar.validarUsuariosChain, panelControllers.usuariosInsert);
 
 router.get("/usuarios/editar", auth.authSupervisor, panelControllers.usuariosEditar);
-// ticket 005
+
 router.post("/usuarios/editar", auth.authSupervisor, validar.validarUsuariosUpdateChain, panelControllers.usuariosUpdate);
-// ticket 005
+
 router.get("/usuarios/eliminar", auth.authSupervisor, panelControllers.usuariosEliminar);
 
 router.get("/usuarios/local", auth.authAdmin, panelControllers.usuariosLocal);
@@ -87,9 +87,9 @@ router.get("/usuarios/local", auth.authAdmin, panelControllers.usuariosLocal);
 router.get("/usuarios/local/nuevo", auth.authAdmin, panelControllers.usuariosLocalNuevo);
 
 router.post("/usuarios/local/nuevo", auth.authAdmin, validar.validarUsuariosChain, panelControllers.usuariosLocalInsert);
-// ticket 005
+
 router.get("/usuarios/local/eliminar", auth.authAdmin, panelControllers.usuariosLocalEliminar);
-// ticket 005
+
 router.get("/usuarios/local/editar", auth.authAdmin, panelControllers.usuariosLocalEditar);
 
 router.post("/usuarios/local/editar", auth.authAdmin, validar.validarUsuariosUpdateChain, panelControllers.usuariosLocalUpdate);
@@ -156,7 +156,7 @@ router.get("/produccion/reportes/categorias/editar", auth.authProduccion, panelC
 
 router.post("/produccion/reportes/categorias/editar", auth.authProduccion, panelControllers.reportePlantaCategoriasUpdate);
 
-router.get("/produccionreportescategorias/eliminar", auth.authProduccion, panelControllers.reportePlantaCategoriasEliminar);
+router.get("/produccion/reportes/categorias/eliminar", auth.authProduccion, panelControllers.reportePlantaCategoriasEliminar);
 
 router.get("/produccion/personalizado/nuevo", auth.authProduccion, panelControllers.pedidoProduccionPersonalizadoNuevo);
 

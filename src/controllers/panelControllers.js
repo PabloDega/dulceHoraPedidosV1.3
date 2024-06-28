@@ -48,7 +48,9 @@ const productosCard = async (req, res) => {
 
 const productosTabla = async (req, res) => {
   let data = await servicesProductos.getProductosLocalTodos();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
   res.render(__basedir + "/src/views/pages/productos", {
+    errores,
     data,
     vista: "tabla",
     usuario: req.session.userLog,
@@ -57,7 +59,6 @@ const productosTabla = async (req, res) => {
 };
 
 const productosEditar = async (req, res) => {
-  // ticket 001
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productos/tabla?error=query1");
   }
@@ -140,7 +141,6 @@ const productosInsert = async (req, res) => {
 };
 
 const productosEliminar = async (req, res) => {
-  // ticket 001/2
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productos/tabla?error=query1");
   }
@@ -151,7 +151,9 @@ const productosEliminar = async (req, res) => {
 
 const categoriasTabla = async (req, res) => {
   let data = await servicesProductos.getCategorias();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
   res.render(__basedir + "/src/views/pages/categorias", {
+    errores,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -186,7 +188,6 @@ const categoriasInsert = async (req, res) => {
 };
 
 const categoriasEditar = async (req, res) => {
-  // ticket 001/3
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/categorias?error=query1");
   }
@@ -217,7 +218,6 @@ const categoriasUpdate = async (req, res) => {
 };
 
 const categoriasEliminar = async (req, res) => {
-  // ticket 001/4
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/categorias?error=query1");
   }
@@ -258,7 +258,9 @@ const preciosUpdate = async (req, res) => {
 
 const local = async (req, res) => {
   let data = await servicesLocal.getLocales();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
   res.render(__basedir + "/src/views/pages/local", {
+    errores,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -266,7 +268,6 @@ const local = async (req, res) => {
 };
 
 const localEditar = async (req, res) => {
-  // ticket 001/5
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/local?error=query1");
   }
@@ -346,7 +347,6 @@ const localInsert = async (req, res) => {
 };
 
 const localEliminar = async (req, res) => {
-  // ticket 001/6
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/local?error=query1");
   }
@@ -356,7 +356,6 @@ const localEliminar = async (req, res) => {
 };
 
 const localDatosFiscales = async (req, res) => {
-  // ticket 001/7
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/local?error=query1");
   }
@@ -528,7 +527,9 @@ const fotosNuevaSubida = async (req, res) => {
 
 const usuarios = async (req, res) => {
   let usuarios = await servicesUsuarios.getUsuarios();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
   res.render(__basedir + "/src/views/pages/usuarios", {
+    errores,
     usuarios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -584,7 +585,6 @@ const usuariosInsert = async (req, res) => {
 };
 
 const usuariosEditar = async (req, res) => {
-  // ticket 001/8
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/usuarios?error=query1");
   }
@@ -617,7 +617,6 @@ const usuariosUpdate = async (req, res) => {
   }
 
   if (!errores.isEmpty()) {
-    // ticket 001/8
     if(!req.query.id || isNaN(parseInt(req.query.id))){
       return res.redirect("/panel/usuarios?error=query1");
     }
@@ -641,7 +640,6 @@ const usuariosUpdate = async (req, res) => {
 };
 
 const usuariosEliminar = async (req, res) => {
-  // ticket 001/9
   if(!req.query.id){
     return res.redirect("/panel/usuarios?error=query1");
   }
@@ -654,8 +652,10 @@ const usuariosEliminar = async (req, res) => {
 const usuariosLocal = async (req, res) => {
   const usuarios = await servicesUsuarios.getUsuariosLocal(req.session.userLocal);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
 
   res.render(__basedir + "/src/views/pages/usuariosLocal", {
+    errores,
     usuarios,
     servicios,
     usuario: req.session.userLog,
@@ -717,7 +717,6 @@ const usuariosLocalInsert = async (req, res) => {
 };
 
 const usuariosLocalEliminar = async (req, res) => {
-  // ticket 001/28
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/usuarios/local?error=query1");
   }
@@ -735,7 +734,6 @@ const usuariosLocalEliminar = async (req, res) => {
 };
 
 const usuariosLocalEditar = async (req, res) => {
-  // ticket 001/8
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/usuarios/local?error=query1");
   }
@@ -962,7 +960,6 @@ const pedidoProduccionLocal = async(req, res) => {
   let categoriasHistoricas = [];
   let dataPedido;
   if(req.query.id){
-    // ticket 001/10
     if(isNaN(parseInt(req.query.id))){
       return res.redirect("/panel/produccion/Local?error=query1")
     }
@@ -983,7 +980,10 @@ const pedidoProduccionLocal = async(req, res) => {
   const locales = await servicesLocal.getLocalesHistoricos();
   const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/produccion", {
+    errores,
     data,
     categoriasHistoricas,
     dataPedido,
@@ -1027,13 +1027,15 @@ const pedidoProduccionFabrica = async(req, res) => {
   let categoriasHistoricas = [];
   let dataPedido;
   if(req.query.id){
-    const dataPedidoCheck = await servicesProduccion.getProduccionPedido(req.query.id);
-    if(dataPedidoCheck.buzon == "mensajeLocal"){
-      await servicesProduccion.mensajeProduccionLeido(req.query.id)
+    if(isNaN(parseInt(req.query.id))){
+      return res.redirect("/panel/produccion/fabrica?error=query1");
     }
     dataPedido = await servicesProduccion.getProduccionPedido(req.query.id);
     if(dataPedido.local === "x"){
-      return res.redirect("/panel/produccion/fabrica")
+      return res.redirect("/panel/produccion/fabrica?error=query2")
+    }
+    if(dataPedido.buzon == "mensajeLocal"){
+      await servicesProduccion.mensajeProduccionLeido(req.query.id)
     }
     categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
   }
@@ -1051,7 +1053,11 @@ const pedidoProduccionFabrica = async(req, res) => {
       fechasLocales.push(fechas);
     }
   }
+
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/produccion", {
+    errores,
     data,
     dataPedido,
     productos,
@@ -1173,7 +1179,6 @@ const pedidoProduccionUpdateEstado = async(req, res) => {
 }
 
 const pedidoProduccionEditar = async(req, res) => {
-  // ticket 001/11
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/produccion/fabrica?error=query1");
   }
@@ -1236,7 +1241,10 @@ const pedidoProduccionUpdate = async(req, res) => {
 
 const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
   const locales = await servicesLocal.getLocalesHistoricos();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/nuevoPedidoPersonalizado", {
+    errores,
     locales,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1244,7 +1252,6 @@ const pedidoProduccionPersonalizadoNuevo = async (req, res) => {
 }
 
 const pedidoProduccionPersonalizadoCrear = async (req, res) => {
-  // ticket 001/27
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     return res.redirect("/panel/produccion/personalizado/nuevo?error=validacion1")
@@ -1262,7 +1269,10 @@ const pedidoProduccionPersonalizadoCrear = async (req, res) => {
 
 const productosFabrica = async(req, res) => {
   let data = await servicesProductosFabrica.getProductosFabrica();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/productosFabrica", {
+    errores,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1309,7 +1319,6 @@ const productosFabricaInsert = async(req, res) => {
 }
 
 const productosFabricaEditar = async(req, res) => {
-  // ticket 001/12
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productosFabrica?error=query1");
   }
@@ -1329,7 +1338,6 @@ const productosFabricaEditar = async(req, res) => {
 }
 
 const productosFabricaUpdate = async(req, res) => {
-  // ticket 001/13
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productosFabrica?error=query1")
   }
@@ -1367,7 +1375,6 @@ const productosFabricaUpdate = async(req, res) => {
 }
 
 const productosFabricaEliminar = async(req, res) => {
-  // ticket 001/14
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productosFabrica?error=query1")
   }
@@ -1378,7 +1385,10 @@ const productosFabricaEliminar = async(req, res) => {
 
 const categoriasFabrica = async(req, res) => {
   let data = await servicesProductosFabrica.getCategoriasFabrica();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/categoriasFabrica", {
+    errores,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1410,7 +1420,6 @@ const categoriasFabricaInsert = async(req, res) => {
 }
 
 const categoriasFabricaEditar = async(req, res) => {
-  // ticket 001/15
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/categoriasFabrica?error=query1")
   }
@@ -1428,7 +1437,6 @@ const categoriasFabricaEditar = async(req, res) => {
 const categoriasFabricaUpdate = async(req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    // ticket 001/16
     if(!req.query.id){
       return res.redirect("/panel/categoriasFabrica?error=query1")
     }
@@ -1443,7 +1451,6 @@ const categoriasFabricaUpdate = async(req, res) => {
       userRol: req.session.userRol,
     })
   }
-  // ticket 001/17
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/categoriasFabrica?error=query1")
   }
@@ -1453,7 +1460,6 @@ const categoriasFabricaUpdate = async(req, res) => {
 }
 
 const categoriasFabricaEliminar = async(req, res) => {
-  // ticket 001/18
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/categoriasFabrica?error=query1")
   }
@@ -1464,7 +1470,10 @@ const categoriasFabricaEliminar = async(req, res) => {
 
 const fotosProductosFabrica = async(req, res) => {
   let data = await servicesProductosFabrica.getProductosFabrica();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/fotosProductosFabrica", {
+    errores,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1472,7 +1481,6 @@ const fotosProductosFabrica = async(req, res) => {
 }
 
 const nuevaFotoProductoFabrica = async(req, res) => {
-  // ticket 001/19
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productosFabrica/fotos?error=query1");
   }
@@ -1505,7 +1513,10 @@ const uploadNuevaFotoProductoFabrica = async(req, res) => {
 
 const reportes = async (req, res) => {
   const sectores = await servicesProductosFabrica.getSectoresFabrica();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/reportesProduccion", {
+    errores,
     sectores,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1517,7 +1528,6 @@ const reportesSelector = async(req, res) => {
 }
 
 const reportePlanta = async(req, res) => {
-  // ticket 001/20
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
     return res.redirect("/panel/produccion/reportes?error=query2");
@@ -1551,7 +1561,6 @@ const reportePlanta = async(req, res) => {
 }
 
 const reportePlantaCategoriasEliminar = async(req, res) => {
-  // ticket 001/21
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/produccion/reportes/categorias?error=query1")
   }
@@ -1560,7 +1569,6 @@ const reportePlantaCategoriasEliminar = async(req, res) => {
 }
 
 const reportePedidos = async(req, res) => {
-  // ticket 001/22
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
     return res.redirect("/panel/produccion/reportes?error=query1");
@@ -1593,7 +1601,6 @@ const reportePedidos = async(req, res) => {
 }
 
 const reporteValorizado = async(req, res) => {
-  // ticket 001/23
   //verificar querys
   if(req.query.fecha === undefined || req.query.sector === undefined){
     return res.redirect("/panel/produccion/reportes?error=query1");
@@ -1633,7 +1640,10 @@ const reporteValorizado = async(req, res) => {
 const reportePlantaCategorias = async (req, res) => {
   const categorias = await servicesReportes.getCategoriasReporte();
   const productosFabrica = await servicesProductosFabrica.getProductosFabricaActivos();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/reportePlantaCategorias", {
+    errores,
     categorias,
     productosFabrica,
     usuario: req.session.userLog,
@@ -1708,7 +1718,10 @@ const reportePlantaCategoriasUpdate = async (req, res) => {
 
 const servicios = async (req, res) => {
   let data = await servicesServicios.getServicios();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/servicios", {
+    errores,
     data,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -1740,7 +1753,6 @@ const servicioInsert = async (req, res) => {
 }
 
 const servicioEliminar = async (req, res) => {
-  // ticket 001/24
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/servicios?error=query1");
   }
@@ -1771,7 +1783,6 @@ const facturacion = async(req, res) => {
   }
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const serviciosLocal = JSON.parse(local.servicios);
-  // ticket 001/25
   if(!serviciosLocal.facturacion){
     return res.redirect("/panel?error=acceso1");
   }
@@ -2149,8 +2160,11 @@ const facturacionRegistrosSenias = async (req, res) => {
   let senias = await servicesFacturacion.getSenias(req.session.userLocal);
   const fecha = await facturacionMiddleware.fechaHoy();
   const fechaHyphen = await facturacionMiddleware.fechaHyphen(fecha);
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   // console.log(fechaHyphen)
   res.render(__basedir + "/src/views/pages/facturacionLocalSenias", {
+    errores,
     dias,
     fechaHyphen,
     senias,
@@ -2161,7 +2175,6 @@ const facturacionRegistrosSenias = async (req, res) => {
 }
 
 const facturacionSeniasActualizarEstado = async (req, res) => {
-  // ticket 001/26
   if(isNaN(parseInt(req.query.id)) && (req.query.accion !== "registrar" || req.query.accion !== "cancelar")){
     return res.redirect("/panel/facturacion/registros/senias?error=query1");
   }
@@ -2183,7 +2196,10 @@ const facturacionSeniasActualizarEstado = async (req, res) => {
 const facturacionFabricaBotones = async (req, res) => {
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacionTodos();
   const productos = await servicesProductos.getProductosLocal();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/facturacionBotones", {
+    errores,
     botonesfacturacion,
     productos,
     usuario: req.session.userLog,
@@ -2210,7 +2226,6 @@ const facturacionFabricaBotonesInsert = async(req, res) => {
 }
 
 const facturacionFabricaBotonesEditar = async (req, res) => {
-  // ticket 001/27
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/facturacion/fabrica/botones?error=query1");
   }
