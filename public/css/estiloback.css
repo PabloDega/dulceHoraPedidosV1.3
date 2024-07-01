@@ -380,6 +380,9 @@ footer img {
 .small img {
   height: 25px;
 }
+.medium{
+  font-size: 0.9em;
+}
 .fotosHeader{
   display: flex;
   align-items: baseline;
@@ -1710,4 +1713,7 @@ form.editor#cierreCajaCierre table tbody tr input{
   font-size: 0.8em;
   border-left: 4px solid red;
   padding-left: 0.5em;
+}
+.sepTabla{
+  border-left: 4px solid red;
 }

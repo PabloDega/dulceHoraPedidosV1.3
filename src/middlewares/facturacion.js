@@ -46,17 +46,57 @@ const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
         // facturasLocal = facturasLocal.filter((factura) => factura.fecha == fecha);
         let total = 0;
         let operaciones = 0;
+        let operacionesComanda = 0;
+        let totalComanda = 0;
+        let operacionesCAE = 0;
+        let totalCAE = 0;
+        let totalEfectivo = 0;
         facturasLocal.forEach((factura) => {
             if(factura.tipo === "X" || factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
                 total += factura.total;
                 operaciones++;
+                if(factura.tipo === "X"){
+                    operacionesComanda++;
+                    totalComanda += factura.total;
+                } else {
+                    operacionesCAE++;
+                    totalCAE += factura.total;
+                }
+                if(factura.formaPago === "efectivo"){
+                    totalEfectivo += factura.total;
+                } else if(factura.formaPago === "multiple"){
+                    let pagoMultiple = JSON.parse(factura.observaciones);
+                    if(pagoMultiple.efectivo){
+                        totalEfectivo += pagoMultiple.montoefectivo;
+                    }
+                }
             } else if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
                 total -= factura.total;
                 operaciones--;
+                if(factura.tipo === "NC"){
+                    operacionesComanda--;
+                    totalComanda -= factura.total;
+                } else {
+                    operacionesCAE--;
+                    totalCAE -= factura.total;
+                }
+                if(factura.formaPago === "efectivo"){
+                    totalEfectivo -= factura.total;
+                } else if(factura.formaPago === "multiple"){
+                    let pagoMultiple = JSON.parse(factura.observaciones);
+                    if(pagoMultiple.efectivo){
+                        totalEfectivo -= pagoMultiple.montoefectivo;
+                    }
+                }
             }
         });
         datos.total = total;
         datos.operaciones = operaciones;
+        datos.totalCAE = totalCAE;
+        datos.operacionesCAE = operacionesCAE;
+        datos.totalComanda = totalComanda;
+        datos.operacionesComanda = operacionesComanda;
+        datos.totalEfectivo = totalEfectivo;
         factucionxLocal.push(datos);
     });
     return factucionxLocal;

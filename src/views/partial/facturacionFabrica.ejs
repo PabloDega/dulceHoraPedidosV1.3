@@ -1,3 +1,8 @@
+<%function monetarizar(valor){
+    valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+    return valor;
+}%>
+
 <h2 id="InputRegistroFacturacion">Resumen del <input type="date" name="fechaRegFact" id="fechaFactFabrica" value="<%=fechaHyphen%>"></h2> 
 
 <table class="resumenFacturaciones">
@@ -7,21 +12,28 @@
             <th>Operaciones</th>
             <th>Total</th>
             <th>Promedio</th>
+            <th>Efectivo</th>
+            <th>Otros</th>
+            <th>Comandas</th>
+            <th>CAE</th>
         </tr>
     </thead>
     <tbody>
         <%facturacionDiaria.sort((a, b) => b.operaciones - a.operaciones)
         facturacionDiaria.forEach((local) => {
             let promedio = local.total / local.operaciones;
+            let otrosMedios = local.total - local.totalEfectivo
             if(isNaN(promedio)){promedio = 0};
-            let totalFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(local.total);
-            promedio = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS'  }).format(promedio);%>
-
+            %>
             <tr>
                 <td><%=local.local%></td>
                 <td style="text-align: center;"><%=local.operaciones%></td>
-                <td style="text-align: right;"><%=totalFormateado%></td>
-                <td style="text-align: right;"><%=promedio%></td>
+                <td class="importe"><%=monetarizar(local.total)%></td>
+                <td class="importe"><%=monetarizar(promedio)%></td>
+                <td class="importe medium sepTabla"><%=monetarizar(local.totalEfectivo)%></td>
+                <td class="importe medium"><%=monetarizar(otrosMedios)%></td>
+                <td class="importe medium sepTabla"><%=monetarizar(local.totalComanda)%></td>
+                <td class="importe medium"><%=monetarizar(local.totalCAE)%></td>
             </tr>
         <%})%>
     </tbody>
