@@ -1121,12 +1121,19 @@ footer img {
 #tablaReportePlanta{
   width: fit-content;
 }
-
+.factCont #factBotones{
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+.factCont #factBotones hr{
+  border: 1px solid white;
+}
 .factCont .factSubCont{
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
-  gap: 1em;
+  gap: 2em;
   width: 100%;
   align-items: flex-start;
 }
@@ -1139,7 +1146,7 @@ footer img {
 .factCont > header span{
   padding: 0.5em;
 }
-.factCont #factBotonesRapidos{
+.factCont #factBotonesRapidos, .factCont #factBotonesCategoria{
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -1188,6 +1195,15 @@ footer img {
 }
 .factCont .factBotonRapido:hover{
   filter: grayscale(100%);
+}
+.factCont #factBotonesCategoria .factBotonCategoria{
+  display: flex;
+  padding: 0.5em;
+  background-color: orangered;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 0.5em 0 0.5em 0;
 }
 .flexgrow{
   flex-grow: 1;
@@ -1509,7 +1525,7 @@ footer img {
   cursor: pointer;
 }
 #factBotonesPersonalizados{
-  margin-top: 1em;
+  /* margin-top: 1em; */
   display: flex;
   gap: 1em;
   flex-wrap: wrap;
@@ -1716,4 +1732,7 @@ form.editor#cierreCajaCierre table tbody tr input{
 }
 .sepTabla{
   border-left: 4px solid red;
+}
+.formBoton{
+  display: inline-block;
 }

@@ -91,7 +91,7 @@ const crearReporteCaja = async (facturas, resumenGeneral, resumenGastos) => {
   facturas.forEach((fact) => {
     let detalles = JSON.parse(fact.detalle);
     detalles.forEach((detalle) => {
-      // buscar pro en array
+      // buscar prod en array
       let ubicacion = detalleVentasCaja.findIndex((dato) => dato[0] == detalle[3]);
       if(ubicacion < 0){
         // insertar prod en array

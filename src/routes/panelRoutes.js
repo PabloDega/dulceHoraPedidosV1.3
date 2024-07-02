@@ -272,6 +272,6 @@ router.post("/local/caja/api", auth.authAtencion, panelControllers.localCierreDe
 
 router.get("/local/caja/reporte", auth.authAtencion, panelControllers.localCierreDeCajaReporte);
 
-
+router.post("/local/caja/reporte/excel", auth.authAdmin, excelControllers.exportarExcelReporteCaja);
 
 module.exports = router;

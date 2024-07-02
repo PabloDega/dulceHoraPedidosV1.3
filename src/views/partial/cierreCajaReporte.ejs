@@ -1,5 +1,5 @@
 <%function monetarizar(valor){
-    if (valor < 1) {
+    if (valor == 0) {
         return "-";
     }
     valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
@@ -39,7 +39,7 @@ let reporte = JSON.parse(registro.reporte);
     </div>
     <div>
         <span>Diferencia:</span>
-        <span><%=monetarizar(((cierre.efectivo + cierre.reservado)) - (apertura.efectivo + apertura.reservado))%></span>
+        <span><%=monetarizar((cierre.efectivo + cierre.reservado) - (apertura.efectivo + apertura.reservado))%></span>
     </div>
     <hr>
     <h2>Detalles</h2>
@@ -94,6 +94,24 @@ let reporte = JSON.parse(registro.reporte);
     <div>
         <span>Retiros:</span>
         <span><%= monetarizar(resumenGastos.retiros) %></span>
+    </div>
+    <hr>
+    <div>
+        <span>Descargar: </span>
+        <!-- <span>
+            <form action="/panel/local/caja/reporte/pdf" method="post" class="formBoton">
+                <input type="hidden" name="id" value="<%=registro.id%>">
+                <input type="submit" value="PDF" class="pedidoEstadoBoton btnNaranja medium off">
+            </form>
+        </span> -->
+        <span>
+            <form action="/panel/local/caja/reporte/excel" method="post" class="formBoton">
+                <input type="hidden" name="id" value="<%=registro.id%>">
+                <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde medium">
+            </form>
+        </span>
+        
+        
     </div>
 </div>
 <div>

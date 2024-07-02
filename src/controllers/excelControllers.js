@@ -4,7 +4,10 @@ const servicesLocal = require(__basedir + "/src/services/local");
 const servicesReportes = require(__basedir + "/src/services/reportes");
 const reportesMiddleware = require(__basedir + "/src/middlewares/reportes");
 const produccionMiddleware = require(__basedir + "/src/middlewares/produccion");
-
+const servicesCaja = require(__basedir + "/src/services/caja");
+const servicesGastos = require(__basedir + "/src/services/gastos");
+const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
+const servicesProductos = require(__basedir + "/src/services/productos");
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
@@ -496,9 +499,202 @@ const exportarExcelReporteValorizado = async(req, res) => {
     wb.write(`Reporte Valorizado - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }
 
+const exportarExcelReporteCaja = async(req, res) => {
+  if(!req.body.id || isNaN(parseInt(req.body.id))){
+    return res.redirect(`/panel/local/caja/cierre?errores=2`);
+  }
+
+  let registro = await servicesCaja.getCierresxId(req.session.userLocal, req.body.id);
+  if(registro.length !== 1){
+    return res.redirect(`/panel/local/caja/cierre?errores=2`);
+  } else if(registro[0].cierre === null){
+    return res.redirect(`/panel/local/caja/cierre?errores=4`);
+  }
+
+  let fecha = registro[0].inicio;
+  fecha = JSON.parse(fecha);
+  fecha = fecha.fecha;
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
+  const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
+  const productos = await servicesProductos.getProductosLocalTodos();
+  const productosPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
+
+  registro = registro[0]
+  let apertura = JSON.parse(registro.inicio);
+  let cierre = JSON.parse(registro.cierre);
+  let reporte = JSON.parse(registro.reporte);
+  
+  let wb = new xl.Workbook({
+    dateFormat: 'dd/mm/yy hh:mm:ss',
+  });
+
+  //estilos
+  let estiloNegro = wb.createStyle({
+    font: {
+      color: '#FFFFFF',
+      size: 12,
+      bold: true,
+    },
+    fill: {
+        type: 'pattern',
+        patternType: 'solid',
+        fgColor: '#000000',
+    },
+    alignment: {
+        horizontal: 'center',
+    }
+  });
+  let estiloGris = wb.createStyle({
+      font: {
+        size: 12,
+        bold: true,
+      },
+      fill: {
+          type: 'pattern',
+          patternType: 'solid',
+          fgColor: '#CCCCCC',
+      },
+      alignment: {
+          horizontal: 'center',
+      }
+  });
+  let estiloCentrado = wb.createStyle({
+      alignment: {
+          horizontal: 'center',
+      }
+  });
+  let estiloBorde = wb.createStyle({
+      border:{
+          left:{
+              style: "thin",
+              color: "#000000",
+          },
+          right:{
+              style: "thin",
+              color: "#000000",
+          },
+          top:{
+              style: "thin",
+              color: "#000000",
+          },
+          bottom:{
+              style: "thin",
+              color: "#000000",
+          }
+      }
+  });
+  let estiloImporte = wb.createStyle({
+      numberFormat: '$#,##0.00; ($#,##0.00); -',
+  })
+  let estiloTitulo = wb.createStyle({
+    font: {
+      size: 16,
+      bold: true,
+      color: '#FFFFFF',
+    },
+  })
+  
+  // Hoja reporte
+  let wsReporte = wb.addWorksheet('Reporte de Caja');
+
+  //Setear anchos
+  wsReporte.column(1).setWidth(20);
+  wsReporte.column(2).setWidth(20);
+
+  wsReporte.cell(1, 1, 1, 2, true).string(`Reporte de Caja Nº ${registro.numero}`).style(estiloNegro).style(estiloTitulo);
+  wsReporte.cell(2, 1).string("Fecha de Apertura");
+  wsReporte.cell(2, 2).date(apertura.fecha);
+  wsReporte.cell(3, 1).string("Fecha de Cierre");
+  wsReporte.cell(3, 2).date(cierre.fecha);
+  wsReporte.cell(4, 1, 4, 2, true).string("Información General").style(estiloGris).style(estiloCentrado);
+  wsReporte.cell(5, 1).string("Razon Social");
+  wsReporte.cell(5, 2).string(local.nombre);
+  wsReporte.cell(6, 1).string("Efectivo en apertura");
+  wsReporte.cell(6, 2).number(apertura.efectivo + apertura.reservado).style(estiloImporte);
+  wsReporte.cell(7, 1).string("Efectivo en cierre");
+  wsReporte.cell(7, 2).number(cierre.efectivo + cierre.reservado).style(estiloImporte);
+  wsReporte.cell(8, 1).string("Diferencia");
+  wsReporte.cell(8, 2).formula("B7-B6").style(estiloImporte);
+  wsReporte.cell(9, 1, 9, 2, true).string("Detalles").style(estiloGris).style(estiloCentrado);
+  wsReporte.cell(10, 1).string("Cantidad de comandas");
+  wsReporte.cell(10, 2).number(reporte.contadorComanda);
+  wsReporte.cell(11, 1).string("Monto total comandas");
+  wsReporte.cell(11, 2).number(reporte.totalNF).style(estiloImporte);
+  wsReporte.cell(12, 1).string("Cantidad de tickets");
+  wsReporte.cell(12, 2).number(reporte.contadorCAE);
+  wsReporte.cell(13, 1).string("Monto total tickets");
+  wsReporte.cell(13, 2).number(reporte.totalCAE).style(estiloImporte);
+  wsReporte.cell(14, 1).string("Cantidad Total");
+  wsReporte.cell(14, 2).formula("B10 + B12");
+  wsReporte.cell(15, 1).string("Monto total");
+  wsReporte.cell(15, 2).formula("B11+B13").style(estiloImporte);
+  wsReporte.cell(16, 1, 16, 2, true).string("Medios de Pago").style(estiloGris).style(estiloCentrado);
+  wsReporte.cell(17, 1).string("Efectivo");
+  wsReporte.cell(17, 2).number(reporte.totalEfectivo).style(estiloImporte);
+  wsReporte.cell(18, 1).string("Débito");
+  wsReporte.cell(18, 2).number(reporte.totalDebito).style(estiloImporte);
+  wsReporte.cell(19, 1).string("Crédito");
+  wsReporte.cell(19, 2).number(reporte.totalCredito).style(estiloImporte);
+  wsReporte.cell(20, 1).string("Virtual");
+  wsReporte.cell(20, 2).number(reporte.totalNB).style(estiloImporte);
+  wsReporte.cell(21, 1, 21, 2, true).string("Gastos y Retiros").style(estiloGris).style(estiloCentrado);
+  wsReporte.cell(22, 1).string("Gastos");
+  wsReporte.cell(22, 2).number(resumenGastos.gastos).style(estiloImporte);
+  wsReporte.cell(23, 1).string("Retiros");
+  wsReporte.cell(23, 2).number(resumenGastos.retiros).style(estiloImporte);
+
+  // Hoja detalle
+  let wsDetalle = wb.addWorksheet('Detalle de Ventas');
+
+  //Setear anchos
+  wsDetalle.column(1).setWidth(8);
+  wsDetalle.column(2).setWidth(9);
+  wsDetalle.column(3).setWidth(30);
+  wsDetalle.column(4).setWidth(12);
+
+  wsDetalle.cell(1, 1, 1, 4, true).string(`Detalle de productos vendidos`).style(estiloNegro).style(estiloTitulo);
+  wsDetalle.cell(2, 1).string("Cantidad").style(estiloGris).style(estiloCentrado);
+  wsDetalle.cell(2, 2).string("Frac.").style(estiloGris).style(estiloCentrado);
+  wsDetalle.cell(2, 3).string("Producto").style(estiloGris).style(estiloCentrado);
+  wsDetalle.cell(2, 4).string("Total").style(estiloGris).style(estiloCentrado);
+  let iDetalle = 3;
+
+  reporte.detalleVentasCaja.forEach((item) => {
+
+    let fraccionamiento = "Unidad";
+    let producto;
+    if(item[0] > 99){
+        producto = productos.find((prod) => prod.id == item[1]);
+        if(producto.fraccionamiento == "kilo"){
+            fraccionamiento = "kilo";
+            item[2] = item[2]/1000
+        }
+    } else if(item[0] < 100){
+        producto = productosPersonalizados.find((prod) => prod.id == item[1]);
+    }
+    if(producto === undefined){
+        console.log(`Error al buscar producto en Reporte de Caja para codigo ${item[0]} / usuario: ${usuario}`)
+        return;
+    }
+
+    wsDetalle.cell(iDetalle, 1).number(item[2]).style(estiloBorde).style(estiloCentrado);
+    wsDetalle.cell(iDetalle, 2).string(fraccionamiento).style(estiloBorde);
+    wsDetalle.cell(iDetalle, 3).string(producto.nombre).style(estiloBorde);
+    wsDetalle.cell(iDetalle, 4).number(item[3]).style(estiloImporte).style(estiloBorde);
+
+    iDetalle++;
+  });
+
+  wsDetalle.cell(iDetalle, 4).formula(`SUM(D3:D${iDetalle - 1})`).style(estiloImporte).style(estiloBorde);
+
+  wb.write(`Reporte de Caja - ${registro.numero} - ${apertura.fecha}.xlsx`, res);
+}
+
 module.exports = {
     exportarExcelProduccion,
     exportarExcelReportePlanta,
     exportarExcelReportePedidos,
     exportarExcelReporteValorizado,
+    exportarExcelReporteCaja,
 }

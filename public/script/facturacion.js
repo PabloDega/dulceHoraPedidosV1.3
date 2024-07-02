@@ -36,6 +36,25 @@ function crearBotonesRapidos() {
 
 crearBotonesRapidos();
 
+function crearBotonesCategoria() {
+  if(categorias.length == 0){
+    return
+  }
+  // sort categorias
+
+  let contenedor = document.querySelector("#factBotonesCategoria");
+  categorias.forEach((categoria) => {
+     // check empty categorias
+    let productosxCategoria = productos.find((prod) => prod.categoria == categoria.categoria);
+    if(!productosxCategoria){
+      return;
+    }
+    contenedor.innerHTML += `<div class="factBotonCategoria" data-id="${categoria.id}">${categoria.categoria}</div>`;
+  });
+}
+
+crearBotonesCategoria();
+
 function crearBotonesPers() {
   if(botonesPersonalizados.length == 0){
     return
