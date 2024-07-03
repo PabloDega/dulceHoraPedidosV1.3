@@ -1,10 +1,12 @@
+<div id="cortina" class="fondoCortina"></div>
+
 <div class="backMenu noImprimir">
   <h2>Panel de Control<span id="backMenuShow">Menu</span></h2>
 </div>
 
 
 <% if(userRol == "supervisor" || userRol == "produccion"){%>
-  <div class="backMenu noImprimir" id="supervisor">
+  <div class="backMenu noImprimir" id="menuSupervisor">
     <% if(userRol == "supervisor"){%>
       <h2>Administracion</h2>
       <div class="backCard <%= menu %>" id="usuarios">

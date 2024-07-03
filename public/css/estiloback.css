@@ -31,6 +31,13 @@ body {
   flex-wrap: wrap;
   align-content: flex-start;
 }
+.menuFixed{
+  z-index: 10;
+  background-color: rgba(50,0,0,0.8);
+  padding: 1em;
+  position: fixed;
+  top: 6em;
+}
 .backMenu > h1, .backMenu > h2, .titulo, #backRender > h2{
   width: 100%;
   color: white;
@@ -398,7 +405,7 @@ footer img {
 .fotosHeader h2{
   font-size: 1.3em;
 }
-#cortina, .cortina{
+#cortina, .cortina, .fondoCortina{
   position: fixed;
   top: 0;
   left: 0;
@@ -410,6 +417,10 @@ footer img {
   justify-content: center;
   align-items: center;
   z-index: 100;
+}
+.fondoCortina, #cortina.fondoCortina{
+  display: none;
+  z-index: 10;
 }
 #cortina #confirmarEliminar, #cortina #confirmarAbrirCajaAuto{
   background-color: white;
@@ -806,8 +817,9 @@ footer img {
   border-bottom: 1px solid gray;
   padding-bottom: 0.2em;
 }
-#calendarioPedidos div span:first-child{
+#calendarioPedidos div>span:first-child{
   font-weight: 600;
+  width: 120px;
 }
 .pedidosProdInfo .localEstadoPedido{
   display: flex;
@@ -1379,18 +1391,6 @@ footer img {
   display: flex;
   flex-direction: column;
 }
-#contGastos{
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.5);
-  display: none;
-  z-index: 30;
-}
 #contGastos > div{
   height: fit-content;
 }
@@ -1592,74 +1592,7 @@ form.editor#cierreCajaCierre table tbody tr input{
   flex-direction: column;
   gap: 1em;
 }
-#backRender .editor .resumenFacturacion{
-  display: flex;
-  flex-direction: column;
-  align-items: unset;
-}
 
-#backRender .editor .resumenFacturacionScroll{
-  position: fixed;
-  flex-direction: row;
-  bottom: 0;
-  left: 0;
-  background-color: white;
-  width: 100%;
-  padding: 1em;
-  z-index: 20;
-  justify-content: center;
-  align-items: end;
-  border-top: 3px solid red;
-}
-#backRender .editor .resumenFacturacionScroll span:nth-child(1){
-  min-width: 40%;
-}
-#backRender .editor .resumenFacturacionScroll span:nth-child(2){
-  flex-direction: column;
-  align-items: stretch;
-}
-#backRender #factBotoneraXtra.factBotoneraXtraScroll{
-  flex-direction: row;
-  position: fixed;
-  bottom: 1em;
-  right: 1em;
-  z-index: 30;
-}
-#backRender.factBackRenderScroll{
-  margin-bottom: 150px;
-}
-
-/* Media Style */
-
-@media (max-width: 800px) {
-
-}
-
-@media (max-width: 576px) {
-  #loginForm {
-    margin: 0 2em;
-  }
-  header > span{
-    flex-direction: column;
-  }
-  header >span span{
-    text-align: center;
-  }
-  header > span img {
-    width: 120px;
-  }
-  header > span #userIcon {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  .produccionCont{
-    flex-direction: column-reverse;
-  }
-  .pedidoEstado{
-    flex-direction: column;
-  }
-}
 .txtNegro{
   font-weight: 600;
 }
@@ -1735,4 +1668,110 @@ form.editor#cierreCajaCierre table tbody tr input{
 }
 .formBoton{
   display: inline-block;
+}
+#factContCategorias{
+  gap: 2em;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+/* Media Style */
+
+@media (max-width: 800px) {
+  #contRegistroFact, #contRegistroGastos, #cierreCajaReporteContenedor, #cierreCajaContenedor{
+    flex-direction: column;
+  }
+  #contRegistroFact .resumenRegistroFact, #tablaFacturacionLocalRegistros, #contRegistroGastos table, #contRegistroGastos span, #cierreCajaContenedor{
+    width: fit-content;
+  }
+  #contRegistroFact #tablaFacturacionLocalRegistros, table#facturacionLocalSenias, #contRegistroGastos table{
+    table-layout: fixed;
+    width: 100%;
+  }
+  #backRender #cierreCajaContenedor{
+    margin: 2em 0;
+  }
+  #backRender #cierreCajaContenedor:nth-child(2){
+    gap: 0;
+  }
+  #backRender #nuevaVenta{
+    padding: 1em;
+  }
+}
+
+@media (max-width: 576px) {
+  #loginForm {
+    margin: 0 2em;
+  }
+  header >span span{
+    text-align: center;
+  }
+  header > span > img {
+    width: 120px;
+    display: none;
+  }
+  /* header > span #userIcon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  } */
+  header > span #backHome {
+    margin-right: 0;
+  }
+  .produccionCont{
+    flex-direction: column-reverse;
+  }
+  .pedidoEstado{
+    flex-direction: column;
+  }
+  #contRegistroFact #tablaFacturacionLocalRegistros thead tr th:nth-child(6),
+  #contRegistroFact #tablaFacturacionLocalRegistros tbody tr td:nth-child(6),
+  #contRegistroFact #tablaFacturacionLocalRegistros thead tr th:nth-child(7),
+  #contRegistroFact #tablaFacturacionLocalRegistros tbody tr td:nth-child(7){
+    display: none;
+  }
+  table#facturacionLocalSenias thead tr th:nth-child(1),
+  table#facturacionLocalSenias tbody tr td:nth-child(1),
+  table#facturacionLocalSenias thead tr th:nth-child(8),
+  table#facturacionLocalSenias tbody tr td:nth-child(8){
+    display: none;
+  }
+  #tablaCierreDeCaja thead tr th:nth-child(1),
+  #tablaCierreDeCaja tbody tr td:nth-child(1){
+    display: none;
+  }
+  #backRender #cierreCajaCerrar span label{
+    width: unset;
+  }
+  #calendarioPedidos div>span:first-child{
+    width: min-content;
+  }
+  #tablaProduccionCard{
+    table-layout: fixed;
+    width: 100%;
+  }
+  #pedidoProduccionTabla{
+    table-layout: fixed;
+    width: 100%;
+  }
+  #pedidoProduccionTabla thead tr th:nth-child(1),
+  #pedidoProduccionTabla tbody tr td:nth-child(1),
+  #pedidoProduccionTabla thead tr th:nth-child(3),
+  #pedidoProduccionTabla tbody tr td:nth-child(3),
+  #pedidoProduccionTabla thead tr th:nth-child(7),
+  #pedidoProduccionTabla tbody tr td:nth-child(7){
+    display: none;
+  }
+  #pedidoProduccionTabla tbody tr .categoriaTabla{
+    display: none;
+  }
+  #backRender #nuevaProduccion{
+    padding: 1em;
+  }
+  #pedidoProdHeadForm{
+    flex-direction: column;
+  }
+  #datosFloat{
+    flex-direction: column;
+  }
 }

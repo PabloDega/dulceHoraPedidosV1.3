@@ -345,17 +345,27 @@ if (document.querySelector(".fila") != null) {
 
 // ocultar menu en modo supervisor, excepto en panel home
 let vistaMenu = "flex";
-if((window.location.pathname !== "/panel" && window.location.pathname !== "/login") && document.querySelector("#supervisor")){
-  let menu = document.querySelector("#supervisor");
+console.log(window.location.pathname)
+if((window.location.pathname !== "/panel" && window.location.pathname !== "/login") && document.querySelector("#menuSupervisor")){
+  let menu = document.querySelector("#menuSupervisor");
   let boton = document.querySelector("#backMenuShow");
+  let cortina = document.querySelector("#cortina.fondoCortina")
   menu.style.display = "none";
   boton.style.display = "block";
+  cortina.style.display = "none";
+  menu.classList.add("menuFixed")
   boton.addEventListener("click", () => {
     if(menu.style.display == "none"){
       menu.style.display = "flex";
+      cortina.style.display = "flex";
     } else {
       menu.style.display = "none";
+      cortina.style.display = "none";
     }
+  })
+  cortina.addEventListener("click", () => {
+      menu.style.display = "none";
+      cortina.style.display = "none";
   })
 }
 
