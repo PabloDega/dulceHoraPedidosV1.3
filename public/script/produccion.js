@@ -2,28 +2,33 @@ let pedidoProduccion = [];
 let totalPedido = 0;
 let diasDeLaSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
 
-function pedidoProduccionCalcImporte(e){
-    if(isNaN(parseInt(e.target.value))){
+function pedidoProduccionCalcImporte(e) {
+    if (isNaN(parseInt(e.target.value))) {
         e.target.value = 0;
         return;
     }
     let costo = document.querySelector("#costo" + e.target.dataset.id);
-    costo = parseInt(costo.innerHTML)
-    document.querySelector(`#importe${e.target.dataset.id}`).innerHTML = costo * parseInt(e.target.value);
+    costo = parseInt(costo.innerHTML);
+    document.querySelector(`#importe${e.target.dataset.id}`).innerHTML =
+        costo * parseInt(e.target.value);
     pedidoProduccionCalcTotal();
 }
 
-function pedidoProduccionCalcImportes(){
+function pedidoProduccionCalcImportes() {
     document.querySelectorAll(".importe").forEach((importe) => {
         let item = importe.id.slice(7);
-        let importeFinal = document.querySelector("#costo" + item).innerHTML * document.querySelector("#cantidad" + item).value;
+        let importeFinal =
+            document.querySelector("#costo" + item).innerHTML *
+            document.querySelector("#cantidad" + item).value;
         importe.innerHTML = importeFinal;
-    })
+    });
 }
 
-function pedidoProduccionCalcTotal(){
+function pedidoProduccionCalcTotal() {
     let montosArray = [];
-    document.querySelectorAll(".importe").forEach((monto) => montosArray.push(parseInt(monto.innerHTML)));
+    document
+        .querySelectorAll(".importe")
+        .forEach((monto) => montosArray.push(parseInt(monto.innerHTML)));
     totalPedido = montosArray.reduce((acumulador, valor) => {
         return acumulador + valor;
     }, 0);
@@ -36,43 +41,49 @@ document.querySelectorAll(".pedidoProduccionCantidad").forEach((boton) => {
         pedidoProduccionCalcImporte(e);
         precargaLocalStorage();
         calcularCantidades(e);
-    })
-})
+    });
+});
 
-function precargaLocalStorage(){
+function precargaLocalStorage() {
     precargaPedidoProduccion = [];
     document.querySelectorAll(".pedidoProduccionCantidad").forEach((cantidad) => {
-        if(cantidad.value > 0){
+        if (cantidad.value > 0) {
             let pedidoItem = [];
-            pedidoItem.push(cantidad.dataset.id)
-            pedidoItem.push(cantidad.value)
-            precargaPedidoProduccion.push(pedidoItem)
+            pedidoItem.push(cantidad.dataset.id);
+            pedidoItem.push(cantidad.value);
+            precargaPedidoProduccion.push(pedidoItem);
         }
-    })
+    });
     localStorage.setItem("precargaPedidoProduccion", JSON.stringify(precargaPedidoProduccion));
 }
 
-let precargaAnterior = JSON.parse(localStorage.getItem("precargaPedidoProduccion"))
+let precargaAnterior = JSON.parse(localStorage.getItem("precargaPedidoProduccion"));
 
-if(precargaAnterior && precargaAnterior.length > 0){
+if (precargaAnterior && precargaAnterior.length > 0) {
     precargaAnterior.forEach((item) => {
         document.querySelector("#cantidad" + item[0]).value = item[1];
-    })
+    });
 }
 
-function setFechaDeEntrega(){
+function setFechaDeEntrega() {
     let fechaEntrega = localStorage.getItem("fechaEntregaActiva");
-    if(fechaEntrega !== null){
-        let diaEntrega = new Date(fechaEntrega.split("/")[2], fechaEntrega.split("/")[1]-1, fechaEntrega.split("/")[0]).getDay()
-        document.querySelector("#pedidoProduccionFechaEntrega").value = localStorage.getItem("fechaEntregaActiva");
-        document.querySelector("#pedidoProduccionDatosFechaEntrega").innerHTML = diasDeLaSemana[diaEntrega] + " " + fechaEntrega;
+    if (fechaEntrega !== null) {
+        let diaEntrega = new Date(
+            fechaEntrega.split("/")[2],
+            fechaEntrega.split("/")[1] - 1,
+            fechaEntrega.split("/")[0]
+        ).getDay();
+        document.querySelector("#pedidoProduccionFechaEntrega").value =
+            localStorage.getItem("fechaEntregaActiva");
+        document.querySelector("#pedidoProduccionDatosFechaEntrega").innerHTML =
+            diasDeLaSemana[diaEntrega] + " " + fechaEntrega;
     }
 }
-if(document.querySelector("#pedidoProduccionVerPedidoAnterior") != null){
+if (document.querySelector("#pedidoProduccionVerPedidoAnterior") != null) {
     document.querySelector("#pedidoProduccionVerPedidoAnterior").addEventListener("click", () => {
         document.querySelectorAll(".pedidoProduccionUltimoPedido").forEach((elem) => {
             elem.classList.toggle("visible");
-        })
+        });
     });
 }
 
@@ -85,45 +96,59 @@ function vaciarImportes() {
     pedidoProduccionCalcTotal();
 }
 
-if(document.querySelector("#pedidoProduccionVaciar") !=null){
+if (document.querySelector("#pedidoProduccionVaciar") != null) {
     document.querySelector("#pedidoProduccionVaciar").addEventListener("click", () => {
         vaciarImportes();
-    })
+    });
 }
 
-if(document.querySelector("#pedidoProduccionEnviar") != null){
+if (document.querySelector("#pedidoProduccionEnviar") != null) {
     document.querySelector("#pedidoProduccionEnviar").addEventListener("click", (e) => {
         e.preventDefault();
         pedidoProduccionCalcTotal();
         localStorage.removeItem("precargaPedidoProduccion");
-        if(validarCantidades()){
+        if (validarCantidades()) {
             document.querySelector("#cortinaLoad").style.display = "flex";
             document.querySelector("#nuevaProduccion").submit();
         }
-    })
+    });
 }
+
+// vaciar inpuit en 0 al darle click
+document.querySelectorAll("input.pedidoProduccionCantidad").forEach((boton) => {
+    boton.addEventListener("focus", (e) => {
+        if (e.target.value == 0) {
+            e.target.value = "";
+        }
+    });
+    boton.addEventListener("focusout", (e) => {
+      if (e.target.value == "") {
+          e.target.value = 0;
+      }
+  });
+});
 
 //Evitar que el fomulario se envie con enter
 document.querySelector("#nuevaProduccion").addEventListener("keypress", (e) => {
-    if(e.keyCode == 13){
+    if (e.keyCode == 13) {
         e.preventDefault();
     }
-})
+});
 
-function calcularCantidades(e){
-    if(window.minimosCategoria[e.target.dataset.categoria][1] > 0){
+function calcularCantidades(e) {
+    if (window.minimosCategoria[e.target.dataset.categoria][1] > 0) {
         let itemsCategoria = document.querySelectorAll(`.${e.target.dataset.categoria}`);
         let suma = 0;
-        itemsCategoria.forEach((item) => suma = suma + parseInt(item.value));
+        itemsCategoria.forEach((item) => (suma = suma + parseInt(item.value)));
         window.minimosCategoria[e.target.dataset.categoria][0] = suma;
         document.querySelector(`#cantidad${e.target.dataset.categoria}`).innerHTML = suma;
     }
 }
 
-for(categoria in window.minimosCategoria){
-    if(window.minimosCategoria[categoria][1] > 0){
+for (categoria in window.minimosCategoria) {
+    if (window.minimosCategoria[categoria][1] > 0) {
         let itemsCategoria = document.querySelectorAll(`.${categoria}`);
-        if(itemsCategoria.length > 0){
+        if (itemsCategoria.length > 0) {
             let suma = 0;
             itemsCategoria.forEach((item) => {
                 suma = suma + parseInt(item.value);
@@ -134,14 +159,17 @@ for(categoria in window.minimosCategoria){
     }
 }
 
-function validarCantidades(){
+function validarCantidades() {
     let x = 0;
-    for(item in window.minimosCategoria){
-        if(window.minimosCategoria[item][0] < window.minimosCategoria[item][1] && window.minimosCategoria[item][0] !== 0){
+    for (item in window.minimosCategoria) {
+        if (
+            window.minimosCategoria[item][0] < window.minimosCategoria[item][1] &&
+            window.minimosCategoria[item][0] !== 0
+        ) {
             x++;
         }
     }
-    if(x > 0){
+    if (x > 0) {
         let popScreen = document.querySelector("#popScreen");
         popScreen.innerHTML += `<div id="cortina">
         <div id="confirmarEliminar">
@@ -154,7 +182,6 @@ function validarCantidades(){
     }
     return true;
 }
-
 
 pedidoProduccionCalcImportes();
 pedidoProduccionCalcTotal();

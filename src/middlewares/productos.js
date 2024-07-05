@@ -11,6 +11,7 @@ const crearObjetoUpdatePrecios = (datos) => {
         items = datos.id;
     }
     let objetoPrecios = {}
+    objetoPrecios.lista = "lista" + datos.lista;
     items.forEach((item) => {
         let precios = [];
         precios.push(datos[`preciounidad${item}`]);
@@ -108,9 +109,48 @@ const buscarDuplicadosProdFabrica = async (productos, codigo) => {
     return respuesta;
 }
 
+const cargarPrecios = async(productos, precios, lista) => {
+    if(lista === undefined){
+        lista = "lista1"
+    }
+    productos.forEach((producto) => {
+        let precio = precios.find((item) => item.codigo == producto.codigo);
+        if(precio === undefined){
+            producto.preciounidad = 0;
+            producto.preciodocena = 0;
+            producto.preciokilo = 0;
+            return;
+        } else {
+            let precioItem = JSON.parse(precio[lista]);
+            if(precio[lista] === null){
+                producto.preciounidad = 0;
+                producto.preciodocena = 0;
+                producto.preciokilo = 0;
+                return;
+            }
+            producto.preciounidad = precioItem[0];
+            producto.preciodocena = precioItem[1];
+            producto.preciokilo = precioItem[2];
+        }
+    });
+    return productos;
+}
+
+const parseColumnas = async (query) => {
+    let columnas = [];
+    query = query[0];
+    query = query.slice(2, query.length)
+    query.forEach((col) => {
+        columnas.push(col.COLUMN_NAME)
+    })
+    return columnas;
+}
+
 module.exports = {
     crearObjetoUpdatePrecios,
     buscarDuplicadosProdPersonalizados,
     buscarDuplicadosProdLocal,
     buscarDuplicadosProdFabrica,
+    cargarPrecios,
+    parseColumnas,
 }

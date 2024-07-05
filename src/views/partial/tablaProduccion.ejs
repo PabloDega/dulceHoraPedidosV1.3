@@ -1,11 +1,18 @@
 <%function monetarizar(valor){
     valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
     return valor;
-}%>
+}
+// analizar filtros de la query
+let mensajes = false;
+if(filtros.findIndex((item) => item == "mensajes") !== -1){
+    mensajes = true;
+}
+%>
+
 <table id="tablaProduccion">
     <thead>
         <tr>
-            <th>Numero</th>
+            <th>Nº</th>
             <th>Fecha Pedido</th>
             <th>Fecha Entrega</th>
             <th>Local</th>
@@ -18,6 +25,11 @@
     <tbody>
         <%produccion = produccion.reverse();
         produccion.forEach((pedido) => {
+            if(mensajes){
+                if(pedido.mensajes.length == 0 || pedido.buzon !== "mensajeLocal"){
+                    return;
+                }
+            }
             let local = locales.find(local => local.id == pedido.local);
             let estiloEstado = "txtVerde"
             if(pedido.estado == "aceptado"){

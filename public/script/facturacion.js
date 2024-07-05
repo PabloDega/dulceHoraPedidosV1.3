@@ -980,6 +980,11 @@ async function enviarGasto(){
     mostrarError("Caja cerrada");
     return cerrarGastos();
   }
+  // verficar que no se envie un gasto de $0
+  if(document.querySelector("#gastosMonto").value == 0){
+    mostrarError("Por favor cargar un valor para el registro");
+    return
+  }
 
   let datos = {
     movimiento: "gasto",

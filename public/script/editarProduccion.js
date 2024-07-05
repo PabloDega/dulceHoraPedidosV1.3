@@ -106,5 +106,19 @@ document.querySelector("#pedidoProduccionUpdate").addEventListener("click", (e) 
     }
 });
 
+// vaciar inpuit en 0 al darle click
+document.querySelectorAll("input.pedidoProduccionCantidad").forEach((boton) => {
+    boton.addEventListener("focus", (e) => {
+        if (e.target.value == 0) {
+            e.target.value = "";
+        }
+    });
+    boton.addEventListener("focusout", (e) => {
+      if (e.target.value == "") {
+          e.target.value = 0;
+      }
+  });
+});
+
 pedidoProduccionCalcImportes();
 pedidoProduccionCalcTotal();

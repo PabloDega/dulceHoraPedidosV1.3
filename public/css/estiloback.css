@@ -49,6 +49,8 @@ body {
 }
 .backMenu > h2, #backRender > h2{
   border-bottom: 2px solid white;
+  align-items: baseline;
+  position: relative;
 }
 #cont .backSubMenu{
   gap: 1em;
@@ -201,7 +203,7 @@ table input{
   font-size: 1.2em;
 }
 #preciosForm{
-  margin: 1em auto;
+  margin: 1em 0;
   width: fit-content;
   display: flex;
   flex-direction: column;
@@ -1674,6 +1676,21 @@ form.editor#cierreCajaCierre table tbody tr input{
   flex-wrap: wrap;
   align-content: center;
 }
+#contSelectLista{
+  font-size: 0.8em;
+  margin-left: 2em;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 1em;
+  align-items: baseline;
+}
+
+#contSelectLista #listaDePrecios{
+  font-size: 1em;
+  padding: 0.3em;
+}
 
 /* Media Style */
 
@@ -1684,7 +1701,7 @@ form.editor#cierreCajaCierre table tbody tr input{
   #contRegistroFact .resumenRegistroFact, #tablaFacturacionLocalRegistros, #contRegistroGastos table, #contRegistroGastos span, #cierreCajaContenedor{
     width: fit-content;
   }
-  #contRegistroFact #tablaFacturacionLocalRegistros, table#facturacionLocalSenias, #contRegistroGastos table{
+  #contRegistroFact #tablaFacturacionLocalRegistros, table#facturacionLocalSenias, #contRegistroGastos table, #tablaProduccion{
     table-layout: fixed;
     width: 100%;
   }
@@ -1696,6 +1713,9 @@ form.editor#cierreCajaCierre table tbody tr input{
   }
   #backRender #nuevaVenta{
     padding: 1em;
+  }
+  .produccionCont{
+    flex-direction: column-reverse;
   }
 }
 
@@ -1718,9 +1738,7 @@ form.editor#cierreCajaCierre table tbody tr input{
   header > span #backHome {
     margin-right: 0;
   }
-  .produccionCont{
-    flex-direction: column-reverse;
-  }
+  
   .pedidoEstado{
     flex-direction: column;
   }
@@ -1773,5 +1791,13 @@ form.editor#cierreCajaCierre table tbody tr input{
   }
   #datosFloat{
     flex-direction: column;
+  }
+  #tablaProduccion thead tr th:nth-child(2),
+  #tablaProduccion tbody tr td:nth-child(2),
+  #tablaProduccion thead tr th:nth-child(4),
+  #tablaProduccion tbody tr td:nth-child(4),
+  #tablaProduccion thead tr th:nth-child(6),
+  #tablaProduccion tbody tr td:nth-child(6){
+    display: none;
   }
 }

@@ -1,5 +1,7 @@
 const fs = require("fs");
 const { conectar } = require(__basedir + "/src/config/dbConnection");
+const productosMiddleware = require(__basedir + "/src/middlewares/productos");
+
 
 const getCategorias = async () => {
   try {
@@ -60,7 +62,17 @@ const deleteCategoria = async (id) => {
 const updatePrecios = async (objetoPrecios) => {
   try {
     for(item in objetoPrecios){
-      await conectar.query(`UPDATE productoslocal SET preciounidad = "${objetoPrecios[item][0]}", preciodocena = "${objetoPrecios[item][1]}", preciokilo = "${objetoPrecios[item][2]}" WHERE id = "${item}"`);
+      if(item == "lista"){
+        return;
+      }
+      let precios = JSON.stringify(objetoPrecios[item]);
+      // verificar que el id este definido en la tabla!!!
+      const check = await conectar.query(`SELECT * FROM listasdeprecios WHERE idRef = "${item}"`);
+      if(check[0].length < 1){
+        let producto = await conectar.query(`SELECT * FROM productoslocal WHERE id = "${item}"`);
+        await conectar.query(`INSERT INTO listasdeprecios (idRef, codigo) VALUES ("${item}", "${producto[0][0].codigo}")`);
+      }
+      await conectar.query(`UPDATE listasdeprecios SET ${objetoPrecios.lista} = "${precios}" WHERE idRef = "${item}"`);
     }
     return
   } catch (error) {
@@ -76,10 +88,14 @@ const lastId = async (tabla) => {
   return getLastId[0][0].Auto_increment;
 };
 
-const getProductosLocal = async () => {
+const getProductosLocal = async (lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productoslocal WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
-    return rows[0];
+    /* const rows = await conectar.query("SELECT * FROM productoslocal WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
+    return rows[0]; */
+    const productos = await conectar.query("SELECT * FROM productoslocal WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
+    const precios = await conectar.query("SELECT * FROM listasdeprecios");
+    const productosConPrecio = await productosMiddleware.cargarPrecios(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {
@@ -87,10 +103,14 @@ const getProductosLocal = async () => {
   }
 };
 
-const getProductosLocalTodos = async () => {
+const getProductosLocalTodos = async (lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productoslocal ORDER BY codigo");
-    return rows[0];
+    /* const rows = await conectar.query("SELECT * FROM productoslocal ORDER BY codigo");
+    return rows[0]; */
+    const productos = await conectar.query("SELECT * FROM productoslocal ORDER BY codigo");
+    const precios = await conectar.query("SELECT * FROM listasdeprecios");
+    const productosConPrecio = await productosMiddleware.cargarPrecios(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {
@@ -98,16 +118,32 @@ const getProductosLocalTodos = async () => {
   }
 };
 
-const getProductoLocal = async (id) => {
+const getProductoLocal = async (id, lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productoslocal WHERE ?", { id });
-    return rows[0][0];
+    /* const rows = await conectar.query("SELECT * FROM productoslocal WHERE ?", { id });
+    return rows[0][0]; */
+    const productos = await conectar.query(`SELECT * FROM productoslocal WHERE id = "${id}"`);
+    const precios = await conectar.query("SELECT * FROM listasdeprecios");
+    const productosConPrecio = await productosMiddleware.cargarPrecios(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {
     conectar.releaseConnection();
   }
 };
+
+const getColumnasPrecios = async () => {
+  try {
+    let columnas = await conectar.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='listasdeprecios'`);
+    columnas = await productosMiddleware.parseColumnas(columnas);
+    return columnas;
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
 
 const insertProductoLocal = async (datos) => {
   try {
@@ -227,4 +263,5 @@ module.exports = {
   insertProductosPersonalizados,
   updateProductosPersonalizados,
   deleteProductosPersonalizados,
+  getColumnasPrecios,
 };

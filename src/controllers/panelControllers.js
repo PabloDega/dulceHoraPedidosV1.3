@@ -37,7 +37,12 @@ const index = async (req, res) => {
 };
 
 const productosCard = async (req, res) => {
-  let data = await servicesProductos.getProductosLocalTodos();
+  let lista = "lista1";
+  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
+    lista = `lista${req.query.lista}`;
+  }
+
+  let data = await servicesProductos.getProductosLocalTodos(lista);
   res.render(__basedir + "/src/views/pages/productos", {
     data,
     vista: "card",
@@ -47,7 +52,12 @@ const productosCard = async (req, res) => {
 };
 
 const productosTabla = async (req, res) => {
-  let data = await servicesProductos.getProductosLocalTodos();
+  let lista = "lista1";
+  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
+    lista = `lista${req.query.lista}`;
+  }
+
+  let data = await servicesProductos.getProductosLocalTodos(lista);
   let errores = await erroresMiddleware.erroresGral(req.query.error);
   res.render(__basedir + "/src/views/pages/productos", {
     errores,
@@ -228,9 +238,18 @@ const categoriasEliminar = async (req, res) => {
 };
 
 const precios = async (req, res) => {
-  let data = await servicesProductos.getProductosLocal();
+  let lista = "lista1";
+  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
+    lista = `lista${req.query.lista}`;
+  }
+
+  let data = await servicesProductos.getProductosLocal(lista);
+  let columnas = await servicesProductos.getColumnasPrecios();
+
   res.render(__basedir + "/src/views/pages/precios", {
     data,
+    lista,
+    columnas,
     valoresForm: {},
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -240,20 +259,29 @@ const precios = async (req, res) => {
 const preciosUpdate = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    let data = await servicesProductos.getProductosLocal();
+    let lista = "lista1";
+    if(req.query.lista && !isNaN(parseInt(req.query.lista))){
+      lista = `lista${req.query.lista}`;
+    }
+    let data = await servicesProductos.getProductosLocal(lista);
+    let columnas = await servicesProductos.getColumnasPrecios();
     return res.render(__basedir + "/src/views/pages/precios", {
       data,
+      lista,
+      columnas,
       valoresForm: req.body,
       errores: errores.array({ onlyFirstError: true }),
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     });
   }
-  let objetoPrecios = await productosMiddleware.crearObjetoUpdatePrecios(req.body)
+  
+  
+  let objetoPrecios = await productosMiddleware.crearObjetoUpdatePrecios(req.body);
   await servicesProductos.updatePrecios(objetoPrecios);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de precios", "");
 
-  return res.redirect("/panel/precios");
+  return res.redirect(`/panel/precios?lista=${req.body.lista}`);
 };
 
 const local = async (req, res) => {
@@ -1073,10 +1101,17 @@ const pedidoProduccionFabrica = async(req, res) => {
 const pedidoProduccionFabricaTabla = async(req, res) => {
   const locales = await servicesLocal.getLocalesHistoricos();
   const produccion = await servicesProduccion.getProduccionFabrica();
+  let filtros = [];
+  if(req.query.filtro){
+    if(req.query.filtro === "mensajes"){
+      filtros.push("mensajes")
+    }
+  }
   
   res.render(__basedir + "/src/views/pages/tablaProduccion", {
     produccion,
     locales,
+    filtros,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -1813,6 +1848,7 @@ const facturacion = async(req, res) => {
 
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
   const botonesPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal)
+  // continuar aca
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
 
@@ -2129,6 +2165,7 @@ const facturacionRegistros = async (req, res) => {
   const resumen = await facturacionMiddleware.crearResumenVistaLocal(facturas);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   const local = await servicesLocal.getLocal(req.session.userLocal);
+
   const productos = await servicesProductos.getProductosLocalTodos();
   const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
   const botonesPersonalizados = await servicesProductos.getProductosPersonalizadosxLocalTodos(req.session.userLocal)

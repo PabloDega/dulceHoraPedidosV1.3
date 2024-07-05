@@ -345,7 +345,6 @@ if (document.querySelector(".fila") != null) {
 
 // ocultar menu en modo supervisor, excepto en panel home
 let vistaMenu = "flex";
-console.log(window.location.pathname)
 if((window.location.pathname !== "/panel" && window.location.pathname !== "/login") && document.querySelector("#menuSupervisor")){
   let menu = document.querySelector("#menuSupervisor");
   let boton = document.querySelector("#backMenuShow");

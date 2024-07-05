@@ -1,4 +1,17 @@
-<h2>Precios</h2>
+<h2>Precios
+  <span id="contSelectLista">Lista de precios: 
+    <select name="lista" id="listaDePrecios">
+      <%columnas.forEach((columna) => {
+        let selected;
+        if(lista === columna){
+          selected = "selected";
+        }%>
+        <option value="<%=columna%>" <%=selected%>><%=columna%></option>
+      <%})%>
+      
+    </select>
+  </span>
+</h2>
 <form action="/panel/precios" method="post" id="preciosForm">
 <table id="preciosTabla">
     <thead>
@@ -30,6 +43,7 @@
       <%}); %>
     </tbody>
 </table>
+<input type="hidden" name="lista" value="<%=lista.replace(/[^0-9]/g, "")%>">
 <input type="submit" value="Actualizar Precios" class="backListaProdCardBoton btnNaranja inputBtn" id="preciosEnviar">
 </form>
 <script src="/script/preciosUpdate.js"></script>
