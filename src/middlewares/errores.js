@@ -43,6 +43,11 @@ const erroresGral = async (error) => {
         errores.push(error);
         return errores;
     }
+    if (error == "lista1") {
+        let error = { msg: "La lista de precios seleccionada no se encuentra habilitada para el local" };
+        errores.push(error);
+        return errores;
+    }
 };
 
 module.exports = {

@@ -139,7 +139,7 @@ const cargarPrecios = async(productos, precios, lista) => {
 const parseColumnas = async (query) => {
     let columnas = [];
     query = query[0];
-    query = query.slice(2, query.length)
+    query = query.slice(3, query.length)
     query.forEach((col) => {
         columnas.push(col.COLUMN_NAME)
     })

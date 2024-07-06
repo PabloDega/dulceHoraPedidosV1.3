@@ -1,40 +1,46 @@
 #backRender .editor .resumenFacturacion{
-    display: flex;
-    flex-direction: column;
-    align-items: unset;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: unset;
+}
   
-  #backRender .editor .resumenFacturacionScroll{
-    position: fixed;
-    flex-direction: row;
-    bottom: 0;
-    left: 0;
-    background-color: white;
-    width: 100%;
-    padding: 1em;
-    z-index: 20;
-    justify-content: center;
-    align-items: end;
-    border-top: 3px solid red;
-  }
-  #backRender .editor .resumenFacturacionScroll span:nth-child(1){
-    min-width: 40%;
-  }
-  #backRender .editor .resumenFacturacionScroll span:nth-child(2){
-    flex-direction: column;
-    align-items: stretch;
-  }
-  #factBotoneraXtra.factBotoneraXtraScroll{
-    flex-direction: row;
-    position: fixed;
-    bottom: 1em;
-    right: 1em;
-    z-index: 30;
-  }
-  #backRender.factBackRenderScroll{
-    margin-bottom: 150px;
-  }
+#backRender .editor .resumenFacturacionScroll{
+  position: fixed;
+  flex-direction: row;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  width: 100%;
+  padding: 1em;
+  z-index: 20;
+  justify-content: center;
+  align-items: end;
+  border-top: 3px solid red;
+}
+#backRender .editor .resumenFacturacionScroll span:nth-child(1){
+  min-width: 40%;
+}
+#backRender .editor .resumenFacturacionScroll span:nth-child(2){
+  flex-direction: column;
+  align-items: stretch;
+}
+#factBotoneraXtra.factBotoneraXtraScroll{
+  flex-direction: row;
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  z-index: 30;
+}
+#backRender.factBackRenderScroll{
+  margin-bottom: 150px;
+}
+form #listaDePrecios{
 
+}
+form#nuevaVenta h1{
+  display: flex;
+  justify-content: space-between;
+}
 
 
 @media (max-width: 800px) or (pointer: coarse) {

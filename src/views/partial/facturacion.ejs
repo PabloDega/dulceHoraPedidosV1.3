@@ -1,7 +1,22 @@
 <!-- <div id="errores"></div> -->
+ <%let listasdisponibles = JSON.parse(local.listasdisponibles)%>
 <div class="factSubCont">
     <form action="" method="post" class="editor" id="nuevaVenta">
-        <h1>Facturacion</h1>  
+        <h1>Facturacion
+        <%if(listasdisponibles.length > 1){%>
+            <select name="lista" id="listaDePrecios">
+                <%listasdisponibles.forEach((dato) => {
+                    let selected;
+                    if(lista === dato){
+                        selected = "selected";
+                    }
+                    let nombreDeLista = dato.replace(/[^0-9]/g, "");
+                    nombreDeLista = "Lista " + nombreDeLista%>
+                    <option value="<%=dato%>" <%=selected%>><%=nombreDeLista%></option>
+                <%})%>
+            </select>
+        <%}%>
+        </h1>
         <span>
             <table id="detallesFacturacion">
                 <thead>
@@ -204,6 +219,7 @@
         window.impuestos = <%- JSON.stringify(impuestos) %>
         window.data = <%- JSON.stringify(data) %>
         window.local = <%- JSON.stringify(local) %>
+        window.lista = <%- JSON.stringify(lista) %>
         window.datosFiscales = <%- JSON.stringify(datosFiscales) %>
         window.botonesPersonalizados = <%- JSON.stringify(botonesPersonalizados) %>
     </script>

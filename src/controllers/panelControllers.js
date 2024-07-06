@@ -1829,6 +1829,7 @@ const facturacion = async(req, res) => {
   }
 
   let data = false;
+  // Si se carga el id de la seña debe especificar la lista de precios -- Ticket
   if(req.query.id){
     if(isNaN(parseInt(req.query.id))){
       return res.redirect("/panel/facturacion?error=query1");
@@ -1846,11 +1847,22 @@ const facturacion = async(req, res) => {
     return res.redirect("/panel?error=datosFiscales1")
   }
 
+  let lista = local.listaprimaria;
+  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
+    lista = `lista${req.query.lista}`;
+    // verificar si la lista solicitada está habilitada en la bbdd -- Ticket
+    let listasDisponibles = JSON.parse(local.listasdisponibles);
+    let checkLista = listasDisponibles.findIndex((item) => item == lista);
+    if(checkLista < 0){
+      return res.redirect("/panel?error=lista1")
+    }
+  }
+  
+  const productos = await servicesProductos.getProductosLocal(lista);
+  const categorias = await servicesProductos.getCategorias();
   const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
   const botonesPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal)
-  // continuar aca
-  const productos = await servicesProductos.getProductosLocal();
-  const categorias = await servicesProductos.getCategorias();
+  let columnas = await servicesProductos.getColumnasPrecios();
 
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
@@ -1859,6 +1871,8 @@ const facturacion = async(req, res) => {
     data,
     datosFiscales,
     local,
+    columnas,
+    lista,
     impuestos: datosFiscales.condicioniva,
     botonesfacturacion,
     botonesPersonalizados,
