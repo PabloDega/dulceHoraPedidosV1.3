@@ -1059,9 +1059,10 @@ async function consultarPadron(){
 document.querySelector("#consultarPadron").addEventListener("click", () => {consultarPadron();})
 
 document.querySelector("#listaDePrecios").addEventListener("change", (e) => {
+  document.querySelector("#cortinaLoad").style.display = "flex";
   let numero = e.target.value.replace(/[^0-9]/g, "");
   window.location.href = `/panel/facturacion?lista=${numero}`;
-})
+});
 
 if(local.listaprimaria !== lista){
   document.querySelector("body").style.backgroundColor = "orange"

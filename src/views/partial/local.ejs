@@ -82,7 +82,8 @@
                       break;
                   };
                 })
-                diasEntrega.forEach((dia) => {%> <%= dia %>, <%}) %>
+                diasEntrega = diasEntrega.join(", ");%>
+                <%= diasEntrega %>
             </td>
           </tr>
           <tr>
@@ -99,6 +100,18 @@
             <td class="servicio<%=estado%>"><%= estado %></td>
           </tr>
           <%}%>
+          <tr>
+            <td>Lista de precios primaria</td>
+            <td><%= dato.listaprimaria %></td>
+          </tr>
+          <tr>
+            <td>Lista disponibles</td>
+            <td>
+              <%let listasDisponibles = JSON.parse(dato.listasdisponibles);
+              listasDisponibles = listasDisponibles.join(", ");%>
+              <%=listasDisponibles%>
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="backListaProdCardBoton btnNaranja" id="backListaLocalEditar" data-id="<%= dato.id %>">editar</div>

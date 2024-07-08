@@ -5,8 +5,10 @@
         let selected;
         if(lista === columna){
           selected = "selected";
-        }%>
-        <option value="<%=columna%>" <%=selected%>><%=columna%></option>
+        }
+        let nombreDeLista = columna.replace(/[^0-9]/g, "");
+        nombreDeLista = "Lista " + nombreDeLista%>%>
+        <option value="<%=columna%>" <%=selected%>><%=nombreDeLista%></option>
       <%})%>
       
     </select>

@@ -1,4 +1,5 @@
 <%- include("../partial/erroresForm")%>
+<%- include("../partial/cortina")%>
 <%- include("../partial/confirmarEliminar") %>
 <%- include("../partial/menu", {menu: "small"})%>
 <%- include("../partial/menuProductos", {menu: "small"})%>
@@ -9,3 +10,7 @@
     <%- include("../partial/tablaProductos", { data }) %>
   <% } %>
 </div>
+
+<script>
+  window.lista = <%- JSON.stringify(lista) %>
+</script>

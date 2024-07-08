@@ -57,10 +57,9 @@ const insertLocal = async(datos, diasEntrega, serviciosActivos) => {
   }
 }
 
-const updateLocal = async(datos, serviciosActivos, diasEntrega) => {
+const updateLocal = async(datos, serviciosActivos, diasEntrega, listas) => {
   try {
-    /* await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", cuit = "${datos.cuit}", impuestos = "${datos.impuestos}", ptoventa = "${datos.ptoventa}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}" WHERE id = "${datos.id}"`); */
-    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}" WHERE id = "${datos.id}"`);
+    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}", listaprimaria = "lista${datos.lista}", listasdisponibles = '${listas}' WHERE id = "${datos.id}"`);
   } catch (error) {
     throw error;
   } finally {

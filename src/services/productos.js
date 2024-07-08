@@ -120,12 +120,13 @@ const getProductosLocalTodos = async (lista) => {
 
 const getProductoLocal = async (id, lista) => {
   try {
+    lista = "lista"+lista;
     /* const rows = await conectar.query("SELECT * FROM productoslocal WHERE ?", { id });
     return rows[0][0]; */
     const productos = await conectar.query(`SELECT * FROM productoslocal WHERE id = "${id}"`);
     const precios = await conectar.query("SELECT * FROM listasdeprecios");
     const productosConPrecio = await productosMiddleware.cargarPrecios(productos[0], precios[0], lista);
-    return productosConPrecio;
+    return productosConPrecio[0];
   } catch (error) {
     throw error;
   } finally {
@@ -147,7 +148,12 @@ const getColumnasPrecios = async () => {
 
 const insertProductoLocal = async (datos) => {
   try {
-    await conectar.query(`INSERT INTO productoslocal (codigo, nombre, categoria, descripcion, fraccionamiento, preciounidad, preciodocena, preciokilo, iva, img, estado) VALUES ("${datos.codigo}", "${datos.nombre}", "${datos.categoria}", "${datos.descripcion}", "${datos.fraccionamiento}", "${datos.preciounidad}", "${datos.preciodocena}", "${datos.preciokilo}", "${datos.iva}", "${datos.nombreImg}", "${datos.estado}")`);
+    let productoInsert = await conectar.query(`INSERT INTO productoslocal (codigo, nombre, categoria, descripcion, fraccionamiento, iva, img, estado) VALUES ("${datos.codigo}", "${datos.nombre}", "${datos.categoria}", "${datos.descripcion}", "${datos.fraccionamiento}", "${datos.iva}", "${datos.nombreImg}", "${datos.estado}")`);
+    // Crear array e Insertar precio en lista 1
+    /* let precios = [parseFloat(datos.preciounidad), parseFloat(datos.preciodocena), parseFloat(datos.preciokilo)];
+    precios = JSON.stringify(precios); */
+    let precios = await productosMiddleware.parsePrecios(datos);
+    await conectar.query(`INSERT INTO listasdeprecios (idRef, codigo, lista1) VALUES (${productoInsert[0].insertId}, "${datos.codigo}", "${precios}")`);
   } catch (error) {
     throw error;
   } finally {
@@ -155,11 +161,17 @@ const insertProductoLocal = async (datos) => {
   }
 };
 
-const updateProductoLocal = async (datos) => {
+const updateProductoLocal = async (datos, numeroLista) => {
   try {
-    const answer = await conectar.query(
-      `UPDATE productoslocal SET codigo = "${datos.codigo}", nombre = "${datos.nombre}", categoria = "${datos.categoria}", descripcion = "${datos.descripcion}", fraccionamiento = "${datos.fraccionamiento}", preciounidad = "${datos.preciounidad}", preciodocena = "${datos.preciodocena}", preciokilo = "${datos.preciokilo}", iva = "${datos.iva}", img = "${datos.nombreImg}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`
-    );
+    await conectar.query(`UPDATE productoslocal SET codigo = "${datos.codigo}", nombre = "${datos.nombre}", categoria = "${datos.categoria}", descripcion = "${datos.descripcion}", fraccionamiento = "${datos.fraccionamiento}", iva = "${datos.iva}", img = "${datos.nombreImg}", estado = "${datos.estado || "false"}" WHERE id = "${datos.id}"`);
+    
+    /* let precios = [parseFloat(datos.preciounidad), parseFloat(datos.preciodocena), parseFloat(datos.preciokilo)];
+    precios = JSON.stringify(precios); */
+    let precios = await productosMiddleware.parsePrecios(datos);
+    let lista = "lista1";
+    if(numeroLista){lista = `lista${numeroLista}`;}
+    await conectar.query(`UPDATE listasdeprecios SET ${lista} = "${precios}" WHERE idRef = "${datos.id}"`);
+
   } catch (error) {
     throw error;
   } finally {

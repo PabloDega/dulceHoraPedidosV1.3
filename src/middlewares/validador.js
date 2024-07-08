@@ -50,6 +50,11 @@ const validarProductoChain = [
     .trim()
     .notEmpty().withMessage("Error en el codigo, por favor recargar fomulario")
     .isNumeric().withMessage("Error en el codigo, por favor recargar fomulario"),
+  body("lista")
+    .optional({ values: "falsy" })
+    .trim()
+    .notEmpty().withMessage("Error en la lista, por favor recargar fomulario")
+    .isNumeric().withMessage("Error en la lista, por favor recargar fomulario"),
   body("nombre")
     .trim()
     .escape()
@@ -182,7 +187,30 @@ const validarLocalesChain = [
         }
       }
     }),
-];
+  body("lista")
+    .optional({ values: "falsy" })
+    .trim()
+    .notEmpty().withMessage("Error en la lista de precios, por favor recargar fomulario")
+    .isNumeric().withMessage("Error en la lista de precios, por favor recargar fomulario"),
+  body("listasDisp")
+    .optional({ values: "falsy" })
+    .trim()
+    .notEmpty().withMessage("Error en las listas de precios, por favor recargar fomulario")
+    .custom(async(dato) => {
+      if (typeof(dato) == "object") {
+        dato.forEach((lista) => {
+          if(isNaN(parseInt(lista))) {
+            throw new Error("Datos de lista invalidos");
+          }
+        })
+      } else if (typeof(dato) == "string"){
+        if(isNaN(parseInt(dato))) {
+          throw new Error("Datos de lista invalidos");
+        }
+      } else {
+        throw new Error("Datos de lista invalidos");
+      }
+    }),];
 
 const validarUsuariosChain = [
   body("usuario")

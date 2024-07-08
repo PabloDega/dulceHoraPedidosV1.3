@@ -34,9 +34,6 @@
 #backRender.factBackRenderScroll{
   margin-bottom: 150px;
 }
-form #listaDePrecios{
-
-}
 form#nuevaVenta h1{
   display: flex;
   justify-content: space-between;

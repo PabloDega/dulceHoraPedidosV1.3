@@ -93,24 +93,61 @@
             </div>
         </span>
     </span>
-<span>
-    <span>Servicios</span>
     <span>
-        <div id="nuevoLocalServicios">
-            <%  let servicioArray = [];
-                let serviciosActivos = JSON.parse(data.servicios || data.serviciosArray);
-                servicios.forEach((servicio) => {
-                    servicioArray.push(servicio.servicio);
-                    let estado = "";
-                    if(serviciosActivos[servicio.servicio]){estado = "checked"}%>
-                    <div>
-                        <span><input type="checkbox" name="<%= servicio.servicio %>" value="true" <%= estado %>></span>
-                        <span>Servicio <%= servicio.servicio %></span>
-                    </div>
+        <span>Servicios</span>
+        <span>
+            <div id="nuevoLocalServicios">
+                <%  let servicioArray = [];
+                    let serviciosActivos = JSON.parse(data.servicios || data.serviciosArray);
+                    servicios.forEach((servicio) => {
+                        servicioArray.push(servicio.servicio);
+                        let estado = "";
+                        if(serviciosActivos[servicio.servicio] || data[servicio.servicio]){estado = "checked"}%>
+                        <div>
+                            <span><input type="checkbox" name="<%= servicio.servicio %>" value="true" <%= estado %>></span>
+                            <span>Servicio <%= servicio.servicio %></span>
+                        </div>
+                    <%})%>
+            </div>
+        </span>
+    </span>
+    <%if(serviciosActivos.facturacion || data.facturacion){%>
+    <span>
+        <span>Lista de precios principal</span>
+        <span>
+            <select name="lista" id="listaDePrecios">
+                <%columnas.forEach((columna) => {
+                    let selected;
+                    if(data.listaprimaria === columna){
+                        selected = "selected";
+                    }
+                    let numeroDeLista = columna.replace(/[^0-9]/g, "");
+                    let nombreDeLista = "Lista " + numeroDeLista%>%>
+                    <option value="<%=numeroDeLista%>" <%=selected%>><%=nombreDeLista%></option>
                 <%})%>
+            </select>
+        </span>
+    </span>
+
+    <span>
+        <span>Lispas disponibles</span>
+        <div id="listasDePreciosEditLocal">
+        <%let listasDisponibles = JSON.parse(data.listasdisponibles)%>
+        <%columnas.forEach((columna) => {
+            let checked = "";
+            if(listasDisponibles.findIndex((lista) => lista === columna) !== -1){
+                checked = "checked";
+            }
+            let numeroDeLista = columna.replace(/[^0-9]/g, "");
+            let nombreDeLista = "Lista " + numeroDeLista%>
+            <div>
+            <input type="checkbox" name="listasDisp" class="listasDisp" id="<%=columna%>" value="<%=numeroDeLista%>" <%= checked %>>
+            <span><%=nombreDeLista%></span>
+            </div>
+        <%})%>
         </div>
     </span>
-</span>
+    <%}%>
 
     <input type="hidden" name="serviciosArray" value="<%= JSON.stringify(servicioArray) %>">
 
@@ -135,4 +172,4 @@
     <input type="hidden" name="nombreImgOriginal" value="<%= data.img || data.nombreImgOriginal %>">
 </form>
 
-<script defer src="/script/cuit.js"></script>
+<script defer src="/script/editarLocal.js"></script>

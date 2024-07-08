@@ -37,7 +37,7 @@ if (document.querySelector("#verCategoriaFabrica") != null) {
     .querySelector("#verCategoriaFabrica")
     .addEventListener("click", () => (location.href = "/panel/categoriasFabrica"));
 }
-if (document.querySelector("#backListaProdEditar") != null) {
+/* if (document.querySelector("#backListaProdEditar") != null) {
   document
     .querySelectorAll("#backListaProdEditar")
     .forEach((boton) =>
@@ -46,7 +46,7 @@ if (document.querySelector("#backListaProdEditar") != null) {
         (e) => (location.href = "/panel/productos/editar?id=" + e.target.dataset.id)
       )
     );
-}
+} */
 if (document.querySelector("#backListaProdEliminar") != null) {
   document
     .querySelectorAll("#backListaProdEliminar")

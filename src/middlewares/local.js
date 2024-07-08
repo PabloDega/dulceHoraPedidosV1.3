@@ -58,10 +58,25 @@ const localesConFacturacion = async (locales) => {
   return localesConFacturacion;
 }
 
+const crearListasDisponibles = async (datos) => {
+  let listas = [];
+  if(typeof(datos.listasDisp) == "string"){
+    listas.push("lista" + datos.listasDisp);
+    return JSON.stringify(listas);
+  } else if(typeof(datos.listasDisp) == "object"){
+    datos.listasDisp.forEach((dato) => {
+      listas.push("lista" + dato);
+    })
+    return JSON.stringify(listas);
+  }
+
+}
+
 module.exports = {
   crearObjetoServicios,
   crearObjetoDiasEntrega,
   crearObjetoDiasEntrega2,
   filtarServicios,
   localesConFacturacion,
+  crearListasDisponibles,
 };

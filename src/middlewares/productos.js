@@ -146,6 +146,12 @@ const parseColumnas = async (query) => {
     return columnas;
 }
 
+const parsePrecios = async (datos) => {
+    let precios = [parseFloat(datos.preciounidad), parseFloat(datos.preciodocena), parseFloat(datos.preciokilo)];
+    precios = JSON.stringify(precios);
+    return precios;
+}
+
 module.exports = {
     crearObjetoUpdatePrecios,
     buscarDuplicadosProdPersonalizados,
@@ -153,4 +159,5 @@ module.exports = {
     buscarDuplicadosProdFabrica,
     cargarPrecios,
     parseColumnas,
+    parsePrecios,
 }

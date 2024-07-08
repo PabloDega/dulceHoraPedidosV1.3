@@ -43,8 +43,14 @@ const productosCard = async (req, res) => {
   }
 
   let data = await servicesProductos.getProductosLocalTodos(lista);
+  let columnas = await servicesProductos.getColumnasPrecios();
+  let errores = await erroresMiddleware.erroresGral(req.query.error);
+
   res.render(__basedir + "/src/views/pages/productos", {
     data,
+    errores,
+    columnas,
+    lista,
     vista: "card",
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -59,26 +65,31 @@ const productosTabla = async (req, res) => {
 
   let data = await servicesProductos.getProductosLocalTodos(lista);
   let errores = await erroresMiddleware.erroresGral(req.query.error);
+  let columnas = await servicesProductos.getColumnasPrecios();
+
   res.render(__basedir + "/src/views/pages/productos", {
     errores,
     data,
     vista: "tabla",
+    lista,
+    columnas,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
 };
 
 const productosEditar = async (req, res) => {
-  if(!req.query.id || isNaN(parseInt(req.query.id))){
+  if(!req.query.id || isNaN(parseInt(req.query.id)) || !req.query.lista || isNaN(parseInt(req.query.lista))){
     return res.redirect("/panel/productos/tabla?error=query1");
   }
-  let data = await servicesProductos.getProductoLocal(req.query.id);
+  let data = await servicesProductos.getProductoLocal(req.query.id, req.query.lista);
   if(data === undefined){
     return res.redirect("/panel/productos/tabla?error=query2");
   }
   let dataCategorias = await servicesProductos.getCategorias();
   res.render(__basedir + "/src/views/pages/editarProducto", {
     data,
+    lista: req.query.lista,
     dataCategorias,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -88,7 +99,7 @@ const productosEditar = async (req, res) => {
 const productosUpdate = async (req, res) => {
   // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
   // si no se modifico el codigo evitar verificacion
-  let codigoOriginal = await servicesProductos.getProductoLocal(req.body.id);
+  let codigoOriginal = await servicesProductos.getProductoLocal(req.body.id, req.body.lista);
   let buscarDuplicados = {error: false}
   if(codigoOriginal.codigo != req.body.codigo){
     let productos = await servicesProductos.getProductosLocal();
@@ -109,9 +120,9 @@ const productosUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  await servicesProductos.updateProductoLocal(req.body);
+  await servicesProductos.updateProductoLocal(req.body, req.body.lista);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de Producto", `Id de pord: ${req.body.id}`)
-  return res.redirect("/panel/productos/tabla");
+  return res.redirect(`/panel/productos/tabla?lista=${req.body.lista}`);
 };
 
 const productosNuevo = async (req, res) => {
@@ -305,10 +316,13 @@ const localEditar = async (req, res) => {
   }
   const servicios = await servicesServicios.getServicios();
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega2(data.entrega);
+  let columnas = await servicesProductos.getColumnasPrecios();
+
   res.render(__basedir + "/src/views/pages/editarLocal", {
     data,
     servicios,
     diasEntrega,
+    columnas,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -320,19 +334,26 @@ const localUpdate = async (req, res) => {
     let diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body);
     diasEntrega = await localMiddleware.crearObjetoDiasEntrega2(diasEntrega);
     const servicios = await servicesServicios.getServicios();
+    let columnas = await servicesProductos.getColumnasPrecios();
+    let data = await servicesLocal.getLocal(req.query.id);
+    req.body.listasdisponibles = data.listasdisponibles;
+
     return res.render(__basedir + "/src/views/pages/editarLocal", {
       diasEntrega,
       servicios,
       data: req.body,
+      columnas,
       errores: errores.array({ onlyFirstError: true }),
       usuario: req.session.userLog,
       userRol: req.session.userRol,
     });
   }
+
   const servicios = await servicesServicios.getServicios();
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body);
-  const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
-  await servicesLocal.updateLocal(req.body, serviciosActivos, diasEntrega);
+  const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body);
+  const listas = await localMiddleware.crearListasDisponibles(req.body);
+  await servicesLocal.updateLocal(req.body, serviciosActivos, diasEntrega, listas);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de local", `Id de local: ${req.body.id}`);
 
   return res.redirect("/panel/local");

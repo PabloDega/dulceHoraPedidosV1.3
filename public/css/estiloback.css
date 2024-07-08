@@ -1691,6 +1691,28 @@ form.editor#cierreCajaCierre table tbody tr input{
   font-size: 1em;
   padding: 0.3em;
 }
+#headListaSelect{
+  margin-bottom: 0.5em;
+}
+
+#headListaSelect span{
+  flex-grow: 1;
+}
+
+#headListaSelect #listaDePrecios{
+  display: flex;
+  justify-self: flex-end;
+  padding: 0.3em;
+}
+#listasDePreciosEditLocal{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+#listasDePreciosEditLocal div{
+  display: flex;
+  gap: 0.5em;
+}
 
 /* Media Style */
 
