@@ -93,11 +93,17 @@ function cargarItem(e) {
     producto.fraccionamiento = "unidad";
     producto.preciounidad = producto.precio;
   }
+  // rechazar productos con precios en $0;
+  if(checkPrecios(producto)){
+    mostrarError(`El item ${e.target.value} no tiene declarado un precio`);
+    vaciarItem(e);
+    return;
+  }
   let item = e.target.dataset.item;
   let nombre = document.querySelector(`#nom${item}`);
   let medida = document.querySelector(`#med${item}`);
   let precio = document.querySelector(`#precio${item}`);
-  let cantidad = document.querySelector(`#cant${item}`);
+  // let cantidad = document.querySelector(`#cant${item}`);
 
   nombre.innerHTML = producto.nombre;
   medida.innerHTML = producto.fraccionamiento;
@@ -120,6 +126,18 @@ function cargarItem(e) {
 
   eventos();
   calcularItem(e);
+}
+
+function checkPrecios(producto){
+  let resutlado = false;
+  if(producto.fraccionamiento === "unidad" && producto.preciounidad < 1){
+    resutlado =  true;
+  } else if(producto.fraccionamiento === "docena" && (producto.preciounidad < 1 && producto.preciodocena < 1)){
+    resutlado =  true;
+  } else if(producto.fraccionamiento === "kilo" && producto.preciokilo < 1){
+    resutlado =  true;
+  }
+  return resutlado;
 }
 
 function calcularItem(e) {
@@ -456,6 +474,13 @@ async function enviarFactura(tipo) {
   estadoCaja = await estadoCaja.json();
   if(estadoCaja.error){
     mostrarError("Caja cerrada, abra un nueva caja para operar");
+    document.querySelector("#cortinaLoad").style.display = "none";
+    return;
+  }
+
+  // Verficar monto > $0
+  if(total < 1){
+    mostrarError("El comprobante no contiene un monto válido, por favor recargue la página");
     document.querySelector("#cortinaLoad").style.display = "none";
     return;
   }

@@ -849,40 +849,6 @@ const usuariosLocalUpdate = async (req, res) => {
   return res.redirect("/panel/usuarios/local");
 };
 
-/* const pedidos = async (req, res) => {
-  let dataPedido;
-  let dataMensajes;
-  let idLocal = req.session.userLocal;
-  if(req.query.id && !isNaN(parseInt(req.query.id))){
-    // ticket 003
-    const dataPedidoCheck = await servicesPedidos.getPedido(req.query.id);
-    if(dataPedidoCheck.local === idLocal){
-      dataPedido = dataPedidoCheck;
-      dataMensajes = await servicesChat.getMensajes(req.query.id);
-      // await actividadMiddleware.actividadUser(req.session.userLog, idLocal, req.query.id, "Lectura", "");
-    }
-  }
-  let dataPedidos = await servicesPedidos.getPedidos(idLocal);
-  let dataProds = await servicesProductos.getProductosLocal();
-  let local = await servicesLocal.getLocal(idLocal);
-  res.render(__basedir + "/src/views/pages/pedidos", {
-    pedidoNumero: req.query.id || 0,
-    dataPedido,
-    dataMensajes,
-    dataPedidos,
-    dataProds,
-    usuario: req.session.userLog,
-    userRol: req.session.userRol,
-    local,
-  });
-}; */
-
-/* const pedidosEstado = async (req, res) => {
-  await servicesPedidos.updateEstadoPedidos(req.body.id, req.body.estado);
-  await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, req.body.id, "Estado", req.body.estado);
- return res.redirect("/panel/pedidos");
-}; */
-
 const actividad = async(req, res) => {
   let page;
   if(isNaN(req.body.page) || req.body.page < 1){
@@ -975,7 +941,7 @@ const actividadTodaFiltro = async (req, res) => {
 
 }
 
-const stockForm = async(req, res) => {
+/* const stockForm = async(req, res) => {
   const data = await servicesLocal.getLocal(req.session.userLocal);
   const productos = await servicesProductos.getProductosLocal();
   const categorias = await servicesProductos.getCategorias();
@@ -988,7 +954,7 @@ const stockForm = async(req, res) => {
   });
 }
 
-/* const stockUpdate = async (req, res) => {
+ const stockUpdate = async (req, res) => {
   let datos = req.body.stock;
   // validacion
   if(!Array.isArray(req.body.stock)){
@@ -1887,7 +1853,6 @@ const facturacion = async(req, res) => {
 
   res.render(__basedir + "/src/views/pages/facturacion", {
     productos,
-    botonesPersonalizados,
     categorias,
     data,
     datosFiscales,
@@ -1906,29 +1871,12 @@ const facturacion = async(req, res) => {
 const facturacionPost = async(req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    const botonesfacturacion = await servicesFacturacion.getBotonesFacturacion();
-    const productos = await servicesProductos.getProductosLocal();
-    const categorias = await servicesProductos.getCategorias();
-    // modlocal - pasar a datos fiscales, solo para res en error de validacion
-    // const local = await servicesLocal.getLocal(req.session.userLocal);
-    const local = await servicesLocal.getDatosFiscales(req.session.userLocal);
-    const datosFiscales = await servicesLocal.getDatosFiscales(req.session.userLocal);
-    const serviciosLocal = JSON.parse(local.servicios);
-    const data = {};
-    if(!serviciosLocal.facturacion){
-      return res.redirect("/panel");
-    }
-    return res.render(__basedir + "/src/views/pages/facturacion", {
-      errores: errores.array({ onlyFirstError: true }),
-      productos,
-      categorias,
-      data,
-      impuestos: datosFiscales.condicioniva,
-      botonesfacturacion,
-      usuario: req.session.userLog,
-      userRol: req.session.userRol,
-      layout: __basedir + "/src/views/layouts/facturacion",
-    });
+    let msgError = [];
+    errores.errors.forEach((error) => {
+      msgError.push(error.msg)
+    })
+    msgError = msgError.join("<br>")
+    return res.send({error: JSON.stringify(msgError), resultado: false, imprimir: false});
   }
   
   // verificar estado de caja previo registro
@@ -2765,7 +2713,7 @@ module.exports = {
   actividad,
   actividadToda,
   actividadTodaFiltro,
-  stockForm,
+  // stockForm,
   // stockUpdate,
   pedidoProduccionLocal,
   pedidoProduccionLocalTabla,

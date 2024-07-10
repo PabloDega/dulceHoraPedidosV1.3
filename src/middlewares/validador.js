@@ -475,10 +475,10 @@ const validarFacturacionChain = [
     .escape()
     .isString().withMessage("Formato del campo 'datos' incorrecto"),
   body("neto")
-    .notEmpty().withMessage("El campo 'neto:' es obligatorio")
+    .notEmpty().withMessage("El campo 'neto' es obligatorio")
     .trim()
     .escape()
-    .isNumeric().withMessage("Formato del campo 'neto:' incorrecto"),
+    .isNumeric().withMessage("Formato del campo 'neto' incorrecto"),
   body("iva10")
     .notEmpty().withMessage("El campo 'iva10' es obligatorio")
     .trim()

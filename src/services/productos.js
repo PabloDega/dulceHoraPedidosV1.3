@@ -245,7 +245,6 @@ const updateProductosPersonalizados = async (datos, local) => {
 
 const deleteProductosPersonalizados = async (id, local) => {
   try {
-    // const answer = await conectar.query(`DELETE FROM productoslocal WHERE id = "${id}"`);
     await conectar.query(`UPDATE productospersonalizados SET visible = 'false' WHERE id = '${id}' AND local = '${local}'`);
   } catch (error) {
     throw error;

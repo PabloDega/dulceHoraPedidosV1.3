@@ -10,3 +10,7 @@ document.querySelector("#listaDePrecios").addEventListener("change", (e) => {
     let numero = e.target.value.replace(/[^0-9]/g, "");
     window.location.href = `/panel/precios?lista=${numero}`;
 })
+
+document.querySelector("#preciosEnviar").addEventListener("click", () => {
+    document.querySelector("#cortinaLoad").style.display = "flex";
+})

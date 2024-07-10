@@ -151,6 +151,9 @@
     #factBotonesPersonalizados{
       display: none !important;
     }
+    #factBotonesCategoria{
+      display: none !important;
+    }
     .mensajeInfo{
       display: none !important;
     }
