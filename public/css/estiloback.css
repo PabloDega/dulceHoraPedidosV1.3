@@ -1714,6 +1714,10 @@ form.editor#cierreCajaCierre table tbody tr input{
   gap: 0.5em;
 }
 
+.filtroProduccionActivo{
+  background-color: orange;
+}
+
 /* Media Style */
 
 @media (max-width: 800px) {

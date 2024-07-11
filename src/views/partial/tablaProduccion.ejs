@@ -1,14 +1,7 @@
 <%function monetarizar(valor){
     valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
     return valor;
-}
-// analizar filtros de la query
-let mensajes = false;
-if(filtros.findIndex((item) => item == "mensajes") !== -1){
-    mensajes = true;
-}
-%>
-
+}%>
 <table id="tablaProduccion">
     <thead>
         <tr>
@@ -25,10 +18,28 @@ if(filtros.findIndex((item) => item == "mensajes") !== -1){
     <tbody>
         <%produccion = produccion.reverse();
         produccion.forEach((pedido) => {
-            if(mensajes){
-                if(pedido.mensajes.length == 0 || pedido.buzon !== "mensajeLocal"){
-                    return;
+            let filtrar = true;
+            if(filtros.validacion){
+                if(filtros.filtros.findIndex((filtro) => filtro === "inbox") != -1){
+                    if(pedido.mensajes.length !== 0 && pedido.buzon == "mensajeLocal"){
+                        filtrar = false;
+                    }
                 }
+                if(filtros.filtros.findIndex((filtro) => filtro === "cargados") != -1){
+                    if(pedido.estado === "cargado"){
+                        filtrar = false;
+                    }
+                }
+                if(filtros.filtros.findIndex((filtro) => filtro === "aceptados") != -1){
+                    if(pedido.estado === "aceptado"){
+                        filtrar = false;
+                    }
+                }
+            } else {
+                filtrar = false;
+            }
+            if(filtrar){
+                return;
             }
             let local = locales.find(local => local.id == pedido.local);
             let estiloEstado = "txtVerde"
@@ -53,3 +64,7 @@ if(filtros.findIndex((item) => item == "mensajes") !== -1){
         <%})%>
     </tbody>
 </table>
+
+<script>
+    window.filtros = <%- JSON.stringify(filtros) %>
+</script>

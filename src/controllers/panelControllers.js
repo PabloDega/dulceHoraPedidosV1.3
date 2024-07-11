@@ -1088,12 +1088,8 @@ const pedidoProduccionFabrica = async(req, res) => {
 const pedidoProduccionFabricaTabla = async(req, res) => {
   const locales = await servicesLocal.getLocalesHistoricos();
   const produccion = await servicesProduccion.getProduccionFabrica();
-  let filtros = [];
-  if(req.query.filtro){
-    if(req.query.filtro === "mensajes"){
-      filtros.push("mensajes")
-    }
-  }
+  const filtrosDisponibles = ["inbox", "cargados", "aceptados"];
+  let filtros = await produccionMiddleware.parseFiltrosTablaProduccion(req.query.filtro, filtrosDisponibles);
   
   res.render(__basedir + "/src/views/pages/tablaProduccion", {
     produccion,

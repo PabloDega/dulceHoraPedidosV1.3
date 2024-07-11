@@ -127,9 +127,39 @@ const getCategoriasDeProductosArray = async(pedidos, productos, sector) => {
   return categoriasPedido;
 }
 
+const parseFiltrosTablaProduccion = async (filtrosQuery, filtrosDisponibles) => {
+  let respuesta = {};
+  let filtros = [];
+  let validacion = true;
+  if(filtrosQuery !== undefined){
+    if(typeof(filtrosQuery) != "object"){
+      filtros.push(filtrosQuery);
+    } else {
+      filtros = filtrosQuery;
+    }
+  }
+  respuesta.filtros = filtros;
+  // validar querys
+  if(respuesta.filtros.length == 0){
+    validacion = false;
+  } else {
+    filtros.forEach((dato) => {
+      let busqueda = filtrosDisponibles.findIndex((filtDisp) => filtDisp === dato);
+      if(busqueda < 0){
+        respuesta.filtros = [];
+        validacion = false;
+      }
+    });
+  }
+  
+  respuesta.validacion = validacion;
+  return respuesta;
+};
+
 module.exports = {
   getFechasProduccionLocal,
   fechaProduccionNormalizada,
   getCategoriasDeProductos,
   getCategoriasDeProductosArray,
+  parseFiltrosTablaProduccion,
 };
