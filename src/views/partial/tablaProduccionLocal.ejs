@@ -17,6 +17,31 @@
     <tbody>
         <%produccion = produccion.reverse();
         produccion.forEach((pedido) => {
+
+            let filtrar = true;
+            if(filtros.validacion){
+                if(filtros.filtros.findIndex((filtro) => filtro === "inbox") != -1){
+                    if(pedido.mensajes.length !== 0 && pedido.buzon == "mensajeFabrica"){
+                        filtrar = false;
+                    }
+                }
+                if(filtros.filtros.findIndex((filtro) => filtro === "cargados") != -1){
+                    if(pedido.estado === "cargado"){
+                        filtrar = false;
+                    }
+                }
+                if(filtros.filtros.findIndex((filtro) => filtro === "aceptados") != -1){
+                    if(pedido.estado === "aceptado"){
+                        filtrar = false;
+                    }
+                }
+            } else {
+                filtrar = false;
+            }
+            if(filtrar){
+                return;
+            }
+
             let estiloEstado = "txtVerde"
             if(pedido.estado == "aceptado"){
                 estiloEstado = "txtAzul";

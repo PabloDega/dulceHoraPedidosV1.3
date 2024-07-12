@@ -12,7 +12,10 @@ querys.forEach((filtro) => {
 });
 
 function toggleFiltro(filtro){
-    let url = "/panel/produccion/fabrica/tabla";
+    let url = "/panel/produccion/local/tabla";
+    if(window.userRol !== "admin"){
+        url = "/panel/produccion/fabrica/tabla";
+    }
     if(filtro === "todos"){
         window.location.href = url;
         return;

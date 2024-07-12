@@ -1028,10 +1028,13 @@ const pedidoProduccionAgregarMensajeLocal = async(req, res) => {
 const pedidoProduccionLocalTabla = async(req, res) => {
   const produccion = await servicesProduccion.getProduccionLocal(req.session.userLocal);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  const filtrosDisponibles = ["inbox", "cargados", "aceptados"];
+  let filtros = await produccionMiddleware.parseFiltrosTablaProduccion(req.query.filtro, filtrosDisponibles);
 
   res.render(__basedir + "/src/views/pages/tablaProduccionLocal", {
     produccion,
     servicios,
+    filtros,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
