@@ -120,7 +120,12 @@ const getProductosLocalTodos = async (lista) => {
 
 const getProductoLocal = async (id, lista) => {
   try {
-    lista = "lista"+lista;
+    if(lista === undefined){
+      lista = "lista1";
+    } else {
+      lista = "lista"+lista;
+    }
+    
     /* const rows = await conectar.query("SELECT * FROM productoslocal WHERE ?", { id });
     return rows[0][0]; */
     const productos = await conectar.query(`SELECT * FROM productoslocal WHERE id = "${id}"`);
