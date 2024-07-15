@@ -1,9 +1,16 @@
 const { conectar } = require(__basedir + "/src/config/dbConnection");
+const productosMiddleware = require(__basedir + "/src/middlewares/productos");
 
-const getProductosFabrica = async () => {
+
+const getProductosFabrica = async (lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE visible = 'true' ORDER BY codigo");
-    return rows[0];
+    if(lista === undefined){
+      lista = "lista1";
+    }
+    const productos = await conectar.query("SELECT * FROM productosfabrica WHERE visible = 'true' ORDER BY codigo");
+    const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
+    const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {
@@ -11,10 +18,15 @@ const getProductosFabrica = async () => {
   }
 };
 
-const getProductosFabricaActivos = async () => {
+const getProductosFabricaActivos = async (lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
-    return rows[0];
+    if(lista === undefined){
+      lista = "lista1";
+    }
+    const productos = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' AND visible = 'true' ORDER BY codigo");
+    const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
+    const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {
@@ -22,10 +34,12 @@ const getProductosFabricaActivos = async () => {
   }
 };
 
-const getProductosFabricaHistoricos = async () => {
+const getProductosFabricaHistoricos = async (lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosfabrica ORDER BY codigo");
-    return rows[0];
+    const productos = await conectar.query("SELECT * FROM productosfabrica ORDER BY codigo");
+    const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
+    const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {
@@ -33,10 +47,12 @@ const getProductosFabricaHistoricos = async () => {
   }
 };
 
-const getProductoFabrica = async (id) => {
+const getProductoFabrica = async (id, lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE ?", { id });
-    return rows[0][0];
+    const productos = await conectar.query("SELECT * FROM productosfabrica WHERE ?", { id });
+    const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
+    const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {

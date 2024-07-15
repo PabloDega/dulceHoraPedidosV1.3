@@ -1,4 +1,6 @@
 const { conectar } = require(__basedir + "/src/config/dbConnection");
+const productosMiddleware = require(__basedir + "/src/middlewares/productos");
+
 
 const getProduccionLocal = async (local) => {
   try {
@@ -57,10 +59,16 @@ const mensajeProduccionLeido = async(id) => {
   }
 }
 
-const getProductosProduccion = async () => {
+const getProductosProduccion = async (lista) => {
   try {
-    const rows = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' ORDER BY codigo");
-    return rows[0];
+    if(lista === undefined){
+      lista = "lista1";
+    }
+    console.log(lista)
+    const productos = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' ORDER BY codigo");
+    const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
+    const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);
+    return productosConPrecio;
   } catch (error) {
     throw error;
   } finally {

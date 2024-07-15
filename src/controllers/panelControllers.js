@@ -37,11 +37,7 @@ const index = async (req, res) => {
 };
 
 const productosCard = async (req, res) => {
-  let lista = "lista1";
-  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
-    lista = `lista${req.query.lista}`;
-  }
-
+  let lista = await productosMiddleware.parseListaQuery(req.query);
   let data = await servicesProductos.getProductosLocalTodos(lista);
   let columnas = await servicesProductos.getColumnasPrecios();
   let errores = await erroresMiddleware.erroresGral(req.query.error);
@@ -58,11 +54,7 @@ const productosCard = async (req, res) => {
 };
 
 const productosTabla = async (req, res) => {
-  let lista = "lista1";
-  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
-    lista = `lista${req.query.lista}`;
-  }
-
+  let lista = await productosMiddleware.parseListaQuery(req.query);
   let data = await servicesProductos.getProductosLocalTodos(lista);
   let errores = await erroresMiddleware.erroresGral(req.query.error);
   let columnas = await servicesProductos.getColumnasPrecios();
@@ -249,11 +241,7 @@ const categoriasEliminar = async (req, res) => {
 };
 
 const precios = async (req, res) => {
-  let lista = "lista1";
-  if(req.query.lista && !isNaN(parseInt(req.query.lista))){
-    lista = `lista${req.query.lista}`;
-  }
-
+  let lista = await productosMiddleware.parseListaQuery(req.query);
   let data = await servicesProductos.getProductosLocal(lista);
   let columnas = await servicesProductos.getColumnasPrecios();
 
@@ -270,10 +258,7 @@ const precios = async (req, res) => {
 const preciosUpdate = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    let lista = "lista1";
-    if(req.query.lista && !isNaN(parseInt(req.query.lista))){
-      lista = `lista${req.query.lista}`;
-    }
+    let lista = await productosMiddleware.parseListaQuery(req.query);
     let data = await servicesProductos.getProductosLocal(lista);
     let columnas = await servicesProductos.getColumnasPrecios();
     return res.render(__basedir + "/src/views/pages/precios", {
@@ -971,7 +956,9 @@ const actividadTodaFiltro = async (req, res) => {
 }; */
 
 const pedidoProduccionLocal = async(req, res) => {
-  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
+  let lista = await productosMiddleware.parseListaQuery(req.query);
+  console.log("ping" + lista)
+  const productos = await servicesProductosFabrica.getProductosFabricaHistoricos(lista);
   let categoriasHistoricas = [];
   let dataPedido;
   if(req.query.id){
@@ -1122,8 +1109,8 @@ const pedidoProduccionNuevo = async (req, res) => {
   if(prodFecha.pedidoEstado !== "abierto" && prodFecha.proximoPedidoEstado !== "abierto" && prodFecha.pedidoEstado !== "demorado" && prodFecha.proximoPedidoEstado !== "demorado"){
     return res.redirect("/panel/produccion/local")
   }
-
-  const productos = await servicesProduccion.getProductosProduccion();
+  const local = await servicesLocal.getLocal(req.session.userLocal);
+  const productos = await servicesProduccion.getProductosProduccion(local.listacostosprimaria);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   let ultimoPedido = await servicesProduccion.getUltimoPedido(req.session.userLocal);
   if(ultimoPedido == undefined){
@@ -1289,7 +1276,8 @@ const pedidoProduccionPersonalizadoCrear = async (req, res) => {
 }
 
 const productosFabrica = async(req, res) => {
-  let data = await servicesProductosFabrica.getProductosFabrica();
+  let lista = await productosMiddleware.parseListaQuery(req.query);
+  let data = await servicesProductosFabrica.getProductosFabrica(lista);
   let errores = await erroresMiddleware.erroresGral(req.query.error);
 
   res.render(__basedir + "/src/views/pages/productosFabrica", {
@@ -1313,7 +1301,6 @@ const productosFabricaNuevo = async(req, res) => {
 }
 
 const productosFabricaInsert = async(req, res) => {
-  // buscar mismo codigo de prod en uso actual y emitir error para evitar duplicados
   let productos = await servicesProductosFabrica.getProductosFabrica();
   let buscarDuplicados = await productosMiddleware.buscarDuplicadosProdFabrica(productos, req.body.codigo);
   const errores = validationResult(req);
@@ -1782,8 +1769,9 @@ const servicioEliminar = async (req, res) => {
 };
 
 const preciosProductosFabrica = async(req, res) => {
+  let lista = await productosMiddleware.parseListaQuery(req.query);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
-  const productos = await servicesProductosFabrica.getProductosFabrica();
+  const productos = await servicesProductosFabrica.getProductosFabrica(lista);
   res.render(__basedir + "/src/views/pages/preciosFabrica", {
     categorias,
     productos,

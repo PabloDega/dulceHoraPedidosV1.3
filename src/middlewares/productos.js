@@ -111,10 +111,10 @@ const buscarDuplicadosProdFabrica = async (productos, codigo) => {
 
 const cargarPrecios = async(productos, precios, lista) => {
     if(lista === undefined){
-        lista = "lista1"
+        lista = "lista1";
     }
     productos.forEach((producto) => {
-        let precio = precios.find((item) => item.codigo == producto.codigo);
+        let precio = precios.find((item) => item.idRef == producto.id);
         if(precio === undefined){
             producto.preciounidad = 0;
             producto.preciodocena = 0;
@@ -136,6 +136,27 @@ const cargarPrecios = async(productos, precios, lista) => {
     return productos;
 }
 
+const cargarPreciosFabrica = async(productos, precios, lista) => {
+    if(lista === undefined){
+        lista = "lista1";
+    }
+    productos.forEach((producto) => {
+        let precio = precios.find((item) => item.idRef == producto.id);
+        if(precio === undefined){
+            producto.costo = 0;
+            return;
+        } else {
+            let precioItem = JSON.parse(precio[lista]);
+            if(precio[lista] === null){
+                producto.costo = 0;
+                return;
+            }
+            producto.costo = precioItem;
+        }
+    });
+    return productos;
+}
+
 const parseColumnas = async (query) => {
     let columnas = [];
     query = query[0];
@@ -152,12 +173,22 @@ const parsePrecios = async (datos) => {
     return precios;
 }
 
+const parseListaQuery = async (query) => {
+    let lista = "lista1";
+    if(query.lista && !isNaN(parseInt(query.lista))){
+        lista = `lista${query.lista}`;
+    }
+    return lista;
+}
+
 module.exports = {
     crearObjetoUpdatePrecios,
     buscarDuplicadosProdPersonalizados,
     buscarDuplicadosProdLocal,
     buscarDuplicadosProdFabrica,
     cargarPrecios,
+    cargarPreciosFabrica,
     parseColumnas,
     parsePrecios,
+    parseListaQuery,
 }
