@@ -37,7 +37,7 @@ const getLocal = async (id) => {
 
 const getLocalesFront = async () => {
   try {
-    const rows = await conectar.query("SELECT id, nombre, direccion, gmap FROM locales WHERE estado = 'activo'");
+    const rows = await conectar.query("SELECT id, nombre, direccion, gmap FROM locales WHERE estado = 'true'");
     return rows[0];
   } catch (error) {
     throw error;
@@ -46,10 +46,9 @@ const getLocalesFront = async () => {
   }
 };
 
-const insertLocal = async(datos, diasEntrega, serviciosActivos) => {
+const insertLocal = async(datos, serviciosActivos) => {
   try {
-    /* await conectar.query(`INSERT INTO locales (franquicia, nombre, cuit, impuestos, ptoventa, direccion, telefono, img, gmap, promobp, stock, estado, linkmp, entrega, servicios) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.cuit}", "${datos.impuestos}", "${datos.ptoventa}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "${datos.promobp}", "1", "activo", "${datos.linkmp}", "${diasEntrega}", '${serviciosActivos}')`); */
-    await conectar.query(`INSERT INTO locales (franquicia, nombre, direccion, telefono, img, gmap, promobp, stock, estado, linkmp, entrega, servicios) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "${datos.promobp}", "1", "activo", "${datos.linkmp}", "${diasEntrega}", '${serviciosActivos}')`);
+    await conectar.query(`INSERT INTO locales (franquicia, nombre, direccion, telefono, img, gmap, estado, linkmp, entrega, servicios) VALUES ("${datos.franquicia}", "${datos.nombre}", "${datos.direccion}", "${datos.telefono}", "${datos.img}", "${datos.gmap}", "true", "${datos.linkmp}", "[1]", '${serviciosActivos}')`);
   } catch (error) {
     throw error;
   } finally {
@@ -61,7 +60,7 @@ const updateLocal = async(datos, serviciosActivos, diasEntrega, listas) => {
   try {
     if(listas === undefined){listas = `["lista1"]`};
     if(datos.lista === undefined){datos.lista = 1};
-    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", promobp = "${datos.promobp || "false"}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}", listaprimaria = "lista${datos.lista}", listasdisponibles = '${listas}' WHERE id = "${datos.id}"`);
+    await conectar.query(`UPDATE locales SET franquicia =  "${datos.franquicia}", nombre = "${datos.nombre}", direccion = "${datos.direccion}", telefono = "${datos.telefono}", img = "${datos.img}", gmap = "${datos.gmap}", estado = "${datos.estado}", linkmp = "${datos.linkmp}", servicios = '${serviciosActivos}', entrega = "${diasEntrega}", listaprimaria = "lista${datos.lista}", listasdisponibles = '${listas}', listacostosprimaria = "lista${datos.listaCostos}" WHERE id = "${datos.id}"`);
   } catch (error) {
     throw error;
   } finally {
@@ -80,7 +79,7 @@ const deleteLocal = async(id) => {
   }
 }
 
-const updateStock = async(datos, local) => {
+/* const updateStock = async(datos, local) => {
   try {
     await conectar.query(`UPDATE locales SET stock = "${datos}" WHERE id = "${local}"`);
   } catch (error) {
@@ -88,7 +87,7 @@ const updateStock = async(datos, local) => {
   } finally {
     conectar.releaseConnection();
   }
-};
+}; */
 
 const getDatosFiscales = async (id) => {
   try {
@@ -124,7 +123,7 @@ module.exports = {
   insertLocal,
   updateLocal,
   deleteLocal,
-  updateStock,
+  // updateStock,
   getDatosFiscales,
   insertDatosFiscales,
 };

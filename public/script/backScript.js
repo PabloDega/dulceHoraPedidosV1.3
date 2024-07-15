@@ -398,13 +398,13 @@ if(document.querySelector("#nuevoProdFabrica") != null){
   })
 }
 
-if (document.querySelector(".backListaProdFabricaEditar") != null) {
+/* if (document.querySelector(".backListaProdFabricaEditar") != null) { 
   document.querySelectorAll(".backListaProdFabricaEditar").forEach((boton) =>
     boton.addEventListener("click", (e) => {
       location.href = "/panel/productosFabrica/editar?id=" + e.currentTarget.dataset.id;
     })
   );
-}
+} */
 
 if (document.querySelector(".backListaProdFabricaEliminar") != null) {
   document

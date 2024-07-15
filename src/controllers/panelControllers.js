@@ -301,13 +301,15 @@ const localEditar = async (req, res) => {
   }
   const servicios = await servicesServicios.getServicios();
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega2(data.entrega);
-  let columnas = await servicesProductos.getColumnasPrecios();
+  const columnas = await servicesProductos.getColumnasPrecios();
+  const columnasCostos = await servicesProductosFabrica.getColumnasPreciosFabrica();
 
   res.render(__basedir + "/src/views/pages/editarLocal", {
     data,
     servicios,
     diasEntrega,
     columnas,
+    columnasCostos,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
@@ -333,7 +335,6 @@ const localUpdate = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-
   const servicios = await servicesServicios.getServicios();
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body);
   const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body);
@@ -341,7 +342,7 @@ const localUpdate = async (req, res) => {
   await servicesLocal.updateLocal(req.body, serviciosActivos, diasEntrega, listas);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de local", `Id de local: ${req.body.id}`);
 
-  return res.redirect("/panel/local");
+  return res.redirect(`/panel/local/editar?id=${req.query.id}`);
 };
 
 const localNuevo = async (req, res) => {
@@ -369,13 +370,13 @@ const localInsert = async (req, res) => {
       userRol: req.session.userRol,
     });
   }
-  const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
+  /* const diasEntrega = await localMiddleware.crearObjetoDiasEntrega(req.body)
   if(diasEntrega.length == 0){
     return res.redirect("/panel/local");
     // agregar manejo de error, un mensaje
-  }
+  } */
   const serviciosActivos = await localMiddleware.crearObjetoServicios(servicios, req.body) 
-  await servicesLocal.insertLocal(req.body, diasEntrega, serviciosActivos);
+  await servicesLocal.insertLocal(req.body, serviciosActivos);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Alta de local", `Id de local: ${req.body.id}`);
   return res.redirect("/panel/local");
 };
@@ -1276,13 +1277,16 @@ const pedidoProduccionPersonalizadoCrear = async (req, res) => {
 }
 
 const productosFabrica = async(req, res) => {
-  let lista = await productosMiddleware.parseListaQuery(req.query);
-  let data = await servicesProductosFabrica.getProductosFabrica(lista);
-  let errores = await erroresMiddleware.erroresGral(req.query.error);
+  const lista = await productosMiddleware.parseListaQuery(req.query);
+  const data = await servicesProductosFabrica.getProductosFabrica(lista);
+  const errores = await erroresMiddleware.erroresGral(req.query.error);
+  const columnas = await servicesProductos.getColumnasPrecios();
 
   res.render(__basedir + "/src/views/pages/productosFabrica", {
     errores,
     data,
+    columnas,
+    lista,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -1330,7 +1334,8 @@ const productosFabricaEditar = async(req, res) => {
   if(!req.query.id || isNaN(parseInt(req.query.id))){
     return res.redirect("/panel/productosFabrica?error=query1");
   }
-  let productoFabrica = await servicesProductosFabrica.getProductoFabrica(req.query.id);
+  let lista = await productosMiddleware.parseListaQuery(req.query);
+  let productoFabrica = await servicesProductosFabrica.getProductoFabrica(req.query.id, lista);
   if(productoFabrica == undefined){
     return res.redirect("/panel/productosFabrica?error=query2");
   }
@@ -1340,6 +1345,7 @@ const productosFabricaEditar = async(req, res) => {
     valoresForm: productoFabrica,
     categorias,
     sectores,
+    lista,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   })
@@ -1367,10 +1373,12 @@ const productosFabricaUpdate = async(req, res) => {
   if (!errores.isEmpty()) {
     const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     const sectores = await servicesProductosFabrica.getSectoresFabrica();
+
     return res.render(__basedir + "/src/views/pages/editarProductoFabrica", {
       valoresForm: req.body,
       categorias,
       sectores,
+      lista: req.body.lista,
       errores: errores.array({ onlyFirstError: true }),
       usuario: req.session.userLog,
       userRol: req.session.userRol,
@@ -1379,7 +1387,7 @@ const productosFabricaUpdate = async(req, res) => {
 
   await servicesProductosFabrica.updateProductoFabrica(req.body, req.query.id);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion de producto fabrica", `Id de prod: ${req.query.id}`);
-  return res.redirect("/panel/productosFabrica");
+  return res.redirect(`/panel/productosFabrica?lista=${req.body.lista}`);
 }
 
 const productosFabricaEliminar = async(req, res) => {
@@ -1769,21 +1777,26 @@ const servicioEliminar = async (req, res) => {
 };
 
 const preciosProductosFabrica = async(req, res) => {
-  let lista = await productosMiddleware.parseListaQuery(req.query);
+  const lista = await productosMiddleware.parseListaQuery(req.query);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabrica(lista);
+  const columnas = await servicesProductosFabrica.getColumnasPreciosFabrica();
+
   res.render(__basedir + "/src/views/pages/preciosFabrica", {
     categorias,
     productos,
+    columnas,
+    lista,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
   });
 }
 
 const preciosProductosFabricaUpdate = async(req, res) => {
-  await servicesProductosFabrica.updatePreciosProductosFabrica(req.body);
+  let lista = await productosMiddleware.parseListaQuery(req.query);
+  await servicesProductosFabrica.updatePreciosProductosFabrica(req.body, lista);
   await servicesActividad.insertActividad(req.session.userLocal, 0, req.session.userLog, "Modificacion precios de productos de fabrica", "");
-  res.redirect("/panel/productosFabrica/precios");
+  res.redirect(`/panel/productosFabrica/precios?lista=${req.query.lista}`);
 }
 
 const facturacion = async(req, res) => {

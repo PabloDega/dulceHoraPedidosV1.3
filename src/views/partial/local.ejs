@@ -1,7 +1,7 @@
 <div id="errores"></div>
 <div id="localCards">
   <% data.forEach(dato => {%>
-    <div class="backListaLocalCard">
+    <div class="backListaLocalCard <%if(!JSON.parse(dato.estado)){%> off <%}%>">
       <img src="/<%= dato.img %>" alt="" />
       <h1><%= dato.nombre %></h1>
       <table>
@@ -18,18 +18,6 @@
             <td>Nombre</td>
             <td><%= dato.nombre %></td>
           </tr>
-          <!-- <tr>
-            <td>CUIT</td>
-            <td><%= dato.cuit %></td>
-          </tr>
-          <tr>
-            <td>Estado Impositivo</td>
-            <td><%= dato.impuestos %></td>
-          </tr>
-          <tr>
-            <td>Punto de Venta</td>
-            <td><%= dato.ptoventa %></td>
-          </tr> -->
           <tr>
             <td>Dirección</td>
             <td><%= dato.direccion %></td>
@@ -43,52 +31,8 @@
             <td><%= dato.gmap %></td>
           </tr>
           <tr>
-            <td>Promo Provincia</td>
-            <td><%= dato.promobp %></td>
-          </tr>
-          <tr>
             <td>Link MP</td>
             <td><%= dato.linkmp %></td>
-          </tr>
-          <tr>
-            <td>Dias de Entrega</td>
-            <td>
-              <% let diasEntrega = [];
-                let diasActuales = JSON.parse(dato.entrega);
-                diasActuales.forEach((dia) => {
-                  switch (dia) {
-                    case 0:
-                      diasEntrega.push("Domingo");
-                      break;
-                    case 1:
-                      diasEntrega.push("Lunes");
-                      break;
-                    case 2:
-                      diasEntrega.push("Martes");
-                      break;
-                    case 3:
-                      diasEntrega.push("Miércoles");
-                      break;
-                    case 4:
-                      diasEntrega.push("Jueves");
-                      break;
-                    case 5:
-                      diasEntrega.push("Viernes");
-                      break;
-                    case 6:
-                      diasEntrega.push("Sábado");
-                      break;
-                    default:
-                      break;
-                  };
-                })
-                diasEntrega = diasEntrega.join(", ");%>
-                <%= diasEntrega %>
-            </td>
-          </tr>
-          <tr>
-            <td>Estado</td>
-            <td class="servicio<%= dato.estado %>"><%= dato.estado %></td>
           </tr>
           <% let servicios = dato.servicios;
           servicios = JSON.parse(servicios);
@@ -100,6 +44,49 @@
             <td class="servicio<%=estado%>"><%= estado %></td>
           </tr>
           <%}%>
+          <%if(servicios.pedidos){%>
+            <tr>
+              <td>Lista de costos</td>
+              <td><%= dato.listacostosprimaria %></td>
+            </tr>
+            <tr>
+              <td>Dias de Entrega</td>
+              <td>
+                <% let diasEntrega = [];
+                  let diasActuales = JSON.parse(dato.entrega);
+                  diasActuales.forEach((dia) => {
+                    switch (dia) {
+                      case 0:
+                        diasEntrega.push("Domingo");
+                        break;
+                      case 1:
+                        diasEntrega.push("Lunes");
+                        break;
+                      case 2:
+                        diasEntrega.push("Martes");
+                        break;
+                      case 3:
+                        diasEntrega.push("Miércoles");
+                        break;
+                      case 4:
+                        diasEntrega.push("Jueves");
+                        break;
+                      case 5:
+                        diasEntrega.push("Viernes");
+                        break;
+                      case 6:
+                        diasEntrega.push("Sábado");
+                        break;
+                      default:
+                        break;
+                    };
+                  })
+                  diasEntrega = diasEntrega.join(", ");%>
+                  <%= diasEntrega %>
+              </td>
+            </tr>
+          <%}%>
+          <%if(servicios.facturacion){%>
           <tr>
             <td>Lista de precios primaria</td>
             <td><%= dato.listaprimaria %></td>
@@ -112,6 +99,7 @@
               <%=listasDisponibles%>
             </td>
           </tr>
+          <%}%>
         </tbody>
       </table>
       <div class="backListaProdCardBoton btnNaranja" id="backListaLocalEditar" data-id="<%= dato.id %>">editar</div>

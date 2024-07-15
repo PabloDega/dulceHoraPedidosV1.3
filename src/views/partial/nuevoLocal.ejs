@@ -12,22 +12,6 @@
         <label for="nombre">Nombre</label>
         <input type="text" name="nombre" id="nombre" value="<%= valoresForm.nombre %>" />
     </span>
-    <!-- <span>
-        <label for="cuit">CUIT</label>
-        <input type="text" name="cuit" id="cuit" value="<%= valoresForm.cuit %>" />
-    </span>
-    <span>
-        <label for="ptoventa">Punto de Venta</label>
-        <input type="text" name="ptoventa" id="ptoventa" value="<%= valoresForm.ptoventa %>" />
-    </span>
-    <span>
-        <label for="impuestos">Estado Impositivo</label>
-        <select name="impuestos" id="impuestos">
-            <option value="" selected disabled>-Seleccione una opción-</option>
-            <option value="monotributista" <%if(valoresForm.impuestos == "monotributista"){%><%="selected"%><%}%>>Monotributista</option>
-            <option value="responsable" <%if(valoresForm.impuestos == "responsable"){%><%="selected"%><%}%>>Resposable Inscripto</option>
-        </select>
-    </span> -->
     <span>
         <label for="direccion">Dirección</label>
         <input type="text" name="direccion" id="direccion" value="<%= valoresForm.direccion %>" />
@@ -45,49 +29,9 @@
         <input type="text" name="img" id="img" value="im/local/local<%= data %>.png" readonly />
     </span>
     <span>
-        <label for="promobp">Promo Banco Provincia</label>
-        <input type="checkbox" name="promobp" id="promobp" value="true" <% if(valoresForm.promobp == "true"){ %><%= "checked" %><% } %>>
-    </span>
-    <span>
         <label for="linkmp">Link MP</label>
         <input type="text" name="linkmp" id="linkmp" value="<%= valoresForm.linkmp %>" />
     </span>
-    <span>
-        <span>Dias de Entrega</span>
-        <span>
-            <div id="nuevoLocalCalendario">
-                <div>
-                    <span><input type="checkbox" name="1" id="" value="1"></span>
-                    <span>Lunes</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="2" id="" value="2"></span>
-                    <span>Martes</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="3" id="" value="3"></span>
-                    <span>Miércoles</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="4" id="" value="4"></span>
-                    <span>Jueves</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="5" id="" value="5"></span>
-                    <span>Viernes</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="6" id="" value="6"></span>
-                    <span>Sábado</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="0" id="" value="0"></span>
-                    <span>Domingo</span>
-                </div>
-            </div>
-        </span>
-    </span>
-
     <span>
         <span>Servicios</span>
         <span>
@@ -108,4 +52,3 @@
     <input type="hidden" name="tipo" value="nuevo">
 </form>
 
-<script defer src="/script/cuit.js"></script>

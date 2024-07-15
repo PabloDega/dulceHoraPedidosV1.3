@@ -137,21 +137,6 @@ const validarLocalesChain = [
     .escape()
     .notEmpty().withMessage("El campo 'Nombre' es obligatorio")
     .isString().withMessage("Formato incorrecto, reingresar datos"),
-  /* body("cuit")
-    .trim()
-    .escape()
-    .notEmpty().withMessage("El campo 'cuit' es obligatorio")
-    .isNumeric().withMessage("Formato incorrecto, reingresar datos"),
-  body("impuestos")
-    .trim()
-    .escape()
-    .notEmpty().withMessage("El campo 'impuestos' es obligatorio")
-    .isString().withMessage("Formato incorrecto, reingresar datos"),
-  body("ptoventa")
-    .trim()
-    .escape()
-    .notEmpty().withMessage("El campo 'pto de venta' es obligatorio")
-    .isNumeric().withMessage("Formato incorrecto, reingresar datos"), */
   body("direccion")
     .optional({ values: "falsy" })
     .trim()
@@ -188,6 +173,11 @@ const validarLocalesChain = [
       }
     }),
   body("lista")
+    .optional({ values: "falsy" })
+    .trim()
+    .notEmpty().withMessage("Error en la lista de precios, por favor recargar fomulario")
+    .isNumeric().withMessage("Error en la lista de precios, por favor recargar fomulario"),
+  body("listaCostos")
     .optional({ values: "falsy" })
     .trim()
     .notEmpty().withMessage("Error en la lista de precios, por favor recargar fomulario")
@@ -307,6 +297,11 @@ const validarProductoFabricaChain = [
     .trim()
     .escape()
     .isString().withMessage("Formato del campo Sector incorrecto"),
+  body("lista")
+    .optional({ values: "falsy" })
+    .trim()
+    .notEmpty().withMessage("Error en la lista, por favor recargar fomulario")
+    .isNumeric().withMessage("Error en la lista, por favor recargar fomulario"),
 ];
 
 const validarCategoriaFabricaChain = [

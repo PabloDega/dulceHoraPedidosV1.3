@@ -67,6 +67,7 @@ const updatePrecios = async (objetoPrecios) => {
       }
       let precios = JSON.stringify(objetoPrecios[item]);
       // verificar que el id este definido en la tabla!!!
+      // ticket - verificar utilidad de las lineas de verificacion
       const check = await conectar.query(`SELECT * FROM listasdeprecios WHERE idRef = "${item}"`);
       if(check[0].length < 1){
         let producto = await conectar.query(`SELECT * FROM productoslocal WHERE id = "${item}"`);

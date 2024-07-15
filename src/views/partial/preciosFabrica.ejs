@@ -1,4 +1,20 @@
-<h2>Precios de Fábrica</h2>
+<h2>Precios de Fábrica
+  <span id="contSelectLista">Lista de precios: 
+    <select name="lista" id="listaDePrecios">
+      <%columnas.forEach((columna) => {
+        let selected;
+        if(lista === columna){
+          selected = "selected";
+        }
+        let nombreDeLista = columna.replace(/[^0-9]/g, "");
+        nombreDeLista = "Lista " + nombreDeLista%>%>
+        <option value="<%=columna%>" <%=selected%>><%=nombreDeLista%></option>
+      <%})%>
+      
+    </select>
+  </span>
+</h2>
+
 <form action="" method="post" id="preciosForm">
 <table id="preciosTabla">
     <thead>
@@ -35,3 +51,5 @@
 </table>
 <input type="submit" value="Actualizar Precios" class="backListaProdCardBoton btnNaranja inputBtn" id="preciosFabricaEnviar">
 </form>
+
+<script src="/script/preciosFabrica.js" defer></script>

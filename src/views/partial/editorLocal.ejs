@@ -1,6 +1,19 @@
 <form action="" method="post" id="editorLocal" class="editor">
     <h1>Editar Local</h1>
     <span>
+        <label for="estado">Estado</label>
+        <% let estadoActivo = "selected";
+        let estadoInactivo = "";
+        if(!JSON.parse(data.estado)){
+          estadoActivo = "";
+          estadoInactivo = "selected";
+        } %>
+        <select name="estado" id="estado">
+            <option value="true" <%= estadoActivo %>>Activo</option>
+            <option value="false" <%= estadoInactivo %>>Inactivo</option>
+        </select>
+    </span>
+    <span>
         <label for="id">ID</label>
         <input type="text" name="id" id="id" value="<%= data.id %>" readonly />
     </span>
@@ -12,21 +25,6 @@
         <label for="nombre">Nombre</label>
         <input type="text" name="nombre" id="nombre" value="<%= data.nombre %>" />
     </span>
-    <!-- <span>
-        <label for="cuit">CUIT</label>
-        <input type="text" name="cuit" id="cuit" value="<%= data.cuit %>" />
-    </span>
-    <span>
-        <label for="impuestos">Estado Impositivo</label>
-        <select name="impuestos" id="impuestos">
-            <option value="monotributista" <%if(data.impuestos == "monotributista"){%><%="selected"%><%}%>>Monotributista</option>
-            <option value="responsable" <%if(data.impuestos == "responsable"){%><%="selected"%><%}%>>Resposable Inscripto</option>
-        </select>
-    </span>
-    <span>
-        <label for="ptoventa">Punto de Venta</label>
-        <input type="text" name="ptoventa" id="ptoventa" value="<%= data.ptoventa %>" />
-    </span> -->
     <span>
         <label for="direccion">Dirección</label>
         <input type="text" name="direccion" id="direccion" value="<%= data.direccion %>" />
@@ -44,55 +42,10 @@
         <input type="text" name="img" id="img" value="im/local/local<%= data.id %>.png" readonly />
     </span>
     <span>
-        <label for="promobp">Promo Banco Provincia</label>
-        <% 
-        let promobp="" ; 
-        if(data.promobp == "true"){
-            promobp="checked";
-        }
-         %>
-        <input type="checkbox" name="promobp" id="promobp" value="true" <%= promobp %>>
-    </span>
-    <span>
         <label for="linkmp">Link MP</label>
         <input type="text" name="linkmp" id="linkmp" value="<%= data.linkmp %>" />
     </span>
 
-    <span>
-        <span>Dias de Entrega</span>
-        <span>
-            <div id="nuevoLocalCalendario">
-                <div>
-                    <span><input type="checkbox" name="1" id="" value="1" <% if(diasEntrega[1]){%>checked<%} %>></span>
-                    <span>Lunes</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="2" id="" value="2" <% if(diasEntrega[2]){%>checked<%} %>></span>
-                    <span>Martes</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="3" id="" value="3" <% if(diasEntrega[3]){%>checked<%} %>></span>
-                    <span>Miércoles</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="4" id="" value="4" <% if(diasEntrega[4]){%>checked<%} %>></span>
-                    <span>Jueves</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="5" id="" value="5" <% if(diasEntrega[5]){%>checked<%} %>></span>
-                    <span>Viernes</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="6" id="" value="6" <% if(diasEntrega[6]){%>checked<%} %>></span>
-                    <span>Sábado</span>
-                </div>
-                <div>
-                    <span><input type="checkbox" name="0" id="" value="0" <% if(diasEntrega[0]){%>checked<%} %>></span>
-                    <span>Domingo</span>
-                </div>
-            </div>
-        </span>
-    </span>
     <span>
         <span>Servicios</span>
         <span>
@@ -111,7 +64,69 @@
             </div>
         </span>
     </span>
+
+    <%if(serviciosActivos.pedidos || data.pedidos){%>
+    <h2>Servicio de Pedidos</h2><hr>
+
+    <span>
+        <span>Lista de costos</span>
+        <span>
+            <select name="listaCostos" id="listaDeCostos">
+                <%columnasCostos.forEach((columna) => {
+                    let selected;
+                    if(data.listacostosprimaria === columna){
+                        selected = "selected";
+                    }
+                    let numeroDeLista = columna.replace(/[^0-9]/g, "");
+                    let nombreDeLista = "Lista " + numeroDeLista%>%>
+                    <option value="<%=numeroDeLista%>" <%=selected%>><%=nombreDeLista%></option>
+                <%})%>
+            </select>
+        </span>
+    </span>
+
+    <span>
+        <span>Dias de Entrega</span>
+        <span>
+            <div id="nuevoLocalCalendario">
+                <div>
+                    <span><input type="checkbox" name="1" id="" value="1" <% if(diasEntrega[1]){%> checked <%}%>></span>
+                    <span>Lunes</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="2" id="" value="2" <% if(diasEntrega[2]){%> checked <%} %>></span>
+                    <span>Martes</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="3" id="" value="3" <% if(diasEntrega[3]){%> checked <%} %>></span>
+                    <span>Miércoles</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="4" id="" value="4" <% if(diasEntrega[4]){%> checked <%} %>></span>
+                    <span>Jueves</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="5" id="" value="5" <% if(diasEntrega[5]){%> checked <%} %>></span>
+                    <span>Viernes</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="6" id="" value="6" <% if(diasEntrega[6]){%> checked <%} %>></span>
+                    <span>Sábado</span>
+                </div>
+                <div>
+                    <span><input type="checkbox" name="0" id="" value="0" <% if(diasEntrega[0]){%> checked <%} %>></span>
+                    <span>Domingo</span>
+                </div>
+            </div>
+        </span>
+    </span>
+    <%} else {%>
+        <input type="hidden" name="1" value="1">
+    <%}%>
+
+
     <%if(serviciosActivos.facturacion || data.facturacion){%>
+    <h2>Servicio de Facturación</h2><hr>
     <span>
         <span>Lista de precios principal</span>
         <span>
@@ -130,7 +145,7 @@
     </span>
 
     <span>
-        <span>Lispas disponibles</span>
+        <span>Listas disponibles</span>
         <div id="listasDePreciosEditLocal">
         <%let listasDisponibles = JSON.parse(data.listasdisponibles)%>
         <%columnas.forEach((columna) => {
@@ -150,20 +165,6 @@
     <%}%>
 
     <input type="hidden" name="serviciosArray" value="<%= JSON.stringify(servicioArray) %>">
-
-    <span>
-        <label for="estado">Estado</label>
-        <% let estadoActivo = "selected";
-        let estadoInactivo = "";
-        if(data.estado == "inactivo"){
-          estadoActivo = "";
-          estadoInactivo = "selected";
-        } %>
-        <select name="estado" id="estado">
-            <option value="activo" <%= estadoActivo %>>Activo</option>
-            <option value="inactivo" <%= estadoInactivo %>>Inactivo</option>
-        </select>
-    </span>
 
     <span>
         <input type="submit" value="Modificar">

@@ -49,6 +49,8 @@
         <input type="checkbox" name="estado" id="estado" value="true" <%= estadoChecked %>> Disponible
     </span>
     <span>
+        <input type="hidden" name="lista" value="<%=lista.replace(/[^0-9]/g, "")%>">
+        <input type="hidden" name="id" value="<%=valoresForm.id%>">
         <input type="submit" value="Modificar">
     </span>
 </form>

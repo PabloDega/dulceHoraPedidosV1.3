@@ -52,7 +52,7 @@ const getProductoFabrica = async (id, lista) => {
     const productos = await conectar.query("SELECT * FROM productosfabrica WHERE ?", { id });
     const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
     const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);
-    return productosConPrecio;
+    return productosConPrecio[0];
   } catch (error) {
     throw error;
   } finally {
@@ -62,7 +62,10 @@ const getProductoFabrica = async (id, lista) => {
 
 const insertProductoFabrica = async (datos) => {
   try {
-    await conectar.query(`INSERT INTO productosfabrica (categoria, nombre, costo, estado, descripcion, sector, unidad, codigo, img) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.costo}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}", "im/fabrica/${datos.codigo}.png")`);  
+    let productoInsert = await conectar.query(`INSERT INTO productosfabrica (categoria, nombre, estado, descripcion, sector, unidad, codigo, img) VALUES ("${datos.categoria}", "${datos.nombre}", "${datos.estado || 'false'}", "${datos.descripcion || ''}", "${datos.sector}", "${datos.unidad}", "${datos.codigo}", "im/fabrica/${datos.codigo}.png")`);
+
+    await conectar.query(`INSERT INTO listasdepreciosfabrica (idRef, codigo, lista1) VALUES (${productoInsert[0].insertId}, "${datos.codigo}", "${datos.costo}")`);
+
   } catch (error) {
     throw error;
   } finally {
@@ -72,7 +75,12 @@ const insertProductoFabrica = async (datos) => {
 
 const updateProductoFabrica = async (datos, id) => {
   try {
-    await conectar.query(`UPDATE productosfabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", costo = "${datos.costo}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}", img = "im/fabrica/${datos.codigo}.png" WHERE id = "${id}"`);
+    await conectar.query(`UPDATE productosfabrica SET categoria = "${datos.categoria}", nombre = "${datos.nombre}", estado = "${datos.estado || 'false'}", descripcion = "${datos.descripcion}", sector = "${datos.sector}", unidad = "${datos.unidad}", codigo = "${datos.codigo}", img = "im/fabrica/${datos.codigo}.png" WHERE id = "${id}"`);
+
+    let lista = "lista1";
+    if(datos.lista){lista = `lista${datos.lista}`;}
+    await conectar.query(`UPDATE listasdepreciosfabrica SET ${lista} = "${datos.costo}" WHERE idRef = "${id}"`)
+
   } catch (error) {
     throw error;
   } finally {
@@ -155,13 +163,30 @@ const deleteCategoriaFabrica = async (id) => {
   }
 };
 
-const updatePreciosProductosFabrica = async (precios) => {
+const updatePreciosProductosFabrica = async (precios, lista) => {
   try {
     for(id in precios){
       if(precios[id] > 0){
-        await conectar.query(`UPDATE productosfabrica SET costo = "${precios[id]}" WHERE id = "${id}"`);
+        const check = await conectar.query(`SELECT * FROM listasdepreciosfabrica WHERE idRef = "${id}"`);
+        if(check[0].length < 1){
+          let producto = await conectar.query(`SELECT * FROM productosfabrica WHERE id = "${id}"`);
+          await conectar.query(`INSERT INTO listasdepreciosfabrica (idRef, codigo) VALUES ("${id}", "${producto[0][0].codigo}")`);  
+        }
+        await conectar.query(`UPDATE listasdepreciosfabrica SET ${lista} = "${precios[id]}" WHERE idRef = "${id}"`);
       }
     }
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
+const getColumnasPreciosFabrica = async () => {
+  try {
+    let columnas = await conectar.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='listasdepreciosfabrica'`);
+    columnas = await productosMiddleware.parseColumnas(columnas);
+    return columnas;
   } catch (error) {
     throw error;
   } finally {
@@ -184,4 +209,5 @@ module.exports = {
   deleteCategoriaFabrica,
   getSectoresFabrica,
   updatePreciosProductosFabrica,
+  getColumnasPreciosFabrica,
 };

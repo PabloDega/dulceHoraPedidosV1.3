@@ -1,5 +1,10 @@
 <%- include("../partial/erroresForm")%>
+<%- include("../partial/cortina")%>
 <%- include("../partial/menu", {menu: "small"})%>
 <div id="backRender">
     <%- include("../partial/preciosFabrica", { categorias, productos }) %>
 </div>
+
+<script>
+    window.lista = <%- JSON.stringify(lista) %>
+</script>

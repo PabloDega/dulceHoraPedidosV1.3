@@ -64,7 +64,6 @@ const getProductosProduccion = async (lista) => {
     if(lista === undefined){
       lista = "lista1";
     }
-    console.log(lista)
     const productos = await conectar.query("SELECT * FROM productosfabrica WHERE estado = 'true' ORDER BY codigo");
     const precios = await conectar.query("SELECT * FROM listasdepreciosfabrica");
     const productosConPrecio = await productosMiddleware.cargarPreciosFabrica(productos[0], precios[0], lista);

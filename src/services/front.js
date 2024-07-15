@@ -3,7 +3,7 @@ const { query } = require("express");
 const servicesProductos = require(__basedir + "/src/services/productos");
 const { conectar } = require(__basedir + "/src/config/dbConnection");
 
-const prodActivos = (data, local) => {
+/* const prodActivos = (data, local) => {
     let stock = local.stock.split(",")
     let prodActivos = []
     stock.forEach((prod) => {
@@ -11,7 +11,7 @@ const prodActivos = (data, local) => {
         prodActivos.push(busqueda)
     })
     return prodActivos;
-}
+} */
 
 const categorias = async (prodActivos) => {
     let categorias = [];
@@ -40,7 +40,7 @@ const insertPedido = async(local, productos, total) => {
   };
 
 module.exports = { 
-    prodActivos,
+    //prodActivos,
     categorias,
     insertPedido,
  };

@@ -9,6 +9,7 @@ const loginForm = (req, res) => {
   };
   
 const loginQuery = async (req, res) => {
+  // Ticket verificar si local activo para loguear!!!
   const errores = validationResult(req);
   if(!errores.isEmpty()){
     return res.render(__basedir + "/src/views/pages/login", {
