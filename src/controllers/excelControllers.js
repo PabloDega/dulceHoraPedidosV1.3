@@ -349,14 +349,15 @@ const exportarExcelReporteValorizado = async(req, res) => {
     fecha = fecha.split("/")
     fecha = new Date(fecha[2], fecha[1] - 1, fecha[0])
     const locales = await servicesLocal.getLocales();
-    const pedidos = await servicesReportes.getReportes(req.body.fecha);
+    const pedidos = await servicesReportes.getReportes(req.body.fecha); 
     const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
     const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
     // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
     const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
     const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductosArray(pedidosFiltrados, productos, req.body.sector);
     const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.body.sector);
-  
+    const totalPorLocal = await reportesMiddleware.totalPorLocal(pedidosFiltrados, req.body.sector, productos);
+
     let wb = new xl.Workbook({
         dateFormat: 'dd/mm/yy',
     });
@@ -430,7 +431,7 @@ const exportarExcelReporteValorizado = async(req, res) => {
     let colPrecio;
 
     ws.cell(iPedidos, 1).date(fecha).style(estiloNegro);
-    let colspan = 4;
+    let colspan = 3;
     let col = 2;
     localesConPedido.forEach((local) => {
         colspan++;
@@ -443,9 +444,9 @@ const exportarExcelReporteValorizado = async(req, res) => {
     ws.cell(iPedidos, col).string("Cantidad Total").style(estiloBorde).style(estiloCentrado);
     ws.column(col).setWidth(14);
     col++;
-    ws.cell(iPedidos, col).string("Precio").style(estiloBorde).style(estiloCentrado);
-    ws.column(col).setWidth(14);
-    col++;
+    /* ws.cell(iPedidos, col).string("Precio").style(estiloBorde).style(estiloCentrado);
+    ws.column(col).setWidth(14); 
+    col++;*/
     ws.cell(iPedidos, col).string("Importe Total").style(estiloBorde).style(estiloCentrado);
     ws.column(col).setWidth(14);
     iPedidos++;
@@ -469,10 +470,10 @@ const exportarExcelReporteValorizado = async(req, res) => {
             ws.cell(iPedidos, col).number(acumulador).style(estiloBorde).style(estiloCentrado);
             col++
             colPrecio = col;
-            ws.cell(iPedidos, col).number(pedido.precio).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
-            col++;
-            let total = acumulador * pedido.precio;
-            ws.cell(iPedidos, col).number(total).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
+            /* ws.cell(iPedidos, col).number(pedido.precio).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
+            col++; */
+            //let total = acumulador * pedido.precio;
+            ws.cell(iPedidos, col).number(pedido.total).style(estiloBorde).style(estiloCentrado).style(estiloImporte);
             iPedidos++;
         });
     });
@@ -480,21 +481,15 @@ const exportarExcelReporteValorizado = async(req, res) => {
     col = 2;
 
     localesConPedido.forEach((local) => {
-        let formulaTotal = "=";
-        for(let i = 3; i < iPedidos; i++) {
-            let colLetra = String.fromCharCode(96 + col)
-            let colPrecioLetra = String.fromCharCode(96 + colPrecio)
-            formulaTotal += `${colLetra}${i}*${colPrecioLetra}${i}+`
-        }
-        formulaTotal = formulaTotal.substring(0, formulaTotal.length-1);
-        ws.cell(iPedidos, col).formula(formulaTotal).style(estiloBorde).style(estiloGris).style(estiloImporte);
+        let total = totalPorLocal.find((total) => total.local === local);
+        ws.cell(iPedidos, col).number(total.total).style(estiloBorde).style(estiloGris).style(estiloImporte);
         col++;
     })
 
-    const colLetra = String.fromCharCode(96 + colPrecio + 1)
+    const colLetra = String.fromCharCode(96 + colPrecio)
     const ultimoTotal = iPedidos-1;
     const sumarTotales = `=sum(${colLetra}3:${colLetra}${ultimoTotal})`;
-    ws.cell(iPedidos, colPrecio + 1).formula(sumarTotales).style(estiloBorde).style(estiloImporte);
+    ws.cell(iPedidos, colPrecio).formula(sumarTotales).style(estiloBorde).style(estiloImporte).style(estiloGris);
 
     wb.write(`Reporte Valorizado - ${req.body.sector} - ${req.body.fecha}.xlsx`, res);
 }

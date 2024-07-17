@@ -5,6 +5,7 @@ const sumarPedidosMismaFecha = async(pedidos, locales) =>{
         pedidosPorLocal = await pedidosPorLocal.filter((pedido) => pedido.estado == "aceptado" || pedido.estado == "entregado")
         if(pedidosPorLocal.length == 1){
             let pedidoAcumulado = await crearObjetoPedido(pedidosPorLocal);
+            pedidoAcumulado.listaDeCostos = local.listacostosprimaria;
             pedidosFiltrados.push(pedidoAcumulado)
         } else if(pedidosPorLocal.length > 1){
             // sumar totales de mismo local
@@ -17,6 +18,7 @@ const sumarPedidosMismaFecha = async(pedidos, locales) =>{
             sumaDePedidos = await resumirProductosRepetidos(sumaDePedidos);
             pedidosPorLocal[0].pedido = JSON.stringify(sumaDePedidos);
             let pedidoAcumulado = await crearObjetoPedido(pedidosPorLocal);
+            pedidoAcumulado.listaDeCostos = local.listacostosprimaria;
             // pedidoAcumulado.total = totalAcumulado;
             pedidosFiltrados.push(pedidoAcumulado);
         }
@@ -59,6 +61,10 @@ const crearObjetoPedido = async(pedidosPorLocal) => {
 }
 
 const reportePlanta = async(productos, pedidos, sector) => {
+    pedidos = pedidos.filter((pedido) => pedido.estado == "aceptado" || pedido.estado == "entregado")
+    if(pedidos.length === 0){
+        return pedidos;
+    }
     // Array con los id del sector
     const productosDelSector = productos.filter((producto) => producto.sector === sector);
     let idDelSector = [];
@@ -83,6 +89,9 @@ const reportePlanta = async(productos, pedidos, sector) => {
 
 const productosDelPedido = async(productos, data) => {
     let idDelPedido = [];
+    if(data.length === 0){
+        return idDelPedido;
+    }
     data.forEach((dato) => idDelPedido.push(dato[1]));
     const productosDelPedido = productos.filter((producto) => idDelPedido.includes(producto.id));
     // agregar cantidades
@@ -136,10 +145,29 @@ const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
     return cantidadesPorProducto;
 }
 
+const totalPorLocal = async (pedidosFiltrados, sector, productos) => {
+    let totalPorLocal = [];
+    pedidosFiltrados.forEach((pedido) => {
+        let respuesta = {
+            local: pedido.local,
+            total: 0,
+        }
+        let pedidoDetalle = JSON.parse(pedido.pedido);
+        pedidoDetalle.forEach((item) => {
+            const producto = productos.find((prod) => prod.id === item[1]);
+            if(!producto || producto.sector !== sector){return}
+            respuesta.total += item[2];
+        })
+        totalPorLocal.push(respuesta)
+    });
+    return totalPorLocal;
+}
+
 module.exports = {
     sumarPedidosMismaFecha,
     reportePlanta,
     productosDelPedido,
     localesConPedido,
     cantidadesPorProducto,
+    totalPorLocal,
 }

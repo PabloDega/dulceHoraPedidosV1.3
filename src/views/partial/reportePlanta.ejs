@@ -1,5 +1,8 @@
 <h1>Reporte de Planta</h1>
 <h2>Sector: <%= sector %> - Fecha: <%= fecha %></h2>
+<%if(data.length == 0){%>
+    <span>No se econtraron datos para el reporte solicitado</span>
+<%} else {%>
 <!-- ticket - msg de error si no hay registros para el sector -->
     <%if(sector === "panificado"){
         let secciones = new Set();
@@ -78,3 +81,4 @@
     <input type="hidden" name="productos" value="<%= JSON.stringify(productos) %>">
     <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
 </form>
+<%}%>

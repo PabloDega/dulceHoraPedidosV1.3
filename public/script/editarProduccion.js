@@ -6,7 +6,12 @@ function pedidoProduccionCalcImporte(e){
         return;
     }
     let costo = document.querySelector("#costo" + e.target.dataset.id);
-    costo = parseInt(costo.innerHTML)
+    costo = parseInt(costo.innerHTML);
+    if(costo === 0){
+        mostrarError("El producto seleccionado no tiene en monto cargado, por favor comunicarse con administración para modificarlo");
+        e.target.value = 0;
+        return;
+    }
     document.querySelector(`#importe${e.target.dataset.id}`).innerHTML = costo * parseInt(e.target.value);
     pedidoProduccionCalcTotal();
 }
@@ -119,6 +124,12 @@ document.querySelectorAll("input.pedidoProduccionCantidad").forEach((boton) => {
       }
   });
 });
+
+function mostrarError(info){
+    let mensaje = `<div class="mensajeErrorForm"><span>${info}</span><span id="timeBar"></span></div>`;
+    document.querySelector("#errores").innerHTML = mensaje;
+    document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
+}
 
 pedidoProduccionCalcImportes();
 pedidoProduccionCalcTotal();

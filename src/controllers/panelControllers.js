@@ -1566,6 +1566,9 @@ const reportePlanta = async(req, res) => {
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
   const data = await reportesMiddleware.reportePlanta(productos, pedidos, req.query.sector);
+  if(data.length == 0){
+    return res.redirect("/panel/produccion/reportes?error=reporte1");
+  }
   const productosDelPedido = await reportesMiddleware.productosDelPedido(productos, data);
   const categoriasReportePlanta = await servicesReportes.getCategoriasReporte();
   res.render(__basedir + "/src/views/pages/reportePlanta", {
@@ -1601,11 +1604,11 @@ const reportePedidos = async(req, res) => {
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   // Verifica si la fecha contiene pedidos
-  if(pedidos.length == 0){
-    return res.redirect("/panel/produccion/reportes?error=reporte1");
-  }
   const locales = await servicesLocal.getLocalesHistoricos();
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+  if(pedidosFiltrados.length == 0){
+    return res.redirect("/panel/produccion/reportes?error=reporte1");
+  }
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos(); 
   res.render(__basedir + "/src/views/pages/reportePedidos", {
@@ -1633,11 +1636,11 @@ const reporteValorizado = async(req, res) => {
   const fecha = await produccionMiddleware.fechaProduccionNormalizada(req.query.fecha);
   const pedidos = await servicesReportes.getReportes(fecha);
   // Verifica si la fecha contiene pedidos
-  if(pedidos.length == 0){
-    return res.redirect("/panel/produccion/reportes?error=reporte1");
-  }
   const locales = await servicesLocal.getLocalesHistoricos();
   const pedidosFiltrados = await reportesMiddleware.sumarPedidosMismaFecha(pedidos, locales);
+  if(pedidosFiltrados.length == 0){
+    return res.redirect("/panel/produccion/reportes?error=reporte1");
+  }
   const localesConPedido = await reportesMiddleware.localesConPedido(pedidosFiltrados);
   // const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
