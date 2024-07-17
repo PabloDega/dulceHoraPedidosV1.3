@@ -28,6 +28,7 @@ const getProduccionPedido = async (id) => {
   try {
     const rows = await conectar.query("SELECT * FROM produccion WHERE ?", { id });
     if(rows[0][0] === undefined){
+      // ticket - modificar respuesta de error - solo 2 impactos
       let data = {local: "x"}
       return data
     }

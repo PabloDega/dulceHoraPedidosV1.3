@@ -389,12 +389,17 @@ const validarProduccionUpdateChain = [
     .notEmpty()
     .trim()
     .escape()
-    .isString(),
+    .isNumeric(),
   body("pedidoProduccionImporteTotal")
     .notEmpty()
     .trim()
     .escape()
-    .isString(),
+    .isNumeric(),
+  body("pedidoProduccionLocalLocal")
+    .notEmpty()
+    .trim()
+    .escape()
+    .isNumeric(),
 ]
 
 const validarQueryActividadChain = [

@@ -958,7 +958,6 @@ const actividadTodaFiltro = async (req, res) => {
 
 const pedidoProduccionLocal = async(req, res) => {
   let lista = await productosMiddleware.parseListaQuery(req.query);
-  console.log("ping" + lista)
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos(lista);
   let categoriasHistoricas = [];
   let dataPedido;
@@ -1131,8 +1130,10 @@ const pedidoProduccionNuevo = async (req, res) => {
 const pedidoProduccionInsert = async (req, res) => {
 /*   await actividadMiddleware.actividadUser(req.session.userLog, req.session.userLocal, 0, "Nuevo Pedido a Produccion", "");
  */
+  // buscar lista del local
+  const local = await servicesLocal.getLocal(req.session.userLocal);
   let pedido = [];
-  const productos = await servicesProduccion.getProductosProduccion();
+  const productos = await servicesProduccion.getProductosProduccion(local.listacostosprimaria);
   for(dato in req.body){
     if(!isNaN(dato)){
       if(req.body[dato] > 0){
@@ -1198,12 +1199,13 @@ const pedidoProduccionEditar = async(req, res) => {
   if(req.session.userRol == "admin" && pedido.estado !== "personalizado"){
     return res.redirect("/panel/produccion/fabrica?error=produccion1");
   }
-  let productos = await servicesProductosFabrica.getProductosFabricaActivos();
-  let locales = await servicesLocal.getLocalesHistoricos();
+  //const locales = await servicesLocal.getLocalesHistoricos();
+  const local = await servicesLocal.getLocal(pedido.local);
+  const productos = await servicesProductosFabrica.getProductosFabricaActivos(local.listacostosprimaria);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   return res.render(__basedir + "/src/views/pages/editarPedidoProduccion", {
-    locales,
+    local,
     productos,
     pedido,
     categorias,
@@ -1214,8 +1216,10 @@ const pedidoProduccionEditar = async(req, res) => {
 }
 
 const pedidoProduccionUpdate = async(req, res) => {
+  // ticket - verificar acceso del local al pedido para potestad de modificacion
+  const local = await servicesLocal.getLocal(req.body.pedidoProduccionLocalLocal);
   let pedido = [];
-  const productos = await servicesProduccion.getProductosProduccion();
+  const productos = await servicesProduccion.getProductosProduccion(local.listacostosprimaria);
   for(dato in req.body){
     if(!isNaN(dato)){
       if(req.body[dato] > 0){
@@ -1639,6 +1643,7 @@ const reporteValorizado = async(req, res) => {
   const productos = await servicesProductosFabrica.getProductosFabricaHistoricos();
   const categorias = await produccionMiddleware.getCategoriasDeProductosArray(pedidosFiltrados, productos, req.query.sector);
   const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.query.sector);
+  // ticket - msg de error si no hay registros para el sector
   res.render(__basedir + "/src/views/pages/reporteValorizado", {
     sector: req.query.sector,
     fecha,

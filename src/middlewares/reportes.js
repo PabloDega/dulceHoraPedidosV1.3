@@ -104,29 +104,34 @@ const localesConPedido = async(pedidos) => {
 const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
     let cantidadesPorProducto = [];
     productos.forEach((producto) => {
-        let x = false;
-        let precio = 0;
         if(producto.sector !== sector){return}
+        let x = false;
+        //let precio = 0;
+        let total = 0;
         let objeto = {};
+        let cantidades = [];
         objeto.id = producto.id;
         objeto.categoria = producto.categoria;
-        let cantidades = [];
+        
         pedidosFiltrados.forEach((pedido) => {
             let pedidoDetalle = JSON.parse(pedido.pedido);
-            let cantidadPedida = pedidoDetalle.find((item) => item[1] == producto.id);
-            if(cantidadPedida === undefined){
+            let itemPedidoDetalle = pedidoDetalle.find((item) => item[1] == producto.id);
+            if(itemPedidoDetalle === undefined){
+                // return no?
                 cantidades.push(0);
             } else {
-                cantidades.push(cantidadPedida[0]);
-                precio = cantidadPedida[2];
+                cantidades.push(itemPedidoDetalle[0]);
+                //precio = itemPedidoDetalle[2];
+                total += itemPedidoDetalle[2];
                 x = true;
             }
         })
         objeto.cantidades = cantidades;
-        objeto.precio = precio;
+        //objeto.precio = precio;
+        objeto.total = total;
         if(x){
             cantidadesPorProducto.push(objeto);
-        }  
+        }
     })
     return cantidadesPorProducto;
 }

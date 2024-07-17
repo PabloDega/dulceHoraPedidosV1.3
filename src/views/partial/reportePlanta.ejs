@@ -1,5 +1,6 @@
 <h1>Reporte de Planta</h1>
 <h2>Sector: <%= sector %> - Fecha: <%= fecha %></h2>
+<!-- ticket - msg de error si no hay registros para el sector -->
     <%if(sector === "panificado"){
         let secciones = new Set();
         categoriasReportePlanta.forEach((categoria) => {

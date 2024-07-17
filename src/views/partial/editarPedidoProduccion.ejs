@@ -21,7 +21,7 @@
         <hr>
         <h3>Fecha de Entrega: <%= pedido.fechaentrega %></h3>
         <hr>
-        <% let local = locales.find((local) => pedido.local == local.id) %>
+        <% //let local = locales.find((local) => pedido.local == local.id) %>
         <h3>Local: <%= local.nombre %></h3>
     </div>
     <table id="pedidoProduccionTabla">
@@ -90,8 +90,9 @@
                 }
             })%>
             <tr style="display: none;">
-                <td> <input type="text" name="pedidoProduccionLocalId" id="pedidoProduccionLocalId" value="<%= pedido.id %>"> </td>
-                <td> <input type="text" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
+                <td> <input type="hidden" name="pedidoProduccionLocalId" id="pedidoProduccionLocalId" value="<%= pedido.id %>"> </td>
+                <td> <input type="hidden" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
+                <td><input type="hidden" name="pedidoProduccionLocalLocal" value="<%= local.id %>"></td>
             </tr>
         </tbody>
     </table>

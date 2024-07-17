@@ -5,7 +5,7 @@
         <thead>
             <tr>
                 <th class="categoriaTabla"><%= fecha %></th>
-                <% let colspan = 4;
+                <% let colspan = 3;
                 localesConPedido.forEach((local) => {
                     colspan++;
                     let nombreLocal = locales.find((dato) => dato.id == local);
@@ -13,7 +13,7 @@
                     <th><%= nombreLocal %></th>
                 <%}) %>
                 <th class="categoriaTabla">Cantidad Total</th>
-                <th class="categoriaTabla">Precio</th>
+               
                 <th class="categoriaTabla">Importe Total</th>
             </tr>
         </thead>
@@ -23,7 +23,7 @@
                 if(pedidosDeCategoria.length == 0){ return }%>
                 <tr><th colspan="<%= colspan %>" class="categoriaTabla"><%= categoria %></th></tr>
                 <%pedidosDeCategoria.forEach((pedido) => {
-                    let acumulador = 0;
+                    let acumulador = 0; 
                     let nombreProducto = productos.find((producto) => producto.id == pedido.id);%>
                 <tr>
                     <td><%= nombreProducto.nombre %></td>
@@ -32,8 +32,7 @@
                         <td><%= cantidad %></td>
                     <%})%>
                     <td><%= acumulador %></td>
-                    <td>$<%= pedido.precio %></td>
-                    <td>$<%let total = acumulador * pedido.precio%><%=total%></td>
+                    <td>$<%= pedido.total%></td>
                 </tr>
                 <%})
             }) %>
@@ -46,3 +45,7 @@
     <input type="hidden" name="sector" value="<%= sector %>">
     <input type="submit" value="Excel" class="pedidoEstadoBoton btnVerde">
 </form>
+
+<script>
+    window.cantidadesPorProducto = <%- JSON.stringify(cantidadesPorProducto) %>
+</script>

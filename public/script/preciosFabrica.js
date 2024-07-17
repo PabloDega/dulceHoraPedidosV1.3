@@ -3,3 +3,7 @@ document.querySelector("#listaDePrecios").addEventListener("change", (e) => {
     let numero = e.target.value.replace(/[^0-9]/g, "");
     window.location.href = `/panel/productosFabrica/precios?lista=${numero}`;
 });
+
+document.querySelector("#preciosFabricaEnviar").addEventListener("click", () => {
+    document.querySelector("#cortinaLoad").style.display = "flex";
+})

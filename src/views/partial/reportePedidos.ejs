@@ -9,6 +9,7 @@
     })
     productosDelPedido = productosDelPedido.filter((producto) => producto.sector == sector)
     if(productosDelPedido.length == 0){
+        // ticket - msg de error si no hay registros para el sector
         return
     }
     productosDelPedido.forEach((producto) => {
