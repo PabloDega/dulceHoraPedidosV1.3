@@ -28,7 +28,7 @@
                 <tr>
                     <td><%= nombreProducto.nombre %></td>
                     <% pedido.cantidades.forEach((cantidad) => {
-                        acumulador = acumulador + cantidad;%>
+                        acumulador += cantidad;%>
                         <td><%= cantidad %></td>
                     <%})%>
                     <td><%= acumulador %></td>

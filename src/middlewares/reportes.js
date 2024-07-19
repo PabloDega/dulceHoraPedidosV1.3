@@ -131,7 +131,8 @@ const cantidadesPorProducto = async(productos, pedidosFiltrados, sector) => {
             } else {
                 cantidades.push(itemPedidoDetalle[0]);
                 //precio = itemPedidoDetalle[2];
-                total += itemPedidoDetalle[2];
+                let monto = itemPedidoDetalle[2] * itemPedidoDetalle[0];
+                total += monto;
                 x = true;
             }
         })
@@ -155,8 +156,9 @@ const totalPorLocal = async (pedidosFiltrados, sector, productos) => {
         let pedidoDetalle = JSON.parse(pedido.pedido);
         pedidoDetalle.forEach((item) => {
             const producto = productos.find((prod) => prod.id === item[1]);
-            if(!producto || producto.sector !== sector){return}
-            respuesta.total += item[2];
+            if(!producto || producto.sector !== sector){return};
+            let monto = item[2] * item[0];
+            respuesta.total += monto;
         })
         totalPorLocal.push(respuesta)
     });

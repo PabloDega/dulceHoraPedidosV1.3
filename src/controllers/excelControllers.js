@@ -357,7 +357,6 @@ const exportarExcelReporteValorizado = async(req, res) => {
     const categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductosArray(pedidosFiltrados, productos, req.body.sector);
     const cantidadesPorProducto = await reportesMiddleware.cantidadesPorProducto(productos, pedidosFiltrados, req.body.sector);
     const totalPorLocal = await reportesMiddleware.totalPorLocal(pedidosFiltrados, req.body.sector, productos);
-
     let wb = new xl.Workbook({
         dateFormat: 'dd/mm/yy',
     });
