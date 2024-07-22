@@ -713,9 +713,20 @@ footer img {
   display: flex;
   flex-direction: column;
   gap: 0.25em;
+  background-color: lightgray;
+  padding: 0.5em;
+  min-width: fit-content;
+  border-radius: 0  0 1em 0;
+}
+.pedidoDetalle{
+  display: flex;
+  flex-direction: column;
   background-color: white;
   padding: 1em;
-  border-radius: 1em;
+  gap: 0.5em;
+}
+.pedidoCard h1{
+  font-size: 1em;
 }
 .pedidoEstado{
   display: flex;
@@ -834,33 +845,35 @@ footer img {
   width: 15px;
   border-radius: 50%;
 }
-.pedidosProdInfo .proximo{
-  background-color: gray;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.proximo{
+  border-left: 6px solid grey;
 }
-.pedidosProdInfo .abierto{
-  background-color: yellow;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.abierto{
+  border-left: 6px solid yellow;
+  order: -5;
 }
-.pedidosProdInfo .demorado{
-  background-color: orange;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.demorado{
+  border-left: 6px solid orange;
+  order: -9;
 }
-.pedidosProdInfo .cargado{
-  background-color: green;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.cargado{
+  border-left: 6px solid green;
+  order: -2;
 }
-.pedidosProdInfo .aceptado{
-  background-color: blue;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.aceptado{
+  border-left: 6px solid blue;
 }
-.pedidosProdInfo .entregado{
-  background-color: blueviolet;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.entregado{
+  border-left: 6px solid violet;
+  order: 2;
 }
-.pedidosProdInfo .aplazado{
-  background-color: red;
-  border: 2px solid black;
+.pedidosProdInfo .pedidoCard.aplazado{
+  border-left: 6px solid red;
+  order: -10;
+}
+.pedidosProdInfo .pedidoCard.personalizado{
+  border-left: 6px solid cyan;
+  order: -3;
 }
 #backRender #nuevaProduccion{
   width: 100%;
@@ -914,10 +927,32 @@ footer img {
 #estadoPedidos{
   font-size: 0.8em;
   display: flex;
+  flex-direction: column;
   gap: 1em;
-  flex-wrap: wrap;
   overflow-y: scroll;
-  max-height: 200px;
+  max-height: 350px;
+}
+#estadoPedidos h2{
+  display: block;
+  width: 100%;
+  border-bottom: 2px solid black;
+}
+#estadoPedidos > div > span{
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  overflow-x: auto;
+  border-top: 8px solid lightgray;
+}
+#estadoPedidos > div > span.cerrado{
+  border-color: gray;
+  color: rgb(30, 30, 30);
+}
+#estadoPedidos > div > span.cerrado > .pedidoCard{
+  background-color: gray;
+}
+#estadoPedidos > div > span.proximo{
+  opacity: 0.6;
 }
 .produccionSemaforo{
   display: flex;

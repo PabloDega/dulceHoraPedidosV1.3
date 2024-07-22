@@ -1,15 +1,96 @@
-const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
+function verFechaFiltro(fecha) {
+  let year = fecha.getFullYear();
+  let month = fecha.getMonth() + 1;
+  let day = fecha.getDate();
+  return day + "/" + month + "/" + year;
+}
 
-  function verFechaFiltro(fecha) {
-    let year = fecha.getFullYear();
-    let month = fecha.getMonth() + 1;
-    let day = fecha.getDate();
-    return day + "/" + month + "/" + year;
+async function crearObjetoCalendario(fecha){
+  let objeto = {};
+  objeto.fecha = new Date(fecha);
+  objeto.dia = fecha.getDay();
+  return objeto;
+}
+
+async function agregarLocalesConEntrega(objetoFecha, locales){
+  objetoFecha.locales = [];
+  locales.forEach((local) => {
+    let servicios = JSON.parse(local.servicios);
+    if(!servicios.pedidos){
+      return
+    }
+    let dias = JSON.parse(local.entrega);
+    let checkEntrega = dias.findIndex((dia) => dia == objetoFecha.dia);
+    if(checkEntrega !== -1){
+      objetoFecha.locales.push(local.id);
+    }
+  })
+  return objetoFecha;
+}
+
+async function calcularEstadoPedido(objetoFecha, horaCorte){
+  let ahora = new Date();
+  let estadoDelPedido;
+  let fechaBase = new Date(objetoFecha.fecha);
+  fechaBase.setHours(horaCorte);
+  fechaBase.setMinutes(0);
+  fechaBase.setSeconds(0);
+  let fechaApertura = new Date(fechaBase);
+  fechaApertura.setDate(fechaApertura.getDate() - 3);
+  objetoFecha.fechaApertura = fechaApertura;
+  let fechaCierre = new Date(fechaBase);
+  fechaCierre.setDate(fechaCierre.getDate() - 2);
+  objetoFecha.fechaCierre = fechaCierre;
+  let fechaDemorada = new Date(fechaCierre);
+  fechaDemorada.setHours(horaCorte - 2);
+  objetoFecha.fechaDemorada = fechaDemorada;
+
+  if(ahora < fechaApertura){
+    estadoDelPedido = "proximo";
+  } else if(ahora < fechaCierre){
+    estadoDelPedido = "abierto";
+  } else {
+    estadoDelPedido = "cerrado";
   }
+  objetoFecha.estado = estadoDelPedido;
+  
+  return objetoFecha;
+}
+
+const getCalendarioEntregas = async (locales) => {
+  let calendarioDeEntregas = [];
+  let nDias = 7;
+  let horaCorte = 15;
+  // testAdjust
+  horaCorte -= 3;
+  let fecha = new Date();
+  for (let i = 0; i < nDias; i++) {
+    let objetoFecha = await crearObjetoCalendario(fecha);
+    objetoFecha = await agregarLocalesConEntrega(objetoFecha, locales);
+    objetoFecha = await calcularEstadoPedido(objetoFecha, horaCorte);
+    calendarioDeEntregas.push(objetoFecha);
+    fecha = new Date(fecha.setDate(fecha.getDate() + 1));
+  }
+  return calendarioDeEntregas;
+}
+
+const getCalendarioEntregasLocal = async (calendarioEntregas, local) => {
+  let calendarioDeEntregasLocal = [];
+  calendarioEntregas.forEach((dia) => {
+    let checkLocal = dia.locales.findIndex((item) => item == local);
+    if(checkLocal !== -1){
+      calendarioDeEntregasLocal.push(dia);
+    }
+  });
+  return calendarioDeEntregasLocal;
+}
+
+const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
 
   let diasDeEntrega = JSON.parse(diasEntrega);
   let fechaHoy = new Date();
 
+  
   //buscar dia de proxima entrega
   let proximaEntrega;
   let diasRestanteProxEntrega;
@@ -162,4 +243,6 @@ module.exports = {
   getCategoriasDeProductos,
   getCategoriasDeProductosArray,
   parseFiltrosTablaProduccion,
+  getCalendarioEntregas,
+  getCalendarioEntregasLocal,
 };
