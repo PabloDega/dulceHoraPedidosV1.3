@@ -512,7 +512,7 @@ const exportarExcelReporteCaja = async(req, res) => {
   const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
   const productos = await servicesProductos.getProductosLocalTodos();
-  const productosPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
+  const productosPersonalizados = await servicesProductos.getProductosPersonalizadosxLocalTodos(req.session.userLocal);
 
   registro = registro[0]
   let apertura = JSON.parse(registro.inicio);
@@ -668,7 +668,7 @@ const exportarExcelReporteCaja = async(req, res) => {
         producto = productosPersonalizados.find((prod) => prod.id == item[1]);
     }
     if(producto === undefined){
-        console.log(`Error al buscar producto en Reporte de Caja para codigo ${item[0]} / usuario: ${usuario}`)
+        console.log(`Error al buscar producto en Reporte de Caja para id ${item[1]} / usuario: ${req.session.userLocal}`)
         return;
     }
 

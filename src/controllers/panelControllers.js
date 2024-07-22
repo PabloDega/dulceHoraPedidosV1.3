@@ -2360,6 +2360,7 @@ const facturacionLocalProdPersNuevo = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/nuevoProductoPers", {
     valores: {},
+    proxId,
     servicios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
