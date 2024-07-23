@@ -1,9 +1,12 @@
-function verFechaFiltro(fecha) {
+/* function verFechaFiltro(fecha) {
   let year = fecha.getFullYear();
   let month = fecha.getMonth() + 1;
   let day = fecha.getDate();
   return day + "/" + month + "/" + year;
-}
+} */
+
+let nDias = 7;
+let horaCorte = 15;
 
 async function crearObjetoCalendario(fecha){
   let objeto = {};
@@ -59,8 +62,8 @@ async function calcularEstadoPedido(objetoFecha, horaCorte){
 
 const getCalendarioEntregas = async (locales) => {
   let calendarioDeEntregas = [];
-  let nDias = 7;
-  let horaCorte = 15;
+  /* let nDias = 7;
+  let horaCorte = 15; */
   // testAdjust
   horaCorte -= 3;
   let fecha = new Date();
@@ -74,7 +77,7 @@ const getCalendarioEntregas = async (locales) => {
   return calendarioDeEntregas;
 }
 
-const getCalendarioEntregasLocal = async (calendarioEntregas, local) => {
+const getCalendarioEntregasLocal = async (calendarioEntregas, local, produccion) => {
   let calendarioDeEntregasLocal = [];
   calendarioEntregas.forEach((dia) => {
     let checkLocal = dia.locales.findIndex((item) => item == local);
@@ -82,10 +85,49 @@ const getCalendarioEntregasLocal = async (calendarioEntregas, local) => {
       calendarioDeEntregasLocal.push(dia);
     }
   });
+  // Agregar posible pedido personalizado
+  calendarioDeEntregasLocal = await filtrarPedidosFueraDeCalendario(calendarioDeEntregasLocal, produccion);
+  
   return calendarioDeEntregasLocal;
 }
 
-const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
+async function filtrarPedidosFueraDeCalendario(calendarioDeEntregasLocal, produccion){
+  // crear fechas de pedidos visualizados
+  const fechaBase = new Date();
+  fechaBase.setHours(horaCorte);
+  fechaBase.setMinutes(0);
+  fechaBase.setSeconds(0);
+  const fechaFin = new Date();
+  fechaFin.setDate(fechaFin.getDate() + nDias)
+  // filtrar obj produccion en base a las fechas
+  let pedidosFiltrados = produccion.filter((prod) => {
+    let fechaArray = prod.fechaentrega.split("/");
+    return new Date(fechaArray[2], fechaArray[1] - 1, fechaArray[0]) > fechaBase;
+  })
+  // comparar fechas con los pedidos de calendario
+  let fechasDeCalendario = [];
+  calendarioDeEntregasLocal.forEach((dia) => fechasDeCalendario.push(dia.fecha.getDate()));
+  pedidosFiltrados = pedidosFiltrados.filter((pedido) => {
+    let fechaPedido = pedido.fechaentrega.split("/");
+    fechaPedido = new Date(fechaPedido[2], fechaPedido[1] - 1, fechaPedido[0]);
+    let buscar = fechasDeCalendario.findIndex((fecha) => fecha == fechaPedido.getDate());
+    return buscar === -1;
+  });
+  // crear objetos de calendario con los pedidos
+  pedidosFiltrados.forEach((pedido) => {
+    let fechaPedido = pedido.fechaentrega.split("/");
+    fechaPedido = new Date(fechaPedido[2], fechaPedido[1] - 1, fechaPedido[0])
+    let objetoCalendario = {
+      fecha: fechaPedido,
+    }
+    calendarioDeEntregasLocal.push(objetoCalendario);
+  });
+  // ordenar array
+  calendarioDeEntregasLocal.sort((a, b) => a.fecha - b.fecha)
+  return calendarioDeEntregasLocal;
+}
+
+/* const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
 
   let diasDeEntrega = JSON.parse(diasEntrega);
   let fechaHoy = new Date();
@@ -175,7 +217,7 @@ const getFechasProduccionLocal = (diasEntrega, pedidosLocal) => {
     horasRestanteEntregaProximoPedido: Math.trunc(horasRestanteEntregaProximoPedido) - 48,
   };
   return fechas;
-};
+}; */
 
 const fechaProduccionNormalizada = async(info) => {
   let fechaArray = info.split("-")
@@ -237,12 +279,27 @@ const parseFiltrosTablaProduccion = async (filtrosQuery, filtrosDisponibles) => 
   return respuesta;
 };
 
+ const checkPedidoAbierto = async (calendarioEntregasLocal) => {
+  let pedidoAbierto = calendarioEntregasLocal.find((pedido) => pedido.estado === "abierto");
+  let resp = {
+    estado: false,
+  };
+  if(pedidoAbierto === undefined){
+    return resp;
+  } else if(pedidoAbierto.length !== 0){
+    resp.estado = true;
+    resp.fecha = new Date(pedidoAbierto.fecha)
+  }
+  return resp;
+ }
+
 module.exports = {
-  getFechasProduccionLocal,
+  //getFechasProduccionLocal,
   fechaProduccionNormalizada,
   getCategoriasDeProductos,
   getCategoriasDeProductosArray,
   parseFiltrosTablaProduccion,
   getCalendarioEntregas,
   getCalendarioEntregasLocal,
+  checkPedidoAbierto,
 };

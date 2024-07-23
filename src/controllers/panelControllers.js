@@ -23,7 +23,7 @@ const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion"
 const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
 const cajaMiddleware = require(__basedir + "/src/middlewares/caja");
 const erroresMiddleware = require(__basedir + "/src/middlewares/errores")
-
+const fechasMiddleware = require(__basedir + "/src/middlewares/fecha")
 
 const index = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
@@ -951,11 +951,11 @@ const pedidoProduccionLocal = async(req, res) => {
   }
   const produccion = await servicesProduccion.getProduccionLocal(req.session.userLocal);
   const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
-  const locales = await servicesLocal.getLocalesHistoricos();
-  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, produccion);
+  //const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, produccion);
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  const locales = await servicesLocal.getLocalesHistoricos();
   const calendarioEntregas = await produccionMiddleware.getCalendarioEntregas(locales);
-  const calendarioEntregasLocal = await produccionMiddleware.getCalendarioEntregasLocal(calendarioEntregas, req.session.userLocal);
+  const calendarioEntregasLocal = await produccionMiddleware.getCalendarioEntregasLocal(calendarioEntregas, req.session.userLocal, produccion);
 
   let errores = await erroresMiddleware.erroresGral(req.query.error);
 
@@ -966,7 +966,7 @@ const pedidoProduccionLocal = async(req, res) => {
     dataPedido,
     dataLocal,
     productos,
-    prodFecha,
+    //prodFecha,
     locales,
     calendarioEntregasLocal,
     lector: "local",
@@ -1067,13 +1067,15 @@ const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
 }
 
 const pedidoProduccionNuevo = async (req, res) => {
-  // verificar si el pedido ya está tomado antes de abrir
-  const data = await servicesProduccion.getProduccionLocal(req.session.userLocal);
-  const dataLocal = await servicesLocal.getLocal(req.session.userLocal);
-  const prodFecha = await produccionMiddleware.getFechasProduccionLocal(dataLocal.entrega, data);
-  if(prodFecha.pedidoEstado !== "abierto" && prodFecha.proximoPedidoEstado !== "abierto" && prodFecha.pedidoEstado !== "demorado" && prodFecha.proximoPedidoEstado !== "demorado"){
-    return res.redirect("/panel/produccion/local")
+ // verficiar pedido de calendario abierto para el local
+  const locales = await servicesLocal.getLocalesHistoricos();
+  const calendarioEntregas = await produccionMiddleware.getCalendarioEntregas(locales);
+  const calendarioEntregasLocal = await produccionMiddleware.getCalendarioEntregasLocal(calendarioEntregas, req.session.userLocal);
+  const checkPedidoAbierto = await produccionMiddleware.checkPedidoAbierto(calendarioEntregasLocal);
+  if(!checkPedidoAbierto.estado){
+    return res.redirect("/panel/produccion/local?error=query1");
   }
+  const fechaEntrega = await fechasMiddleware.verFechaConDia(checkPedidoAbierto.fecha)
   const local = await servicesLocal.getLocal(req.session.userLocal);
   const productos = await servicesProduccion.getProductosProduccion(local.listacostosprimaria);
   const categorias = await servicesProductosFabrica.getCategoriasFabrica();
@@ -1086,6 +1088,7 @@ const pedidoProduccionNuevo = async (req, res) => {
     ultimoPedido,
     productos,
     categorias,
+    fecha: fechaEntrega,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
     servicios,
@@ -1190,8 +1193,8 @@ const pedidoProduccionUpdate = async(req, res) => {
       if(req.body[dato] > 0){
         let pedidoItem = [];
         let producto = productos.find((datoProd) => datoProd.id == dato);
-        pedidoItem.push(parseInt(req.body[dato]));
-        pedidoItem.push(parseInt(dato));
+        pedidoItem.push(parseFloat(req.body[dato]));
+        pedidoItem.push(parseFloat(dato));
         pedidoItem.push(producto.costo);
         pedido.push(pedidoItem);
       }
@@ -1199,13 +1202,13 @@ const pedidoProduccionUpdate = async(req, res) => {
   }
   // ticket 004
   // manejo de error temporal
-  if(isNaN(parseInt(req.body.pedidoProduccionImporteTotal))){
+  if(isNaN(parseFloat(req.body.pedidoProduccionImporteTotal))){
     return res.redirect("/panel/produccion/local?id=" + req.body.pedidoProduccionLocalId);
   }
 
   let datos = {
     pedido: JSON.stringify(pedido),
-    total: parseInt(req.body.pedidoProduccionImporteTotal),
+    total: parseFloat(req.body.pedidoProduccionImporteTotal),
     local: parseInt(req.body.pedidoProduccionLocalId),
   }
   await servicesProduccion.updatePedidoProduccion(datos);

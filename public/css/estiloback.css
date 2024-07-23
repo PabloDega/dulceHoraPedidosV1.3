@@ -542,7 +542,7 @@ footer img {
   top: 0px;
   right: -10px;
 }
-.pedidosCard .pedidosCardMsj, .pedidosProdCard .pedidosCardMsj{
+.pedidosCard .pedidosCardMsj, .pedidosProdCard .pedidosCardMsj, #calendarioPedidosLocal .pedidosCardMsj, .pedidoCard .pedidosCardMsj{
   position: absolute;
   width: 30px;
   top: 50px;
@@ -560,6 +560,15 @@ footer img {
   to{
     transform: translateY(3px) rotate(10deg);
   }  
+}
+#calendarioPedidosLocal .pedidosCardMsj{
+  top: 5px;
+  right: -5px;
+}
+.pedidoCard .pedidosCardMsj{
+  top: 3px;
+  right: 3px;
+  width: 20px;
 }
 .pedidoCardNuevo{
   font-weight: 600;
@@ -629,6 +638,7 @@ footer img {
   padding: 1em;
   display: flex;
   flex-direction: column;
+  width: fit-content;
 }
 .chatMensaje .chatMensajeFecha{
   font-size: 0.8em;
@@ -640,6 +650,7 @@ footer img {
   background-color: lightsalmon;
   border-radius: 1em 1em 0 1em;
   margin-left: 2em;
+  align-self: flex-end;
 }
 #msjU, #mensajeFabrica{
   background-color: white;
@@ -716,7 +727,7 @@ footer img {
   background-color: lightgray;
   padding: 0.5em;
   min-width: fit-content;
-  border-radius: 0  0 1em 0;
+  position: relative;
 }
 .pedidoDetalle{
   display: flex;
@@ -797,7 +808,7 @@ footer img {
   background-color: gray;
   padding: 0.5em;
 }
-#actividadPaginado span{
+#actividadPaginado span, .cardCalendarioLocal, .cardCalendarioFabrica{
   cursor: pointer;
 }
 .anchoMax{
@@ -834,6 +845,34 @@ footer img {
   font-weight: 600;
   width: 120px;
 }
+#calendarioPedidosLocal{
+  display: flex;
+  gap: 1em;
+  overflow: auto;
+}
+#calendarioPedidosLocal > span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  position: relative;
+}
+#calendarioPedidosLocal .btn{
+  font-size: 0.9em;
+}
+#calendarioPedidosLocal h1{
+  font-size: 1em;
+}
+#calendarioPedidosLocal h2{
+  font-size: 0.8em;
+  color: gray;
+  border-bottom: 2px solid lightgray;
+}
+#calendarioPedidosLocal .pedidoCardLocal{
+  padding: 0.5em;
+  background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+}
 .pedidosProdInfo .localEstadoPedido{
   display: flex;
   gap: 0.5em;
@@ -845,35 +884,38 @@ footer img {
   width: 15px;
   border-radius: 50%;
 }
-.pedidosProdInfo .pedidoCard.proximo{
+.pedidosProdInfo .pedidoCard.proximo, #calendarioPedidosLocal .pedidoCardLocal.proximo{
   border-left: 6px solid grey;
 }
-.pedidosProdInfo .pedidoCard.abierto{
+.pedidosProdInfo .pedidoCard.abierto, #calendarioPedidosLocal .pedidoCardLocal.abierto{
   border-left: 6px solid yellow;
   order: -5;
 }
-.pedidosProdInfo .pedidoCard.demorado{
+.pedidosProdInfo .pedidoCard.demorado, #calendarioPedidosLocal .pedidoCardLocal.demorado{
   border-left: 6px solid orange;
   order: -9;
 }
-.pedidosProdInfo .pedidoCard.cargado{
+.pedidosProdInfo .pedidoCard.cargado, #calendarioPedidosLocal .pedidoCardLocal.cargado{
   border-left: 6px solid green;
   order: -2;
 }
-.pedidosProdInfo .pedidoCard.aceptado{
+.pedidosProdInfo .pedidoCard.aceptado, #calendarioPedidosLocal .pedidoCardLocal.aceptado{
   border-left: 6px solid blue;
 }
-.pedidosProdInfo .pedidoCard.entregado{
+.pedidosProdInfo .pedidoCard.entregado, #calendarioPedidosLocal .pedidoCardLocal.entregado{
   border-left: 6px solid violet;
   order: 2;
 }
-.pedidosProdInfo .pedidoCard.aplazado{
+.pedidosProdInfo .pedidoCard.aplazado, #calendarioPedidosLocal .pedidoCardLocal.aplazado{
   border-left: 6px solid red;
   order: -10;
 }
-.pedidosProdInfo .pedidoCard.personalizado{
+.pedidosProdInfo .pedidoCard.personalizado, #calendarioPedidosLocal .pedidoCardLocal.personalizado{
   border-left: 6px solid cyan;
   order: -3;
+}
+#calendarioPedidosLocal .pedidoCardLocal{
+  order: unset !important; 
 }
 #backRender #nuevaProduccion{
   width: 100%;
@@ -942,19 +984,25 @@ footer img {
   flex-direction: row;
   gap: 1em;
   overflow-x: auto;
-  border-top: 8px solid lightgray;
+  border-top: 4px solid green;
+  padding: 0.5em 0;
 }
 #estadoPedidos > div > span.cerrado{
-  border-color: gray;
+  border-color: darkblue;
+  color: rgb(30, 30, 30);
+}
+#estadoPedidos > div > span.proximo{
+  border-color: lightgray;
   color: rgb(30, 30, 30);
 }
 #estadoPedidos > div > span.cerrado > .pedidoCard{
-  background-color: gray;
+  background-color: lightblue;
+  color: darkblue;
 }
 #estadoPedidos > div > span.proximo{
   opacity: 0.6;
 }
-.produccionSemaforo{
+/* .produccionSemaforo{
   display: flex;
   width: 30px;
   height: 30px;
@@ -1009,7 +1057,7 @@ footer img {
 .prodSemaforopersonalizado{
   background-color: white;
   border: 1px solid black;
-}
+} */
 #pedidoProduccionModificar{
   display: flex;
   align-items: center;

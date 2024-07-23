@@ -42,7 +42,7 @@
             <td><%= producto.unidad %></td>
             <td class="numTabla">$<%= producto.costo %></td>
             <td>
-              <input type="number" class="sinFlechas" min="0" name="<%= producto.id %>" id="preciosPrecio" data-id="<%= producto.id %>" value="">
+              <input type="number" class="sinFlechas" min="0" step="0.01" name="<%= producto.id %>" id="preciosPrecio" data-id="<%= producto.id %>" value="">
             </td>
         <% });
       })%>

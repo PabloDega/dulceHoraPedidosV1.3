@@ -1,69 +1,109 @@
-<%  function verFechaFiltro(fecha){
-        let year = fecha.getFullYear();
-        let month = fecha.getMonth() + 1;
-        let day = fecha.getDate();
-        return day + "/" + month + "/" + year;
+<% function verFechaFiltro(fecha){
+      let year = fecha.getFullYear();
+      let month = fecha.getMonth() + 1;
+      let day = fecha.getDate();
+      let dia = fecha.getDay();
+      let diaNombre = "Sábado";
+      switch (dia) {
+          case 0:
+              diaNombre = "Domingo"
+              break;
+          case 1:
+              diaNombre = "Lunes"
+              break;
+          case 2:
+              diaNombre = "Martes"
+              break;
+          case 3:
+              diaNombre = "Miércoles"
+              break;
+          case 4:
+              diaNombre = "Jueves"
+              break;
+          case 5:
+              diaNombre = "Viernes"
+              break;
+          default:
+              break;
+      }
+      let resp = {
+          numero: day + "/" + month + "/" + year,
+          dia: diaNombre,
+      };
+      return resp;
     }%>
-<!-- Calendario de pedidos -->
+
+
+<!-- Calendario de pedidos para Local -->
 <h2>Pedidos de Producción a Fábrica</h2>
-<%  if(lector == "local"){ %>
+<%  if(lector == "local"){
+  const ahora = new Date();%>
     <div id="calendarioPedidosProduccion" class="anchoMax pedidosProdInfo">
-        <h2>Calendario de Pedidos y Entregas</h2>
+        <h2>Calendario de Entregas</h2>
+        <div id="calendarioPedidosLocal">
         <%calendarioEntregasLocal.forEach((dia) => {
           // buscar pedido para determinar estado
-          console.log(dia);
-          let demorado = {
-            estado: false,
-            clase: "",
+          let checkPedido = produccion.filter((pedido) => pedido.fechaentrega === verFechaFiltro(dia.fecha).numero);
+          let inbox = false;
+          // check estado
+          let estado = {
+            clickeable: "",
           };
-          if(dia.estado === "abierto"){
-            // check demora
-            if(fecha > fechaDemorada){
-              demorado.estado = true;
-              demorado.clase = "demorado";
+          if(checkPedido.length === 0){
+            // estados para pedido no recibido
+            if(dia.estado === "abierto"){
+              if(ahora > calendarioEntregasLocal.fechaDemorada){
+                estado.estado = "demorado";
+              } else {
+                estado.estado = "abierto";
+              }
+            } else if(dia.estado === "cerrado"){
+              estado.estado = "aplazado";
+            } else if(dia.estado === "proximo"){
+              estado.estado = "proximo";
             }
-          }%>
-          <div id="calendarioPedidos">
-          </div>
+          } else {
+            // estados para pedido recibido
+            if(checkPedido[0].mensajes.length > 0 && checkPedido[0].buzon == "mensajeFabrica"){
+              inbox = true;
+            }
+            estado.estado = checkPedido[0].estado;
+            estado.id = checkPedido[0].id;
+            estado.clickeable = "cardCalendarioLocal";
+          }
+          %>
+          <span>
+            <%if(inbox){%>
+              <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj">
+            <%}%>
+            <h2><%=verFechaFiltro(dia.fecha).dia%></h2>
+            <span class="pedidoCardLocal <%= estado.estado%> <%= estado.clickeable %>" data-id="<%=estado.id%>">
+              <h1><%=verFechaFiltro(dia.fecha).numero%></h1>
+              <span><%= estado.estado %></span>
+              
+            </span>
+            <%if(estado.estado == "abierto" || estado.estado  == "demorado"){%>
+              <span class="btn btnNaranja" id="pedidoProdNuevo">Pedir</span>
+            <%}%>
+            <%if(estado.estado == "personalizado"){%>
+              <span class="btn btnNaranja" id="pedidoProduccionModificar" data-id="<%= checkPedido[0].id %>" data-lector="local">Modificar</span>
+            <%}%>
+          </span>
         <%})%>
-        <!-- <div id="calendarioPedidos">
-            <div>
-                <span>Hoy: </span>
-                <span><%= prodFecha.fechaHoy.toLocaleString("es-AR") %></span>
-            </div>
-            <div>
-                <span>Entrega: </span>
-                <span><%= verFechaFiltro(prodFecha.fechaEntregaPedido) %></span>
-                <span class="localEstadoPedido">
-                    <span class="localSemaforo <%= prodFecha.pedidoEstado %>"></span>
-                    pedido <%= prodFecha.pedidoEstado %>
-                </span>
-            </div>
-            <div>
-                <span>Proxima Entrega: </span>
-                <span><%= verFechaFiltro(prodFecha.fechaEntregaProxPedido) %></span>
-                <span class="localEstadoPedido">
-                    <span class="localSemaforo <%= prodFecha.proximoPedidoEstado %>"></span>
-                    pedido <%= prodFecha.proximoPedidoEstado %>
-                </span>
-            </div>
         </div>
-        <% if(prodFecha.pedidoEstado == "abierto" || prodFecha.proximoPedidoEstado == "abierto" || prodFecha.pedidoEstado == "demorado" || prodFecha.proximoPedidoEstado == "demorado"){%>
-        <div id="botones">
-            <span class="btn btnNaranja" id="pedidoProdNuevo">Nuevo Pedido</span>
-        </div>
-        <%} %>-->
     </div> 
 <%}%>
+
+
 <!-- Calendario de Locales para Fabrica -->
 <%if(lector == "fabrica"){%>
     <div id="estadoPedidosLocales"class="anchoMax pedidosProdInfo">
     <h2>Estado de los pedidos</h2>
     <div id="estadoPedidos">
       <%calendarioEntregas.forEach((dia) => {
-        let pedidosDelDia = produccion.filter((item) => item.fechaentrega == verFechaFiltro(dia.fecha));%>
+        let pedidosDelDia = produccion.filter((item) => item.fechaentrega == verFechaFiltro(dia.fecha).numero);%>
         <div>
-          <h2><%= verFechaFiltro(dia.fecha)%> / <%= dia.estado.toUpperCase() %></h2>
+          <h2><%= verFechaFiltro(dia.fecha).dia%> <%= verFechaFiltro(dia.fecha).numero%> // <%= dia.estado %></h2>
           <span class="<%=dia.estado%>">
             <% dia.locales.forEach((local) => {
               // verificar que el pedido este cargado
@@ -87,8 +127,15 @@
               <%}
             });
             pedidosDelDia.forEach((pedido) => {
-              let localInfo = locales.find((item) => item.id == pedido.local);%>
-              <span class="pedidoCard <%=pedido.estado%>">
+              let localInfo = locales.find((item) => item.id == pedido.local);
+              let inbox = false;
+              if(pedido.mensajes.length > 0 && pedido.buzon == "mensajeLocal"){
+                inbox = true;
+              }%>
+              <span class="pedidoCard cardCalendarioFabrica <%=pedido.estado%>" data-id="<%=pedido.id%>">
+                <%if(inbox){%>
+                  <img src="/im/mensaje.svg" alt="icon" class="pedidosCardMsj">
+                <%}%>
                 <h1><%= localInfo.nombre %></h1>
                 <span>Pedido <%=pedido.estado%></span>
               </span>
@@ -150,7 +197,7 @@
                     <span>Local: <%= local.nombre %></span>
                 <%}%>
                 <span>Fecha: <%= pedido.fechaentrega %></span>
-                <span><b>Estado: <%= pedido.estado %></b></span>
+                <span><b><%= pedido.estado %></b></span>
                 <%if(lector == "fabrica" && botonEntregado){%>
                 <form id="formEntregado" method="post" action="/panel/produccion/fabrica/updateEstado">
                     <input type="hidden" name="id" value="<%= pedido.id %>">
@@ -176,7 +223,7 @@
                     local = locales.find((local) => dataPedido.local == local.id)%>
                     <h3>Local: <%= local.nombre %></h3>
                     <hr>    
-                    <h3>Fecha de carga: <%= fechaCargado.toLocaleString("es-AR") %></h3>
+                    <h3>Fecha de Creación: <%= fechaCargado.toLocaleString("es-AR") %></h3>
                     <hr>
             <%}%>
             <h3>Fecha de Entrega: <%= dataPedido.fechaentrega %></h3>
@@ -323,11 +370,9 @@
         <%} %>
     </div>
 </div>
-<%  if(lector == "local"){%>
-<script>
-    localStorage.setItem("fechaEntregaActiva", <%- JSON.stringify(prodFecha.fechaEntregaActiva) %>)
-</script>
-<%}%>   
+
 <script>
     window.lector = <%- JSON.stringify(lector) %>
 </script>
+
+<script src="/script/produccion.js" defer></script>

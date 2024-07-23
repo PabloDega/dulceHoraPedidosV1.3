@@ -229,12 +229,13 @@ if (document.querySelector(".pedidosProdCard") != null) {
   document.querySelectorAll(".pedidosProdCard").forEach((boton) =>
     boton.addEventListener("click", (e) => {
       document.querySelector("#cortinaLoad").style.display = "flex";
-      let destino = "Local"
+      let destino = "Local";
       if(e.currentTarget.dataset.lector == "fabrica"){destino = "fabrica"}
       location.href = "/panel/produccion/" + destino + "?id=" + e.currentTarget.dataset.id;
     })
   );
 }
+
 // Toggle precio de docena en editar/nuevo producto
 function editProdtoggleUnidad(e) {
   /* let precioDocenaInput = document.querySelector("#preciodocena");
@@ -386,10 +387,10 @@ if (document.querySelector("#verPedidosProduccion") != null) {
 }
 
 if(document.querySelector("#pedidoProduccionModificar") != null){
-  document.querySelector("#pedidoProduccionModificar").addEventListener("click", (e) => {
+  document.querySelectorAll("#pedidoProduccionModificar").forEach((boton) => boton.addEventListener("click", (e) => {
     document.querySelector("#cortinaLoad").style.display = "flex";
     location.href = "/panel/produccion/editar?id=" + e.target.dataset.id;
-  })
+  }));
 }
 
 if(document.querySelector("#nuevoProdFabrica") != null){

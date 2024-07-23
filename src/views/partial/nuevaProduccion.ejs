@@ -3,7 +3,7 @@
     <div id="datosFloat">
         <span>
             <span><b>Fecha de entrega:</b></span>
-            <span id="pedidoProduccionDatosFechaEntrega">Martes 28/11/2023</span>
+            <span id="pedidoProduccionDatosFechaEntrega"><%= fecha.dia + " " + fecha.numero %></span>
         </span>
         <span id="pedidoProduccionTotal">
             <b>Total:</b>
@@ -80,7 +80,7 @@
             })%>
             
             <tr style="display: none;">
-                <td> <input type="hidden" name="pedidoProduccionFechaEntrega" id="pedidoProduccionFechaEntrega"> </td>
+                <td> <input type="hidden" name="pedidoProduccionFechaEntrega" id="pedidoProduccionFechaEntrega" value="<%=fecha.numero%>"> </td>
                 <td> <input type="hidden" name="pedidoProduccionImporteTotal" id="pedidoProduccionImporteTotal"> </td>
             </tr>
         </tbody>
