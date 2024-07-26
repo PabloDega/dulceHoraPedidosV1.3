@@ -7,6 +7,8 @@
 
 let nDias = 7;
 let horaCorte = 15;
+// testAdjust
+horaCorte = 11;
 
 async function crearObjetoCalendario(fecha){
   let objeto = {};
@@ -33,6 +35,10 @@ async function agregarLocalesConEntrega(objetoFecha, locales){
 
 async function calcularEstadoPedido(objetoFecha, horaCorte){
   let ahora = new Date();
+  
+  //testAdjust
+  ahora.setHours(ahora.getHours() - 3);
+
   let estadoDelPedido;
   let fechaBase = new Date(objetoFecha.fecha);
   fechaBase.setHours(horaCorte);
@@ -44,14 +50,17 @@ async function calcularEstadoPedido(objetoFecha, horaCorte){
   let fechaCierre = new Date(fechaBase);
   fechaCierre.setDate(fechaCierre.getDate() - 2);
   objetoFecha.fechaCierre = fechaCierre;
-  let fechaDemorada = new Date(fechaCierre);
+  let fechaDemorada = new Date(fechaBase);
+  fechaDemorada.setDate(fechaDemorada.getDate() - 2);
   fechaDemorada.setHours(horaCorte - 2);
   objetoFecha.fechaDemorada = fechaDemorada;
-
   if(ahora < fechaApertura){
     estadoDelPedido = "proximo";
   } else if(ahora < fechaCierre){
     estadoDelPedido = "abierto";
+    /* if(ahora > fechaDemorada){
+      estadoDelPedido = "demorado";
+    } */
   } else {
     estadoDelPedido = "cerrado";
   }
@@ -62,11 +71,12 @@ async function calcularEstadoPedido(objetoFecha, horaCorte){
 
 const getCalendarioEntregas = async (locales) => {
   let calendarioDeEntregas = [];
-  /* let nDias = 7;
-  let horaCorte = 15; */
-  // testAdjust
-  horaCorte -= 3;
+
   let fecha = new Date();
+
+  // testAdjust
+  fecha.setHours(fecha.getHours() - 3);
+
   for (let i = 0; i < nDias; i++) {
     let objetoFecha = await crearObjetoCalendario(fecha);
     objetoFecha = await agregarLocalesConEntrega(objetoFecha, locales);
@@ -74,6 +84,7 @@ const getCalendarioEntregas = async (locales) => {
     calendarioDeEntregas.push(objetoFecha);
     fecha = new Date(fecha.setDate(fecha.getDate() + 1));
   }
+
   return calendarioDeEntregas;
 }
 

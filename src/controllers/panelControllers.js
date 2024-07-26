@@ -1068,9 +1068,10 @@ const pedidoProduccionAgregarMensajeFabrica = async(req, res) => {
 
 const pedidoProduccionNuevo = async (req, res) => {
  // verficiar pedido de calendario abierto para el local
+  const produccion = await servicesProduccion.getProduccionLocal(req.session.userLocal);
   const locales = await servicesLocal.getLocalesHistoricos();
   const calendarioEntregas = await produccionMiddleware.getCalendarioEntregas(locales);
-  const calendarioEntregasLocal = await produccionMiddleware.getCalendarioEntregasLocal(calendarioEntregas, req.session.userLocal);
+  const calendarioEntregasLocal = await produccionMiddleware.getCalendarioEntregasLocal(calendarioEntregas, req.session.userLocal, produccion);
   const checkPedidoAbierto = await produccionMiddleware.checkPedidoAbierto(calendarioEntregasLocal);
   if(!checkPedidoAbierto.estado){
     return res.redirect("/panel/produccion/local?error=query1");

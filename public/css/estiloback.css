@@ -892,7 +892,7 @@ footer img {
   order: -5;
 }
 .pedidosProdInfo .pedidoCard.demorado, #calendarioPedidosLocal .pedidoCardLocal.demorado{
-  border-left: 6px solid orange;
+  border-left: 6px solid orangered;
   order: -9;
 }
 .pedidosProdInfo .pedidoCard.cargado, #calendarioPedidosLocal .pedidoCardLocal.cargado{
@@ -991,9 +991,11 @@ footer img {
   border-color: darkblue;
   color: rgb(30, 30, 30);
 }
+#estadoPedidos > div > span.demorado{
+  border-color: orangered;
+}
 #estadoPedidos > div > span.proximo{
   border-color: lightgray;
-  color: rgb(30, 30, 30);
 }
 #estadoPedidos > div > span.cerrado > .pedidoCard{
   background-color: lightblue;

@@ -1,43 +1,47 @@
-<% function verFechaFiltro(fecha){
-      let year = fecha.getFullYear();
-      let month = fecha.getMonth() + 1;
-      let day = fecha.getDate();
-      let dia = fecha.getDay();
-      let diaNombre = "Sábado";
-      switch (dia) {
-          case 0:
-              diaNombre = "Domingo"
-              break;
-          case 1:
-              diaNombre = "Lunes"
-              break;
-          case 2:
-              diaNombre = "Martes"
-              break;
-          case 3:
-              diaNombre = "Miércoles"
-              break;
-          case 4:
-              diaNombre = "Jueves"
-              break;
-          case 5:
-              diaNombre = "Viernes"
-              break;
-          default:
-              break;
-      }
-      let resp = {
-          numero: day + "/" + month + "/" + year,
-          dia: diaNombre,
-      };
-      return resp;
-    }%>
+<%function verFechaFiltro(fecha){
+    let year = fecha.getFullYear();
+    let month = fecha.getMonth() + 1;
+    let day = fecha.getDate();
+    let dia = fecha.getDay();
+    let diaNombre = "Sábado";
+    switch (dia) {
+        case 0:
+            diaNombre = "Domingo"
+            break;
+        case 1:
+            diaNombre = "Lunes"
+            break;
+        case 2:
+            diaNombre = "Martes"
+            break;
+        case 3:
+            diaNombre = "Miércoles"
+            break;
+        case 4:
+            diaNombre = "Jueves"
+            break;
+        case 5:
+            diaNombre = "Viernes"
+            break;
+        default:
+            break;
+    }
+    let resp = {
+        numero: day + "/" + month + "/" + year,
+        dia: diaNombre,
+    };
+    return resp;
+  }
+
+  let ahora = new Date();
+  //testAdjust
+  ahora.setHours(ahora.getHours() - 3);
+  %>
 
 
 <!-- Calendario de pedidos para Local -->
 <h2>Pedidos de Producción a Fábrica</h2>
-<%  if(lector == "local"){
-  const ahora = new Date();%>
+<%if(lector == "local"){%>
     <div id="calendarioPedidosProduccion" class="anchoMax pedidosProdInfo">
         <h2>Calendario de Entregas</h2>
         <div id="calendarioPedidosLocal">
@@ -52,7 +56,7 @@
           if(checkPedido.length === 0){
             // estados para pedido no recibido
             if(dia.estado === "abierto"){
-              if(ahora > calendarioEntregasLocal.fechaDemorada){
+              if(ahora > dia.fechaDemorada){
                 estado.estado = "demorado";
               } else {
                 estado.estado = "abierto";
@@ -106,25 +110,36 @@
           <h2><%= verFechaFiltro(dia.fecha).dia%> <%= verFechaFiltro(dia.fecha).numero%> // <%= dia.estado %></h2>
           <span class="<%=dia.estado%>">
             <% dia.locales.forEach((local) => {
+              if(dia.estado === "abierto" && ahora > dia.fechaDemorada){
+                dia.estado = "demorado";
+              }
               // verificar que el pedido este cargado
               let localInfo = locales.find((item) => item.id == local);
               let pedido = pedidosDelDia.find((item) => item.local == local);
-              if(!pedido && dia.estado === "cerrado"){%>
+              if(!pedido){
+                if(dia.estado === "cerrado"){%>
                 <span class="pedidoCard aplazado">
                   <h1><%=localInfo.nombre%></h1>
                   <span>Pedido aplazado</span>
                 </span>
-              <%} else if(!pedido && dia.estado === "abierto"){%>
+              <%} else if(dia.estado === "abierto"){%>
                 <span class="pedidoCard abierto">
                   <h1><%=localInfo.nombre%></h1>
                   <span>Pedido abierto</span>
                 </span>
-              <%} else if(!pedido && dia.estado === "proximo"){%>
+              <%} else if(dia.estado === "proximo"){%>
                 <span class="pedidoCard proximo">
                   <h1><%=localInfo.nombre%></h1>
                   <span>Pedido proximo</span>
                 </span>
+              <%} else if(dia.estado === "demorado"){%>
+                <span class="pedidoCard demorado">
+                  <h1><%=localInfo.nombre%></h1>
+                  <span>Pedido demorado</span>
+                </span>
               <%}
+              }
+              
             });
             pedidosDelDia.forEach((pedido) => {
               let localInfo = locales.find((item) => item.id == pedido.local);
