@@ -1813,6 +1813,29 @@ form.editor#cierreCajaCierre table tbody tr input{
 .filtroProduccionActivo{
   background-color: orange;
 }
+.statsCont{
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  height: auto;
+}
+.statsCont .statsBotonera{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em 0;
+}
+.statsCont span{
+  padding: 1em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.statsCont .statsSubBotonera{
+  display: flex;
+  gap: 1em;
+}
 
 
 /* Media Style */

@@ -22,8 +22,8 @@ const localMiddleware = require(__basedir + "/src/middlewares/local");
 const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
 const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
 const cajaMiddleware = require(__basedir + "/src/middlewares/caja");
-const erroresMiddleware = require(__basedir + "/src/middlewares/errores")
-const fechasMiddleware = require(__basedir + "/src/middlewares/fecha")
+const erroresMiddleware = require(__basedir + "/src/middlewares/errores");
+const fechasMiddleware = require(__basedir + "/src/middlewares/fecha");
 
 const index = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
@@ -2329,7 +2329,7 @@ const facturacionLocalProdPersNuevo = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
   res.render(__basedir + "/src/views/pages/nuevoProductoPers", {
     valores: {},
-    proxId,
+    //proxId,
     servicios,
     usuario: req.session.userLog,
     userRol: req.session.userRol,
@@ -2608,7 +2608,7 @@ const localCierreDeCajaReporte = async (req, res) => {
   const gastos = await servicesGastos.getGastosxEvento(req.session.userLocal, fecha);
   const resumenGastos = await gastosMiddleware.crearResumenGastos(gastos);
   const productos = await servicesProductos.getProductosLocalTodos();
-  const productosPersonalizados = await servicesProductos.getProductosPersonalizadosxLocal(req.session.userLocal);
+  const productosPersonalizados = await servicesProductos.getProductosPersonalizadosxLocalTodos(req.session.userLocal);
   // Agregar consulta de  productos personalizados y filtraros en la vista del reporte por el numero de codigo (>100)
 
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);

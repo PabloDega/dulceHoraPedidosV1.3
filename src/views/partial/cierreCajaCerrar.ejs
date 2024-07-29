@@ -8,6 +8,7 @@ function monetarizar(valor){
 }
 const apertura = JSON.parse(registro.inicio);
 const fechaApertura = new Date(apertura.fecha);
+fechaApertura.setHours(fechaApertura.getHours() + 3);
 %>
 
 <h2>Cerrar caja Nº<%=registro.numero%></h2>
@@ -20,7 +21,7 @@ const fechaApertura = new Date(apertura.fecha);
       Fecha: <%=fechaApertura.toLocaleDateString()%>
     </span><hr>
     <span>
-        Hora: <%=fechaApertura.toLocaleTimeString()%>
+        Hora: <%=fechaApertura.toLocaleTimeString() %>
     </span><hr>
     <span>
         Efectivo en caja: <%=monetarizar(apertura.efectivo)%>

@@ -423,6 +423,22 @@ const ajustarObjParaNC = async (factura) => {
   return factura;
 };
 
+const crearResumenFacturacionEstadisticas = async (facturas) => {
+    let fechas = new Set();
+    let resumen = [];
+    facturas.forEach((factura) => {
+        fechas.add(factura.fecha);
+    });
+    fechas.forEach(async (dia) => {
+        let facturasDelDia = facturas.filter((factura) => factura.fecha === dia);
+        let resumenDelDia = await crearResumenVistaLocal(facturasDelDia);
+        resumenDelDia.fecha = dia;
+        resumen.push(resumenDelDia)
+    });
+
+    return resumen;
+}
+
 module.exports = {
     fechaHoy,
     fechaHyphen,
@@ -438,4 +454,5 @@ module.exports = {
     ajustarObjParaNC,
     checkServerPadron,
     consultarPadron,
+    crearResumenFacturacionEstadisticas,
 }

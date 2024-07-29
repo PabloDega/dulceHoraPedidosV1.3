@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const panelControllers = require("../controllers/panelControllers");
 const excelControllers = require("../controllers/excelControllers");
+const statsControllers = require("../controllers/statsControllers");
 const fileUpload = require("../services/fileUpload");
 const validar = require("../middlewares/validador");
 const auth = require("../middlewares/auth")
@@ -273,5 +274,8 @@ router.post("/local/caja/api", auth.authAtencion, panelControllers.localCierreDe
 router.get("/local/caja/reporte", auth.authAtencion, panelControllers.localCierreDeCajaReporte);
 
 router.post("/local/caja/reporte/excel", auth.authAdmin, excelControllers.exportarExcelReporteCaja);
+
+router.get("/estadisticas/local/ventas/diarias", auth.authAtencion, statsControllers.estadisticasLocalVentasDiarias);
+
 
 module.exports = router;

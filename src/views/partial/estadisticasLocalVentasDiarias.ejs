@@ -1,0 +1,42 @@
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<h2>Estadisticas</h2>
+<div class="statsCont">
+    <div class="statsBotonera">
+        <div class="backCard small" id="statsBtnVentas">
+            <h1>Ventas Diarias</h1>
+        </div>
+        <div class="backCard small" id="statsBtnVentas">
+            <h1>Ventas por Horario</h1>
+        </div>
+        <div class="backCard small" id="statsBtnVentas">
+            <h1>Ventas por Producto</h1>
+        </div>
+    </div>
+    <span>
+        <div id="statsChart"></div>
+        <div class="statsSubBotonera">
+            <div class="backCard small filtrarDias" id="statsVerSemana" data-dias=7>
+                <h1>Semana</h1>
+            </div>
+            <div class="backCard small filtrarDias" id="statsVerSemana" data-dias=15>
+                <h1>Quincena</h1>
+            </div>
+            <div class="backCard small filtrarDias" id="statsVerMes" data-dias=30>
+                <h1>Mes</h1>
+            </div>
+            <div class="backCard small filtrarDias" id="statsVerTrimestre" data-dias=90>
+                <h1>Trimestre</h1>
+            </div>
+            <div class="backCard small" id="statsVerTodo">
+                <h1>Todo</h1>
+            </div>
+        </div>
+    </span>
+    
+</div>
+
+<script>
+    window.facturas = <%- JSON.stringify(facturas) %>
+    window.resumenVentas = <%- JSON.stringify(resumenVentas) %>
+</script>
+<script src="/script/estadisticasLocal.js" defer></script>
