@@ -736,6 +736,18 @@ footer img {
   padding: 1em;
   gap: 0.5em;
 }
+.pedidoDetalle > h3:nth-child(1){
+  display: flex;
+  position: relative;
+  height: fit-content;
+}
+.pedidoDetalle .produccionIconoPlanilla{
+  width: 30px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+}
 .pedidoCard h1{
   font-size: 1em;
 }
@@ -1798,10 +1810,10 @@ form.editor#cierreCajaCierre table tbody tr input{
   display: flex;
   gap: 0.5em;
 }
-
 .filtroProduccionActivo{
   background-color: orange;
 }
+
 
 /* Media Style */
 

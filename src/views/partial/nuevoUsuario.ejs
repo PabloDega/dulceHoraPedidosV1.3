@@ -1,3 +1,10 @@
+<%locales.sort((a, b) => {
+  let x = a.nombre.toLowerCase();
+  let y = b.nombre.toLowerCase();
+  if (x < y) {return -1;}
+  if (x > y) {return 1;}
+  return 0;
+})%>
 <form action="" method="post" class="editor" id="usuarioForm">
   <h1>Nuevo Usuario</h1>
   <span>

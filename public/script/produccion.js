@@ -11,3 +11,11 @@ if (document.querySelector(".cardCalendarioFabrica") != null) {
         location.href = `/panel/produccion/fabrica?id=${e.currentTarget.dataset.id}`;
     }));
 }
+
+if(document.querySelector(".produccionIconoPlanilla") !== null){
+    document.querySelectorAll(".produccionIconoPlanilla").forEach((boton) => {
+        boton.addEventListener("click", (e) => {
+            document.querySelector("#exportarExcel").submit();
+        })
+    })
+}

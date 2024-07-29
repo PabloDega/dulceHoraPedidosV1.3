@@ -1020,7 +1020,7 @@ const pedidoProduccionFabrica = async(req, res) => {
     }
     categoriasHistoricas = await produccionMiddleware.getCategoriasDeProductos(dataPedido.pedido, productos);
   }
-  const locales = await servicesLocal.getLocalesHistoricos();
+  const locales = await servicesLocal.getLocales();
   const produccion = await servicesProduccion.getProduccionFabrica();
   const calendarioEntregas = await produccionMiddleware.getCalendarioEntregas(locales);
 
@@ -1124,7 +1124,7 @@ const pedidoProduccionInsert = async (req, res) => {
   let datos = {
     local: parseInt(req.session.userLocal),
     pedido: JSON.stringify(pedido),
-    total: parseInt(req.body.pedidoProduccionImporteTotal),
+    total: parseFloat(req.body.pedidoProduccionImporteTotal),
     fechaDeEntrega: req.body.pedidoProduccionFechaEntrega,
   }
   let proxId = await servicesProductos.lastId("produccion");

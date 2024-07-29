@@ -3,12 +3,12 @@ let totalPedido = 0;
 let diasDeLaSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
 
 function pedidoProduccionCalcImporte(e) {
-    if (isNaN(parseInt(e.target.value))) {
+    if (isNaN(parseFloat(e.target.value))) {
         e.target.value = 0;
         return;
     }
     let costo = document.querySelector("#costo" + e.target.dataset.id);
-    costo = parseInt(costo.innerHTML);
+    costo = parseFloat(costo.innerHTML);
     document.querySelector(`#importe${e.target.dataset.id}`).innerHTML =
         costo * parseInt(e.target.value);
     pedidoProduccionCalcTotal();
@@ -28,7 +28,7 @@ function pedidoProduccionCalcTotal() {
     let montosArray = [];
     document
         .querySelectorAll(".importe")
-        .forEach((monto) => montosArray.push(parseInt(monto.innerHTML)));
+        .forEach((monto) => montosArray.push(parseFloat(monto.innerHTML)));
     totalPedido = montosArray.reduce((acumulador, valor) => {
         return acumulador + valor;
     }, 0);

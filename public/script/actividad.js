@@ -4,10 +4,10 @@ if (window.location.pathname.split("/")[2] === "actividadToda") {
 }
 // toggle filter bar
 document.querySelector("#actividadFiltrar").addEventListener("click", () => {
-  document.querySelector("#cortina").style.display = "flex";
+  document.querySelector("#cortinaFiltrosActividad").style.display = "flex";
 });
 document.querySelector("#actividadCerrarFiltros").addEventListener("click", () => {
-  document.querySelector("#cortina").style.display = "none";
+  document.querySelector("#cortinaFiltrosActividad").style.display = "none";
 });
 document.querySelector("#actividadQuitarFiltros").addEventListener("click", () => {
   window.location.href = "/panel/actividadToda";

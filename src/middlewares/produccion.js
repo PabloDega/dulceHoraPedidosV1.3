@@ -8,7 +8,7 @@
 let nDias = 7;
 let horaCorte = 15;
 // testAdjust
-horaCorte = 11;
+horaCorte = 12;
 
 async function crearObjetoCalendario(fecha){
   let objeto = {};
@@ -65,7 +65,6 @@ async function calcularEstadoPedido(objetoFecha, horaCorte){
     estadoDelPedido = "cerrado";
   }
   objetoFecha.estado = estadoDelPedido;
-  
   return objetoFecha;
 }
 
