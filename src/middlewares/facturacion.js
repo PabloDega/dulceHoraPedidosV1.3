@@ -423,7 +423,7 @@ const ajustarObjParaNC = async (factura) => {
   return factura;
 };
 
-const crearResumenFacturacionEstadisticas = async (facturas) => {
+const crearResumenFacturacionEstadisticas = (facturas) => {
     let fechas = new Set();
     let resumen = [];
     facturas.forEach((factura) => {
@@ -432,11 +432,38 @@ const crearResumenFacturacionEstadisticas = async (facturas) => {
     fechas.forEach(async (dia) => {
         let facturasDelDia = facturas.filter((factura) => factura.fecha === dia);
         let resumenDelDia = await crearResumenVistaLocal(facturasDelDia);
+        let detallePorHora = crearResumenVentasPorHora(facturasDelDia);
         resumenDelDia.fecha = dia;
-        resumen.push(resumenDelDia)
+        resumenDelDia.cronograma = detallePorHora;
+        resumen.push(resumenDelDia);
     });
-
     return resumen;
+}
+
+const crearResumenVentasPorHora = (facturasDelDia) => {
+    let respuestas = [];
+    for (let i = 0; i < 24; i++) {
+        let respuesta = {
+            hora: i,
+            total: 0,
+            promedio: 0,
+            operaciones: 0,
+        }
+        facturasDelDia.forEach((factura) => {
+            let horaevento = new Date(factura.fechaevento).getHours();
+            // testAdjust
+            horaevento -= 3;
+            if(horaevento == i){
+                respuesta.operaciones++;
+                respuesta.total += factura.total;
+            }
+        })
+        if(respuesta.operaciones > 0){
+            respuesta.promedio = respuesta.total / respuesta.operaciones
+        }
+        respuestas.push(respuesta);
+    }
+    return respuestas;
 }
 
 module.exports = {

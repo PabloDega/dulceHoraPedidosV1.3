@@ -1836,6 +1836,18 @@ form.editor#cierreCajaCierre table tbody tr input{
   display: flex;
   gap: 1em;
 }
+#statsCalendario{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  background-color: white;
+  padding: 1em;
+  border-radius: 0.5em;
+}
+#statsCalendario label{
+  display: inline-block;
+  width: 50px;
+}
 
 
 /* Media Style */

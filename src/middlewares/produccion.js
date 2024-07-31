@@ -37,7 +37,7 @@ async function calcularEstadoPedido(objetoFecha, horaCorte){
   let ahora = new Date();
   
   //testAdjust
-  //ahora.setHours(ahora.getHours() - 3);
+  ahora.setHours(ahora.getHours() - 3);
 
   let estadoDelPedido;
   let fechaBase = new Date(objetoFecha.fecha);
@@ -74,7 +74,7 @@ const getCalendarioEntregas = async (locales) => {
   let fecha = new Date();
 
   // testAdjust
-  //fecha.setHours(fecha.getHours() - 3);
+  fecha.setHours(fecha.getHours() - 3);
 
   for (let i = 0; i < nDias; i++) {
     let objetoFecha = await crearObjetoCalendario(fecha);
