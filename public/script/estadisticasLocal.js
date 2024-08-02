@@ -22,8 +22,25 @@ function mostrarError(info){
   document.querySelector(".mensajeErrorForm").addEventListener("click", (e) => (e.currentTarget.style.display = "none"));
 }
 
+function actualizarBotonesDeFiltro(stats){
+  document.querySelectorAll(".filtrarDias").forEach((boton) => {
+    boton.dataset.stats = stats;
+  })
+  document.querySelector("#statsVerTodo").dataset.stats = stats;
+  document.querySelector("#statsFechasCalendario").dataset.stats = stats;
+}
+
 // ---- Eventos -----
-window.addEventListener("load", () => {iniciarChart()});
+window.addEventListener("load", () => {
+  window.resumenVentas.forEach((dia) => {
+      ventasTotalxDia.push(dia.totalDia);
+  });
+  window.resumenVentas.forEach((dia) => {
+      diasDelResumen.push(dia.fecha);
+  }); 
+
+  iniciarChart();
+});
 
 document.querySelector("#statsFechasCalendario").addEventListener("click", (e) => {
   mostrarFiltroManual(e.currentTarget.dataset);
@@ -31,49 +48,69 @@ document.querySelector("#statsFechasCalendario").addEventListener("click", (e) =
 
 document.querySelectorAll(".filtrarDias").forEach((boton) => {
   boton.addEventListener("click", (e) => {
-    filtrarChartDias(e.currentTarget.dataset.dias)
+    if(e.currentTarget.dataset.stats === "ventasTotal"){
+      filtrarChartVentasDias(e);
+    } else if(e.currentTarget.dataset.stats === "operacionesPromedio"){
+      filtrarChartOperacionesDias(e);
+    }
   })
 });
 
-document.querySelector("#statsVerTodo").addEventListener("click", () => {
+document.querySelector("#statsVerTodo").addEventListener("click", (e) => {
   document.querySelector("#statsChart").innerHTML = "";
-  iniciarChart();
+  chartPath(e);
 });
 
-document.querySelector("#statsBtnVentas").addEventListener("click", () => {
+document.querySelector("#statsBtnVentas").addEventListener("click", (e) => {
   document.querySelector("#statsChart").innerHTML = "";
-  iniciarChart();
+  iniciarChart(e);
 });
 
 document.querySelector("#statsBtnCronograma").addEventListener("click", (e) => {
   iniciarChartCronograma(e);
 })
 
+document.querySelector("#statsBtnProductos").addEventListener("click", (e) => {
+  iniciarChartProductos(e);
+})
+
 // ---- Variables iniciales ----
-
 let ventasTotalxDia = [];
-window.resumenVentas.forEach((dia) => {
-    ventasTotalxDia.push(dia.totalDia);
-});
-
 let diasDelResumen = [];
-window.resumenVentas.forEach((dia) => {
-    diasDelResumen.push(dia.fecha);
-});
-
 let options;
 let chart;
 
 // ---------
 
-function iniciarChart(){
+function chartPath(e){
+  let stats = e.currentTarget.dataset.stats;
+  if(stats === "ventasTotal"){
+    iniciarChart(e);
+    return;
+  } else if(stats === "operacionesPromedio"){
+    iniciarChartCronograma(e);
+  } else if(stats === "productosTotal"){
+    iniciarChartProductos(e);
+  }
+}
+
+function iniciarChart(e){
+  let periodo;
+  if(!e){
+    periodo = "Todos los datos"
+  } else {
+    periodo = e.currentTarget.dataset.periodo;
+  }
+
+  actualizarBotonesDeFiltro("ventasTotal");
+
   options = {
     chart: {
       type: 'bar',
       width: '100%',
     },
     series: [{
-      name: 'Venta',
+      name: 'Monto total de ventas',
       data: ventasTotalxDia,
     }],
     yaxis: {
@@ -103,19 +140,37 @@ function iniciarChart(){
       enabled: true,
       autoScaleYaxis: true
     },
+    title: {
+      text: 'Total de ventas',
+      align: 'center',
+      offsetY: 30,
+      style: {
+        color: '#444',
+        fontSize: "1.2em",
+      }
+    },
+    subtitle: {
+      text: periodo,
+      align: 'center',
+      offsetY: 50,
+      style: {
+        color: '#444',
+        fontSize: "1em",
+      }
+    }
   }
   
   chart = new ApexCharts(document.querySelector("#statsChart"), options);
   chart.render();
 }
 
-function filtrarChartDias(nDias){
+function filtrarChartVentasDias(e){
   let hoy = new Date();
-  hoy.setDate(hoy.getDate() - (nDias - 1));
+  hoy.setDate(hoy.getDate() - (e.currentTarget.dataset.dias - 1));
   let dias = [];
   let ventas = [];
-  for (let i = 0; i < (nDias); i++) {
-    let data = dobleDigito(hoy.getFullYear()) + "-" + dobleDigito((hoy.getMonth() + 1)) + "-"  + dobleDigito(hoy.getDate());
+  for (let i = 0; i < (e.currentTarget.dataset.dias); i++) {
+    let data = dobleDigito(hoy.getFullYear()) + "-" + dobleDigito((hoy.getMonth() + 1)) + "-" + dobleDigito(hoy.getDate());
     dias.push(data);
     let diaIndex = diasDelResumen.findIndex((dia) => dia === data);
     if(diaIndex !== -1){
@@ -125,12 +180,12 @@ function filtrarChartDias(nDias){
     }
     hoy.setDate(hoy.getDate() + 1);
   }
-
-  document.querySelector("#statsChart").innerHTML = "";
   
   options.series[0].data = ventas;
   options.xaxis.categories = dias;
+  options.subtitle.text = e.currentTarget.dataset.periodo;
 
+  document.querySelector("#statsChart").innerHTML = "";
   chart = new ApexCharts(document.querySelector("#statsChart"), options);
   chart.render();
 }
@@ -151,7 +206,7 @@ function mostrarFiltroManual(dataset){
         <h2>Filtrar por fechas</h2>
         <span><label for="fechaInicio">Inicio:</label>  <input type="date" name="fechaInicio" id="fechaInicio"></span>
         <span><label for="fechaFinal">Fin:</label> <input type="date" name="fechaFinal" id="fechaFinal"></span>
-        <div class="btn btnNaranja" id="btnFiltroManual" data-stats="${dataset.stats}">Filtrar</div>
+        <div class="btn btnNaranja" id="btnFiltroManual" data-stats="resumenVentas">Filtrar</div>
     </div>`;
   cortina.style.display = "flex";
   document.querySelector("#btnFiltroManual").addEventListener("click", (e) => {
@@ -176,13 +231,13 @@ async function crearObjetosFiltroManual(dataset){
     let infoFiltrada = await filtrarPorFechas(fechas, dataset.stats);
 
     if(dataset.stats === "resumenVentas"){
-      filtrarChartDiasManual(infoFiltrada);
+      filtrarChartVentasDiasManual(infoFiltrada);
     } else if(dataset.stats === "facturas"){
       filtrarChartFacturasManual(infoFiltrada);
     }
 }
 
-function filtrarChartDiasManual(infoFiltrada){
+function filtrarChartVentasDiasManual(infoFiltrada){
   let ventas = [];
   infoFiltrada.forEach((dia) => {
     ventas.push(dia.totalDia);
@@ -198,7 +253,7 @@ function filtrarChartDiasManual(infoFiltrada){
   chart.render();
 }
 
-function filtrarChartFacturasManual(infoFiltrada, dato){
+/* function filtrarChartFacturasManual(infoFiltrada, dato){
   let total = [];
   infoFiltrada.forEach((dia) => {
     total.push(dia[dato]);
@@ -212,7 +267,7 @@ function filtrarChartFacturasManual(infoFiltrada, dato){
   options.xaxis.categories = dias;
   chart = new ApexCharts(document.querySelector("#statsChart"), options);
   chart.render();
-}
+} */
 
 function crearResumenChartCronograma(fechas){
   let info;
@@ -244,12 +299,15 @@ function crearResumenChartCronograma(fechas){
     })
   });
   horas.forEach((hora) => {
-    let operacionesPromedioCalculo = hora.operaciones / info.length;
+    /* let operacionesPromedioCalculo = hora.operaciones / info.length;
     operacionesPromedioCalculo = Math.round(operacionesPromedioCalculo*100)/100;
     hora.operacionesPromedio = operacionesPromedioCalculo;
     let ventasPromedioCalculo = hora.ventas / info.length;
     ventasPromedioCalculo = Math.round(ventasPromedioCalculo*100)/100;
     hora.ventasPromedio = ventasPromedioCalculo;
+    hora.ventas = Math.round(hora.ventas*100)/100; */
+    hora.operacionesPromedio = Math.round((hora.operaciones / info.length)*100)/100;;
+    hora.ventasPromedio = Math.round((hora.ventas / info.length)*100)/100;
     hora.ventas = Math.round(hora.ventas*100)/100;
   })
 
@@ -258,7 +316,7 @@ function crearResumenChartCronograma(fechas){
 
 
 function iniciarChartCronograma(e, fechas){
-
+  actualizarBotonesDeFiltro(e.currentTarget.dataset.stats);
   let info = crearResumenChartCronograma(fechas);
   let infoSeries = crearObjetoCronograma(info, e.currentTarget.dataset);
 
@@ -277,6 +335,27 @@ function iniciarChartCronograma(e, fechas){
           shadeTo: 'light',
           shadeIntensity: 0.65
         },
+    },
+    xaxis: {
+      tickAmount: infoSeries[0].data.length - 1,
+    },
+    title: {
+      text: 'Promedio de operaciones por hora',
+      align: 'center',
+      offsetY: 30,
+      style: {
+        color: '#444',
+        fontSize: "1.2em",
+      }
+    },
+    subtitle: {
+      text: e.currentTarget.dataset.periodo,
+      align: 'center',
+      offsetY: 50,
+      style: {
+        color: '#444',
+        fontSize: "1em",
+      }
     }
   }
   document.querySelector("#statsChart").innerHTML = "";
@@ -287,9 +366,14 @@ function iniciarChartCronograma(e, fechas){
 function crearObjetoCronograma(info, variable){
   if(!variable){
     variable = {};
+  }
+  if(!variable.stats){
     variable.stats = "operacionesPromedio";
+  }
+  if(!variable.name){
     variable.name = "Operaciones Promedio";
   }
+
   let hrInicioReporte = 7;
   let hrFinalReporte = 22;
   let series = [{
@@ -336,3 +420,136 @@ function crearObjetoCronograma(info, variable){
   });
   console.log(series)
 } */
+
+function filtrarChartOperacionesDias(e){
+  let inicial = new Date();
+  let final = new Date();
+  inicial.setDate(inicial.getDate() - (e.currentTarget.dataset.dias - 1));
+  let fechas = {
+    inicial,
+    final,
+  }
+  iniciarChartCronograma(e, fechas);
+}
+
+function iniciarChartProductos(e, fechas){
+  actualizarBotonesDeFiltro(e.currentTarget.dataset.stats);
+  let info = crearResumenChartProductos(fechas);
+  let infoSeries = crearObjetoProductos(info, e.currentTarget.dataset);
+
+  options = {
+    chart: {
+      type: 'bar',
+      width: '100%',
+    },
+    series: infoSeries.seriesMasVendidos,
+    theme: {
+      mode: 'light', 
+      palette: 'palette1', 
+      monochrome: {
+          enabled: false,
+          color: '#255aee',
+          shadeTo: 'light',
+          shadeIntensity: 0.65
+        },
+    },
+    xaxis: {
+      tickAmount: infoSeries.seriesMasVendidos[0].data.length - 1,
+    },
+    title: {
+      text: 'Promedio de productos mas vendidos',
+      align: 'center',
+      offsetY: 30,
+      style: {
+        color: '#444',
+        fontSize: "1.2em",
+      }
+    },
+    subtitle: {
+      text: e.currentTarget.dataset.periodo,
+      align: 'center',
+      offsetY: 50,
+      style: {
+        color: '#444',
+        fontSize: "1em",
+      }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true
+      }
+    },
+  }
+
+  document.querySelector("#statsChart").innerHTML = "";
+  chart = new ApexCharts(document.querySelector("#statsChart"), options);
+  chart.render();
+}
+
+function crearResumenChartProductos(fechas){
+  let info;
+  if(fechas){
+    info = filtrarPorFechas(fechas, "resumenVentas");
+  } else {
+    info = window.resumenVentas;
+  }
+  
+  let productosResumen = [];
+  info.forEach((dia) => {
+    dia.productos.forEach((item) => {
+      let infoDelProd = window.productos.find((prod) => prod.id === item[5]);
+      if(infoDelProd === undefined){
+        return;
+      } else if(infoDelProd.fraccionamiento === "kilo"){
+        item[4] = item[4]/250;
+      }
+      item.push(infoDelProd.nombre);
+      item.push(infoDelProd.categoria);
+      let buscarProd = productosResumen.findIndex((prod) => prod[5] === item[5]);
+      if(buscarProd !== -1){
+        productosResumen[buscarProd][1] += item[1];
+        productosResumen[buscarProd][4] += item[4];
+      } else {
+        productosResumen.push(item);
+      }
+    });
+  });
+
+  // Calcular promedio en base a total / info.length
+  productosResumen.forEach((producto) => {
+    let promedio = producto[1] / info.length
+    producto.push(Math.round(promedio*100)/100)
+    producto[1] = Math.round(producto[1]*100)/100;
+    producto[4] = Math.round(producto[4]);
+  })
+  productosResumen = productosResumen.sort((a, b) => b[4] - a[4]);
+  console.log(productosResumen)
+  return productosResumen;
+}
+
+function crearObjetoProductos(info, dataset){
+  let objeto = {}
+  // Filtrar cantidad de productos mas vendidos para mostrar
+  let prodsDelResumen = 10;
+  if(dataset.productos){
+    if(isNaN(dataset.productos)){
+      return
+    }
+    prodsDelResumen = dataset.productos;
+  }
+
+  let productosMasVendidos = info.slice(0, prodsDelResumen);
+  objeto.productosMasVendidos = productosMasVendidos;
+  let seriesMasVendidos = [{
+    name: "Promedio de productos mas vendidos",
+    data: []
+  }];
+  productosMasVendidos.forEach((producto) => {
+    let obj = {}
+    obj.y= producto[4];
+    obj.x = producto[6];
+    seriesMasVendidos[0].data.push(obj);
+  });
+  objeto.seriesMasVendidos = seriesMasVendidos;
+  return objeto;
+}

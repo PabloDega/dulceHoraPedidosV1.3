@@ -3,35 +3,35 @@
 <h2>Estadisticas</h2>
 <div class="statsCont">
     <div class="statsBotonera">
-        <div class="backCard small" id="statsBtnVentas">
+        <div class="backCard small statsBtn" id="statsBtnVentas" data-periodo="Todos los datos" data-stats="ventasTotal">
             <h1>Ventas Diarias</h1>
         </div>
-        <div class="backCard small" id="statsBtnCronograma" data-stats="operacionesPromedio" data-name="Operaciones Promedio">
+        <div class="backCard small statsBtn" id="statsBtnCronograma" data-periodo="Todos los datos" data-stats="operacionesPromedio" data-name="Operaciones Promedio">
             <h1>Ventas por Horario</h1>
         </div>
-        <div class="backCard small" id="statsBtnVentas">
+        <div class="backCard small statsBtn" id="statsBtnProductos"  data-periodo="Todos los datos" data-stats="productosTotal"  data-name="Productos Promedio">
             <h1>Ventas por Producto</h1>
         </div>
     </div>
     <span>
         <div id="statsChart"></div>
         <div class="statsSubBotonera">
-            <div class="backCard small filtrarDias" id="statsVerSemana" data-dias=7>
+            <div class="backCard small filtrarDias" data-stats="ventasTotal" data-dias=7 data-periodo="Ultima semana">
                 <h1>Semana</h1>
             </div>
-            <div class="backCard small filtrarDias" id="statsVerSemana" data-dias=15>
+            <div class="backCard small filtrarDias" data-stats="ventasTotal" data-dias=15 data-periodo="Ultima quincena">
                 <h1>Quincena</h1>
             </div>
-            <div class="backCard small filtrarDias" id="statsVerMes" data-dias=30>
+            <div class="backCard small filtrarDias" data-stats="ventasTotal" data-dias=30 data-periodo="Ultimo mes">
                 <h1>Mes</h1>
             </div>
-            <div class="backCard small filtrarDias" id="statsVerTrimestre" data-dias=90>
+            <div class="backCard small filtrarDias" data-stats="ventasTotal" data-dias=90 data-periodo="Ultimo trimestre">
                 <h1>Trimestre</h1>
             </div>
-            <div class="backCard small" id="statsVerTodo">
+            <div class="backCard small" id="statsVerTodo" data-stats="ventasTotal" data-periodo="Todos los datos">
                 <h1>Todo</h1>
             </div>
-            <div class="backCard small" id="statsFechasCalendario" data-stats="resumenVentas">
+            <div class="backCard small" id="statsFechasCalendario" data-stats="ventasTotal" data-periodo="Filtro manual">
                 <h1>Manual</h1>
             </div>
         </div>
@@ -42,5 +42,6 @@
 <script>
     window.facturas = <%- JSON.stringify(facturas) %>
     window.resumenVentas = <%- JSON.stringify(resumenVentas) %>
+    window.productos = <%- JSON.stringify(productos) %>
 </script>
 <script src="/script/estadisticasLocal.js" defer></script>

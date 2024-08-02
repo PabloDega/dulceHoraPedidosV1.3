@@ -23,11 +23,13 @@ const fechasMiddleware = require(__basedir + "/src/middlewares/fecha")
 
 const estadisticasLocalVentasDiarias = async (req, res) => {
   const servicios = await localMiddleware.filtarServicios(req.session.userLocal);
+  const productos = await servicesProductos.getProductosLocalTodos();
   let facturasCAE = await servicesFacturacion.getFacturasCAExLocal(req.session.userLocal);
   let facturasNF = await servicesFacturacion.getFacturasNFxLocal(req.session.userLocal);
   let facturas = facturasNF.concat(facturasCAE);
   facturas.sort((a, b) => a.fechaevento - b.fechaevento);
-  const resumenVentas = await facturacionMiddleware.crearResumenFacturacionEstadisticas(facturas);
+  const resumenVentas = await facturacionMiddleware.crearResumenFacturacionEstadisticas(facturas, productos);
+  //const resumenProductos = await facturacionMiddleware.crearResumenProductosEstadisticas(facturas)
 
   return res.render(__basedir + "/src/views/pages/estadisticasLocalVentasDiarias", {
       usuario: req.session.userLog,
@@ -35,6 +37,8 @@ const estadisticasLocalVentasDiarias = async (req, res) => {
       servicios,
       facturas,
       resumenVentas,
+      productos,
+      //resumenProductos,
     });
 }
 

@@ -423,7 +423,7 @@ const ajustarObjParaNC = async (factura) => {
   return factura;
 };
 
-const crearResumenFacturacionEstadisticas = (facturas) => {
+const crearResumenFacturacionEstadisticas = (facturas, productos) => {
     let fechas = new Set();
     let resumen = [];
     facturas.forEach((factura) => {
@@ -433,8 +433,10 @@ const crearResumenFacturacionEstadisticas = (facturas) => {
         let facturasDelDia = facturas.filter((factura) => factura.fecha === dia);
         let resumenDelDia = await crearResumenVistaLocal(facturasDelDia);
         let detallePorHora = crearResumenVentasPorHora(facturasDelDia);
+        let detalleDeProductos = crearResumenProductosEstadisticas(facturasDelDia, productos);
         resumenDelDia.fecha = dia;
         resumenDelDia.cronograma = detallePorHora;
+        resumenDelDia.productos = detalleDeProductos;
         resumen.push(resumenDelDia);
     });
     return resumen;
@@ -454,16 +456,47 @@ const crearResumenVentasPorHora = (facturasDelDia) => {
             // testAdjust
             horaevento -= 3;
             if(horaevento == i){
-                respuesta.operaciones++;
-                respuesta.total += factura.total;
+                if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+                    respuesta.operaciones--;
+                    respuesta.total -= factura.total;
+                } else {
+                    respuesta.operaciones++;
+                    respuesta.total += factura.total;
+                }
             }
         })
         if(respuesta.operaciones > 0){
-            respuesta.promedio = respuesta.total / respuesta.operaciones
+            respuesta.promedio = Math.round((respuesta.total / respuesta.operaciones)*100)/100
         }
         respuestas.push(respuesta);
     }
     return respuestas;
+}
+
+const crearResumenProductosEstadisticas = (facturasDelDia, productos) => {
+    let productosDelDia = [];
+    facturasDelDia.forEach((factura) => {
+        let detalle = JSON.parse(factura.detalle);
+        detalle.forEach((item) => {
+            // buscar prod en productosDelDia y si está sumarlo
+            let buscarProd = productosDelDia.findIndex((prod) => prod[5] === item[5])
+            if(buscarProd !== -1){
+                if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+                    productosDelDia[buscarProd][1] -= item[1];
+                    productosDelDia[buscarProd][4] -= item[4];
+                } else {
+                    productosDelDia[buscarProd][1] += item[1];
+                    productosDelDia[buscarProd][4] += item[4];
+                }
+            } else {
+                if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+                    return;
+                }
+                productosDelDia.push(item);
+            }
+        });
+    });
+    return productosDelDia;
 }
 
 module.exports = {
@@ -482,4 +515,5 @@ module.exports = {
     checkServerPadron,
     consultarPadron,
     crearResumenFacturacionEstadisticas,
+    crearResumenProductosEstadisticas,
 }

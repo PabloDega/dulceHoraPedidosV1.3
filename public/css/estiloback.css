@@ -1834,6 +1834,7 @@ form.editor#cierreCajaCierre table tbody tr input{
 }
 .statsCont .statsSubBotonera{
   display: flex;
+  flex-wrap: wrap;
   gap: 1em;
 }
 #statsCalendario{
@@ -1874,6 +1875,12 @@ form.editor#cierreCajaCierre table tbody tr input{
   }
   .produccionCont{
     flex-direction: column-reverse;
+  }
+  .statsCont{
+    flex-direction: column;
+  }
+  .statsCont .statsBotonera {
+    flex-direction: row;
   }
 }
 
