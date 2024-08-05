@@ -277,5 +277,6 @@ router.post("/local/caja/reporte/excel", auth.authAdmin, excelControllers.export
 
 router.get("/estadisticas/local/ventas/diarias", auth.authAtencion, statsControllers.estadisticasLocalVentasDiarias);
 
+router.get("/estadisticas/local/exportar", auth.authAtencion, excelControllers.exportarEstadisticasLocal);
 
 module.exports = router;

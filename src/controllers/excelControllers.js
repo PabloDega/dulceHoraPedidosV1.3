@@ -1,4 +1,5 @@
 const xl = require('excel4node');
+const { borderStyle } = require('excel4node/distribution/lib/types');
 const servicesProductosFabrica = require(__basedir + "/src/services/productosFabrica");
 const servicesLocal = require(__basedir + "/src/services/local");
 const servicesReportes = require(__basedir + "/src/services/reportes");
@@ -8,6 +9,23 @@ const servicesCaja = require(__basedir + "/src/services/caja");
 const servicesGastos = require(__basedir + "/src/services/gastos");
 const gastosMiddleware = require(__basedir + "/src/middlewares/gastos");
 const servicesProductos = require(__basedir + "/src/services/productos");
+const servicesFacturacion = require(__basedir + "/src/services/facturacion");
+const facturacionMiddleware = require(__basedir + "/src/middlewares/facturacion");
+
+const fechaHoy = async () => {
+    let hoy = new Date();
+    let anio = hoy.getFullYear();
+    let mes = hoy.getMonth() + 1;
+    let dia = hoy.getDate();
+    if(mes < 10){
+        mes = "0" + mes;
+    }
+    if(dia < 10){
+        dia = "0" + dia;
+    }
+    let fecha = anio.toString() + "-" + mes.toString() + "-" + dia.toString();
+    return fecha;
+}
 
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
@@ -685,10 +703,246 @@ const exportarExcelReporteCaja = async(req, res) => {
   wb.write(`Reporte de Caja - ${registro.numero} - ${apertura.fecha}.xlsx`, res);
 }
 
+const exportarEstadisticasLocal = async(req, res) => {
+    const productos = await servicesProductos.getProductosLocalTodos();
+    let facturasCAE = await servicesFacturacion.getFacturasCAExLocal(req.session.userLocal);
+    let facturasNF = await servicesFacturacion.getFacturasNFxLocal(req.session.userLocal);
+    let facturas = facturasNF.concat(facturasCAE);
+    facturas.sort((a, b) => a.fechaevento - b.fechaevento);
+    const resumenVentas = await facturacionMiddleware.crearResumenFacturacionEstadisticas(facturas, productos);
+    const local = await servicesLocal.getLocal(req.session.userLocal);
+
+    let wb = new xl.Workbook({
+        dateFormat: 'dd/mm/yy',
+      });
+
+    //estilos
+    let estiloNegro = wb.createStyle({
+        font: {
+            color: '#FFFFFF',
+            size: 12,
+            bold: true,
+        },
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#000000',
+        },
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloFondoGris = wb.createStyle({
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#CCCCCC',
+        },
+    });
+    let estiloGris = wb.createStyle({
+        font: {
+            size: 12,
+            bold: true,
+        },
+        fill: {
+            type: 'pattern',
+            patternType: 'solid',
+            fgColor: '#CCCCCC',
+        },
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloCentrado = wb.createStyle({
+        alignment: {
+            horizontal: 'center',
+        }
+    });
+    let estiloBorde = wb.createStyle({
+        border:{
+            left:{
+                style: "thin",
+                color: "#000000",
+            },
+            right:{
+                style: "thin",
+                color: "#000000",
+            },
+            top:{
+                style: "thin",
+                color: "#000000",
+            },
+            bottom:{
+                style: "thin",
+                color: "#000000",
+            }
+        }
+    });
+    let estiloImporte = wb.createStyle({
+        numberFormat: '$#,##0.00; ($#,##0.00); -',
+    })
+    let estiloTitulo = wb.createStyle({
+        font: {
+            size: 14,
+            bold: true,
+            color: '#FFFFFF',
+        },
+    });
+    let estiloMultilinea = wb.createStyle({
+        alignment: {
+            wrapText: true,
+            horizontal: 'center',
+            vertical: "center",
+        },
+    })
+
+    let wsVentas = wb.addWorksheet(`Estadisticas de Ventas`);
+
+    //Setear anchos
+    wsVentas.column(1).setWidth(10);
+    wsVentas.column(2).setWidth(17);
+    wsVentas.column(3).setWidth(12);
+    wsVentas.column(4).setWidth(11);
+    wsVentas.column(5).setWidth(2);
+    wsVentas.column(6).setWidth(15);
+    wsVentas.column(7).setWidth(15);
+    wsVentas.column(8).setWidth(10);
+    wsVentas.column(9).setWidth(10);
+    wsVentas.column(10).setWidth(2);
+    wsVentas.column(11).setWidth(17);
+    wsVentas.column(12).setWidth(17);
+    wsVentas.column(13).setWidth(17);
+    wsVentas.column(14).setWidth(17);
+
+    let row = 1;
+    wsVentas.cell(row, 1, row, 12, true).string(`Dulce Hora ${local.nombre}`).style(estiloNegro).style(estiloTitulo);
+    wsVentas.cell(row, 13).string(`Datos desde`).style(estiloNegro);
+    wsVentas.cell(row, 14).date(resumenVentas[0].fecha).style(estiloNegro);
+    row++;
+    wsVentas.cell(row, 1, row, 12, true).string(`Estadisticas de ventas sobre dia`).style(estiloNegro);
+    wsVentas.cell(row, 13).string(`hasta`).style(estiloNegro);
+    wsVentas.cell(row, 14).date(resumenVentas[resumenVentas.length - 1].fecha).style(estiloNegro);
+    row += 2;
+    wsVentas.cell(row, 1, row, 4, true).string(`RESUMEN DE VENTAS`).style(estiloNegro);
+    wsVentas.cell(row, 6, row, 9, true).string(`DETALLES`).style(estiloNegro);
+    wsVentas.cell(row, 11, row, 14, true).string(`MEDIOS DE PAGO`).style(estiloNegro);
+    row++;
+    wsVentas.cell(row, 1).string(`Fecha`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 2).string(`Total de Ventas`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 3).string(`Total de operaciones`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 4).string(`Ticket promedio`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 6).string(`Total con CAE`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 7).string(`Total sin CAE`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 8).string(`Registros con CAE`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 9).string(`Registros sin CAE`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 11).string(`Efectivo`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 12).string(`Débito`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 13).string(`Crédito`).style(estiloMultilinea).style(estiloNegro);
+    wsVentas.cell(row, 14).string(`Virtual`).style(estiloMultilinea).style(estiloNegro);
+    row++;
+
+    resumenVentas.forEach((dia) => {
+        wsVentas.cell(row, 1).date(dia.fecha).style(estiloBorde).style(estiloCentrado);
+        wsVentas.cell(row, 2).number(dia.totalDia).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 3).number(dia.contadorOperaciones).style(estiloBorde).style(estiloCentrado);
+        wsVentas.cell(row, 4).number(dia.promedio).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 6).number(dia.totalCAE).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 7).number(dia.totalNF).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 8).number(dia.contadorCAE).style(estiloBorde).style(estiloCentrado);
+        wsVentas.cell(row, 9).number(dia.contadorComanda).style(estiloBorde).style(estiloCentrado);
+        wsVentas.cell(row, 11).number(dia.totalEfectivo).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 12).number(dia.totalDebito).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 13).number(dia.totalCredito).style(estiloBorde).style(estiloImporte);
+        wsVentas.cell(row, 14).number(dia.totalNB).style(estiloBorde).style(estiloImporte);
+        row++;
+    });
+
+
+    let wsCronograma = wb.addWorksheet(`Cronograma de Ventas`);
+
+    //Setear anchos
+    wsCronograma.column(1).setWidth(10);
+    wsCronograma.column(2).setWidth(12);
+    wsCronograma.column(3).setWidth(17);
+    wsCronograma.column(4).setWidth(17);
+    wsCronograma.column(5).setWidth(17);
+    wsCronograma.column(6).setWidth(17);
+    wsCronograma.column(7).setWidth(17);
+    wsCronograma.column(8).setWidth(17);
+    wsCronograma.column(9).setWidth(17);
+    wsCronograma.column(10).setWidth(17);
+    wsCronograma.column(11).setWidth(17);
+    wsCronograma.column(12).setWidth(17);
+    wsCronograma.column(13).setWidth(17);
+    wsCronograma.column(14).setWidth(17);
+    wsCronograma.column(15).setWidth(17);
+    wsCronograma.column(16).setWidth(17);
+    wsCronograma.column(17).setWidth(17);
+    wsCronograma.column(18).setWidth(17);
+    wsCronograma.column(19).setWidth(17);
+    wsCronograma.column(20).setWidth(17);
+    wsCronograma.column(21).setWidth(17);
+    wsCronograma.column(22).setWidth(17);
+    wsCronograma.column(23).setWidth(17);
+    wsCronograma.column(24).setWidth(17);
+    wsCronograma.column(25).setWidth(17);
+    wsCronograma.column(26).setWidth(17);
+
+    row = 1;
+    wsCronograma.cell(row, 1, row, 24, true).string(`Dulce Hora ${local.nombre}`).style(estiloNegro).style(estiloTitulo);
+    wsCronograma.cell(row, 25).string(`Datos desde`).style(estiloNegro);
+    wsCronograma.cell(row, 26).date(resumenVentas[0].fecha).style(estiloNegro);
+    row++;
+    wsCronograma.cell(row, 1, row, 24, true).string(`Estadisticas de ventas sobre hora`).style(estiloNegro);
+    wsCronograma.cell(row, 25).string(`hasta`).style(estiloNegro);
+    wsCronograma.cell(row, 26).date(resumenVentas[resumenVentas.length - 1].fecha).style(estiloNegro);
+    row += 2;
+
+    wsCronograma.cell(row, 1, row, 26, true).string(`Estadisticas de ventas sobre hora`).style(estiloNegro);
+    row++;
+    wsCronograma.cell(row, 1, row, 2, true).string(`Fecha`).style(estiloNegro);
+    let col = 3;
+     for (let index = 0; index < 24; index++) {
+        wsCronograma.cell(row, col).number(index).style(estiloNegro);
+        col++;
+    }
+    row++;
+    // ticket crear fondos de patron para leer resumen
+    resumenVentas.forEach((dia) => {
+        wsCronograma.cell(row, 1, row+2, 1, true).date(dia.fecha).style(estiloBorde).style(estiloMultilinea);
+        wsCronograma.cell(row, 2).string("Total").style(estiloBorde);
+        let col = 3;
+        dia.cronograma.forEach((hora) => {
+            wsCronograma.cell(row, col).number(hora.total).style(estiloBorde).style(estiloImporte);
+            col++;
+        })
+        row++;
+        wsCronograma.cell(row, 2).string("Operaciones").style(estiloBorde);
+        col = 3;
+        dia.cronograma.forEach((hora) => {
+            wsCronograma.cell(row, col).number(hora.operaciones).style(estiloBorde).style(estiloCentrado);
+            col++;
+        })
+        row++;
+        wsCronograma.cell(row, 2).string("Promedio").style(estiloBorde);
+        col = 3;
+        dia.cronograma.forEach((hora) => {
+            wsCronograma.cell(row, col).number(hora.promedio).style(estiloBorde).style(estiloImporte);
+            col++;
+        })
+        row++;
+    });
+
+    let hoy = await fechaHoy();
+
+    return wb.write(`Estadisticas de ${local.nombre} - ${hoy}.xlsx`, res);
+}
+
 module.exports = {
     exportarExcelProduccion,
     exportarExcelReportePlanta,
     exportarExcelReportePedidos,
     exportarExcelReporteValorizado,
     exportarExcelReporteCaja,
+    exportarEstadisticasLocal,
 }

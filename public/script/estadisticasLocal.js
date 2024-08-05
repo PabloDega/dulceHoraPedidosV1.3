@@ -30,6 +30,23 @@ function actualizarBotonesDeFiltro(stats){
   document.querySelector("#statsFechasCalendario").dataset.stats = stats;
 }
 
+function textoTipoFrase(texto){
+  let nombreProducto = texto.toLowerCase();
+  nombreProducto = nombreProducto.split(" ");
+  nuevoNombre = []
+  nombreProducto.forEach((palabra) => {
+    if(palabra.length > 3 || palabra === "pan"){
+      nuevaPalabra = palabra[0].toUpperCase() + palabra.slice(1);
+      nuevoNombre.push(nuevaPalabra);
+    } else {
+      nuevoNombre.push(palabra)
+    }
+  });
+  nombreProducto = nuevoNombre.join(" ");
+  return nombreProducto;
+}
+
+
 // ---- Eventos -----
 window.addEventListener("load", () => {
   window.resumenVentas.forEach((dia) => {
@@ -52,6 +69,8 @@ document.querySelectorAll(".filtrarDias").forEach((boton) => {
       filtrarChartVentasDias(e);
     } else if(e.currentTarget.dataset.stats === "operacionesPromedio"){
       filtrarChartOperacionesDias(e);
+    } else if(e.currentTarget.dataset.stats === "productosTotal"){
+      filtrarChartProductos(e);
     }
   })
 });
@@ -193,7 +212,8 @@ function filtrarChartVentasDias(e){
 function filtrarPorFechas(fechas, variable){
   /* fechas.inicial = ajustarFecha(new Date(document.querySelector("#fechaInicio").value));
   fechas.final = ajustarFecha(new Date(document.querySelector("#fechaFinal").value)); */
-  let respuesta = window[variable].filter((item) => {
+  let info = structuredClone(window[variable])
+  let respuesta = info.filter((item) => {
     let fecha = ajustarFecha(new Date(item.fecha));
     return fecha >= fechas.inicial && fecha <= fechas.final;
   });
@@ -432,10 +452,21 @@ function filtrarChartOperacionesDias(e){
   iniciarChartCronograma(e, fechas);
 }
 
+function filtrarChartProductos(e){
+  let inicial = new Date();
+  let final = new Date();
+  inicial.setDate(inicial.getDate() - (e.currentTarget.dataset.dias - 1));
+  let fechas = {
+    inicial,
+    final,
+  }
+  iniciarChartProductos(e, fechas);
+}
+
 function iniciarChartProductos(e, fechas){
   actualizarBotonesDeFiltro(e.currentTarget.dataset.stats);
   let info = crearResumenChartProductos(fechas);
-  let infoSeries = crearObjetoProductos(info, e.currentTarget.dataset);
+  let infoSeries = crearObjetoProductosMasVendidos(info, e.currentTarget.dataset);
 
   options = {
     chart: {
@@ -452,9 +483,6 @@ function iniciarChartProductos(e, fechas){
           shadeTo: 'light',
           shadeIntensity: 0.65
         },
-    },
-    xaxis: {
-      tickAmount: infoSeries.seriesMasVendidos[0].data.length - 1,
     },
     title: {
       text: 'Promedio de productos mas vendidos',
@@ -479,6 +507,18 @@ function iniciarChartProductos(e, fechas){
         horizontal: true
       }
     },
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      show: true,
+      borderColor: '#90A4AE',
+      xaxis: {
+          lines: {
+              show: true
+          }
+      },   
+    },
   }
 
   document.querySelector("#statsChart").innerHTML = "";
@@ -491,7 +531,7 @@ function crearResumenChartProductos(fechas){
   if(fechas){
     info = filtrarPorFechas(fechas, "resumenVentas");
   } else {
-    info = window.resumenVentas;
+    info = structuredClone(window.resumenVentas);
   }
   
   let productosResumen = [];
@@ -502,9 +542,11 @@ function crearResumenChartProductos(fechas){
         return;
       } else if(infoDelProd.fraccionamiento === "kilo"){
         item[4] = item[4]/250;
+      } else if(infoDelProd.fraccionamiento === "docena"){
+        item[4] = item[4]/12;
       }
-      item.push(infoDelProd.nombre);
-      item.push(infoDelProd.categoria);
+      item.push(textoTipoFrase(infoDelProd.nombre));
+      item.push(textoTipoFrase(infoDelProd.categoria));
       let buscarProd = productosResumen.findIndex((prod) => prod[5] === item[5]);
       if(buscarProd !== -1){
         productosResumen[buscarProd][1] += item[1];
@@ -517,17 +559,18 @@ function crearResumenChartProductos(fechas){
 
   // Calcular promedio en base a total / info.length
   productosResumen.forEach((producto) => {
-    let promedio = producto[1] / info.length
-    producto.push(Math.round(promedio*100)/100)
+    let promedio = producto[1] / info.length;
+    producto.push(Math.round(promedio*100)/100);
+    let promedioCantidadVentas = producto[4] / info.length;
+    producto.push(Math.round(promedioCantidadVentas*100)/100);
     producto[1] = Math.round(producto[1]*100)/100;
     producto[4] = Math.round(producto[4]);
   })
   productosResumen = productosResumen.sort((a, b) => b[4] - a[4]);
-  console.log(productosResumen)
   return productosResumen;
 }
 
-function crearObjetoProductos(info, dataset){
+function crearObjetoProductosMasVendidos(info, dataset){
   let objeto = {}
   // Filtrar cantidad de productos mas vendidos para mostrar
   let prodsDelResumen = 10;
@@ -537,16 +580,17 @@ function crearObjetoProductos(info, dataset){
     }
     prodsDelResumen = dataset.productos;
   }
-
+  
   let productosMasVendidos = info.slice(0, prodsDelResumen);
   objeto.productosMasVendidos = productosMasVendidos;
   let seriesMasVendidos = [{
     name: "Promedio de productos mas vendidos",
-    data: []
+    data: [],
   }];
+  console.log(productosMasVendidos)
   productosMasVendidos.forEach((producto) => {
     let obj = {}
-    obj.y= producto[4];
+    obj.y= producto[9];
     obj.x = producto[6];
     seriesMasVendidos[0].data.push(obj);
   });
