@@ -208,6 +208,17 @@ const getFacturasCAE = async(local, tipo) => {
   }
 }
 
+const getFacturasCAETodas = async() => {
+  try {
+    const facturas = await conectar.query(`SELECT * FROM registrosWSFE`);
+    return facturas[0];
+  } catch (error) {
+    throw error;
+  } finally {
+    conectar.releaseConnection();
+  }
+}
+
 const getFacturasCAETodasxFecha = async(fecha) => {
   try {
     const facturas = await conectar.query(`SELECT * FROM registrosWSFE WHERE fecha = '${fecha}'`);
@@ -325,6 +336,7 @@ module.exports = {
   updateSenias,
   getFacturasCAE,
   getFacturaCAE,
+  getFacturasCAETodas,
   getFacturasCAETodasxFecha,
   getFacturasCAExfecha,
   getFacturasCAExLocal,

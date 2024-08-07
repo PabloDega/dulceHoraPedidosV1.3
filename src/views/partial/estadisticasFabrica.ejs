@@ -12,9 +12,9 @@
         <div class="backCard small statsBtn" id="statsBtnProductos"  data-periodo="Todos los datos" data-stats="productosTotal"  data-name="Productos Promedio">
             <h1>Ventas por Producto</h1>
         </div>
-        <div class="backCard small statsBtn btnVerde" id="statsBtnDownload"  data-periodo="Todos los datos" data-stats="productosTotal"  data-name="Productos Promedio">
+        <!-- <div class="backCard small statsBtn btnVerde" id="statsBtnDownload"  data-periodo="Todos los datos" data-stats="productosTotal"  data-name="Productos Promedio">
             <h1>Descargar info en planilla</h1>
-        </div>
+        </div> -->
     </div>
     <span>
         <div id="statsChart"></div>
@@ -43,8 +43,7 @@
 </div>
 
 <script>
-    window.facturas = <%- JSON.stringify(facturas) %>
-    window.resumenVentas = <%- JSON.stringify(resumenVentas) %>
-    window.productos = <%- JSON.stringify(productos) %>
+    window.statsFacturacion = <%- JSON.stringify(statsFacturacion) %>
+    window.localesConFacturacion = <%- JSON.stringify(localesConFacturacion) %>
 </script>
-<script src="/script/estadisticasLocal.js" defer></script>
+<script src="/script/estadisticasFabrica.js" defer></script>

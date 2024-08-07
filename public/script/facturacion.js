@@ -1054,12 +1054,13 @@ function redimensionar(){
     document.querySelector("#backRender").classList.remove("factBackRenderScroll");
   }
 }
-
+let consultaPadron;
+// ticket inhabilitar boton de emitir hasta validar CUIT
 async function consultarPadron(){
   // let data = {idPersona: e.target.value};
   let data = {idPersona: document.querySelector("#cuit").value}
   const dataBody = new URLSearchParams(data);
-  let consultaPadron = await fetch("/panel/facturacion/padron/api", {
+  consultaPadron = await fetch("/panel/facturacion/padron/api", {
     method: "POST",
     body: dataBody,
   })
@@ -1083,11 +1084,14 @@ async function consultarPadron(){
 
 document.querySelector("#consultarPadron").addEventListener("click", () => {consultarPadron();})
 
-document.querySelector("#listaDePrecios").addEventListener("change", (e) => {
-  document.querySelector("#cortinaLoad").style.display = "flex";
-  let numero = e.target.value.replace(/[^0-9]/g, "");
-  window.location.href = `/panel/facturacion?lista=${numero}`;
-});
+if(document.querySelector("#listaDePrecios") !== null){
+  document.querySelector("#listaDePrecios").addEventListener("change", (e) => {
+    document.querySelector("#cortinaLoad").style.display = "flex";
+    let numero = e.target.value.replace(/[^0-9]/g, "");
+    window.location.href = `/panel/facturacion?lista=${numero}`;
+  });
+}
+
 
 if(local.listaprimaria !== lista){
   document.querySelector("body").style.backgroundColor = "orange"

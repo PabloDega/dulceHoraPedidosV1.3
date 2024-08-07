@@ -279,4 +279,7 @@ router.get("/estadisticas/local/ventas/diarias", auth.authAtencion, statsControl
 
 router.get("/estadisticas/local/exportar", auth.authAtencion, excelControllers.exportarEstadisticasLocal);
 
+router.get("/estadisticas/fabrica", auth.authAtencion, statsControllers.estadisticasFabrica);
+
+
 module.exports = router;

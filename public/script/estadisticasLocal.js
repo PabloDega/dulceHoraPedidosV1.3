@@ -59,6 +59,10 @@ window.addEventListener("load", () => {
   iniciarChart();
 });
 
+document.querySelector("#statsBtnDownload").addEventListener("click", () => {
+  window.location.href = "/panel/estadisticas/local/exportar"
+})
+
 document.querySelector("#statsFechasCalendario").addEventListener("click", (e) => {
   mostrarFiltroManual(e.currentTarget.dataset);
 });
@@ -544,6 +548,8 @@ function crearResumenChartProductos(fechas){
         item[4] = item[4]/250;
       } else if(infoDelProd.fraccionamiento === "docena"){
         item[4] = item[4]/12;
+      } else if(infoDelProd.categoria.toLowerCase() === "pan" && infoDelProd.fraccionamiento === "unidad"){
+        item[4] = item[4]/24;
       }
       item.push(textoTipoFrase(infoDelProd.nombre));
       item.push(textoTipoFrase(infoDelProd.categoria));
@@ -587,7 +593,7 @@ function crearObjetoProductosMasVendidos(info, dataset){
     name: "Promedio de productos mas vendidos",
     data: [],
   }];
-  console.log(productosMasVendidos)
+
   productosMasVendidos.forEach((producto) => {
     let obj = {}
     obj.y= producto[9];

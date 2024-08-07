@@ -27,6 +27,22 @@ const fechaHoy = async () => {
     return fecha;
 }
 
+const textoTipoFrase = (texto) => {
+    let nombreProducto = texto.toLowerCase();
+    nombreProducto = nombreProducto.split(" ");
+    nuevoNombre = [];
+    nombreProducto.forEach((palabra) => {
+        if (palabra.length > 3 || palabra === "pan") {
+            nuevaPalabra = palabra[0].toUpperCase() + palabra.slice(1);
+            nuevoNombre.push(nuevaPalabra);
+        } else {
+            nuevoNombre.push(palabra);
+        }
+    });
+    nombreProducto = nuevoNombre.join(" ");
+    return nombreProducto;
+};
+
 const exportarExcelProduccion = async(req, res) => {
     const pedido = JSON.parse(req.body.pedido);
     // console.log(pedido)
@@ -796,6 +812,7 @@ const exportarEstadisticasLocal = async(req, res) => {
         },
     })
 
+    //------>> Hoja ventas
     let wsVentas = wb.addWorksheet(`Estadisticas de Ventas`);
 
     //Setear anchos
@@ -857,7 +874,7 @@ const exportarEstadisticasLocal = async(req, res) => {
         row++;
     });
 
-
+    //------>> Hoja cronograma
     let wsCronograma = wb.addWorksheet(`Cronograma de Ventas`);
 
     //Setear anchos
@@ -907,31 +924,80 @@ const exportarEstadisticasLocal = async(req, res) => {
         col++;
     }
     row++;
-    // ticket crear fondos de patron para leer resumen
-    resumenVentas.forEach((dia) => {
-        wsCronograma.cell(row, 1, row+2, 1, true).date(dia.fecha).style(estiloBorde).style(estiloMultilinea);
-        wsCronograma.cell(row, 2).string("Total").style(estiloBorde);
+    // ticket -- crear fondos de patron para leer resumen
+    resumenVentas.forEach((dia, i) => {
+        let barraGris = wb.createStyle({});
+        if(i % 2 !== 0){
+            barraGris = wb.createStyle({
+                fill: {
+                    type: 'pattern',
+                    patternType: 'solid',
+                    fgColor: '#CCCCCC',
+            }});
+        } else {
+            barraGris = wb.createStyle({
+                fill: {
+                    type: 'pattern',
+                    patternType: 'solid',
+                    fgColor: '#FFFFFF',
+            }});        }
+        wsCronograma.cell(row, 1, row+2, 1, true).date(dia.fecha).style(estiloBorde).style(estiloMultilinea).style(barraGris);
+        wsCronograma.cell(row, 2).string("Total").style(estiloBorde).style(barraGris);
         let col = 3;
         dia.cronograma.forEach((hora) => {
-            wsCronograma.cell(row, col).number(hora.total).style(estiloBorde).style(estiloImporte);
+            wsCronograma.cell(row, col).number(hora.total).style(estiloBorde).style(estiloImporte).style(barraGris);
             col++;
         })
         row++;
-        wsCronograma.cell(row, 2).string("Operaciones").style(estiloBorde);
+        wsCronograma.cell(row, 2).string("Operaciones").style(estiloBorde).style(barraGris);
         col = 3;
         dia.cronograma.forEach((hora) => {
-            wsCronograma.cell(row, col).number(hora.operaciones).style(estiloBorde).style(estiloCentrado);
+            wsCronograma.cell(row, col).number(hora.operaciones).style(estiloBorde).style(estiloCentrado).style(barraGris);
             col++;
         })
         row++;
-        wsCronograma.cell(row, 2).string("Promedio").style(estiloBorde);
+        wsCronograma.cell(row, 2).string("Promedio").style(estiloBorde).style(barraGris);
         col = 3;
         dia.cronograma.forEach((hora) => {
-            wsCronograma.cell(row, col).number(hora.promedio).style(estiloBorde).style(estiloImporte);
+            wsCronograma.cell(row, col).number(hora.promedio).style(estiloBorde).style(estiloImporte).style(barraGris);
             col++;
         })
         row++;
     });
+
+    //------>> Hoja productos
+    let wsProductos = wb.addWorksheet(`Estadisticas de Productos`);
+    let colFinal = productos.length + 1;
+    row = 1;
+    wsProductos.cell(row, 1, row, (colFinal - 2), true).string(`Dulce Hora ${local.nombre}`).style(estiloNegro).style(estiloTitulo);
+    wsProductos.cell(row, (colFinal - 1)).string(`Datos desde`).style(estiloNegro);
+    wsProductos.cell(row, colFinal).date(resumenVentas[0].fecha).style(estiloNegro);
+    row++;
+    wsProductos.cell(row, 1, row, (colFinal - 2), true).string(`Total de productos por dia`).style(estiloNegro);
+    wsProductos.cell(row, (colFinal - 1)).string(`hasta`).style(estiloNegro);
+    wsProductos.cell(row, colFinal).date(resumenVentas[resumenVentas.length - 1].fecha).style(estiloNegro);
+
+    wsProductos.column(1).setWidth(10);
+    wsProductos.cell(4, 1, 5, 1, true).style(estiloNegro).style(estiloTitulo);
+    row = 6;
+    resumenVentas.forEach((dia, i) => {
+        wsProductos.cell(row, 1, row, colFinal).style(estiloBorde);
+        wsProductos.cell(row, 1).date(dia.fecha).style(estiloBorde);
+        dia.productos.forEach((prod) => {
+            let colProd = productos.findIndex((item) => item.id == prod[5]);
+            if(colProd === -1){return}
+            colProd += 2;
+            wsProductos.cell(row, colProd).number(prod[4]).style(estiloBorde);
+        })
+        row++;
+    });
+    col = 2
+    productos.forEach((prod) => {
+        wsProductos.cell(4, col).number(prod.codigo).style(estiloMultilinea).style(estiloNegro);
+        let nombre = textoTipoFrase(prod.nombre)
+        wsProductos.cell(5, col).string(nombre).style(estiloMultilinea).style(estiloNegro).style({font: {size: 9,}});
+        col++;
+    })
 
     let hoy = await fechaHoy();
 

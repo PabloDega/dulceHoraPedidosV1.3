@@ -159,7 +159,12 @@ async function crearComprobanteCAE(id) {
   let fechaHora = factura.fechaevento.split("T");
   let destinatario = "A Consumidor Final"
   if(factura.tipo == 1){
-    destinatario = "Dest: " + factura.receptor;
+    destinatario = `<span style="font-weight: 400; font-size: 0.8em;">
+    Destinatario: <br> 
+    CUIT: ${factura.receptor}<br>
+    Razón Social: ${consultaPadron.data.datosGenerales.apellido}, ${consultaPadron.data.datosGenerales.nombre}<br>
+    Domicilio: ${consultaPadron.data.datosGenerales.domicilioFiscal.direccion}, ${consultaPadron.data.datosGenerales.domicilioFiscal.localidad}
+    </span>`;
   };
   let condicion = "Monotributista";
   if(window.datosFiscales.condicioniva == "responsable"){

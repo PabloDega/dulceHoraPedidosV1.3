@@ -2,6 +2,8 @@ const servicesFacturacion = require(__basedir + "/src/services/facturacion");
 
 const axios = require('axios');
 
+const fs = require('fs')
+
 const fechaHoy = async () => {
     let hoy = new Date();
     let anio = hoy.getFullYear();
@@ -100,6 +102,97 @@ const calcularFacturacionxFechaxLocal = async (locales, fecha) => {
         factucionxLocal.push(datos);
     });
     return factucionxLocal;
+}
+
+const calcularStatsFacturacion = async (locales, productos) => {
+    const facturasNF = await servicesFacturacion.getFacturasNFTodas();
+    const facturasCAE = await servicesFacturacion.getFacturasCAETodas();
+    const facturas = facturasNF.concat(facturasCAE);
+    let factucionxLocal = [];
+    await locales.forEach(async(local) => {
+        let facturasLocal = facturas.filter((factura) => factura.local == local.id);
+        if(facturasLocal === undefined){
+            return;
+        }
+        let resumenDelLocal = await crearResumenFacturacionEstadisticas(facturasLocal, productos);
+        let datos = {
+            local: local.nombre,
+            localId: local.id,
+            facturacion: resumenDelLocal,
+        };
+        factucionxLocal.push(datos);
+    })
+    fs.writeFile("./log/stats.txt", JSON.stringify(factucionxLocal), (err) => {if(err){console.error(err)}})
+    return factucionxLocal;
+
+        /* let facturasLocal = facturas.filter((factura) => factura.local == local.id);
+
+        let datos = {
+            local: local.nombre,
+            localId: local.id,
+            facturacion: [],
+        };
+        let diasConFactura = new Set();
+        facturasLocal.forEach((factura) => {
+            diasConFactura.add(factura.fecha)
+        });
+
+        diasConFactura.forEach((dia) => {
+            let facturasDeDia = facturasLocal.filter((factura) => factura.fecha == dia);
+            let statsDelDia = {
+                fecha: dia,
+                total: 0,
+                operaciones: 0,
+                operacionesComanda: 0,
+                totalComanda: 0,
+                operacionesCAE: 0,
+                totalCAE: 0,
+                totalEfectivo: 0,
+            }
+            facturasDeDia.forEach((factura) => {
+                if(factura.tipo === "X" || factura.tipo === 1 || factura.tipo === 6 || factura.tipo === 11){
+                    statsDelDia.total += factura.total;
+                    statsDelDia.operaciones++;
+                    if(factura.tipo === "X"){
+                        statsDelDia.operacionesComanda++;
+                        statsDelDia.totalComanda += factura.total;
+                    } else {
+                        statsDelDia.operacionesCAE++;
+                        statsDelDia.totalCAE += factura.total;
+                    }
+                    if(factura.formaPago === "efectivo"){
+                        statsDelDia.totalEfectivo += factura.total;
+                    } else if(factura.formaPago === "multiple"){
+                        let pagoMultiple = JSON.parse(factura.observaciones);
+                        if(pagoMultiple.efectivo){
+                            statsDelDia.totalEfectivo += pagoMultiple.montoefectivo;
+                        }
+                    }
+                } else if(factura.tipo === "NC" || factura.tipo === 3 || factura.tipo === 8 || factura.tipo === 13){
+                    statsDelDia.total -= factura.total;
+                    statsDelDia.operaciones--;
+                    if(factura.tipo === "NC"){
+                        statsDelDia.operacionesComanda--;
+                        statsDelDia.totalComanda -= factura.total;
+                    } else {
+                        statsDelDia.operacionesCAE--;
+                        statsDelDia.totalCAE -= factura.total;
+                    }
+                    if(factura.formaPago === "efectivo"){
+                        statsDelDia.totalEfectivo -= factura.total;
+                    } else if(factura.formaPago === "multiple"){
+                        let pagoMultiple = JSON.parse(factura.observaciones);
+                        if(pagoMultiple.efectivo){
+                            statsDelDia.totalEfectivo -= pagoMultiple.montoefectivo;
+                        }
+                    }
+                }
+            });
+            datos.facturacion.push(statsDelDia);
+        });        
+        factucionxLocal.push(datos);
+    });
+    return factucionxLocal; */
 }
 
 const crearResumenVistaLocal = async (facturas) => {
@@ -423,7 +516,7 @@ const ajustarObjParaNC = async (factura) => {
   return factura;
 };
 
-const crearResumenFacturacionEstadisticas = (facturas, productos) => {
+const crearResumenFacturacionEstadisticas = async (facturas, productos) => {
     let fechas = new Set();
     let resumen = [];
     facturas.forEach((factura) => {
@@ -504,6 +597,7 @@ module.exports = {
     fechaHyphen,
     fechaNormalizada,
     calcularFacturacionxFechaxLocal,
+    calcularStatsFacturacion,
     crearResumenVistaLocal,
     crearResumenCajaLocal,
     checkDummy,

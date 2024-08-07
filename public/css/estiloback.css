@@ -1417,7 +1417,8 @@ footer img {
   }
 }
 .resumenFacturaciones{
-  font-size: 1.1em;
+  width: 100%;
+  font-size: 0.9em;
 }
 #reportePlantaCategorias .nombresProductos{
   display: flex;

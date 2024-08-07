@@ -470,23 +470,6 @@ function confirmarEliminarProduccion(e){
   document.querySelector("#btnEliminarCancelar").addEventListener("click", cerrarPopEliminar);
 }
 
-if (document.querySelector("#factFabRegistros") != null) {
-  document
-    .querySelector("#factFabRegistros")
-    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica"));
-}
-
-if (document.querySelector("#factFabBotones") != null) {
-  document
-    .querySelector("#factFabBotones")
-    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica/botones"));
-}
-
-if (document.querySelector("#factFabBotonesNuevo") != null) {
-  document
-    .querySelector("#factFabBotonesNuevo")
-    .addEventListener("click", () => (location.href = "/panel/facturacion/fabrica/botones/nuevo"));
-}
 if (document.querySelector("#chatProduccionSend") != null) {
   document
     .querySelector("#chatProduccionSend").addEventListener("submit", () => {

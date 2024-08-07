@@ -2,9 +2,14 @@
     valor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
     return valor;
 }%>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 
 <h2 id="InputRegistroFacturacion">Resumen del <input type="date" name="fechaRegFact" id="fechaFactFabrica" value="<%=fechaHyphen%>"></h2> 
 
+<div id="statsChartFabricaVentasDelDia"></div>
+
+<h2>Detalles</h2>
 <table class="resumenFacturaciones">
     <thead>
         <tr>
@@ -19,7 +24,7 @@
         </tr>
     </thead>
     <tbody>
-        <%facturacionDiaria.sort((a, b) => b.operaciones - a.operaciones)
+        <%facturacionDiaria.sort((a, b) => b.total - a.total)
         facturacionDiaria.forEach((local) => {
             let promedio = local.total / local.operaciones;
             let otrosMedios = local.total - local.totalEfectivo
@@ -38,5 +43,9 @@
         <%})%>
     </tbody>
 </table>
+
+<script>
+    window.facturacionDiaria = <%- JSON.stringify(facturacionDiaria) %>
+</script>
 
 <script src="/script/registroFacturacionFabrica.js"></script>
