@@ -47,8 +47,7 @@ function textoTipoFrase(texto) {
 
 function filtrarFacturacionPorDia(fecha){
   if(!fecha){
-    // testAdjust
-    let hoy = new Date("2024-07-28");
+    let hoy = new Date();
     fecha = dobleDigito(hoy.getFullYear()) + "-" + dobleDigito((hoy.getMonth() + 1)) + "-" + dobleDigito(hoy.getDate());
   }
   let objetoVacio = {
@@ -86,6 +85,24 @@ function filtrarFacturacionPorDia(fecha){
   return facturacionDiaria;
 }
 
+function filtrarFacturacionPorPeriodo(fechas){
+  let resumenxDia = [];
+  fechas = {
+    inicial: new Date("2024-07-27"),  
+    final: new Date("2024-07-31"),
+  }
+  let pediodoDias = (fechas.final - fechas.inicial) / 1000 / 60 / 60 / 24;
+  for (let i = 0; i < pediodoDias + 1; i++) {
+    let dia = fechas.inicial;
+    dia.setDate(dia.getDate()+1);
+    console.log(dia);
+  }
+}
+
+filtrarFacturacionPorPeriodo()
+
+function acumuladorDeVentasxDia(){}
+
 function crearObjetoChartLocalesxDia(info){
   info.sort((a, b) => b.facturacion.totalDia - a.facturacion.totalDia);
   info.forEach((local) => {
@@ -99,18 +116,81 @@ function crearObjetoChartLocalesxDia(info){
   info.forEach((local) => {
       ventas.push(local.facturacion.totalDia);
   });
-  return {locales, ventas};
+  let fecha = info[0].fecha
+  return {locales, ventas, fecha};
+}
+
+function rotarFecha(fecha){
+  let arrayFecha = fecha.split("-");
+  arrayFecha.reverse();
+  let nuevaFecha = arrayFecha.join("-");
+  return nuevaFecha;
+}
+
+function removerClasesBtnFabrica(elementos, clase){
+  document.querySelectorAll(`.${elementos}`).forEach((btn) => {
+    btn.classList.remove(`${clase}`)
+  })
+}
+
+function colorearBotonesStatsFabrica(botones){
+  removerClasesBtnFabrica("statsFabrica", "btnNaranja");
+  botones.forEach((boton) => {
+    document.querySelector(`#${boton}`).classList.add("btnNaranja")
+  })
+}
+
+function colorearBotonesStatsFiltrosLocales(boton){
+  document.querySelectorAll(".statsFiltrosLocales").forEach((btn) => {btn.classList.remove("btnNaranja")});
+  document.querySelector(`#${boton}`).classList.add("btnNaranja");
 }
 
 // ---- Eventos -----
 window.addEventListener("load", () => {
-  let info = filtrarFacturacionPorDia();
-  let datosChart = crearObjetoChartLocalesxDia(info);
-  iniciarChartVentasDelDia(datosChart);
+  iniciarChartVentasDelDia();
+});
+
+if(document.querySelector("#fechaEstadisticaFabrica") !== null){
+  document.querySelector("#fechaEstadisticaFabrica").addEventListener("change", (e) => {
+    iniciarChartVentasDelDia(e.target.value);
+  })
+};
+
+document.querySelector("#statsValoresPromedio").addEventListener("click", (e) => {
+  colorearBotonesStatsFabrica([e.currentTarget.id,"statsBtnVentas", "statsLocalesTodos", "statsSemana"])
+  document.querySelector("#statsDiarios").style.display = "none";
+});
+
+document.querySelector("#statsValoresTotales").addEventListener("click", (e) => {
+  colorearBotonesStatsFabrica([e.currentTarget.id,"statsBtnVentas", "statsLocalesTodos", "statsDiarios"])
+  document.querySelector("#statsDiarios").style.display = "flex";
+});
+
+document.querySelector("#statsLocalesTodos").addEventListener("click", (e) => {
+  colorearBotonesStatsFiltrosLocales(e.currentTarget.id);
+});
+
+document.querySelector("#statsLocalesTop10").addEventListener("click", (e) => {
+  colorearBotonesStatsFiltrosLocales(e.currentTarget.id);
+});
+
+document.querySelector("#statsLocalesIndividual").addEventListener("click", (e) => {
+  colorearBotonesStatsFiltrosLocales(e.currentTarget.id);
 });
 
 // ---- Funciones ----
-function iniciarChartVentasDelDia(datosChart){
+
+function iniciarChartVentasDelDia(fecha){
+  document.querySelector("#statsBtnVentas").classList.add("btnNaranja");
+  document.querySelector("#statsValoresTotales").classList.add("btnNaranja");
+  document.querySelector("#statsLocalesTodos").classList.add("btnNaranja");
+  document.querySelector("#statsLocalesTodos").classList.add("btnNaranja");
+  let info = filtrarFacturacionPorDia(fecha);
+  let datosChart = crearObjetoChartLocalesxDia(info);
+  renderChartVentasDelDia(datosChart);
+}
+
+function renderChartVentasDelDia(datosChart){
   options = {
     chart: {
       type: 'bar',
@@ -143,7 +223,7 @@ function iniciarChartVentasDelDia(datosChart){
       }
     },
     title: {
-      text: 'Ventas por local',
+      text: 'Venta total de locales por día',
       align: 'center',
       offsetY: 30,
       style: {
@@ -152,7 +232,7 @@ function iniciarChartVentasDelDia(datosChart){
       }
     },
     subtitle: {
-      text: fecha,
+      text: rotarFecha(datosChart.fecha),
       align: 'center',
       offsetY: 50,
       style: {
@@ -178,7 +258,7 @@ function iniciarChartVentasDelDia(datosChart){
       enabled: false,
     },
   }
-  
+  document.querySelector("#statsChart").innerHTML = "";
   chart = new ApexCharts(document.querySelector("#statsChart"), options);
   chart.render();
 }

@@ -1851,6 +1851,16 @@ form.editor#cierreCajaCierre table tbody tr input{
   width: 50px;
 }
 
+.statsCont #calendarioStats{
+  color: white;
+  font-size: 1em;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+}
+
 
 /* Media Style */
 
